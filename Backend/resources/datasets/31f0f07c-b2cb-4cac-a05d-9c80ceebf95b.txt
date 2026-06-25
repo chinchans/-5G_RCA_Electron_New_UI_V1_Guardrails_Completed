@@ -1,0 +1,108 @@
+10.4.1	EN-DC
+The Secondary Node Release procedure may be initiated either by the MN or by the SN and is used to initiate the release of the UE context at the SN. The recipient node of this request can reject it, e.g., if a SN change procedure is triggered by the SN.
+In case of CPA or inter-SN CPC, this procedure may be initiated either by the MN or the candidate SN, and it is used to cancel all the prepared PSCells at the candidate SN and initiate the release of related UE context at the candidate SN.
+It does not necessarily need to involve signalling towards the UE, e.g., in case of the RRC connection re-establishment due to Radio Link Failure in MN.
+MN initiated SN Release
+
+Figure 10.4.1-1: SN Release procedure – MN initiated
+Figure 10.4.1-1 shows an example signalling flow for the MN initiated Secondary Node Release procedure when SN Release is confirmed by SN.
+1.	The MN initiates the procedure by sending the SgNB Release Request message. If applicable, the MN provides data forwarding addresses to the SN.
+2.	The SN confirms SN Release by sending the SgNB Release Request Acknowledge message. If appropriate, the SN may reject SN Release, e.g. if the SN change procedure is triggered by the SN.
+NOTE 0:	If inter-SN CPC is configured, upon reception of the SgNB Release Request Acknowledge message from the source SN, the MN cancels all CPC with the target candidate SN(s).
+NOTE 0a:	If CPA or inter-SN CPC is configured, upon reception of the SgNB Release Request Acknowledge message from a candidate SN, the MN cancels all CPAC configurations in the candidate SN. In case of SN initiated inter-SN CPC, the MN triggers the Conditional PSCell Change Cancel procedure towards the source SN to inform it of the cancellation of CPAC in the candidate SN.
+3/4.	If required, the MN indicates in the RRCConnectionReconfiguration message towards the UE that the UE shall release the entire SCG configuration. In case the UE is unable to comply with (part of) the configuration included in the RRCConnectionReconfiguration message, it performs the reconfiguration failure procedure.
+NOTE 1:	If data forwarding is applied, timely coordination between steps 1 and 2 may minimize gaps in service provision, this is however regarded to be an implementation matter.
+5.	For bearers using RLC AM, the SN sends the SN Status Transfer message.
+6.	Data forwarding from the SN to the MN may start.
+7.	The SN sends the Secondary RAT Data Usage Report message to the MN and includes the data volumes delivered to and received from the UE over the NR radio for the related E-RABs.
+NOTE 2:	If data forwarding is applied, the order the SN sends the Secondary RAT Data Usage Report message and starts data forwarding with MN is not defined i.e., step 7 can take place before step 6. The SN does not need to wait for the end of data forwarding to send the Secondary RAT Data Usage Report message.
+8.	If applicable, the path update procedure is initiated.
+9.	Upon reception of the UE Context Release message, the SN releases radio and C-plane related resources associated to the UE context. Any ongoing data forwarding may continue.
+SN initiated SN Release
+
+Figure 10.4.1-2: SN Release procedure – SN initiated
+Figure 10.4.1-2 shows an example signalling flow for the SN initiated Secondary Node Release procedure.
+1.	The SN initiates the procedure by sending the SgNB Release Required message which may contain inter-node message to support delta configuration.
+2.	If applicable, the MN provides data forwarding addresses to the SN in the SgNB Release Confirm message. The SN may start data forwarding and stop providing user data to the UE as early as it receives the SgNB Release Confirm message.
+NOTE 2a:	If inter-SN CPC is configured, upon reception of the SgNB Release Required message from the source SN, the MN cancels all CPC with the target candidate SN(s).
+NOTE 2b:	If CPA or inter-SN CPC is configured, upon reception of the SgNB Release Required message from a candidate SN, the MN cancels all CPAC configurations in the candidate SN. In case of SN initiated inter-SN CPC, the MN triggers the Conditional PSCell Change Cancel procedure towards the source SN to inform it of the cancellation of CPAC in the candidate SN.
+3/4.	If required, the MN indicates in the RRCConnectionReconfiguration message towards the UE that the UE shall release the entire SCG configuration. In case the UE is unable to comply with (part of) the configuration included in the RRCConnectionReconfiguration message, it performs the reconfiguration failure procedure.
+NOTE 3:	If data forwarding is applied, timely coordination between steps 2 and 3 may minimize gaps in service provision. This is however regarded to be an implementation matter.
+5.	For bearers using RLC AM, the SN sends the SN Status Transfer message.
+6.	Data forwarding from the SN to the MN may start.
+7.	The SN sends the Secondary RAT Data Usage Report message to the MN and includes the data volumes delivered to and received from the UE over the NR radio for the related E-RABs.
+NOTE 4:	If data forwarding is applied, the order the SN sends the Secondary RAT Data Usage Report message and starts data forwarding with MN is not defined i.e., step 7 can take place before step 6. The SN does not need to wait for the end of data forwarding to send the Secondary RAT Data Usage Report message.
+8.	If applicable, the path update procedure is initiated.
+9.	Upon reception of the UE Context Release message, the SN releases radio and C-plane related resources associated to the UE context. Any ongoing data forwarding may continue.
+Clause:	Clause 10.4.1	10.4.1	EN-DC
+The Secondary Node Release procedure may be initiated either by the MN or by the SN and is used to initiate the release of the UE context at the SN. The recipient node of this request can reject it, e.g., if a SN change procedure is triggered by the SN.
+In case of CPA or inter-SN CPC, this procedure may be initiated either by the MN or the candidate SN, and it is used to cancel all the prepared PSCells at the candidate SN and initiate the release of related UE context at the candidate SN.
+It does not necessarily need to involve signalling towards the UE, e.g., in case of the RRC connection re-establishment due to Radio Link Failure in MN.
+MN initiated SN Release
+
+Figure 10.4.1-1: SN Release procedure – MN initiated
+Figure 10.4.1-1 shows an example signalling flow for the MN initiated Secondary Node Release procedure when SN Release is confirmed by SN.
+1.	The MN initiates the procedure by sending the SgNB Release Request message. If applicable, the MN provides data forwarding addresses to the SN.
+2.	The SN confirms SN Release by sending the SgNB Release Request Acknowledge message. If appropriate, the SN may reject SN Release, e.g. if the SN change procedure is triggered by the SN.
+NOTE 0:	If inter-SN CPC is configured, upon reception of the SgNB Release Request Acknowledge message from the source SN, the MN cancels all CPC with the target candidate SN(s).
+NOTE 0a:	If CPA or inter-SN CPC is configured, upon reception of the SgNB Release Request Acknowledge message from a candidate SN, the MN cancels all CPAC configurations in the candidate SN. In case of SN initiated inter-SN CPC, the MN triggers the Conditional PSCell Change Cancel procedure towards the source SN to inform it of the cancellation of CPAC in the candidate SN.
+3/4.	If required, the MN indicates in the RRCConnectionReconfiguration message towards the UE that the UE shall release the entire SCG configuration. In case the UE is unable to comply with (part of) the configuration included in the RRCConnectionReconfiguration message, it performs the reconfiguration failure procedure.
+NOTE 1:	If data forwarding is applied, timely coordination between steps 1 and 2 may minimize gaps in service provision, this is however regarded to be an implementation matter.
+5.	For bearers using RLC AM, the SN sends the SN Status Transfer message.
+6.	Data forwarding from the SN to the MN may start.
+7.	The SN sends the Secondary RAT Data Usage Report message to the MN and includes the data volumes delivered to and received from the UE over the NR radio for the related E-RABs.
+NOTE 2:	If data forwarding is applied, the order the SN sends the Secondary RAT Data Usage Report message and starts data forwarding with MN is not defined i.e., step 7 can take place before step 6. The SN does not need to wait for the end of data forwarding to send the Secondary RAT Data Usage Report message.
+8.	If applicable, the path update procedure is initiated.
+9.	Upon reception of the UE Context Release message, the SN releases radio and C-plane related resources associated to the UE context. Any ongoing data forwarding may continue.
+SN initiated SN Release
+
+Figure 10.4.1-2: SN Release procedure – SN initiated
+Figure 10.4.1-2 shows an example signalling flow for the SN initiated Secondary Node Release procedure.
+1.	The SN initiates the procedure by sending the SgNB Release Required message which may contain inter-node message to support delta configuration.
+2.	If applicable, the MN provides data forwarding addresses to the SN in the SgNB Release Confirm message. The SN may start data forwarding and stop providing user data to the UE as early as it receives the SgNB Release Confirm message.
+NOTE 2a:	If inter-SN CPC is configured, upon reception of the SgNB Release Required message from the source SN, the MN cancels all CPC with the target candidate SN(s).
+NOTE 2b:	If CPA or inter-SN CPC is configured, upon reception of the SgNB Release Required message from a candidate SN, the MN cancels all CPAC configurations in the candidate SN. In case of SN initiated inter-SN CPC, the MN triggers the Conditional PSCell Change Cancel procedure towards the source SN to inform it of the cancellation of CPAC in the candidate SN.
+3/4.	If required, the MN indicates in the RRCConnectionReconfiguration message towards the UE that the UE shall release the entire SCG configuration. In case the UE is unable to comply with (part of) the configuration included in the RRCConnectionReconfiguration message, it performs the reconfiguration failure procedure.
+NOTE 3:	If data forwarding is applied, timely coordination between steps 2 and 3 may minimize gaps in service provision. This is however regarded to be an implementation matter.
+5.	For bearers using RLC AM, the SN sends the SN Status Transfer message.
+6.	Data forwarding from the SN to the MN may start.
+7.	The SN sends the Secondary RAT Data Usage Report message to the MN and includes the data volumes delivered to and received from the UE over the NR radio for the related E-RABs.
+NOTE 4:	If data forwarding is applied, the order the SN sends the Secondary RAT Data Usage Report message and starts data forwarding with MN is not defined i.e., step 7 can take place before step 6. The SN does not need to wait for the end of data forwarding to send the Secondary RAT Data Usage Report message.
+8.	If applicable, the path update procedure is initiated.
+9.	Upon reception of the UE Context Release message, the SN releases radio and C-plane related resources associated to the UE context. Any ongoing data forwarding may continue.
+Clause:	Clause 10.4.1	10.4.1	EN-DC
+The Secondary Node Release procedure may be initiated either by the MN or by the SN and is used to initiate the release of the UE context at the SN. The recipient node of this request can reject it, e.g., if a SN change procedure is triggered by the SN.
+In case of CPA or inter-SN CPC, this procedure may be initiated either by the MN or the candidate SN, and it is used to cancel all the prepared PSCells at the candidate SN and initiate the release of related UE context at the candidate SN.
+It does not necessarily need to involve signalling towards the UE, e.g., in case of the RRC connection re-establishment due to Radio Link Failure in MN.
+MN initiated SN Release
+
+Figure 10.4.1-1: SN Release procedure – MN initiated
+Figure 10.4.1-1 shows an example signalling flow for the MN initiated Secondary Node Release procedure when SN Release is confirmed by SN.
+1.	The MN initiates the procedure by sending the SgNB Release Request message. If applicable, the MN provides data forwarding addresses to the SN.
+2.	The SN confirms SN Release by sending the SgNB Release Request Acknowledge message. If appropriate, the SN may reject SN Release, e.g. if the SN change procedure is triggered by the SN.
+NOTE 0:	If inter-SN CPC is configured, upon reception of the SgNB Release Request Acknowledge message from the source SN, the MN cancels all CPC with the target candidate SN(s).
+NOTE 0a:	If CPA or inter-SN CPC is configured, upon reception of the SgNB Release Request Acknowledge message from a candidate SN, the MN cancels all CPAC configurations in the candidate SN. In case of SN initiated inter-SN CPC, the MN triggers the Conditional PSCell Change Cancel procedure towards the source SN to inform it of the cancellation of CPAC in the candidate SN.
+3/4.	If required, the MN indicates in the RRCConnectionReconfiguration message towards the UE that the UE shall release the entire SCG configuration. In case the UE is unable to comply with (part of) the configuration included in the RRCConnectionReconfiguration message, it performs the reconfiguration failure procedure.
+NOTE 1:	If data forwarding is applied, timely coordination between steps 1 and 2 may minimize gaps in service provision, this is however regarded to be an implementation matter.
+5.	For bearers using RLC AM, the SN sends the SN Status Transfer message.
+6.	Data forwarding from the SN to the MN may start.
+7.	The SN sends the Secondary RAT Data Usage Report message to the MN and includes the data volumes delivered to and received from the UE over the NR radio for the related E-RABs.
+NOTE 2:	If data forwarding is applied, the order the SN sends the Secondary RAT Data Usage Report message and starts data forwarding with MN is not defined i.e., step 7 can take place before step 6. The SN does not need to wait for the end of data forwarding to send the Secondary RAT Data Usage Report message.
+8.	If applicable, the path update procedure is initiated.
+9.	Upon reception of the UE Context Release message, the SN releases radio and C-plane related resources associated to the UE context. Any ongoing data forwarding may continue.
+SN initiated SN Release
+
+Figure 10.4.1-2: SN Release procedure – SN initiated
+Figure 10.4.1-2 shows an example signalling flow for the SN initiated Secondary Node Release procedure.
+1.	The SN initiates the procedure by sending the SgNB Release Required message which may contain inter-node message to support delta configuration.
+2.	If applicable, the MN provides data forwarding addresses to the SN in the SgNB Release Confirm message. The SN may start data forwarding and stop providing user data to the UE as early as it receives the SgNB Release Confirm message.
+NOTE 2a:	If inter-SN CPC is configured, upon reception of the SgNB Release Required message from the source SN, the MN cancels all CPC with the target candidate SN(s).
+NOTE 2b:	If CPA or inter-SN CPC is configured, upon reception of the SgNB Release Required message from a candidate SN, the MN cancels all CPAC configurations in the candidate SN. In case of SN initiated inter-SN CPC, the MN triggers the Conditional PSCell Change Cancel procedure towards the source SN to inform it of the cancellation of CPAC in the candidate SN.
+3/4.	If required, the MN indicates in the RRCConnectionReconfiguration message towards the UE that the UE shall release the entire SCG configuration. In case the UE is unable to comply with (part of) the configuration included in the RRCConnectionReconfiguration message, it performs the reconfiguration failure procedure.
+NOTE 3:	If data forwarding is applied, timely coordination between steps 2 and 3 may minimize gaps in service provision. This is however regarded to be an implementation matter.
+5.	For bearers using RLC AM, the SN sends the SN Status Transfer message.
+6.	Data forwarding from the SN to the MN may start.
+7.	The SN sends the Secondary RAT Data Usage Report message to the MN and includes the data volumes delivered to and received from the UE over the NR radio for the related E-RABs.
+NOTE 4:	If data forwarding is applied, the order the SN sends the Secondary RAT Data Usage Report message and starts data forwarding with MN is not defined i.e., step 7 can take place before step 6. The SN does not need to wait for the end of data forwarding to send the Secondary RAT Data Usage Report message.
+8.	If applicable, the path update procedure is initiated.
+9.	Upon reception of the UE Context Release message, the SN releases radio and C-plane related resources associated to the UE context. Any ongoing data forwarding may continue.

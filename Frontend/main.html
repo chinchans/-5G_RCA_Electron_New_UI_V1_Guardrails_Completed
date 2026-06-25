@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5G RAN Testing Framework</title>
+    <!-- Material Icons removed - using built-in Unicode icons instead -->
+    <!-- Inter font - using system font stack to avoid firewall issues -->
+    <!-- If Inter is installed locally, it will be used; otherwise falls back to ui-sans-serif and system fonts -->
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="menu-toggle" id="menuToggle">
+            <span class="material-icons" data-icon="menu">☰</span>
+        </button>
+        <div class="logo">5G RAN Testing Framework</div>
+    </header>
+
+    <!-- Layout Container -->
+    <div class="layout-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+        <nav class="nav-links">
+                <a href="#" class="active" data-section="home">
+                    <span class="material-icons nav-icon" data-icon="home">⌂</span>
+                    Home
+                </a>
+                <a href="#" data-section="tasks">
+                    <span class="material-icons nav-icon" data-icon="task">✓</span>
+                    Tasks
+                </a>
+                <a href="#" data-section="prompt-templates">
+                    <span class="material-icons nav-icon" data-icon="description">📄</span>
+                    Prompt Templates
+                </a>
+                <a href="#" data-section="user-history">
+                    <span class="material-icons nav-icon" data-icon="history">⏱</span>
+                    User History
+                </a>
+                <a href="#" data-section="response-evaluation">
+                    <span class="material-icons nav-icon" data-icon="analytics">📊</span>
+                    Response Evaluation
+                </a>
+                <a href="#" data-section="error-fixing">
+                    <span class="material-icons nav-icon" data-icon="bug_report">🐛</span>
+                    Error Fixing
+                </a>
+        </nav>
+        </aside>
+
+        <!-- Modern Status Bar -->
+        <div id="statusBar" class="status-bar" style="display: none;">
+            <div class="status-content">
+                <div class="status-icon">
+                    <span class="status-spinner" id="statusSpinner">⟳</span>
+                    <span class="status-check" id="statusCheck" style="display: none;">✓</span>
+                    <span class="status-error" id="statusError" style="display: none;">✗</span>
+                </div>
+                <div class="status-text">
+                    <div class="status-title" id="statusTitle">Processing...</div>
+                    <div class="status-message" id="statusMessage">Please wait while we process your request</div>
+                </div>
+                <button class="status-close" id="statusClose" onclick="hideStatusBar()">×</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Section -->
+            <div id="home" class="content-section active">
+                <div class="home-container">
+                    <div class="home-box">
+                        <h2>Gen AI Based 5G RAN Test Automation Framework</h2>
+                        <p>Streamline testing lifecycle with AI Driven Approach for End to End 5G Radio Access Network testing. Click below to start exploring the frameworks features.</p>
+                        
+                        <div class="home-buttons">
+                            <button class="home-btn primary">Dataset Generator</button>
+                            <button class="home-btn secondary">Explore Framework</button>
+        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dataset Generator Section -->
+            <div id="dataset-generator" class="content-section">
+                <div class="prompt-templates-grid">
+                    <!-- Box 1: Directory Settings -->
+                    <div class="prompt-box">
+                        <h3>Dataset Generator</h3>
+                        
+                        <!-- Directory Upload Section -->
+                        <div style="display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                            <!-- Working Directory -->
+                            <div style="flex: 1; min-width: 200px;">
+                                <h4 style="color: #5d92ff; font-size: 1rem; font-weight: 600; margin-bottom: 1rem; text-align: center;">Working Directory</h4>
+                                <div id="workingDirUpload" style="border: 2px dashed #3b82f6; border-radius: 8px; padding: 2rem; text-align: center; background-color: rgba(59, 130, 246, 0.05); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)'" onmouseout="this.style.backgroundColor='rgba(59, 130, 246, 0.05)'">
+                                    <span class="material-icons" style="font-size: 2rem; color: #3b82f6; margin-bottom: 0.5rem; display: block;" data-icon="folder_upload">📁⬆</span>
+                                    <p id="workingDirText" style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">Default: C:/Users/ChanduVangala/Documents/GenAI/extract</p>
+                                    <button id="workingDirBtn" class="template-btn browse-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Select Folder Path</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Output Directory -->
+                            <div style="flex: 1; min-width: 200px;">
+                                <h4 style="color: #5d92ff; font-size: 1rem; font-weight: 600; margin-bottom: 1rem; text-align: center;">Output Directory</h4>
+                                <div id="outputDirUpload" style="border: 2px dashed #3b82f6; border-radius: 8px; padding: 2rem; text-align: center; background-color: rgba(59, 130, 246, 0.05); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)'" onmouseout="this.style.backgroundColor='rgba(59, 130, 246, 0.05)'">
+                                    <span class="material-icons" style="font-size: 2rem; color: #3b82f6; margin-bottom: 0.5rem; display: block;" data-icon="folder_upload">📁⬆</span>
+                                    <p id="outputDirText" style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">Default: C:/Users/ChanduVangala/Documents/AgenticRAN-V8_azure_key/output</p>
+                                    <button id="outputDirBtn" class="template-btn browse-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Select Folder Path</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Box 2: Document and Section Settings -->
+                    <div class="prompt-box">
+                        <!-- Document Upload Section -->
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: #5d92ff; font-size: 1rem; font-weight: 600; margin-bottom: 1rem; text-align: center;">Document Upload</h4>
+                            <div id="documentUpload" style="border: 2px dashed #3b82f6; border-radius: 8px; padding: 2rem; text-align: center; background-color: rgba(59, 130, 246, 0.05); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)'" onmouseout="this.style.backgroundColor='rgba(59, 130, 246, 0.05)'">
+                                <span class="material-icons" style="font-size: 2rem; color: #3b82f6; margin-bottom: 0.5rem; display: block;" data-icon="upload_file">📤</span>
+                                <p id="documentText" style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">No Document loaded - Click to select document</p>
+                                <button id="documentBtn" class="template-btn browse-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Load Document</button>
+                            </div>
+                            <input type="file" id="documentInput" accept=".pdf,.doc,.docx,.txt,.html" style="display: none;" />
+                        </div>
+                        
+                        <!-- Section and Subsection Row -->
+                        <div style="display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                            <!-- Section Dropdown -->
+                            <div style="flex: 1; min-width: 200px;">
+                                <label style="color: #5d92ff; font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                                    Section:
+                                    <span id="sectionProgress" class="progress-indicator" style="display: none;">
+                                        <div class="progress-spinner"></div>
+                                    </span>
+                                </label>
+                                <div class="dropdown" id="sectionDropdown">
+                                    <button class="dropdown-btn" id="sectionBtn" type="button">
+                                        <span>Select Section</span>
+                                        <span class="dropdown-arrow">▼</span>
+                                    </button>
+                                    <div class="dropdown-content">
+                                        <!-- Sections will be populated dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Subsection Dropdown -->
+                            <div style="flex: 1; min-width: 200px;">
+                                <label style="color: #5d92ff; font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                                    Subsection:
+                                    <span id="subsectionProgress" class="progress-indicator" style="display: none;">
+                                        <div class="progress-spinner"></div>
+                                    </span>
+                                </label>
+                                <div class="dropdown" id="subsectionDropdown">
+                                    <button class="dropdown-btn" id="subsectionBtn" type="button">
+                                        <span>Select Subsection</span>
+                                        <span class="dropdown-arrow">▼</span>
+                                    </button>
+                                    <div class="dropdown-content">
+                                        <!-- Subsections will be populated dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Box 3: Ready Status and Extract -->
+                    <div class="prompt-box">
+                        <!-- Ready Status Row -->
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                            <label style="color: #5d92ff; font-weight: 600; min-width: 100px;">Ready:</label>
+                            <div id="readyStatusIcon" class="ready-status-icon">
+                                <!-- Tick symbol will be added dynamically -->
+                            </div>
+                        </div>
+                        
+                        <!-- Extract Dataset Button -->
+                        <div style="text-align: center; display: none;" id="extractButtonContainer">
+                            <button class="template-btn save-btn" id="extractDatasetBtn" style="padding: 1rem 3rem; font-size: 1.1rem; min-width: 200px;">Extract Dataset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Deployment Section -->
+            <div id="test-deployment" class="content-section">
+                <div class="prompt-templates-grid">
+                    <!-- Test Deployment Box -->
+                    <div class="prompt-box">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <span class="material-icons" style="font-size: 2rem; color: #5d92ff;" data-icon="cloud_upload">☁⬆</span>
+                            <h3>Test Deployment</h3>
+                        </div>
+                        
+                        <p style="color: #6b7280; margin-bottom: 2rem; text-align: center;">Deploy your latest test scripts to the target environment</p>
+                        
+                        <!-- Configuration File Row -->
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; color: #6b7280; min-height: 20px; font-size: 0.9rem;">
+                                    Select a configuration file
+                                </div>
+                            </div>
+                            <button class="template-btn modify-btn" style="min-width: 120px; padding: 0.5rem 1rem; font-size: 0.8rem;">Change Config</button>
+                        </div>
+                        
+                        <!-- Deploy Button -->
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <button class="template-btn save-btn" style="padding: 1rem 3rem; font-size: 1.1rem; min-width: 200px;">Deploy</button>
+                        </div>
+                    </div>
+
+                    <!-- Ready to Deploy Box -->
+                    <div class="prompt-box">
+                        <h4 style="color: #5d92ff; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Ready to Deploy</h4>
+                        
+                        <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; min-height: 200px;">
+                            <p style="color: #6b7280; text-align: center; margin: 2rem 0; font-style: italic;">Deployment Output Will be displayed here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Execution Section -->
+            <div id="test-execution" class="content-section">
+                <div class="prompt-templates-grid">
+                    <!-- Test Execution Box -->
+                    <div class="prompt-box">
+                        <h3>Integrate CI/CD</h3>
+                        
+                        <!-- Start Execution Button -->
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <button class="template-btn save-btn" style="padding: 1rem 3rem; font-size: 1.1rem; min-width: 200px;">Start Execution</button>
+                        </div>
+                        
+                        <!-- Execution Progress -->
+                        <h4 style="color: #5d92ff; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Execution Progress</h4>
+                        
+                        <!-- Progress Bar -->
+                        <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; color: #6b7280; min-height: 20px; font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
+                            0%
+                        </div>
+                        
+                        <!-- Status -->
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <h4 style="color: #5d92ff; font-size: 1rem; font-weight: 600; margin: 0;">Status:</h4>
+                            <span style="color: #6b7280; font-size: 0.9rem;">Not Started (11:16:54)</span>
+                        </div>
+                        
+                        <!-- Output Text Box -->
+                        <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; min-height: 150px;">
+                            <!-- Empty text box for execution output -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bug Discovery Section -->
+            <div id="bug-discovery" class="content-section">
+                <div class="prompt-templates-grid">
+                    <!-- Box 1: Log File Upload -->
+                    <div class="prompt-box">
+                        <h3>Bug Discovery & Root Cause Analysis</h3>
+                        
+                        <!-- Log Folder Upload Section -->
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: #5d92ff; font-size: 1rem; font-weight: 600; margin-bottom: 1rem; text-align: center;">Log Folder Upload</h4>
+                            <div id="logFileUpload" style="border: 2px dashed #3b82f6; border-radius: 8px; padding: 2rem; text-align: center; background-color: rgba(59, 130, 246, 0.05); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)'" onmouseout="this.style.backgroundColor='rgba(59, 130, 246, 0.05)'">
+                                <span class="material-icons" style="font-size: 2rem; color: #3b82f6; margin-bottom: 0.5rem; display: block;" data-icon="folder_open">📂</span>
+                                <p id="logFileText" style="color: #6b7280; font-size: 0.9rem; margin-bottom: 0.5rem;">No log folder loaded - Click to select folder containing log files</p>
+                                <p style="color: #9ca3af; font-size: 0.75rem; margin-bottom: 1rem;">💡 Tip: Select a folder containing error logs (e.g., TC_pdcp_integrity_failure_*.log) for detailed analysis</p>
+                                <div id="logFileList" style="margin-bottom: 1rem; max-height: 100px; overflow-y: auto; display: none;">
+                                    <!-- Selected folder info will be displayed here -->
+                                </div>
+                                <button id="logFileBtn" class="template-btn browse-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Load Log Folder</button>
+                            </div>
+                            <input type="file" id="logFileInput" webkitdirectory directory multiple accept=".log,.txt" style="display: none;" />
+                        </div>
+                        
+                        <!-- Select Log File Dropdown -->
+                        <div id="logFileDropdownContainer" style="margin-bottom: 2rem; display: none;">
+                            <label style="color: #5d92ff; font-weight: 600; margin-bottom: 0.5rem; display: block;">Select Log File to Analyze:</label>
+                            <div class="dropdown" id="logFileDropdown">
+                                <button class="dropdown-btn" id="logFileDropdownBtn" type="button">
+                                    <span>Select Log File</span>
+                                    <span class="dropdown-arrow">▼</span>
+                                </button>
+                                <div class="dropdown-content" id="logFileDropdownContent">
+                                    <!-- Log files will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Start RCA Test Button -->
+                        <div style="text-align: center;">
+                            <button class="template-btn save-btn" id="startRCABtn" style="padding: 1rem 3rem; font-size: 1.1rem; min-width: 200px;">Start RCA Test</button>
+                        </div>
+                    </div>
+
+                    <!-- Box 2: RCA Analysis Results -->
+                    <div class="prompt-box">
+                        <h4 style="color: #5d92ff; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">RCA Analysis Results</h4>
+                        
+                        <div id="rcaResultsArea" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; min-height: 300px; max-height: 500px; overflow-y: auto; font-family: monospace; font-size: 0.9rem; white-space: pre-wrap;">
+                            <p style="color: #6b7280; text-align: center; margin: 2rem 0; font-style: italic;">Analysis results will appear here...</p>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <button class="template-btn modify-btn" id="clearRCABtn" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Clear Results</button>
+                        </div>
+                    </div>
+
+                    <!-- Box 3: Analysis Options -->
+                    <div class="prompt-box">
+                        <!-- Analysis Options Dropdown -->
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                            <label style="color: #5d92ff; font-weight: 600; min-width: 150px;">Analysis Options:</label>
+                            <div class="dropdown" id="analysisOptionsDropdown" style="flex: 1;">
+                                <button class="dropdown-btn" id="analysisOptionsBtn" type="button">
+                                    <span>Run RCA Test First</span>
+                                    <span class="dropdown-arrow">▼</span>
+                                </button>
+                                <div class="dropdown-content" id="analysisOptionsContent">
+                                    <!-- Analysis options will be populated dynamically after RCA test completes -->
+                                    <div style="padding: 1rem; color: #6b7280; font-size: 0.9rem; text-align: center;">
+                                        Run "Start RCA Test" to populate options
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Analysis Results Section -->
+                        <div>
+                            <h4 style="color: #5d92ff; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem;">Analysis Results:</h4>
+                            <div id="analysisResultsBox" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; min-height: 150px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap;">
+                                <p style="color: #6b7280; text-align: center; margin: 2rem 0; font-style: italic;">Select an analysis type and run RCA test...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Script Generator Section -->
+            <div id="test-script-generator" class="content-section">
+                <div class="prompt-templates-grid">
+                    <!-- Box 1: Dataset Selection -->
+                    <div class="prompt-box">
+                        <h3>Test Script Generator</h3>
+                        
+                        <!-- Dataset Row -->
+                        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                            <label style="color: #5d92ff; font-weight: 600; min-width: 80px;">Dataset:</label>
+                            <div style="flex: 1; min-width: 200px;">
+                                <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; color: #6b7280; min-height: 20px; font-size: 0.9rem;">
+                                    No dataset selected
+                                </div>
+                            </div>
+                            <button class="template-btn save-btn" style="min-width: 120px; padding: 0.5rem 1rem; font-size: 0.8rem;">Load Database</button>
+                        </div>
+                    </div>
+
+                    <!-- Box 2: Template Selection and Generation -->
+                    <div class="prompt-box">
+                        <!-- Template Row -->
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                            <label style="color: #5d92ff; font-weight: 600; min-width: 120px;">Prompt Template:</label>
+                            <div class="dropdown" id="templateDropdown" style="flex: 1; min-width: 200px;">
+                                <button class="dropdown-btn" id="templateBtn" type="button">
+                                    <span>Select Template</span>
+                                    <span class="dropdown-arrow">▼</span>
+                                </button>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-item" data-template="select">Select Template</div>
+                                    <div class="dropdown-item" data-template="test-script">Test Script</div>
+                                    <div class="dropdown-item" data-template="test-case">Test Case</div>
+                                    <div class="dropdown-item" data-template="custom">Custom</div>
+                                </div>
+                            </div>
+                            <button class="template-btn modify-btn" style="min-width: 100px; padding: 0.5rem 1rem; font-size: 0.8rem;">View Template</button>
+                        </div>
+                        
+                        <!-- Template Content Box -->
+                        <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; min-height: 150px;">
+                            <p style="color: #6b7280; text-align: center; margin: 2rem 0; font-style: italic;">Select a Template or enter a custom prompt</p>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div style="display: flex; gap: 4rem; justify-content: center; flex-wrap: wrap;">
+                            <button class="template-btn modify-btn" style="min-width: 80px; padding: 0.5rem 1rem; font-size: 0.8rem;">Modify</button>
+                            <button class="template-btn save-btn" style="min-width: 100px; padding: 0.5rem 1rem; font-size: 0.8rem;">Save Template</button>
+                            <button class="template-btn save-btn" style="min-width: 120px; padding: 0.5rem 1rem; font-size: 0.8rem;">Generate Response</button>
+                        </div>
+                    </div>
+
+                    <!-- Box 3: Generated Script and New Prompt -->
+                    <div class="prompt-box">
+                        <!-- Generated Test Script -->
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: #5d92ff; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Generated Test Script:</h4>
+                            <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; min-height: 150px;">
+                                <p style="color: #6b7280; text-align: center; margin: 2rem 0; font-style: italic;">Generated Test Scripts Will appear here...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- New Prompt -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="color: #5d92ff; font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">New Prompt:</h4>
+                            <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; min-height: 100px;">
+                                <p style="color: #6b7280; text-align: center; margin: 1rem 0; font-style: italic;">Enter a new prompt to refine the script</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+                            <button class="template-btn save-btn" style="min-width: 150px; padding: 0.5rem 1rem; font-size: 0.8rem;">Generate with New Prompt</button>
+                            <button class="template-btn modify-btn" style="min-width: 120px; padding: 0.5rem 1rem; font-size: 0.8rem;">Save Test Script</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Section -->
+            <div id="tasks" class="content-section">
+                <div class="dashboard-grid">
+        <div class="module">
+            <div class="icon-bg">
+                <span class="icon material-icons" data-icon="dataset">📊</span>
+            </div>
+            <h3>Dataset Generator</h3>
+            <p>Process 5G Specifications</p>
+            <button class="launch-btn">Launch</button>
+        </div>
+
+        <div class="module">
+            <div class="icon-bg">
+                <span class="icon material-icons" data-icon="code">💻</span>
+            </div>
+            <h3>Test Script Generator</h3>
+                        <p>Generate Test Scripts</p>
+            <button class="launch-btn">Launch</button>
+        </div>
+
+        <div class="module">
+            <div class="icon-bg">
+                <span class="icon material-icons" data-icon="cloud_upload">☁⬆</span>
+            </div>
+            <h3>Test Deployment</h3>
+                        <p>Deploy Test Environment</p>
+            <button class="launch-btn">Launch</button>
+        </div>
+
+        <div class="module">
+            <div class="icon-bg">
+                            <span class="icon material-icons" data-icon="play_arrow">▶</span>
+            </div>
+                        <h3>Test Execution</h3>
+                        <p>Run Test Scenarios</p>
+            <button class="launch-btn">Launch</button>
+        </div>
+
+        <div class="module">
+            <div class="icon-bg">
+                <span class="icon material-icons" data-icon="bug_report">🐛</span>
+            </div>
+            <h3>Bug Discovery</h3>
+                        <p>Analyze Test Results</p>
+            <button class="launch-btn">Launch</button>
+        </div>
+
+        <div class="module">
+            <div class="icon-bg">
+                <span class="icon material-icons" data-icon="smart_toy">🤖</span>
+            </div>
+            <h3>Code Assistant</h3>
+                        <p>Review and Optimize</p>
+            <button class="launch-btn">Launch</button>
+        </div>
+                </div>
+            </div>
+
+            <!-- Prompt Templates Section -->
+            <div id="prompt-templates" class="content-section">
+                <div class="prompt-templates-grid">
+                    <!-- Box 1: Select Role -->
+                    <div class="prompt-box">
+                        <h3>Select Role</h3>
+                        <div class="dropdown-container">
+                            <div class="dropdown" id="roleDropdown">
+                                <button class="dropdown-btn" id="roleBtn" type="button">
+                                    <span>Select Role</span>
+                                    <span class="dropdown-arrow">▼</span>
+                                </button>
+                                <div class="dropdown-content" id="dropdownContent">
+                                    <div class="dropdown-item" data-role="tester">Tester</div>
+                                    <div class="dropdown-item" data-role="developer">Developer</div>
+                                    <div class="dropdown-item" data-role="analyst">Analyst</div>
+        </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Box 2: Template Categories -->
+                    <div class="prompt-box">
+                        <h3>Template Categories</h3>
+                        <div class="template-categories-area" id="templateCategoriesArea">
+                            <!-- 6 mini boxes will be added here later -->
+                            <p style="color: #666; text-align: center; margin-top: 2rem;">Select a role to see template categories</p>
+                        </div>
+                    </div>
+
+                    <!-- Box 3: Template Content -->
+                    <div class="prompt-box template-content-box">
+                        <div class="template-header">
+                            <h3>Template Content</h3>
+                            <div class="template-buttons">
+                                <button class="template-btn modify-btn">Modify</button>
+                                <button class="template-btn save-btn">Save</button>
+                            </div>
+                        </div>
+                        <div class="template-text-area" id="templateTextArea">
+                            <p style="color: #666; text-align: center; margin-top: 2rem;">Select a template to view content</p>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+            <!-- User History Section -->
+            <div id="user-history" class="content-section">
+                <div class="prompt-templates-grid">
+                    <!-- Box 1: Activity History -->
+                    <div class="prompt-box">
+                        <h3>Activity History</h3>
+                        <p style="color: #6b7280; margin-bottom: 2rem; text-align: center;">View and Manage your framework activities and analysis results.</p>
+                        
+                        <div style="display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; align-items: flex-end;">
+                            <!-- Left side - Filter dropdowns -->
+                            <div style="flex: 1; min-width: 200px;">
+                                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                                    <!-- Time Period Dropdown -->
+                                    <div style="flex: 1; min-width: 140px; max-width: 200px;">
+                                        <h4 style="color: #5d92ff; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; text-align: center;">Time Period</h4>
+                                        <div class="dropdown" id="timePeriodDropdown" style="width: 100%;">
+                                            <button class="dropdown-btn" id="timePeriodBtn" type="button" style="width: 100%; padding: 0.5rem 0.75rem; font-size: 0.85rem;">
+                                                <span>All Dates</span>
+                                                <span class="dropdown-arrow">▼</span>
+            </button>
+                                            <div class="dropdown-content" style="width: 100%;">
+                                                <div class="dropdown-item" data-period="all">All Dates</div>
+                                                <div class="dropdown-item" data-period="today">Today</div>
+                                                <div class="dropdown-item" data-period="7days">Last 7 Days</div>
+                                                <div class="dropdown-item" data-period="30days">Last 30 Days</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Activity Type Dropdown -->
+                                    <div style="flex: 1; min-width: 140px; max-width: 200px;">
+                                        <h4 style="color: #5d92ff; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; text-align: center;">Activity Type</h4>
+                                        <div class="dropdown" id="activityTypeDropdown" style="width: 100%;">
+                                            <button class="dropdown-btn" id="activityTypeBtn" type="button" style="width: 100%; padding: 0.5rem 0.75rem; font-size: 0.85rem;">
+                                                <span>All Activities</span>
+                                                <span class="dropdown-arrow">▼</span>
+            </button>
+                                            <div class="dropdown-content" style="width: 100%;">
+                                                <div class="dropdown-item" data-type="all">All Activities</div>
+                                                <div class="dropdown-item" data-type="test-script">Test Script Generation</div>
+                                                <div class="dropdown-item" data-type="test-case">Test case Creation</div>
+                                                <div class="dropdown-item" data-type="bug-analysis">Bug Analysis</div>
+                                                <div class="dropdown-item" data-type="code-analysis">Code Analysis</div>
+                                                <div class="dropdown-item" data-type="prompt-templates">Prompt Templates</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right side - Action buttons -->
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <button class="template-btn modify-btn" id="clearBtn">Clear</button>
+                                <button class="template-btn save-btn" id="refreshBtn">Refresh</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Box 2: History Results -->
+                    <div class="prompt-box template-content-box">
+                        <h3>History Results</h3>
+                        <div class="template-text-area" id="historyResultsArea">
+                            <p style="color: #6b7280; text-align: center; margin-top: 2rem; font-style: italic;">No history entries found.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Response Evaluation Section -->
+            <div id="response-evaluation" class="content-section">
+                <div class="prompt-templates-grid">
+                    <!-- Response Evaluation Box -->
+                    <div class="prompt-box">
+                        <h3>Response Evaluation</h3>
+                        
+                        <!-- Dataset Row -->
+                        <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem;">
+                            <label style="color: #5d92ff; font-weight: 600; width: 120px; flex-shrink: 0; text-align: left; padding-top: 12px;">Dataset:</label>
+                            <div style="flex: 1;">
+                                <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; color: #6b7280; min-height: 20px; font-size: 0.9rem; margin-bottom: 1rem;">
+                                    No dataset selected
+                                </div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <button class="template-btn modify-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Load Dataset</button>
+                                    <button class="template-btn save-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Use Latest Dataset</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Response Row -->
+                        <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 2rem;">
+                            <label style="color: #5d92ff; font-weight: 600; width: 120px; flex-shrink: 0; text-align: left; padding-top: 12px;">Response:</label>
+                            <div style="flex: 1;">
+                                <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; color: #6b7280; min-height: 20px; font-size: 0.9rem; margin-bottom: 1rem;">
+                                    No response selected
+                                </div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <button class="template-btn modify-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Load Response</button>
+                                    <button class="template-btn save-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Use Latest Response</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Response Evaluation Button -->
+                        <div style="text-align: center;">
+                            <button class="template-btn save-btn" style="padding: 1rem 3rem; font-size: 1.1rem; min-width: 200px;">Response Evaluation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Fixing Section -->
+            <div id="error-fixing" class="content-section">
+                <div class="prompt-templates-grid">
+                    <!-- Error Analysis Box -->
+                    <div class="prompt-box">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <span class="material-icons" style="font-size: 2rem; color: #5d92ff;">bug_report</span>
+                            <h3>Error Analysis & Fix Suggestions</h3>
+                        </div>
+                        
+                        <p style="color: #6b7280; margin-bottom: 2rem; text-align: center;">Analyze errors and get AI-powered fix suggestions for your 5G RAN codebase</p>
+                        
+                        <!-- Error Input Section -->
+                        <div style="margin-bottom: 2rem;">
+                            <label style="color: #5d92ff; font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                                Error Message:
+                            </label>
+                            <textarea 
+                                id="errorMessageInput" 
+                                placeholder="Enter the error message you want to analyze..."
+                                style="width: 100%; min-height: 100px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; resize: vertical;"
+                            ></textarea>
+                        </div>
+                        
+                        <!-- Log File Selection Section -->
+                        <div style="margin-bottom: 2rem;">
+                            <label style="color: #5d92ff; font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                                Log File (Completely Optional - Not Required):
+                            </label>
+                            
+                            <!-- Log File Buttons (Auto-generated after upload) -->
+                            <div style="margin-bottom: 1rem;">
+                                <label style="color: #5d92ff; font-weight: 600; margin-bottom: 0.5rem; display: block; font-size: 0.9rem;">
+                                    Select a log file to analyze:
+                                </label>
+                                <div id="logFileButtonsContainer" style="display: none; border: 2px dashed #3b82f6; border-radius: 8px; padding: 1rem; background-color: rgba(59, 130, 246, 0.05); margin-bottom: 1rem;">
+                                    <div id="logFileButtons" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                        <!-- Log file buttons will be added here automatically after upload -->
+                                    </div>
+                                </div>
+                                <div id="noLogFilesMsgErrorFixing" style="color: #6b7280; font-style: italic; padding: 1rem; text-align: center; border: 2px dashed #e2e8f0; border-radius: 8px; margin-bottom: 1rem;">
+                                    No log files uploaded. This is completely optional - you can analyze with just the error message above.
+                                </div>
+                            </div>
+                            
+                            <!-- Or Upload New Log File -->
+                            <div style="border-top: 1px solid #e2e8f0; padding-top: 1rem;">
+                                <label style="color: #5d92ff; font-weight: 600; margin-bottom: 0.5rem; display: block; font-size: 0.9rem;">
+                                    Or upload a new log file:
+                                </label>
+                                <div id="logFileUpload" style="border: 2px dashed #3b82f6; border-radius: 8px; padding: 1.5rem; text-align: center; background-color: rgba(59, 130, 246, 0.05); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)'" onmouseout="this.style.backgroundColor='rgba(59, 130, 246, 0.05)'">
+                                    <span class="material-icons" style="font-size: 2rem; color: #3b82f6; margin-bottom: 0.5rem; display: block;" data-icon="upload_file">📤</span>
+                                    <p id="logFileText" style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">No log files selected - Click to upload multiple .log files</p>
+                                    <button id="logFileUploadBtn" class="template-btn browse-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Select Log Files</button>
+                                </div>
+                                <input type="file" id="logFileInput" accept=".log,.txt" multiple style="display: none;" />
+                            </div>
+                        </div>
+                        
+                        <!-- Codebase Selection -->
+                        <div style="margin-bottom: 2rem;">
+                            <label style="color: #5d92ff; font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                                OpenAirInterface Codebase:
+                            </label>
+                            <select id="codebaseSelect" style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit;">
+                                <option value="openairinterface5g-develop">openairinterface5g-develop</option>
+                                <option value="openairinterface5g-test">openairinterface5g-test</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Analyze Button -->
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <button id="analyzeErrorBtn" class="template-btn save-btn" style="padding: 1rem 3rem; font-size: 1.1rem; min-width: 200px;">Analyze Error</button>
+                        </div>
+                    </div>
+
+                    <!-- Results Display Box -->
+                    <div class="prompt-box" id="errorResultsBox" style="display: none;">
+                        <h3>Analysis Results</h3>
+                        <div id="errorResults" style="max-height: 500px; overflow-y: auto; padding: 1rem; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <!-- Results will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Fix Suggestions Box -->
+                    <div class="prompt-box" id="fixSuggestionsBox" style="display: none;">
+                        <h3>Fix Suggestions</h3>
+                        <div id="fixSuggestions" style="max-height: 500px; overflow-y: auto; padding: 1rem; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <!-- Fix suggestions will be populated here -->
+                        </div>
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <button id="applyFixesBtn" class="template-btn save-btn" style="padding: 0.8rem 2rem; font-size: 1rem;">Apply Selected Fixes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        </div>
+
+    <!-- External JavaScript file for better debugging -->
+    <script src="api.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

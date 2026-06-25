@@ -1,0 +1,8 @@
+Functional tests introduction
+This clause describes the tests evaluating and assessing the functionality of the radio access network from a network end-to-end perspective. The focus of the testing is on the end-user functionality based on 3GPP and O-RAN specifications.  Pass-fail criteria are defined for the tests wherever possible. 
+The general test methodologies and configurations are mentioned in Clause 4. 
+Unless otherwise stated in the clause, the tests are suitable and can be conducted in both laboratory as well as field environments, with pros and cons of both environments as described in Clause 4. 
+The following end-to-end functional tests are defined in this clause as an extension of the NGMN testing framework [3]: 
+Table 5-1: E2E Functionality Test Case Summary
+
+The test description, setup and procedures are detailed in the following clauses for each test case.

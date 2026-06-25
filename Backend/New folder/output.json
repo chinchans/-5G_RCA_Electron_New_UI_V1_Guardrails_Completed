@@ -1,0 +1,47 @@
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "id": "start"
+        },
+        {
+            "id": "3GPP TS 23.502"
+        },
+        {
+            "id": "Clause 4.2.2.2.2"
+        },
+        {
+            "id": "Clause 4.2.2.3.2"
+        },
+        {
+            "id": "Clause 4.3.2.2.1"
+        },
+        {
+            "id": "Clause 4.3.4.2"
+        }
+    ],
+    "edges": [
+        {
+            "source": "start",
+            "target": "3GPP TS 23.502"
+        },
+        {
+            "source": "3GPP TS 23.502",
+            "target": "Clause 4.2.2.2.2"
+        },
+        {
+            "source": "3GPP TS 23.502",
+            "target": "Clause 4.2.2.3.2"
+        },
+        {
+            "source": "3GPP TS 23.502",
+            "target": "Clause 4.3.2.2.1"
+        },
+        {
+            "source": "3GPP TS 23.502",
+            "target": "Clause 4.3.4.2"
+        }
+    ]
+}

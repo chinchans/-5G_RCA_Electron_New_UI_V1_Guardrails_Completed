@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dropdown Test</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div style="padding: 50px;">
+        <h2>Dropdown Test</h2>
+        
+        <!-- Test Dropdown -->
+        <div class="dropdown" id="testDropdown">
+            <button class="dropdown-btn" id="testBtn" type="button">
+                <span>Select Option</span>
+                <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="dropdown-content" id="testContent">
+                <div class="dropdown-item" data-value="option1">Option 1</div>
+                <div class="dropdown-item" data-value="option2">Option 2</div>
+                <div class="dropdown-item" data-value="option3">Option 3</div>
+            </div>
+        </div>
+        
+        <button onclick="testDropdown()" style="margin-top: 20px; padding: 10px;">Test Dropdown</button>
+        <button onclick="addItems()" style="margin-top: 20px; padding: 10px;">Add Items</button>
+    </div>
+
+    <script>
+        function testDropdown() {
+            const dropdown = document.getElementById('testDropdown');
+            const btn = document.getElementById('testBtn');
+            const content = document.getElementById('testContent');
+            
+            console.log('Dropdown:', dropdown);
+            console.log('Button:', btn);
+            console.log('Content:', content);
+            
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Button clicked!');
+                dropdown.classList.toggle('active');
+                console.log('Active class:', dropdown.classList.contains('active'));
+            });
+            
+            content.addEventListener('click', function(e) {
+                if (e.target.classList.contains('dropdown-item')) {
+                    console.log('Item clicked:', e.target.textContent);
+                    btn.querySelector('span').textContent = e.target.textContent;
+                    dropdown.classList.remove('active');
+                }
+            });
+        }
+        
+        function addItems() {
+            const content = document.getElementById('testContent');
+            const newItem = document.createElement('div');
+            newItem.className = 'dropdown-item';
+            newItem.textContent = 'New Item ' + Date.now();
+            newItem.setAttribute('data-value', 'new' + Date.now());
+            content.appendChild(newItem);
+            console.log('Added new item');
+        }
+        
+        // Auto-test on load
+        window.onload = testDropdown;
+    </script>
+</body>
+</html>

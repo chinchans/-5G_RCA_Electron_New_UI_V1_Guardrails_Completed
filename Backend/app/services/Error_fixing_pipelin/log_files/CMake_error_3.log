@@ -1,0 +1,85 @@
+Will compile gNB
+OPENAIR_DIR    = /home/tcs/Downloads/OAI-CU
+Running "cmake ../../.."
+-- Ccache not found. Consider installing it for faster compilation. Command: sudo apt/dnf install ccache
+-- Check if /opt/asn1c/bin/asn1c supports -gen-APER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-UPER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-JER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-BER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-OER
+-- CMAKE_BUILD_TYPE is RelWithDebInfo
+-- CPU architecture is x86_64
+-- AVX512 intrinsics are OFF
+-- AVX2 intrinsics are ON
+-- LTTNG support disabled
+-- Checking for module 'libcap'
+--   No package 'libcap' found
+-- Checking for module 'cblas'
+--   No package 'cblas' found
+-- No Doxygen documentation requested
+-- No Support for Aerial
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build
+cd /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build
+Running "cmake --build .  --target  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim -- -j4"
+Log file for compilation is being written to: /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt
+Consolidate compiler generated dependencies of target e1ap
+[100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o
+[100%] Building C object openair2/E1AP/CMakeFiles/e1ap.dir/e1ap.c.o
+[100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_ue_context.c.o
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘read_slice_info’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:48: warning: initialization of ‘const F1AP_ServedPLMNs_ItemExtIEs_t *’ {aka ‘const struct F1AP_ServedPLMNs_ItemExtIEs *’} from incompatible pointer type ‘struct F1AP_BHChannels_FailedToBeSetupMod_ItemExtIEs *’ [-Wincompatible-pointer-types]
+  390 |   const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];
+      |                                                ^
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘decode_f1ap_setup_request’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of ‘F1AP_RRC_Version_ExtIEs_t *’ {aka ‘struct F1AP_RRC_Version_ExtIEs *’} from incompatible pointer type ‘struct F1AP_LocationUncertainty_ExtIEs *’ [-Wincompatible-pointer-types]
+  872 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];
+      |                                                 ^~~
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘decode_f1ap_setup_response’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:49: warning: initialization of ‘F1AP_RRC_Version_ExtIEs_t *’ {aka ‘struct F1AP_RRC_Version_ExtIEs *’} from incompatible pointer type ‘struct F1AP_LocationUncertainty_ExtIEs *’ [-Wincompatible-pointer-types]
+ 1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];
+      |                                                 ^~~
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c: In function ‘decode_cu_to_du_rrc_info’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:94:67: warning: initialization of ‘const F1AP_CUtoDURRCInformation_ExtIEs_t *’ {aka ‘const struct F1AP_CUtoDURRCInformation_ExtIEs *’} from incompatible pointer type ‘struct F1AP_BroadcastPNI_NPN_ID_List_ItemExtIEs *’ [-Wincompatible-pointer-types]
+   94 |        const F1AP_CUtoDURRCInformation_ExtIEs_t *cu2du_info_ext = ext->list.array[i];
+      |                                                                   ^~~
+In file included from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:24:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c: In function ‘decode_drbs_to_setup’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_common.h:74:26: warning: initialization of ‘F1AP_DRBs_ToBeSetup_ItemExtIEs_t **’ {aka ‘struct F1AP_DRBs_ToBeSetup_ItemExtIEs **’} from incompatible pointer type ‘struct F1AP_CellToReportItem_ExtIEs **’ [-Wincompatible-pointer-types]
+   74 |     for (IE_TYPE **ptr = (IE_LIST)->array; ptr < &(IE_LIST)->array[(IE_LIST)->count]; ptr++) {       \
+      |                          ^
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:786:6: note: in expansion of macro ‘F1AP_LIB_FIND_IE’
+  786 |      F1AP_LIB_FIND_IE(F1AP_DRBs_ToBeSetup_ItemExtIEs_t, ie, &ext->list, F1AP_ProtocolIE_ID_id_DLPDCPSNLength, true);
+      |      ^~~~~~~~~~~~~~~~
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_common.h:74:48: warning: comparison of distinct pointer types lacks a cast
+   74 |     for (IE_TYPE **ptr = (IE_LIST)->array; ptr < &(IE_LIST)->array[(IE_LIST)->count]; ptr++) {       \
+      |                                                ^
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:786:6: note: in expansion of macro ‘F1AP_LIB_FIND_IE’
+  786 |      F1AP_LIB_FIND_IE(F1AP_DRBs_ToBeSetup_ItemExtIEs_t, ie, &ext->list, F1AP_ProtocolIE_ID_id_DLPDCPSNLength, true);
+      |      ^~~~~~~~~~~~~~~~
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:789:11: warning: assignment to ‘const F1AP_DRBs_ToBeSetup_ItemExtIEs_t *’ {aka ‘const struct F1AP_DRBs_ToBeSetup_ItemExtIEs *’} from incompatible pointer type ‘struct F1AP_CellToReportItem_ExtIEs *’ [-Wincompatible-pointer-types]
+  789 |        ie = ext->list.array[j];
+      |           ^
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c: In function ‘decode_drbs_to_setupmod’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:854:11: warning: assignment to ‘const F1AP_DRBs_ToBeSetupMod_ItemExtIEs_t *’ {aka ‘const struct F1AP_DRBs_ToBeSetupMod_ItemExtIEs *’} from incompatible pointer type ‘struct F1AP_CellType_ExtIEs *’ [-Wincompatible-pointer-types]
+  854 |        ie = ext->list.array[j];
+      |           ^
+/home/tcs/Downloads/OAI-CU/openair2/E1AP/e1ap.c: In function ‘e1apCUUP_handle_SETUP_FAILURE’:
+/home/tcs/Downloads/OAI-CU/openair2/E1AP/e1ap.c:241: note: ‘-Wmisleading-indentation’ is disabled from this point onwards, since column-tracking was disabled due to the size of the code/headers
+  241 |   if (old_transaction_id != transaction_id)
+--
+[100%] Built target L2_NR
+Consolidate compiler generated dependencies of target nr-softmodem
+[100%] Building C object CMakeFiles/nr-softmodem.dir/executables/nr-softmodem.c.o
+[100%] Linking CXX executable nr-softmodem
+/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'
+collect2: error: ld returned 1 exit status
+gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2
+gmake: *** [Makefile:891: nr-softmodem] Error 2
+WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt
+ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt
+compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed
+build have failed

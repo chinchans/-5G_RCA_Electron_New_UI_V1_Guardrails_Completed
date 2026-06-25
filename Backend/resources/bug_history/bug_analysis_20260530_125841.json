@@ -1,0 +1,1843 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"Segmentation fault in rrc_handle_RRCSetupRequest at /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065  \nCode line: UE->establishment_cause = rrcSetupRequest->establishmentCause;",
+  "log_file": "cu_rrc_segmentation_error.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/cu_rrc_segmentation_error.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-05-30T12:58:41.259940",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"Segmentation fault in rrc_handle_RRCSetupRequest at /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065  \nCode line: UE->establishment_cause = rrcSetupRequest->establishmentCause;",
+    "extracted_error": false,
+    "error_source": "user_provided",
+    "timestamp": "2026-05-30T12:58:41.106536",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/cu_rrc_segmentation_error.log",
+    "deployment_context": {
+      "role": "DU",
+      "active_configs": [
+        {
+          "missing": "../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/gnb.sa.band78.fr1.106PRB.usrpb210_with_v2_core_nw.conf",
+          "used": "./openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf",
+          "reason": "Original file not found, using du_gnb.conf"
+        },
+        {
+          "missing": "gnb.sa.band78.fr1.106PRB.usrpb210_with_v2_core_nw.conf",
+          "used": "./openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf",
+          "reason": "Original file not found, using du_gnb.conf"
+        }
+      ],
+      "network_params": {
+        "gnb_ipv4": "10.138.77.32",
+        "amf_ipv4": null,
+        "ngap_port": 1065,
+        "assoc_state": "UNKNOWN"
+      },
+      "log_anchors": [
+        "[NR_MAC]   (719.10) RA Contention Resolution timer expired for UE 0xa67e, RA procedure failed...",
+        "[NR_MAC]   (761.10) RA Contention Resolution timer expired for UE 0xd3a8, RA procedure failed...",
+        "[NR_MAC]   (803.10) RA Contention Resolution timer expired for UE 0x0a0c, RA procedure failed...",
+        "[NR_MAC]   (845.10) RA Contention Resolution timer expired for UE 0x7c05, RA procedure failed...",
+        "[NR_MAC]   (887.10) RA Contention Resolution timer expired for UE 0x5a99, RA procedure failed...",
+        "[NR_MAC]   (929.10) RA Contention Resolution timer expired for UE 0xe48b, RA procedure failed...",
+        "[NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed...",
+        "[GNB_APP]   F1AP: gNB idx 0 gNB_DU_id 0, gNB_DU_name gNB-OAI, TAC 40960 MCC/MNC/length 208/95/2 cellID 1",
+        "[UTIL]   threadCreate() for TASK_SCTP: creating thread with affinity ffffffff, priority 50",
+        "[UTIL]   threadCreate() for TASK_NGAP: creating thread with affinity ffffffff, priority 50",
+        "[NGAP]   Starting NGAP layer",
+        "[NGAP]   Registered new gNB[0] and macro gNB id 0",
+        "[NGAP]   [gNB 0] check the amf registration state",
+        "[NGAP]   Send NGSetupRequest to AMF",
+        "[NGAP]   0 -> 00000000",
+        "[NGAP]   servedGUAMIs.list.count 2",
+        "[NGAP]   PLMNSupportList.list.count 1",
+        "[NGAP]   PLMNSupportList.list.count 3",
+        "[NGAP]   Received NGSetupResponse from AMF",
+        "[GNB_APP]   [gNB 0] Received NGAP_REGISTER_GNB_CNF: associated AMF 1"
+      ],
+      "detailed_log_context": {
+        "total_lines": 309,
+        "error_sequences": [
+          {
+            "error_line": "[HW]   The RFSIMULATOR environment variable is deprecated and support will be removed in the future. Instead, add parameter --rfsimulator.serveraddr server to set the server address. Note: the default is \"server\"; for the gNB/eNB, you don't have to set any configuration.",
+            "line_number": 130,
+            "context": [
+              "     [PHY]   fp->N_RB_SL=0",
+              "     [PHY]   Setting RF config for N_RB 106, NB_RX 1, NB_TX 1",
+              "     [PHY]   tune_offset 0 Hz, sample_rate 61440000 Hz",
+              "     [PHY]   Channel 0: setting tx_gain offset 12, tx_freq 3619200000 Hz",
+              "     [PHY]   Channel 0: setting rx_gain offset 102, rx_freq 3619200000 Hz",
+              " >>> [HW]   The RFSIMULATOR environment variable is deprecated and support will be removed in the future. Instead, add parameter --rfsimulator.serveraddr server to set the server address. Note: the default is \"server\"; for the gNB/eNB, you don't have to set any configuration.",
+              "     [HW]   Remove RFSIMULATOR environment variable to get rid of this message and the sleep.",
+              "     [HW]   Running as server waiting opposite rfsimulators to connect",
+              "     [HW]   [RAU] has loaded RFSIMULATOR device.",
+              "     [PHY]   RU 0 Setting N_TA_offset to 800 samples (UL Freq 3600120, N_RB 106, mu 1)",
+              "     [PHY]   Signaling main thread that RU 0 is ready, sl_ahead 6"
+            ]
+          },
+          {
+            "error_line": "[NR_MAC]   (719.10) RA Contention Resolution timer expired for UE 0xa67e, RA procedure failed...",
+            "line_number": 198,
+            "context": [
+              "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xa67e (state WAIT_Msg3)",
+              "     [NR_RRC]   Decoding CCCH: RNTI a67e, payload_size 6",
+              "     [NR_RRC]   NR_InitialUE_Identity_PR_randomValue= 3",
+              "     [NR_RRC]   rrcSetupRequest->ue_Identity.present value= 3",
+              "     [NR_RRC]   NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 value= 3",
+              " >>> [NR_MAC]   (719.10) RA Contention Resolution timer expired for UE 0xa67e, RA procedure failed...",
+              "     [NR_MAC]   UE a67e: no CU-UE ID stored, cannot request release",
+              "     [RLC]   Remove UE 42622",
+              "     [NR_MAC]   Remove NR rnti 0xa67e",
+              "     [NR_PHY]   [RAPROC] 753.19 Initiating RA procedure with preamble 30, energy 54.9 dB (I0 0, thres 120), delay 0 start symbol 0 freq index 0",
+              "     [NR_MAC]   753.19 UE RA-RNTI 010b TC-RNTI d3a8: Activating RA process index 0"
+            ]
+          },
+          {
+            "error_line": "[NR_MAC]   (761.10) RA Contention Resolution timer expired for UE 0xd3a8, RA procedure failed...",
+            "line_number": 213,
+            "context": [
+              "     [NR_MAC]    754.17 PUSCH with TC_RNTI 0xd3a8 received correctly",
+              "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE d3a8",
+              "     [RLC]   Activated srb0 for UE 54184",
+              "     [RLC]   Added srb 1 to UE 54184",
+              "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xd3a8 (state WAIT_Msg3)",
+              " >>> [NR_MAC]   (761.10) RA Contention Resolution timer expired for UE 0xd3a8, RA procedure failed...",
+              "     [NR_MAC]   UE d3a8: no CU-UE ID stored, cannot request release",
+              "     [RLC]   Remove UE 54184",
+              "     [NR_MAC]   Remove NR rnti 0xd3a8",
+              "     [NR_MAC]   Frame.Slot 768.0",
+              "     "
+            ]
+          },
+          {
+            "error_line": "[NR_MAC]   (803.10) RA Contention Resolution timer expired for UE 0x0a0c, RA procedure failed...",
+            "line_number": 230,
+            "context": [
+              "     [NR_MAC]    796.17 PUSCH with TC_RNTI 0x0a0c received correctly",
+              "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 0a0c",
+              "     [RLC]   Activated srb0 for UE 2572",
+              "     [RLC]   Added srb 1 to UE 2572",
+              "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x0a0c (state WAIT_Msg3)",
+              " >>> [NR_MAC]   (803.10) RA Contention Resolution timer expired for UE 0x0a0c, RA procedure failed...",
+              "     [NR_MAC]   UE 0a0c: no CU-UE ID stored, cannot request release",
+              "     [RLC]   Remove UE 2572",
+              "     [NR_MAC]   Remove NR rnti 0x0a0c",
+              "     [NR_PHY]   [RAPROC] 837.19 Initiating RA procedure with preamble 50, energy 54.9 dB (I0 0, thres 120), delay 0 start symbol 0 freq index 0",
+              "     [NR_MAC]   837.19 UE RA-RNTI 010b TC-RNTI 7c05: Activating RA process index 0"
+            ]
+          },
+          {
+            "error_line": "[NR_MAC]   (845.10) RA Contention Resolution timer expired for UE 0x7c05, RA procedure failed...",
+            "line_number": 245,
+            "context": [
+              "     [NR_MAC]    838.17 PUSCH with TC_RNTI 0x7c05 received correctly",
+              "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 7c05",
+              "     [RLC]   Activated srb0 for UE 31749",
+              "     [RLC]   Added srb 1 to UE 31749",
+              "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x7c05 (state WAIT_Msg3)",
+              " >>> [NR_MAC]   (845.10) RA Contention Resolution timer expired for UE 0x7c05, RA procedure failed...",
+              "     [NR_MAC]   UE 7c05: no CU-UE ID stored, cannot request release",
+              "     [RLC]   Remove UE 31749",
+              "     [NR_MAC]   Remove NR rnti 0x7c05",
+              "     [NR_PHY]   [RAPROC] 879.19 Initiating RA procedure with preamble 22, energy 54.9 dB (I0 0, thres 120), delay 0 start symbol 0 freq index 0",
+              "     [NR_MAC]   879.19 UE RA-RNTI 010b TC-RNTI 5a99: Activating RA process index 0"
+            ]
+          },
+          {
+            "error_line": "[NR_MAC]   (887.10) RA Contention Resolution timer expired for UE 0x5a99, RA procedure failed...",
+            "line_number": 260,
+            "context": [
+              "     [NR_MAC]    880.17 PUSCH with TC_RNTI 0x5a99 received correctly",
+              "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 5a99",
+              "     [RLC]   Activated srb0 for UE 23193",
+              "     [RLC]   Added srb 1 to UE 23193",
+              "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x5a99 (state WAIT_Msg3)",
+              " >>> [NR_MAC]   (887.10) RA Contention Resolution timer expired for UE 0x5a99, RA procedure failed...",
+              "     [NR_MAC]   UE 5a99: no CU-UE ID stored, cannot request release",
+              "     [RLC]   Remove UE 23193",
+              "     [NR_MAC]   Remove NR rnti 0x5a99",
+              "     [NR_MAC]   Frame.Slot 896.0",
+              "     "
+            ]
+          },
+          {
+            "error_line": "[NR_MAC]   (929.10) RA Contention Resolution timer expired for UE 0xe48b, RA procedure failed...",
+            "line_number": 277,
+            "context": [
+              "     [NR_MAC]    922.17 PUSCH with TC_RNTI 0xe48b received correctly",
+              "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e48b",
+              "     [RLC]   Activated srb0 for UE 58507",
+              "     [RLC]   Added srb 1 to UE 58507",
+              "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe48b (state WAIT_Msg3)",
+              " >>> [NR_MAC]   (929.10) RA Contention Resolution timer expired for UE 0xe48b, RA procedure failed...",
+              "     [NR_MAC]   UE e48b: no CU-UE ID stored, cannot request release",
+              "     [RLC]   Remove UE 58507",
+              "     [NR_MAC]   Remove NR rnti 0xe48b",
+              "     [NR_PHY]   [RAPROC] 963.19 Initiating RA procedure with preamble 4, energy 54.0 dB (I0 0, thres 120), delay 0 start symbol 0 freq index 0",
+              "     [NR_MAC]   963.19 UE RA-RNTI 010b TC-RNTI e8dc: Activating RA process index 0"
+            ]
+          },
+          {
+            "error_line": "[NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed...",
+            "line_number": 292,
+            "context": [
+              "     [NR_MAC]    964.17 PUSCH with TC_RNTI 0xe8dc received correctly",
+              "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e8dc",
+              "     [RLC]   Activated srb0 for UE 59612",
+              "     [RLC]   Added srb 1 to UE 59612",
+              "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe8dc (state WAIT_Msg3)",
+              " >>> [NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed...",
+              "     [NR_MAC]   UE e8dc: no CU-UE ID stored, cannot request release",
+              "     [RLC]   Remove UE 59612",
+              "     [NR_MAC]   Remove NR rnti 0xe8dc",
+              "     ",
+              "     Thread 9 \"TASK_RRC_GNB\" received signal SIGSEGV, Segmentation fault."
+            ]
+          },
+          {
+            "error_line": "Thread 9 \"TASK_RRC_GNB\" received signal SIGSEGV, Segmentation fault.",
+            "line_number": 297,
+            "context": [
+              "     [NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed...",
+              "     [NR_MAC]   UE e8dc: no CU-UE ID stored, cannot request release",
+              "     [RLC]   Remove UE 59612",
+              "     [NR_MAC]   Remove NR rnti 0xe8dc",
+              "     ",
+              " >>> Thread 9 \"TASK_RRC_GNB\" received signal SIGSEGV, Segmentation fault.",
+              "     [Switching to Thread 0x7fffe77fe640 (LWP 14161)]",
+              "     0x00005555561b21ed in rrc_handle_RRCSetupRequest (rrc=<optimized out>, assoc_id=<optimized out>, msg=0x7fff700101a0, rrcSetupRequest=<optimized out>) at /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065",
+              "     1065\t  UE->establishment_cause = rrcSetupRequest->establishmentCause;",
+              "     \u001b[?2004h\u001b[?2004l",
+              "     \u001b[?2004h(gdb) exit"
+            ]
+          }
+        ],
+        "debug_values": {
+          "RNTI_values": [
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   711.19 UE RA-RNTI 010b TC-RNTI a67e: Activating RA process index 0"
+            },
+            {
+              "value": "0x10b",
+              "line": "[NR_MAC]   UE a67e: 712.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 58"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   712.7 Send RAR to RA-RNTI 010b"
+            },
+            {
+              "value": "0xa67e",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0xa67e"
+            },
+            {
+              "value": "0xa67e",
+              "line": "[NR_MAC]    712.17 PUSCH with TC_RNTI 0xa67e received correctly"
+            },
+            {
+              "value": "0xa67e",
+              "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xa67e (state WAIT_Msg3)"
+            },
+            {
+              "value": "a67e",
+              "line": "[NR_RRC]   Decoding CCCH: RNTI a67e, payload_size 6"
+            },
+            {
+              "value": "0xa67e",
+              "line": "[NR_MAC]   Remove NR rnti 0xa67e"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   753.19 UE RA-RNTI 010b TC-RNTI d3a8: Activating RA process index 0"
+            },
+            {
+              "value": "0x10b",
+              "line": "[NR_MAC]   UE d3a8: 754.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 30"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   754.7 Send RAR to RA-RNTI 010b"
+            },
+            {
+              "value": "0xd3a8",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0xd3a8"
+            },
+            {
+              "value": "0xd3a8",
+              "line": "[NR_MAC]    754.17 PUSCH with TC_RNTI 0xd3a8 received correctly"
+            },
+            {
+              "value": "0xd3a8",
+              "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xd3a8 (state WAIT_Msg3)"
+            },
+            {
+              "value": "0xd3a8",
+              "line": "[NR_MAC]   Remove NR rnti 0xd3a8"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   795.19 UE RA-RNTI 010b TC-RNTI 0a0c: Activating RA process index 0"
+            },
+            {
+              "value": "0x10b",
+              "line": "[NR_MAC]   UE 0a0c: 796.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 10"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   796.7 Send RAR to RA-RNTI 010b"
+            },
+            {
+              "value": "0x0a0c",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0x0a0c"
+            },
+            {
+              "value": "0x0a0c",
+              "line": "[NR_MAC]    796.17 PUSCH with TC_RNTI 0x0a0c received correctly"
+            },
+            {
+              "value": "0x0a0c",
+              "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x0a0c (state WAIT_Msg3)"
+            },
+            {
+              "value": "0x0a0c",
+              "line": "[NR_MAC]   Remove NR rnti 0x0a0c"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   837.19 UE RA-RNTI 010b TC-RNTI 7c05: Activating RA process index 0"
+            },
+            {
+              "value": "0x10b",
+              "line": "[NR_MAC]   UE 7c05: 838.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 50"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   838.7 Send RAR to RA-RNTI 010b"
+            },
+            {
+              "value": "0x7c05",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0x7c05"
+            },
+            {
+              "value": "0x7c05",
+              "line": "[NR_MAC]    838.17 PUSCH with TC_RNTI 0x7c05 received correctly"
+            },
+            {
+              "value": "0x7c05",
+              "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x7c05 (state WAIT_Msg3)"
+            },
+            {
+              "value": "0x7c05",
+              "line": "[NR_MAC]   Remove NR rnti 0x7c05"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   879.19 UE RA-RNTI 010b TC-RNTI 5a99: Activating RA process index 0"
+            },
+            {
+              "value": "0x10b",
+              "line": "[NR_MAC]   UE 5a99: 880.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 22"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   880.7 Send RAR to RA-RNTI 010b"
+            },
+            {
+              "value": "0x5a99",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0x5a99"
+            },
+            {
+              "value": "0x5a99",
+              "line": "[NR_MAC]    880.17 PUSCH with TC_RNTI 0x5a99 received correctly"
+            },
+            {
+              "value": "0x5a99",
+              "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x5a99 (state WAIT_Msg3)"
+            },
+            {
+              "value": "0x5a99",
+              "line": "[NR_MAC]   Remove NR rnti 0x5a99"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   921.19 UE RA-RNTI 010b TC-RNTI e48b: Activating RA process index 0"
+            },
+            {
+              "value": "0x10b",
+              "line": "[NR_MAC]   UE e48b: 922.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 39"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   922.7 Send RAR to RA-RNTI 010b"
+            },
+            {
+              "value": "0xe48b",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0xe48b"
+            },
+            {
+              "value": "0xe48b",
+              "line": "[NR_MAC]    922.17 PUSCH with TC_RNTI 0xe48b received correctly"
+            },
+            {
+              "value": "0xe48b",
+              "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe48b (state WAIT_Msg3)"
+            },
+            {
+              "value": "0xe48b",
+              "line": "[NR_MAC]   Remove NR rnti 0xe48b"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   963.19 UE RA-RNTI 010b TC-RNTI e8dc: Activating RA process index 0"
+            },
+            {
+              "value": "0x10b",
+              "line": "[NR_MAC]   UE e8dc: 964.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 4"
+            },
+            {
+              "value": "010b",
+              "line": "[NR_MAC]   964.7 Send RAR to RA-RNTI 010b"
+            },
+            {
+              "value": "0xe8dc",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0xe8dc"
+            },
+            {
+              "value": "0xe8dc",
+              "line": "[NR_MAC]    964.17 PUSCH with TC_RNTI 0xe8dc received correctly"
+            },
+            {
+              "value": "0xe8dc",
+              "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe8dc (state WAIT_Msg3)"
+            },
+            {
+              "value": "0xe8dc",
+              "line": "[NR_MAC]   Remove NR rnti 0xe8dc"
+            }
+          ],
+          "UE_IDs": [
+            {
+              "value": "a67e",
+              "line": "[NR_MAC]   UE a67e: Msg3 scheduled at 712.17 (712.7 TDA 3)"
+            },
+            {
+              "value": "a67e",
+              "line": "[NR_MAC]   UE a67e: 712.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 58"
+            },
+            {
+              "value": "c",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0xa67e"
+            },
+            {
+              "value": "a67e",
+              "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE a67e"
+            },
+            {
+              "value": "42622",
+              "line": "[RLC]   Activated srb0 for UE 42622"
+            },
+            {
+              "value": "42622",
+              "line": "[RLC]   Added srb 1 to UE 42622"
+            },
+            {
+              "value": "0xa67e",
+              "line": "[NR_MAC]   (719.10) RA Contention Resolution timer expired for UE 0xa67e, RA procedure failed..."
+            },
+            {
+              "value": "a67e",
+              "line": "[NR_MAC]   UE a67e: no CU-UE ID stored, cannot request release"
+            },
+            {
+              "value": "42622",
+              "line": "[RLC]   Remove UE 42622"
+            },
+            {
+              "value": "d3a8",
+              "line": "[NR_MAC]   UE d3a8: Msg3 scheduled at 754.17 (754.7 TDA 3)"
+            },
+            {
+              "value": "d3a8",
+              "line": "[NR_MAC]   UE d3a8: 754.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 30"
+            },
+            {
+              "value": "c",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0xd3a8"
+            },
+            {
+              "value": "d3a8",
+              "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE d3a8"
+            },
+            {
+              "value": "54184",
+              "line": "[RLC]   Activated srb0 for UE 54184"
+            },
+            {
+              "value": "54184",
+              "line": "[RLC]   Added srb 1 to UE 54184"
+            },
+            {
+              "value": "0xd3a8",
+              "line": "[NR_MAC]   (761.10) RA Contention Resolution timer expired for UE 0xd3a8, RA procedure failed..."
+            },
+            {
+              "value": "d3a8",
+              "line": "[NR_MAC]   UE d3a8: no CU-UE ID stored, cannot request release"
+            },
+            {
+              "value": "54184",
+              "line": "[RLC]   Remove UE 54184"
+            },
+            {
+              "value": "0a0c",
+              "line": "[NR_MAC]   UE 0a0c: Msg3 scheduled at 796.17 (796.7 TDA 3)"
+            },
+            {
+              "value": "0a0c",
+              "line": "[NR_MAC]   UE 0a0c: 796.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 10"
+            },
+            {
+              "value": "c",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0x0a0c"
+            },
+            {
+              "value": "0a0c",
+              "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 0a0c"
+            },
+            {
+              "value": "2572",
+              "line": "[RLC]   Activated srb0 for UE 2572"
+            },
+            {
+              "value": "2572",
+              "line": "[RLC]   Added srb 1 to UE 2572"
+            },
+            {
+              "value": "0x0a0c",
+              "line": "[NR_MAC]   (803.10) RA Contention Resolution timer expired for UE 0x0a0c, RA procedure failed..."
+            },
+            {
+              "value": "0a0c",
+              "line": "[NR_MAC]   UE 0a0c: no CU-UE ID stored, cannot request release"
+            },
+            {
+              "value": "2572",
+              "line": "[RLC]   Remove UE 2572"
+            },
+            {
+              "value": "7c05",
+              "line": "[NR_MAC]   UE 7c05: Msg3 scheduled at 838.17 (838.7 TDA 3)"
+            },
+            {
+              "value": "7c05",
+              "line": "[NR_MAC]   UE 7c05: 838.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 50"
+            },
+            {
+              "value": "c",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0x7c05"
+            },
+            {
+              "value": "7c05",
+              "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 7c05"
+            },
+            {
+              "value": "31749",
+              "line": "[RLC]   Activated srb0 for UE 31749"
+            },
+            {
+              "value": "31749",
+              "line": "[RLC]   Added srb 1 to UE 31749"
+            },
+            {
+              "value": "0x7c05",
+              "line": "[NR_MAC]   (845.10) RA Contention Resolution timer expired for UE 0x7c05, RA procedure failed..."
+            },
+            {
+              "value": "7c05",
+              "line": "[NR_MAC]   UE 7c05: no CU-UE ID stored, cannot request release"
+            },
+            {
+              "value": "31749",
+              "line": "[RLC]   Remove UE 31749"
+            },
+            {
+              "value": "5a99",
+              "line": "[NR_MAC]   UE 5a99: Msg3 scheduled at 880.17 (880.7 TDA 3)"
+            },
+            {
+              "value": "5a99",
+              "line": "[NR_MAC]   UE 5a99: 880.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 22"
+            },
+            {
+              "value": "c",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0x5a99"
+            },
+            {
+              "value": "5a99",
+              "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 5a99"
+            },
+            {
+              "value": "23193",
+              "line": "[RLC]   Activated srb0 for UE 23193"
+            },
+            {
+              "value": "23193",
+              "line": "[RLC]   Added srb 1 to UE 23193"
+            },
+            {
+              "value": "0x5a99",
+              "line": "[NR_MAC]   (887.10) RA Contention Resolution timer expired for UE 0x5a99, RA procedure failed..."
+            },
+            {
+              "value": "5a99",
+              "line": "[NR_MAC]   UE 5a99: no CU-UE ID stored, cannot request release"
+            },
+            {
+              "value": "23193",
+              "line": "[RLC]   Remove UE 23193"
+            },
+            {
+              "value": "e48b",
+              "line": "[NR_MAC]   UE e48b: Msg3 scheduled at 922.17 (922.7 TDA 3)"
+            },
+            {
+              "value": "e48b",
+              "line": "[NR_MAC]   UE e48b: 922.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 39"
+            },
+            {
+              "value": "c",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0xe48b"
+            },
+            {
+              "value": "e48b",
+              "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e48b"
+            },
+            {
+              "value": "58507",
+              "line": "[RLC]   Activated srb0 for UE 58507"
+            },
+            {
+              "value": "58507",
+              "line": "[RLC]   Added srb 1 to UE 58507"
+            },
+            {
+              "value": "0xe48b",
+              "line": "[NR_MAC]   (929.10) RA Contention Resolution timer expired for UE 0xe48b, RA procedure failed..."
+            },
+            {
+              "value": "e48b",
+              "line": "[NR_MAC]   UE e48b: no CU-UE ID stored, cannot request release"
+            },
+            {
+              "value": "58507",
+              "line": "[RLC]   Remove UE 58507"
+            },
+            {
+              "value": "e8dc",
+              "line": "[NR_MAC]   UE e8dc: Msg3 scheduled at 964.17 (964.7 TDA 3)"
+            },
+            {
+              "value": "e8dc",
+              "line": "[NR_MAC]   UE e8dc: 964.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 4"
+            },
+            {
+              "value": "c",
+              "line": "[NR_MAC]   Adding new UE context with RNTI 0xe8dc"
+            },
+            {
+              "value": "e8dc",
+              "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e8dc"
+            },
+            {
+              "value": "59612",
+              "line": "[RLC]   Activated srb0 for UE 59612"
+            },
+            {
+              "value": "59612",
+              "line": "[RLC]   Added srb 1 to UE 59612"
+            },
+            {
+              "value": "0xe8dc",
+              "line": "[NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed..."
+            },
+            {
+              "value": "e8dc",
+              "line": "[NR_MAC]   UE e8dc: no CU-UE ID stored, cannot request release"
+            },
+            {
+              "value": "59612",
+              "line": "[RLC]   Remove UE 59612"
+            }
+          ],
+          "NR_InitialUE_Identity_PR_randomValue": [
+            {
+              "value": "3",
+              "line": "[NR_RRC]   NR_InitialUE_Identity_PR_randomValue= 3"
+            }
+          ],
+          "ue_Identity_present": [
+            {
+              "value": "3",
+              "line": "[NR_RRC]   rrcSetupRequest->ue_Identity.present value= 3"
+            }
+          ],
+          "NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1": [
+            {
+              "value": "3",
+              "line": "[NR_RRC]   NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 value= 3"
+            }
+          ]
+        },
+        "relevant_sections": []
+      },
+      "compiler_ground_truth_errors": [],
+      "cu_ip_address": "10.138.77.131",
+      "du_ip_address": "10.138.77.131",
+      "gnb_ip_address": "10.138.77.131",
+      "amf_ip_address": "192.168.70.132",
+      "core_network_machine_ip": "10.138.77.217",
+      "local_s_portc": "501",
+      "local_s_portd": "2152",
+      "remote_s_portc": "500",
+      "remote_s_portd": "2152",
+      "dnn": "oai",
+      "nssai_sst": "1",
+      "nssai_sd": "0xc",
+      "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+      "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+      "log_error_kind_raw": "runtime",
+      "log_error_kind": "runtime",
+      "build_log_mode": false,
+      "runtime_log_mode": true,
+      "other_log_mode": false,
+      "cmake_build_system_mode": false,
+      "dependency_advice_mode": false
+    },
+    "log_error_kind": "runtime",
+    "ground_truth_errors": [],
+    "phase2_analysis": {
+      "suspected_functions": [
+        {
+          "function_name": "rrc_handle_RRCSetupRequest",
+          "file_path": "openairinterface-5g/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0,
+          "source": "direct_function_extraction",
+          "code_snippet": "",
+          "reason": "no code or context, cannot assess relevance"
+        },
+        {
+          "function_name": "rrc_gNB_generate_RRCReject",
+          "file_path": "openairinterface-5g/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0.7,
+          "source": "error_handling_pattern",
+          "code_snippet": "",
+          "reason": "CRITICAL RRC REJECTION FUNCTION: This function is essential for handling RRC setup failures. When an RRC setup request fails or encounters errors, this function generates and sends an RRCReject message to the UE, properly handling the rejection scenario. For segmentation faults in rrc_handle_RRCSetupRequest, this function should be called in error handling paths to gracefully reject the connection instead of crashing."
+        },
+        {
+          "function_name": "perror",
+          "file_path": "openairinterface-5g/radio/ETHERNET/ethernet_lib.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "no code or context, cannot assess relevance"
+        },
+        {
+          "function_name": "perror",
+          "file_path": "openairinterface-5g/radio/ETHERNET/eth_udp.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "no code or context, cannot assess relevance"
+        },
+        {
+          "function_name": "socketError",
+          "file_path": "openairinterface-5g/radio/rfsimulator/simulator.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "no code or context, cannot assess relevance"
+        },
+        {
+          "function_name": "AssertError",
+          "file_path": "openairinterface-5g/radio/fhi_72/mplane/subscribe-mplane.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "no code or context, cannot assess relevance"
+        },
+        {
+          "function_name": "AssertError",
+          "file_path": "openairinterface-5g/radio/fhi_72/mplane/rpc-send-recv.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "no code or context, cannot assess relevance"
+        },
+        {
+          "function_name": "AssertError",
+          "file_path": "openairinterface-5g/radio/fhi_72/mplane/init-mplane.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "no code or context, cannot assess relevance"
+        },
+        {
+          "function_name": "brf_error",
+          "file_path": "openairinterface-5g/radio/BLADERF/bladerf_lib.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "no code or context, cannot assess relevance"
+        },
+        {
+          "function_name": "packetError",
+          "file_path": "openairinterface-5g/openair1/SCHED/phy_procedures_lte_eNb.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "no code or context, cannot assess relevance"
+        },
+        {
+          "function_name": "dl_rrc_message_transfer",
+          "file_path": "openairinterface5g-develop\\openair2\\LAYER2\\NR_MAC_gNB\\mac_rrc_dl_handler.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "void dl_rrc_message_transfer(const f1ap_dl_rrc_message_t *dl_rrc)\n{\n  LOG_D(NR_MAC,\n        \"DL RRC Message Transfer with %d bytes for RNTI %04x SRB %d\\n\",\n        dl_rrc->rrc_container_length,\n        dl_rrc->gNB_DU_ue_id,\n        dl_rrc->srb_id);\n  gNB_MAC_INST *mac = RC.nrmac[0];\n  pthread_mutex_lock(&mac->sched_lock);\n  /* check first that the scheduler knows such UE */\n  NR_UE_info_t *UE = find_nr_UE(&mac->UE_info, dl_rrc->gNB_DU_ue_id);\n  UE = UE ? UE : find_ra_UE(&mac->UE_info, dl_rrc->gNB_DU_ue_id);\n  if (UE == NULL) {\n    LOG_E(MAC, \"ERROR: unknown UE with RNTI %04x, ignoring DL RRC Message Transfer\\n\", dl_rrc->gNB_DU_ue_id);\n    pthread_mutex_unlock(&mac->sched_lock);\n    return;\n  }\n  pthread_mutex_unlock(&mac->sched_lock);\n  if (!du_exists_f1_ue_data(dl_rrc->gNB_DU_ue_id)) {\n    LOG_D(NR_MAC, \"No CU UE ID stored for UE RNTI %04x, adding CU UE ID %d\\n\", dl_rrc->gNB_DU_ue_id, dl_rrc->gNB_CU_ue_id);\n    f1_ue_data_t new_ue_data = {.secondary_ue = dl_rrc->gNB_CU_ue_id};\n    bool success = du_add_f1_ue_data(dl_rrc->gNB_DU_ue_id, &new_ue_data);\n    DevAssert(success);\n  }\n  /* if we get the old-gNB-DU-UE-ID, this means there is a reestablishment\n   * ongoing. */\n  if (dl_rrc->old_gNB_DU_ue_id != NULL) {\n    AssertFatal(*dl_rrc->old_gNB_DU_ue_id != dl_rrc->gNB_DU_ue_id,\n                \"logic bug: current and old gNB DU UE ID cannot be the same\\n\");\n    /* 38.401 says: \"Find UE context based on old gNB-DU UE F1AP ID, replace\n     * old C-RNTI/PCI with new C-RNTI/PCI\". Below, we do the inverse: we keep\n     * the new UE context (with new C-RNTI), but set up everything to reuse the\n     * old config. */\n    NR_UE_info_t *oldUE = find_nr_UE(&mac->UE_info, *dl_rrc->old_gNB_DU_ue_id);\n    AssertFatal(oldUE, \"CU claims we should know UE %04x, but we don't\\n\", *dl_rrc->old_gNB_DU_ue_id);\n    pthread_mutex_lock(&mac->sched_lock);\n    uid_t temp_uid = UE->uid;\n    UE->uid = oldUE->uid;\n    oldUE->uid = temp_uid;\n    for (int i = 1; i < seq_arr_size(&oldUE->UE_sched_ctrl.lc_config); ++i) {\n      const nr_lc_config_t *c = seq_arr_at(&oldUE->UE_sched_ctrl.lc_config, i);\n      nr_lc_config_t new = *c;\n      new.suspended = true;\n      nr_mac_add_lcid(&UE->UE_sched_ctrl, &new);\n    }\n    ASN_STRUCT_FREE(asn_DEF_NR_CellGroupConfig, UE->CellGroup);\n    UE->CellGroup = oldUE->CellGroup;\n    oldUE->CellGroup = NULL;\n    UE->mac_stats = oldUE->mac_stats;\n    /* 38.331 5.3.7.2 says that the UE releases the spCellConfig, so we drop it\n     * from the current configuration. It will be reapplied when the\n     * reconfiguration has succeeded (indicated by the CU) */\n    UE->reconfigSpCellConfig = UE->CellGroup->spCellConfig;\n    UE->CellGroup->spCellConfig = NULL;\n    mac_remove_nr_ue(mac, *dl_rrc->old_gNB_DU_ue_id);\n    pthread_mutex_unlock(&mac->sched_lock);\n    nr_rlc_remove_ue(dl_rrc->gNB_DU_ue_id);\n    nr_rlc_update_id(*dl_rrc->old_gNB_DU_ue_id, dl_rrc->gNB_DU_ue_id);\n    /* 38.331 clause 5.3.7.4: apply the specified configuration defined in 9.2.1 for SRB1 */\n    nr_rlc_reconfigure_entity(dl_rrc->gNB_DU_ue_id, 1, NULL);\n    instance_t f1inst = get_f1_gtp_instance();\n    if (f1inst >= 0) // we actually use F1-U\n      gtpv1u_update_ue_id(f1inst, *dl_rrc->old_gNB_DU_ue_id, dl_rrc->gNB_DU_ue_id);\n  }\n  /* the DU ue id is the RNTI */\n  nr_rlc_srb_recv_sdu(dl_rrc->gNB_DU_ue_id, dl_rrc->srb_id, dl_rrc->rrc_container, dl_rrc->rrc_container_length);\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "do_RRCReject",
+          "file_path": "openairinterface5g-develop\\openair2\\RRC\\NR\\MESSAGES\\asn1_msg.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "int do_RRCReject(uint8_t *const buffer)\n{\n    asn_enc_rval_t                                   enc_rval;\n    NR_DL_CCCH_Message_t                             dl_ccch_msg;\n    NR_RRCReject_t                                   *rrcReject;\n    memset((void *)&dl_ccch_msg, 0, sizeof(NR_DL_CCCH_Message_t));\n    dl_ccch_msg.message.present = NR_DL_CCCH_MessageType_PR_c1;\n    dl_ccch_msg.message.choice.c1          = CALLOC(1, sizeof(struct NR_DL_CCCH_MessageType__c1));\n    dl_ccch_msg.message.choice.c1->present = NR_DL_CCCH_MessageType__c1_PR_rrcReject;\n    dl_ccch_msg.message.choice.c1->choice.rrcReject = CALLOC(1,sizeof(NR_RRCReject_t));\n    rrcReject = dl_ccch_msg.message.choice.c1->choice.rrcReject;\n    rrcReject->criticalExtensions.choice.rrcReject           = CALLOC(1, sizeof(struct NR_RRCReject_IEs));\n    rrcReject->criticalExtensions.choice.rrcReject->waitTime = CALLOC(1, sizeof(NR_RejectWaitTime_t));\n    *rrcReject->criticalExtensions.choice.rrcReject->waitTime = 10;\n    rrcReject->criticalExtensions.present = NR_RRCReject__criticalExtensions_PR_rrcReject;\n    if ( LOG_DEBUGFLAG(DEBUG_ASN1) ) {\n        xer_fprint(stdout, &asn_DEF_NR_DL_CCCH_Message, (void *)&dl_ccch_msg);\n    }\n    enc_rval = uper_encode_to_buffer(&asn_DEF_NR_DL_CCCH_Message,\n                                    NULL,\n                                    (void *)&dl_ccch_msg,\n                                    buffer,\n                                    100);\n    AssertFatal(enc_rval.encoded > 0, \"ASN1 message encoding failed (%s, %lu)!\\n\",\n                enc_rval.failed_type->name, enc_rval.encoded);\n    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_NR_DL_CCCH_Message, &dl_ccch_msg);\n    LOG_D(NR_RRC,\"RRCReject Encoded %zd bits (%zd bytes)\\n\",\n            enc_rval.encoded,(enc_rval.encoded+7)/8);\n    return (enc_rval.encoded + 7) / 8;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "cu_get_f1_ue_data",
+          "file_path": "openairinterface5g-develop\\openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "f1_ue_data_t cu_get_f1_ue_data(uint32_t ue_id)\n{\n  pthread_mutex_lock(&cu2du_mutex);\n  DevAssert(cu2du_ue_mapping != NULL);\n  f1_ue_data_t ued = *get_hashtable_data(cu2du_ue_mapping, ue_id);\n  pthread_mutex_unlock(&cu2du_mutex);\n  return ued;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "rrc_remove_ue",
+          "file_path": "openairinterface5g-develop\\openair2\\RRC\\NR\\rrc_gNB.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "void rrc_remove_ue(gNB_RRC_INST *rrc, rrc_gNB_ue_context_t *ue_context_p)\n{\n  gNB_RRC_UE_t *UE = &ue_context_p->ue_context;\n  /* we call nr_pdcp_remove_UE() in the handler of E1 bearer release, but if we\n   * are in E1, we also need to free the UE in the CU-CP, so call it twice to\n   * cover all cases */\n  nr_pdcp_remove_UE(UE->rrc_ue_id);\n  LOG_I(NR_RRC, \"removed UE CU UE ID %u/RNTI %04x \\n\", UE->rrc_ue_id, UE->rnti);\n  rrc_delete_ue_data(UE);\n  rrc_gNB_remove_ue_context(rrc, ue_context_p);\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "BIT_STRING_to_uint64",
+          "file_path": "openairinterface5g-develop\\common\\utils\\oai_asn1.h",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "static inline uint64_t BIT_STRING_to_uint64(const BIT_STRING_t *asn) {\n  uint64_t result = 0;\n  size_t index;\n  int shift;\n  DevCheck ((asn->size > 0) && (asn->size <= 8), asn->size, 0, 0);\n  shift = ((asn->size - 1) * 8) - asn->bits_unused;\n  for (index = 0; index < (asn->size - 1); index++) {\n    result |= ((uint64_t)asn->buf[index]) << shift;\n    shift -= 8;\n  }\n  result |= ((uint64_t)asn->buf[index]) >> asn->bits_unused;\n  return result;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "rrc_gNB_generate_RRCSetup",
+          "file_path": "openairinterface5g-develop\\openair2\\RRC\\NR\\rrc_gNB.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "static void rrc_gNB_generate_RRCSetup(instance_t instance,\n                                      rnti_t rnti,\n                                      rrc_gNB_ue_context_t *const ue_context_pP,\n                                      const uint8_t *masterCellGroup,\n                                      int masterCellGroup_len)\n//-----------------------------------------------------------------------------\n{\n  LOG_UE_DL_EVENT(&ue_context_pP->ue_context, \"Send RRC Setup\\n\");\n  gNB_RRC_UE_t *ue_p = &ue_context_pP->ue_context;\n  gNB_RRC_INST *rrc = RC.nrrrc[instance];\n  unsigned char buf[1024];\n  uint8_t xid = rrc_gNB_get_next_transaction_identifier(instance);\n  ue_p->xids[xid] = RRC_SETUP;\n  NR_SRB_ToAddModList_t *SRBs = createSRBlist(ue_p, false);\n  int size = do_RRCSetup(buf, sizeof(buf), xid, masterCellGroup, masterCellGroup_len, &rrc->configuration, SRBs);\n  AssertFatal(size > 0, \"do_RRCSetup failed\\n\");\n  AssertFatal(size <= 1024, \"memory corruption\\n\");\n  LOG_DUMPMSG(NR_RRC, DEBUG_RRC, (char *)buf, size, \"[MSG] RRC Setup\\n\");\n  freeSRBlist(SRBs);\n  f1_ue_data_t ue_data = cu_get_f1_ue_data(ue_p->rrc_ue_id);\n  RETURN_IF_INVALID_ASSOC_ID(ue_data.du_assoc_id);\n  int srbid = 0;\n  f1ap_dl_rrc_message_t dl_rrc = {\n    .gNB_CU_ue_id = ue_p->rrc_ue_id,\n    .gNB_DU_ue_id = ue_data.secondary_ue,\n    .rrc_container = buf,\n    .rrc_container_length = size,\n    .srb_id = srbid\n  };\n  rrc->mac_rrc.dl_rrc_message_transfer(ue_data.du_assoc_id, &dl_rrc);\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "activate_srb",
+          "file_path": "openairinterface5g-develop\\openair2\\RRC\\NR\\rrc_gNB.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "static void activate_srb(gNB_RRC_UE_t *UE, int srb_id)\n{\n  AssertFatal(srb_id == 1 || srb_id == 2, \"handling only SRB 1 or 2\\n\");\n  if (UE->Srb[srb_id].Active == 1) {\n    LOG_W(RRC, \"UE %d SRB %d already activated\\n\", UE->rrc_ue_id, srb_id);\n    return;\n  }\n  LOG_I(RRC, \"activate SRB %d of UE %d\\n\", srb_id, UE->rrc_ue_id);\n  UE->Srb[srb_id].Active = 1;\n  NR_SRB_ToAddModList_t *list = CALLOC(sizeof(*list), 1);\n  asn1cSequenceAdd(list->list, NR_SRB_ToAddMod_t, srb);\n  srb->srb_Identity = srb_id;\n  if (srb_id == 1) {\n    nr_pdcp_entity_security_keys_and_algos_t null_security_parameters = {0};\n    nr_pdcp_add_srbs(true, UE->rrc_ue_id, list, &null_security_parameters);\n  } else {\n    nr_pdcp_entity_security_keys_and_algos_t security_parameters;\n    security_parameters.ciphering_algorithm = UE->ciphering_algorithm;\n    security_parameters.integrity_algorithm = UE->integrity_algorithm;\n    nr_derive_key(RRC_ENC_ALG, UE->ciphering_algorithm, UE->kgnb, security_parameters.ciphering_key);\n    nr_derive_key(RRC_INT_ALG, UE->integrity_algorithm, UE->kgnb, security_parameters.integrity_key);\n    nr_pdcp_add_srbs(true,\n                     UE->rrc_ue_id,\n                     list,\n                     &security_parameters);\n  }\n  freeSRBlist(list);\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "rrc_gNB_create_ue_context",
+          "file_path": "openairinterface5g-develop\\openair2\\RRC\\NR\\rrc_gNB.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "ue_context_p = rrc_gNB_create_ue_context(assoc_id, msg->crnti, rrc, random_value, msg->gNB_DU_ue_id);\n  } else if (NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 == rrcSetupRequest->ue_Identity.present) {\n    /* <5G-S-TMSI> = <AMF Set ID><AMF Pointer><5G-TMSI> 48-bit */\n    /* ng-5G-S-TMSI-Part1                  BIT STRING (SIZE (39)) */\n    if (rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size != 5) {\n      LOG_E(NR_RRC,\n            \"wrong ng_5G_S_TMSI_Part1 size, expected 5, provided %lu \\n\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size);\n      return;\n    }\n    uint64_t s_tmsi_part1 = BIT_STRING_to_uint64(&rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1);\n    LOG_I(NR_RRC, \"Received UE 5G-S-TMSI-Part1 %ld\\n\", s_tmsi_part1);\n    ue_context_p = rrc_gNB_create_ue_context(assoc_id, msg->crnti, rrc, s_tmsi_part1, msg->gNB_DU_ue_id);\n    AssertFatal(ue_context_p != NULL, \"out of memory\\n\");\n    gNB_RRC_UE_t *UE = &ue_context_p->ue_context;\n    UE->Initialue_identity_5g_s_TMSI.presence = true;\n    UE->ng_5G_S_TMSI_Part1 = s_tmsi_part1;\n  }",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "nr_rrc_get_measconfig",
+          "file_path": "openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "Function nr_rrc_get_measconfig called by candidate functions",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "freeSRBlist",
+          "file_path": "openair2\\RRC\\NR\\rrc_gNB.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static void freeSRBlist(NR_SRB_ToAddModList_t *l)\n{\n  ASN_STRUCT_FREE(asn_DEF_NR_SRB_ToAddModList, l);\n}",
+          "reason": "KG evidence: function calls 'activate_srb' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_derive_key",
+          "file_path": "openair1\\SIMULATION\\NR_PHY\\dlsim.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_derive_key(int alg_type, uint8_t alg_id, const uint8_t key[32], uint8_t out[16])\n{\n  (void)alg_type;\n}",
+          "reason": "KG evidence: function calls 'activate_srb' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_pdcp_add_srbs",
+          "file_path": "openair2\\LAYER2\\nr_pdcp\\nr_pdcp_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_pdcp_add_srbs(eNB_flag_t enb_flag,\n                      ue_id_t UEid,\n                      NR_SRB_ToAddModList_t *const srb2add_list,\n                      const nr_pdcp_entity_security_keys_and_algos_t *security_parameters)\n{\n  if (srb2add_list != NULL) {\n    for (int i = 0; i < srb2add_list->list.count; i++) {\n      add_srb(enb_flag, UEid, srb2add_list->list.array[i], security_parameters);\n    }\n  } else\n    LOG_W(PDCP, \"nr_pdcp_add_srbs() with void list\\n\");\n}",
+          "reason": "KG evidence: function calls 'activate_srb' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_update_id",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool nr_rlc_update_id(int from_id, int to_id)\n{\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_ue_t *ue = nr_rlc_manager_get_ue(nr_rlc_ue_manager, from_id);\n  if (ue == NULL) {\n    nr_rlc_manager_unlock(nr_rlc_ue_manager);\n    LOG_E(RLC, \"Cannot find RLC entity for UE %d\\n\", from_id);\n    return false;\n  }\n  ue->ue_id = to_id;\n  LOG_I(RLC, \"Update old UE ID %d context to ID %d\\n\", from_id, to_id);\n  /* re-establish RLC for SRB1: according to 5.3.7.4 of TS 38.331 */\n  if (ue->srb[0]) {\n    LOG_I(RLC, \"Re-establish RLC for SRB 1\\n\");\n    ue->srb[0]->reestablishment(ue->srb[0]);\n  }\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n  return true;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "du_add_f1_ue_data",
+          "file_path": "openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool du_add_f1_ue_data(uint32_t ue_id, const f1_ue_data_t *data)\n{\n  pthread_mutex_lock(&du2cu_mutex);\n  DevAssert(du2cu_ue_mapping != NULL);\n  uint64_t key = ue_id;\n  if (hashtable_is_key_exists(du2cu_ue_mapping, key) == HASH_TABLE_OK) {\n    pthread_mutex_unlock(&du2cu_mutex);\n    return false;\n  }\n  bool ret = add_hashtable_data(du2cu_ue_mapping, key, data);\n  pthread_mutex_unlock(&du2cu_mutex);\n  return ret;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "find_ra_UE",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "NR_UE_info_t *find_ra_UE(NR_UEs_t *UEs, rnti_t rntiP)\n{\n  UE_iterator(UEs->access_ue_list, UE) {\n    if (UE->rnti == rntiP) {\n      LOG_D(NR_MAC,\"Search and found rnti: %04x\\n\", rntiP);\n      return UE;\n    }\n  }\n  return NULL;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "seq_arr_size",
+          "file_path": "common\\utils\\ds\\seq_arr.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "size_t seq_arr_size(seq_arr_t const* arr)\n{\n  assert(arr != NULL);\n  return arr->size;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "seq_arr_at",
+          "file_path": "common\\utils\\ds\\seq_arr.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void* seq_arr_at(seq_arr_t const* arr, uint32_t pos)\n{\n  assert(arr != NULL);\n  assert(arr->data != NULL);\n  assert(pos < arr->size);\n  return arr->data + pos * arr->elt_size;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_remove_ue",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_rlc_remove_ue(int ue_id)\n{\n  LOG_W(RLC, \"Remove UE %d\\n\", ue_id);\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_manager_remove_ue(nr_rlc_ue_manager, ue_id);\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "find_nr_UE",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "NR_UE_info_t *find_nr_UE(NR_UEs_t *UEs, rnti_t rntiP)\n{\n  UE_iterator(UEs->connected_ue_list, UE) {\n    if (UE->rnti == rntiP) {\n      LOG_D(NR_MAC,\"Search and found rnti: %04x\\n\", rntiP);\n      return UE;\n    }\n  }\n  return NULL;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "mac_remove_nr_ue",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void mac_remove_nr_ue(gNB_MAC_INST *nr_mac, rnti_t rnti)\n{\n  /* already mutex protected */\n  NR_SCHED_ENSURE_LOCKED(&nr_mac->sched_lock);\n  NR_UEs_t *UE_info = &nr_mac->UE_info;\n  NR_SCHED_LOCK(&UE_info->mutex);\n  NR_UE_info_t *UE = remove_UE_from_list(MAX_MOBILES_PER_GNB + 1, UE_info->connected_ue_list, rnti);\n  NR_SCHED_UNLOCK(&UE_info->mutex);\n  if (UE)\n    delete_nr_ue_data(UE, nr_mac->common_channels, &UE_info->uid_allocator);\n  else\n    nr_release_ra_UE(nr_mac, rnti);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_mac_add_lcid",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool nr_mac_add_lcid(NR_UE_sched_ctrl_t* sched_ctrl, const nr_lc_config_t *c)\n{\n  elm_arr_t elm = find_if(&sched_ctrl->lc_config, (void *) c, eq_lcid_config);\n  if (elm.found) {\n    LOG_I(NR_MAC, \"cannot add LCID %d: already present, updating configuration\\n\", c->lcid);\n    nr_lc_config_t *exist = (nr_lc_config_t *)elm.it;\n    *exist = *c;\n  } else {\n    LOG_D(NR_MAC, \"Add LCID %d\\n\", c->lcid);\n    seq_arr_push_back(&sched_ctrl->lc_config, (void*) c, sizeof(*c));\n  }\n  void *base = seq_arr_front(&sched_ctrl->lc_config);\n  size_t nmemb = seq_arr_size(&sched_ctrl->lc_config);\n  size_t size = sizeof(*c);\n  qsort(base, nmemb, size, cmp_lc_config);\n  return true;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_reconfigure_entity",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_rlc_reconfigure_entity(int ue_id, int lc_id, NR_RLC_Config_t *rlc_Config)\n{\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_ue_t *ue = nr_rlc_manager_get_ue(nr_rlc_ue_manager, ue_id);\n  if (ue == NULL)\n    LOG_E(RLC, \"RLC instance for the given UE was not found \\n\");\n  nr_rlc_entity_t *rb = get_rlc_entity_from_lcid(ue, lc_id);\n  if (rlc_Config) {\n    AssertFatal(rb->stats.mode != NR_RLC_TM, \"Cannot reconfigure TM mode\\n\");\n    if (rb->stats.mode == NR_RLC_AM) {\n      AssertFatal(rlc_Config->present == NR_RLC_Config_PR_am, \"Invalid RLC Config type\\n\");\n      struct NR_RLC_Config__am *am = rlc_Config->choice.am;\n      int t_reassembly = decode_t_reassembly(am->dl_AM_RLC.t_Reassembly);\n      int t_status_prohibit = decode_t_status_prohibit(am->dl_AM_RLC.t_StatusProhibit);\n      int t_poll_retransmit = decode_t_poll_retransmit(am->ul_AM_RLC.t_PollRetransmit);\n      int poll_pdu = decode_poll_pdu(am->ul_AM_RLC.pollPDU);\n      int poll_byte = decode_poll_byte(am->ul_AM_RLC.pollByte);\n      int max_retx_threshold = decode_max_retx_threshold(am->ul_AM_RLC.maxRetxThreshold);\n      int _sn_field_length;\n      int *sn_field_length = NULL;\n      if (am->dl_AM_RLC.sn_FieldLength) {\n        AssertFatal(am->ul_AM_RLC.sn_FieldLength != NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n        if (am->ul_AM_RLC.sn_FieldLength) {\n          AssertFatal(*am->dl_AM_RLC.sn_FieldLength == *am->ul_AM_RLC.sn_FieldLength,\n                      \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n          _sn_field_length = decode_sn_field_length_am(*am->dl_AM_RLC.sn_FieldLength);\n          sn_field_length = &_sn_field_length;\n        }\n      } else\n        AssertFatal(am->ul_AM_RLC.sn_FieldLength == NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n      nr_rlc_entity_am_reconfigure(rb,\n                                   t_poll_retransmit,\n                                   t_reassembly,\n                                   t_status_prohibit,\n                                   poll_pdu,\n                                   poll_byte,\n                                   max_retx_threshold,\n                                   sn_field_length);\n    } else { // UM\n      AssertFatal(rlc_Config->present == NR_RLC_Config_PR_um_Bi_Directional, \"Invalid RLC Config type\\n\");\n      struct NR_RLC_Config__um_Bi_Directional *um = rlc_Config->choice.um_Bi_Directional;\n      int t_reassembly = decode_t_reassembly(um->dl_UM_RLC.t_Reassembly);\n      int _sn_field_length;\n      int *sn_field_length = NULL;\n      if (um->dl_UM_RLC.sn_FieldLength) {\n        AssertFatal(um->ul_UM_RLC.sn_FieldLength != NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n        if (um->ul_UM_RLC.sn_FieldLength) {\n          AssertFatal(*um->dl_UM_RLC.sn_FieldLength == *um->ul_UM_RLC.sn_FieldLength,\n                      \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n          _sn_field_length = decode_sn_field_length_um(*um->dl_UM_RLC.sn_FieldLength);\n          sn_field_length = &_sn_field_length;\n        }\n      } else\n        AssertFatal(um->ul_UM_RLC.sn_FieldLength == NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n      nr_rlc_entity_um_reconfigure(rb, t_reassembly, sn_field_length);\n    }\n  } else {\n    AssertFatal(rb->stats.mode == NR_RLC_AM, \"Invalid RLC mode\\n\");\n    // default values as in 9.2.1 of 38.331\n    int sn_field_length = 12;\n    nr_rlc_entity_am_reconfigure(rb,\n                                 45, //t_poll_retransmit\n                                 35, //t_reassembly\n                                 0, //t_status_prohibit\n                                 -1, //poll_pdu\n                                 -1, //poll_byte\n                                 8, //max_retx_threshold\n                                 &sn_field_length);\n  }\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "get_f1_gtp_instance",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\mac_rrc_dl_handler.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static instance_t get_f1_gtp_instance(void)\n{\n  const f1ap_cudu_inst_t *inst = getCxt(0);\n  if (!inst)\n    return -1; // means no F1\n  return inst->gtpInst;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "du_exists_f1_ue_data",
+          "file_path": "openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool du_exists_f1_ue_data(uint32_t ue_id)\n{\n  pthread_mutex_lock(&du2cu_mutex);\n  DevAssert(du2cu_ue_mapping != NULL);\n  uint64_t key = ue_id;\n  hashtable_rc_t ret = hashtable_is_key_exists(du2cu_ue_mapping, key);\n  pthread_mutex_unlock(&du2cu_mutex);\n  return ret == HASH_TABLE_OK;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_srb_recv_sdu",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_rlc_srb_recv_sdu(const int ue_id, const logical_chan_id_t channel_id, unsigned char *buf, int size)\n{\n  T(T_ENB_RLC_DL, T_INT(0), T_INT(ue_id), T_INT(0), T_INT(size));\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_ue_t *ue = nr_rlc_manager_get_ue(nr_rlc_ue_manager, ue_id);\n  nr_rlc_entity_t *rb = NULL;\n  if (channel_id == 0) {\n    rb = ue->srb0;\n  } else {\n    rb = ue->srb[channel_id - 1];\n  }\n  AssertFatal(rb != NULL, \"SDU sent to unknown RB UE-ID %d SRB %d\\n\", ue_id, channel_id);\n  rb->set_time(rb, get_nr_rlc_current_time());\n  rb->recv_sdu(rb, (char *)buf, size, -1);\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "get_hashtable_data",
+          "file_path": "openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static f1_ue_data_t *get_hashtable_data(hash_table_t *ht, uint64_t ue_id)\n{\n  void *data = NULL;\n  hashtable_rc_t ret = hashtable_get(ht, ue_id, &data);\n  AssertFatal(ret == HASH_TABLE_OK && data != NULL, \"element for ue_id %ld not found\\n\", ue_id);\n  return data;\n}",
+          "reason": "KG evidence: function calls 'cu_get_f1_ue_data' -> called function expands execution flow."
+        },
+        {
+          "function_name": "cu_exists_f1_ue_data",
+          "file_path": "openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool cu_exists_f1_ue_data(uint32_t ue_id)\n{\n  pthread_mutex_lock(&cu2du_mutex);\n  DevAssert(cu2du_ue_mapping != NULL);\n  uint64_t key = ue_id;\n  hashtable_rc_t ret = hashtable_is_key_exists(cu2du_ue_mapping, key);\n  pthread_mutex_unlock(&cu2du_mutex);\n  return ret == HASH_TABLE_OK;\n}",
+          "reason": "KG evidence: function calls 'rrc_gNB_create_ue_context' -> called function expands execution flow."
+        },
+        {
+          "function_name": "cu_add_f1_ue_data",
+          "file_path": "openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool cu_add_f1_ue_data(uint32_t ue_id, const f1_ue_data_t *data)\n{\n  pthread_mutex_lock(&cu2du_mutex);\n  DevAssert(cu2du_ue_mapping != NULL);\n  uint64_t key = ue_id;\n  if (hashtable_is_key_exists(cu2du_ue_mapping, key) == HASH_TABLE_OK) {\n    pthread_mutex_unlock(&cu2du_mutex);\n    return false;\n  }\n  bool ret = add_hashtable_data(cu2du_ue_mapping, key, data);\n  pthread_mutex_unlock(&cu2du_mutex);\n  return ret;\n}",
+          "reason": "KG evidence: function calls 'rrc_gNB_create_ue_context' -> called function expands execution flow."
+        },
+        {
+          "function_name": "rrc_gNB_allocate_new_ue_context",
+          "file_path": "openair2\\RRC\\NR\\rrc_gNB_UE_context.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "rrc_gNB_ue_context_t *rrc_gNB_allocate_new_ue_context(gNB_RRC_INST *rrc_instance_pP)\n//------------------------------------------------------------------------------\n{\n  rrc_gNB_ue_context_t *new_p = calloc(1, sizeof(*new_p));\n  if (new_p == NULL) {\n    LOG_E(NR_RRC, \"Cannot allocate new ue context\\n\");\n    return NULL;\n  }\n  new_p->ue_context.rrc_ue_id = uid_linear_allocator_new(&rrc_instance_pP->uid_allocator) + 1;\n  rrc_gNB_ue_context_update_time(new_p);\n  for(int i = 0; i < NB_RB_MAX; i++)\n    new_p->ue_context.pduSession[i].xid = -1;\n  LOG_D(NR_RRC, \"Returning new RRC UE context RRC ue id: %d\\n\", new_p->ue_context.rrc_ue_id);\n  return(new_p);\n}",
+          "reason": "KG evidence: function calls 'rrc_gNB_create_ue_context' -> called function expands execution flow."
+        }
+      ],
+      "suspected_configs": [
+        {
+          "param_name": "ra_ContentionResolutionTimer",
+          "file_path": "targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf",
+          "param_value": "0",
+          "relevance_score": 0.1,
+          "source": "context_aware_retrieval",
+          "config_context": "   89:         ssb_perRACH_OccasionAndCB_PreamblesPerSSB_PR                = 4;\n   90: #one (0..15) 4,8,12,16,...60,64\n   91:         ssb_perRACH_OccasionAndCB_PreamblesPerSSB                   = 14;\n   92: #ra_ContentionResolutionTimer\n   93: #(0..7) 8,16,24,32,40,48,56,64\n   94:         ra_ContentionResolutionTimer                                = 0;  <-- TARGET PARAMETER\n   95:         rsrp_ThresholdSSB                                           = 19;\n   96: #prach-RootSequenceIndex_PR\n   97: #1 = 839, 2 = 139\n   98:         prach_RootSequenceIndex_PR                                  = 2;\n   99:         prach_RootSequenceIndex                                     = 1;",
+          "line_number": 94,
+          "reason": "No reason provided"
+        }
+      ],
+      "deployment_context": {
+        "role": "DU",
+        "active_configs": [
+          {
+            "missing": "../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/gnb.sa.band78.fr1.106PRB.usrpb210_with_v2_core_nw.conf",
+            "used": "./openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf",
+            "reason": "Original file not found, using du_gnb.conf"
+          },
+          {
+            "missing": "gnb.sa.band78.fr1.106PRB.usrpb210_with_v2_core_nw.conf",
+            "used": "./openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf",
+            "reason": "Original file not found, using du_gnb.conf"
+          }
+        ],
+        "network_params": {
+          "gnb_ipv4": "10.138.77.32",
+          "amf_ipv4": null,
+          "ngap_port": 1065,
+          "assoc_state": "UNKNOWN"
+        },
+        "log_anchors": [
+          "[NR_MAC]   (719.10) RA Contention Resolution timer expired for UE 0xa67e, RA procedure failed...",
+          "[NR_MAC]   (761.10) RA Contention Resolution timer expired for UE 0xd3a8, RA procedure failed...",
+          "[NR_MAC]   (803.10) RA Contention Resolution timer expired for UE 0x0a0c, RA procedure failed...",
+          "[NR_MAC]   (845.10) RA Contention Resolution timer expired for UE 0x7c05, RA procedure failed...",
+          "[NR_MAC]   (887.10) RA Contention Resolution timer expired for UE 0x5a99, RA procedure failed...",
+          "[NR_MAC]   (929.10) RA Contention Resolution timer expired for UE 0xe48b, RA procedure failed...",
+          "[NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed...",
+          "[GNB_APP]   F1AP: gNB idx 0 gNB_DU_id 0, gNB_DU_name gNB-OAI, TAC 40960 MCC/MNC/length 208/95/2 cellID 1",
+          "[UTIL]   threadCreate() for TASK_SCTP: creating thread with affinity ffffffff, priority 50",
+          "[UTIL]   threadCreate() for TASK_NGAP: creating thread with affinity ffffffff, priority 50",
+          "[NGAP]   Starting NGAP layer",
+          "[NGAP]   Registered new gNB[0] and macro gNB id 0",
+          "[NGAP]   [gNB 0] check the amf registration state",
+          "[NGAP]   Send NGSetupRequest to AMF",
+          "[NGAP]   0 -> 00000000",
+          "[NGAP]   servedGUAMIs.list.count 2",
+          "[NGAP]   PLMNSupportList.list.count 1",
+          "[NGAP]   PLMNSupportList.list.count 3",
+          "[NGAP]   Received NGSetupResponse from AMF",
+          "[GNB_APP]   [gNB 0] Received NGAP_REGISTER_GNB_CNF: associated AMF 1"
+        ],
+        "detailed_log_context": {
+          "total_lines": 309,
+          "error_sequences": [
+            {
+              "error_line": "[HW]   The RFSIMULATOR environment variable is deprecated and support will be removed in the future. Instead, add parameter --rfsimulator.serveraddr server to set the server address. Note: the default is \"server\"; for the gNB/eNB, you don't have to set any configuration.",
+              "line_number": 130,
+              "context": [
+                "     [PHY]   fp->N_RB_SL=0",
+                "     [PHY]   Setting RF config for N_RB 106, NB_RX 1, NB_TX 1",
+                "     [PHY]   tune_offset 0 Hz, sample_rate 61440000 Hz",
+                "     [PHY]   Channel 0: setting tx_gain offset 12, tx_freq 3619200000 Hz",
+                "     [PHY]   Channel 0: setting rx_gain offset 102, rx_freq 3619200000 Hz",
+                " >>> [HW]   The RFSIMULATOR environment variable is deprecated and support will be removed in the future. Instead, add parameter --rfsimulator.serveraddr server to set the server address. Note: the default is \"server\"; for the gNB/eNB, you don't have to set any configuration.",
+                "     [HW]   Remove RFSIMULATOR environment variable to get rid of this message and the sleep.",
+                "     [HW]   Running as server waiting opposite rfsimulators to connect",
+                "     [HW]   [RAU] has loaded RFSIMULATOR device.",
+                "     [PHY]   RU 0 Setting N_TA_offset to 800 samples (UL Freq 3600120, N_RB 106, mu 1)",
+                "     [PHY]   Signaling main thread that RU 0 is ready, sl_ahead 6"
+              ]
+            },
+            {
+              "error_line": "[NR_MAC]   (719.10) RA Contention Resolution timer expired for UE 0xa67e, RA procedure failed...",
+              "line_number": 198,
+              "context": [
+                "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xa67e (state WAIT_Msg3)",
+                "     [NR_RRC]   Decoding CCCH: RNTI a67e, payload_size 6",
+                "     [NR_RRC]   NR_InitialUE_Identity_PR_randomValue= 3",
+                "     [NR_RRC]   rrcSetupRequest->ue_Identity.present value= 3",
+                "     [NR_RRC]   NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 value= 3",
+                " >>> [NR_MAC]   (719.10) RA Contention Resolution timer expired for UE 0xa67e, RA procedure failed...",
+                "     [NR_MAC]   UE a67e: no CU-UE ID stored, cannot request release",
+                "     [RLC]   Remove UE 42622",
+                "     [NR_MAC]   Remove NR rnti 0xa67e",
+                "     [NR_PHY]   [RAPROC] 753.19 Initiating RA procedure with preamble 30, energy 54.9 dB (I0 0, thres 120), delay 0 start symbol 0 freq index 0",
+                "     [NR_MAC]   753.19 UE RA-RNTI 010b TC-RNTI d3a8: Activating RA process index 0"
+              ]
+            },
+            {
+              "error_line": "[NR_MAC]   (761.10) RA Contention Resolution timer expired for UE 0xd3a8, RA procedure failed...",
+              "line_number": 213,
+              "context": [
+                "     [NR_MAC]    754.17 PUSCH with TC_RNTI 0xd3a8 received correctly",
+                "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE d3a8",
+                "     [RLC]   Activated srb0 for UE 54184",
+                "     [RLC]   Added srb 1 to UE 54184",
+                "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xd3a8 (state WAIT_Msg3)",
+                " >>> [NR_MAC]   (761.10) RA Contention Resolution timer expired for UE 0xd3a8, RA procedure failed...",
+                "     [NR_MAC]   UE d3a8: no CU-UE ID stored, cannot request release",
+                "     [RLC]   Remove UE 54184",
+                "     [NR_MAC]   Remove NR rnti 0xd3a8",
+                "     [NR_MAC]   Frame.Slot 768.0",
+                "     "
+              ]
+            },
+            {
+              "error_line": "[NR_MAC]   (803.10) RA Contention Resolution timer expired for UE 0x0a0c, RA procedure failed...",
+              "line_number": 230,
+              "context": [
+                "     [NR_MAC]    796.17 PUSCH with TC_RNTI 0x0a0c received correctly",
+                "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 0a0c",
+                "     [RLC]   Activated srb0 for UE 2572",
+                "     [RLC]   Added srb 1 to UE 2572",
+                "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x0a0c (state WAIT_Msg3)",
+                " >>> [NR_MAC]   (803.10) RA Contention Resolution timer expired for UE 0x0a0c, RA procedure failed...",
+                "     [NR_MAC]   UE 0a0c: no CU-UE ID stored, cannot request release",
+                "     [RLC]   Remove UE 2572",
+                "     [NR_MAC]   Remove NR rnti 0x0a0c",
+                "     [NR_PHY]   [RAPROC] 837.19 Initiating RA procedure with preamble 50, energy 54.9 dB (I0 0, thres 120), delay 0 start symbol 0 freq index 0",
+                "     [NR_MAC]   837.19 UE RA-RNTI 010b TC-RNTI 7c05: Activating RA process index 0"
+              ]
+            },
+            {
+              "error_line": "[NR_MAC]   (845.10) RA Contention Resolution timer expired for UE 0x7c05, RA procedure failed...",
+              "line_number": 245,
+              "context": [
+                "     [NR_MAC]    838.17 PUSCH with TC_RNTI 0x7c05 received correctly",
+                "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 7c05",
+                "     [RLC]   Activated srb0 for UE 31749",
+                "     [RLC]   Added srb 1 to UE 31749",
+                "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x7c05 (state WAIT_Msg3)",
+                " >>> [NR_MAC]   (845.10) RA Contention Resolution timer expired for UE 0x7c05, RA procedure failed...",
+                "     [NR_MAC]   UE 7c05: no CU-UE ID stored, cannot request release",
+                "     [RLC]   Remove UE 31749",
+                "     [NR_MAC]   Remove NR rnti 0x7c05",
+                "     [NR_PHY]   [RAPROC] 879.19 Initiating RA procedure with preamble 22, energy 54.9 dB (I0 0, thres 120), delay 0 start symbol 0 freq index 0",
+                "     [NR_MAC]   879.19 UE RA-RNTI 010b TC-RNTI 5a99: Activating RA process index 0"
+              ]
+            },
+            {
+              "error_line": "[NR_MAC]   (887.10) RA Contention Resolution timer expired for UE 0x5a99, RA procedure failed...",
+              "line_number": 260,
+              "context": [
+                "     [NR_MAC]    880.17 PUSCH with TC_RNTI 0x5a99 received correctly",
+                "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 5a99",
+                "     [RLC]   Activated srb0 for UE 23193",
+                "     [RLC]   Added srb 1 to UE 23193",
+                "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x5a99 (state WAIT_Msg3)",
+                " >>> [NR_MAC]   (887.10) RA Contention Resolution timer expired for UE 0x5a99, RA procedure failed...",
+                "     [NR_MAC]   UE 5a99: no CU-UE ID stored, cannot request release",
+                "     [RLC]   Remove UE 23193",
+                "     [NR_MAC]   Remove NR rnti 0x5a99",
+                "     [NR_MAC]   Frame.Slot 896.0",
+                "     "
+              ]
+            },
+            {
+              "error_line": "[NR_MAC]   (929.10) RA Contention Resolution timer expired for UE 0xe48b, RA procedure failed...",
+              "line_number": 277,
+              "context": [
+                "     [NR_MAC]    922.17 PUSCH with TC_RNTI 0xe48b received correctly",
+                "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e48b",
+                "     [RLC]   Activated srb0 for UE 58507",
+                "     [RLC]   Added srb 1 to UE 58507",
+                "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe48b (state WAIT_Msg3)",
+                " >>> [NR_MAC]   (929.10) RA Contention Resolution timer expired for UE 0xe48b, RA procedure failed...",
+                "     [NR_MAC]   UE e48b: no CU-UE ID stored, cannot request release",
+                "     [RLC]   Remove UE 58507",
+                "     [NR_MAC]   Remove NR rnti 0xe48b",
+                "     [NR_PHY]   [RAPROC] 963.19 Initiating RA procedure with preamble 4, energy 54.0 dB (I0 0, thres 120), delay 0 start symbol 0 freq index 0",
+                "     [NR_MAC]   963.19 UE RA-RNTI 010b TC-RNTI e8dc: Activating RA process index 0"
+              ]
+            },
+            {
+              "error_line": "[NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed...",
+              "line_number": 292,
+              "context": [
+                "     [NR_MAC]    964.17 PUSCH with TC_RNTI 0xe8dc received correctly",
+                "     [MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e8dc",
+                "     [RLC]   Activated srb0 for UE 59612",
+                "     [RLC]   Added srb 1 to UE 59612",
+                "     [NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe8dc (state WAIT_Msg3)",
+                " >>> [NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed...",
+                "     [NR_MAC]   UE e8dc: no CU-UE ID stored, cannot request release",
+                "     [RLC]   Remove UE 59612",
+                "     [NR_MAC]   Remove NR rnti 0xe8dc",
+                "     ",
+                "     Thread 9 \"TASK_RRC_GNB\" received signal SIGSEGV, Segmentation fault."
+              ]
+            },
+            {
+              "error_line": "Thread 9 \"TASK_RRC_GNB\" received signal SIGSEGV, Segmentation fault.",
+              "line_number": 297,
+              "context": [
+                "     [NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed...",
+                "     [NR_MAC]   UE e8dc: no CU-UE ID stored, cannot request release",
+                "     [RLC]   Remove UE 59612",
+                "     [NR_MAC]   Remove NR rnti 0xe8dc",
+                "     ",
+                " >>> Thread 9 \"TASK_RRC_GNB\" received signal SIGSEGV, Segmentation fault.",
+                "     [Switching to Thread 0x7fffe77fe640 (LWP 14161)]",
+                "     0x00005555561b21ed in rrc_handle_RRCSetupRequest (rrc=<optimized out>, assoc_id=<optimized out>, msg=0x7fff700101a0, rrcSetupRequest=<optimized out>) at /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065",
+                "     1065\t  UE->establishment_cause = rrcSetupRequest->establishmentCause;",
+                "     \u001b[?2004h\u001b[?2004l",
+                "     \u001b[?2004h(gdb) exit"
+              ]
+            }
+          ],
+          "debug_values": {
+            "RNTI_values": [
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   711.19 UE RA-RNTI 010b TC-RNTI a67e: Activating RA process index 0"
+              },
+              {
+                "value": "0x10b",
+                "line": "[NR_MAC]   UE a67e: 712.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 58"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   712.7 Send RAR to RA-RNTI 010b"
+              },
+              {
+                "value": "0xa67e",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0xa67e"
+              },
+              {
+                "value": "0xa67e",
+                "line": "[NR_MAC]    712.17 PUSCH with TC_RNTI 0xa67e received correctly"
+              },
+              {
+                "value": "0xa67e",
+                "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xa67e (state WAIT_Msg3)"
+              },
+              {
+                "value": "a67e",
+                "line": "[NR_RRC]   Decoding CCCH: RNTI a67e, payload_size 6"
+              },
+              {
+                "value": "0xa67e",
+                "line": "[NR_MAC]   Remove NR rnti 0xa67e"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   753.19 UE RA-RNTI 010b TC-RNTI d3a8: Activating RA process index 0"
+              },
+              {
+                "value": "0x10b",
+                "line": "[NR_MAC]   UE d3a8: 754.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 30"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   754.7 Send RAR to RA-RNTI 010b"
+              },
+              {
+                "value": "0xd3a8",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0xd3a8"
+              },
+              {
+                "value": "0xd3a8",
+                "line": "[NR_MAC]    754.17 PUSCH with TC_RNTI 0xd3a8 received correctly"
+              },
+              {
+                "value": "0xd3a8",
+                "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xd3a8 (state WAIT_Msg3)"
+              },
+              {
+                "value": "0xd3a8",
+                "line": "[NR_MAC]   Remove NR rnti 0xd3a8"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   795.19 UE RA-RNTI 010b TC-RNTI 0a0c: Activating RA process index 0"
+              },
+              {
+                "value": "0x10b",
+                "line": "[NR_MAC]   UE 0a0c: 796.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 10"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   796.7 Send RAR to RA-RNTI 010b"
+              },
+              {
+                "value": "0x0a0c",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0x0a0c"
+              },
+              {
+                "value": "0x0a0c",
+                "line": "[NR_MAC]    796.17 PUSCH with TC_RNTI 0x0a0c received correctly"
+              },
+              {
+                "value": "0x0a0c",
+                "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x0a0c (state WAIT_Msg3)"
+              },
+              {
+                "value": "0x0a0c",
+                "line": "[NR_MAC]   Remove NR rnti 0x0a0c"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   837.19 UE RA-RNTI 010b TC-RNTI 7c05: Activating RA process index 0"
+              },
+              {
+                "value": "0x10b",
+                "line": "[NR_MAC]   UE 7c05: 838.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 50"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   838.7 Send RAR to RA-RNTI 010b"
+              },
+              {
+                "value": "0x7c05",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0x7c05"
+              },
+              {
+                "value": "0x7c05",
+                "line": "[NR_MAC]    838.17 PUSCH with TC_RNTI 0x7c05 received correctly"
+              },
+              {
+                "value": "0x7c05",
+                "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x7c05 (state WAIT_Msg3)"
+              },
+              {
+                "value": "0x7c05",
+                "line": "[NR_MAC]   Remove NR rnti 0x7c05"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   879.19 UE RA-RNTI 010b TC-RNTI 5a99: Activating RA process index 0"
+              },
+              {
+                "value": "0x10b",
+                "line": "[NR_MAC]   UE 5a99: 880.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 22"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   880.7 Send RAR to RA-RNTI 010b"
+              },
+              {
+                "value": "0x5a99",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0x5a99"
+              },
+              {
+                "value": "0x5a99",
+                "line": "[NR_MAC]    880.17 PUSCH with TC_RNTI 0x5a99 received correctly"
+              },
+              {
+                "value": "0x5a99",
+                "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0x5a99 (state WAIT_Msg3)"
+              },
+              {
+                "value": "0x5a99",
+                "line": "[NR_MAC]   Remove NR rnti 0x5a99"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   921.19 UE RA-RNTI 010b TC-RNTI e48b: Activating RA process index 0"
+              },
+              {
+                "value": "0x10b",
+                "line": "[NR_MAC]   UE e48b: 922.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 39"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   922.7 Send RAR to RA-RNTI 010b"
+              },
+              {
+                "value": "0xe48b",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0xe48b"
+              },
+              {
+                "value": "0xe48b",
+                "line": "[NR_MAC]    922.17 PUSCH with TC_RNTI 0xe48b received correctly"
+              },
+              {
+                "value": "0xe48b",
+                "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe48b (state WAIT_Msg3)"
+              },
+              {
+                "value": "0xe48b",
+                "line": "[NR_MAC]   Remove NR rnti 0xe48b"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   963.19 UE RA-RNTI 010b TC-RNTI e8dc: Activating RA process index 0"
+              },
+              {
+                "value": "0x10b",
+                "line": "[NR_MAC]   UE e8dc: 964.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 4"
+              },
+              {
+                "value": "010b",
+                "line": "[NR_MAC]   964.7 Send RAR to RA-RNTI 010b"
+              },
+              {
+                "value": "0xe8dc",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0xe8dc"
+              },
+              {
+                "value": "0xe8dc",
+                "line": "[NR_MAC]    964.17 PUSCH with TC_RNTI 0xe8dc received correctly"
+              },
+              {
+                "value": "0xe8dc",
+                "line": "[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe8dc (state WAIT_Msg3)"
+              },
+              {
+                "value": "0xe8dc",
+                "line": "[NR_MAC]   Remove NR rnti 0xe8dc"
+              }
+            ],
+            "UE_IDs": [
+              {
+                "value": "a67e",
+                "line": "[NR_MAC]   UE a67e: Msg3 scheduled at 712.17 (712.7 TDA 3)"
+              },
+              {
+                "value": "a67e",
+                "line": "[NR_MAC]   UE a67e: 712.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 58"
+              },
+              {
+                "value": "c",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0xa67e"
+              },
+              {
+                "value": "a67e",
+                "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE a67e"
+              },
+              {
+                "value": "42622",
+                "line": "[RLC]   Activated srb0 for UE 42622"
+              },
+              {
+                "value": "42622",
+                "line": "[RLC]   Added srb 1 to UE 42622"
+              },
+              {
+                "value": "0xa67e",
+                "line": "[NR_MAC]   (719.10) RA Contention Resolution timer expired for UE 0xa67e, RA procedure failed..."
+              },
+              {
+                "value": "a67e",
+                "line": "[NR_MAC]   UE a67e: no CU-UE ID stored, cannot request release"
+              },
+              {
+                "value": "42622",
+                "line": "[RLC]   Remove UE 42622"
+              },
+              {
+                "value": "d3a8",
+                "line": "[NR_MAC]   UE d3a8: Msg3 scheduled at 754.17 (754.7 TDA 3)"
+              },
+              {
+                "value": "d3a8",
+                "line": "[NR_MAC]   UE d3a8: 754.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 30"
+              },
+              {
+                "value": "c",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0xd3a8"
+              },
+              {
+                "value": "d3a8",
+                "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE d3a8"
+              },
+              {
+                "value": "54184",
+                "line": "[RLC]   Activated srb0 for UE 54184"
+              },
+              {
+                "value": "54184",
+                "line": "[RLC]   Added srb 1 to UE 54184"
+              },
+              {
+                "value": "0xd3a8",
+                "line": "[NR_MAC]   (761.10) RA Contention Resolution timer expired for UE 0xd3a8, RA procedure failed..."
+              },
+              {
+                "value": "d3a8",
+                "line": "[NR_MAC]   UE d3a8: no CU-UE ID stored, cannot request release"
+              },
+              {
+                "value": "54184",
+                "line": "[RLC]   Remove UE 54184"
+              },
+              {
+                "value": "0a0c",
+                "line": "[NR_MAC]   UE 0a0c: Msg3 scheduled at 796.17 (796.7 TDA 3)"
+              },
+              {
+                "value": "0a0c",
+                "line": "[NR_MAC]   UE 0a0c: 796.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 10"
+              },
+              {
+                "value": "c",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0x0a0c"
+              },
+              {
+                "value": "0a0c",
+                "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 0a0c"
+              },
+              {
+                "value": "2572",
+                "line": "[RLC]   Activated srb0 for UE 2572"
+              },
+              {
+                "value": "2572",
+                "line": "[RLC]   Added srb 1 to UE 2572"
+              },
+              {
+                "value": "0x0a0c",
+                "line": "[NR_MAC]   (803.10) RA Contention Resolution timer expired for UE 0x0a0c, RA procedure failed..."
+              },
+              {
+                "value": "0a0c",
+                "line": "[NR_MAC]   UE 0a0c: no CU-UE ID stored, cannot request release"
+              },
+              {
+                "value": "2572",
+                "line": "[RLC]   Remove UE 2572"
+              },
+              {
+                "value": "7c05",
+                "line": "[NR_MAC]   UE 7c05: Msg3 scheduled at 838.17 (838.7 TDA 3)"
+              },
+              {
+                "value": "7c05",
+                "line": "[NR_MAC]   UE 7c05: 838.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 50"
+              },
+              {
+                "value": "c",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0x7c05"
+              },
+              {
+                "value": "7c05",
+                "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 7c05"
+              },
+              {
+                "value": "31749",
+                "line": "[RLC]   Activated srb0 for UE 31749"
+              },
+              {
+                "value": "31749",
+                "line": "[RLC]   Added srb 1 to UE 31749"
+              },
+              {
+                "value": "0x7c05",
+                "line": "[NR_MAC]   (845.10) RA Contention Resolution timer expired for UE 0x7c05, RA procedure failed..."
+              },
+              {
+                "value": "7c05",
+                "line": "[NR_MAC]   UE 7c05: no CU-UE ID stored, cannot request release"
+              },
+              {
+                "value": "31749",
+                "line": "[RLC]   Remove UE 31749"
+              },
+              {
+                "value": "5a99",
+                "line": "[NR_MAC]   UE 5a99: Msg3 scheduled at 880.17 (880.7 TDA 3)"
+              },
+              {
+                "value": "5a99",
+                "line": "[NR_MAC]   UE 5a99: 880.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 22"
+              },
+              {
+                "value": "c",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0x5a99"
+              },
+              {
+                "value": "5a99",
+                "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE 5a99"
+              },
+              {
+                "value": "23193",
+                "line": "[RLC]   Activated srb0 for UE 23193"
+              },
+              {
+                "value": "23193",
+                "line": "[RLC]   Added srb 1 to UE 23193"
+              },
+              {
+                "value": "0x5a99",
+                "line": "[NR_MAC]   (887.10) RA Contention Resolution timer expired for UE 0x5a99, RA procedure failed..."
+              },
+              {
+                "value": "5a99",
+                "line": "[NR_MAC]   UE 5a99: no CU-UE ID stored, cannot request release"
+              },
+              {
+                "value": "23193",
+                "line": "[RLC]   Remove UE 23193"
+              },
+              {
+                "value": "e48b",
+                "line": "[NR_MAC]   UE e48b: Msg3 scheduled at 922.17 (922.7 TDA 3)"
+              },
+              {
+                "value": "e48b",
+                "line": "[NR_MAC]   UE e48b: 922.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 39"
+              },
+              {
+                "value": "c",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0xe48b"
+              },
+              {
+                "value": "e48b",
+                "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e48b"
+              },
+              {
+                "value": "58507",
+                "line": "[RLC]   Activated srb0 for UE 58507"
+              },
+              {
+                "value": "58507",
+                "line": "[RLC]   Added srb 1 to UE 58507"
+              },
+              {
+                "value": "0xe48b",
+                "line": "[NR_MAC]   (929.10) RA Contention Resolution timer expired for UE 0xe48b, RA procedure failed..."
+              },
+              {
+                "value": "e48b",
+                "line": "[NR_MAC]   UE e48b: no CU-UE ID stored, cannot request release"
+              },
+              {
+                "value": "58507",
+                "line": "[RLC]   Remove UE 58507"
+              },
+              {
+                "value": "e8dc",
+                "line": "[NR_MAC]   UE e8dc: Msg3 scheduled at 964.17 (964.7 TDA 3)"
+              },
+              {
+                "value": "e8dc",
+                "line": "[NR_MAC]   UE e8dc: 964.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 4"
+              },
+              {
+                "value": "c",
+                "line": "[NR_MAC]   Adding new UE context with RNTI 0xe8dc"
+              },
+              {
+                "value": "e8dc",
+                "line": "[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e8dc"
+              },
+              {
+                "value": "59612",
+                "line": "[RLC]   Activated srb0 for UE 59612"
+              },
+              {
+                "value": "59612",
+                "line": "[RLC]   Added srb 1 to UE 59612"
+              },
+              {
+                "value": "0xe8dc",
+                "line": "[NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed..."
+              },
+              {
+                "value": "e8dc",
+                "line": "[NR_MAC]   UE e8dc: no CU-UE ID stored, cannot request release"
+              },
+              {
+                "value": "59612",
+                "line": "[RLC]   Remove UE 59612"
+              }
+            ],
+            "NR_InitialUE_Identity_PR_randomValue": [
+              {
+                "value": "3",
+                "line": "[NR_RRC]   NR_InitialUE_Identity_PR_randomValue= 3"
+              }
+            ],
+            "ue_Identity_present": [
+              {
+                "value": "3",
+                "line": "[NR_RRC]   rrcSetupRequest->ue_Identity.present value= 3"
+              }
+            ],
+            "NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1": [
+              {
+                "value": "3",
+                "line": "[NR_RRC]   NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 value= 3"
+              }
+            ]
+          },
+          "relevant_sections": []
+        },
+        "compiler_ground_truth_errors": [],
+        "cu_ip_address": "10.138.77.131",
+        "du_ip_address": "10.138.77.131",
+        "gnb_ip_address": "10.138.77.131",
+        "amf_ip_address": "192.168.70.132",
+        "core_network_machine_ip": "10.138.77.217",
+        "local_s_portc": "501",
+        "local_s_portd": "2152",
+        "remote_s_portc": "500",
+        "remote_s_portd": "2152",
+        "dnn": "oai",
+        "nssai_sst": "1",
+        "nssai_sd": "0xc",
+        "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+        "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+        "log_error_kind_raw": "runtime",
+        "log_error_kind": "runtime",
+        "build_log_mode": false,
+        "runtime_log_mode": true,
+        "other_log_mode": false,
+        "cmake_build_system_mode": false,
+        "dependency_advice_mode": false
+      },
+      "retrieval_method": "context_aware",
+      "ground_truth_errors": [],
+      "compiler_cluster_analysis": {},
+      "build_error_mode": false,
+      "narrow_compiler_phase2": false,
+      "log_error_kind": "runtime",
+      "top_ground_truth_clusters": [],
+      "coverage_stats": {
+        "total_compiler_errors_parsed": 0,
+        "ground_truth_with_function_name": 0,
+        "ground_truth_with_file_path": 0
+      }
+    },
+    "phase3_fixes": {
+      "error_text": "ERROR MESSAGE:\n\"Segmentation fault in rrc_handle_RRCSetupRequest at /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065  \nCode line: UE->establishment_cause = rrcSetupRequest->establishmentCause;",
+      "fix_suggestion": {
+        "suspected_functions": [
+          "rrc_handle_RRCSetupRequest",
+          "rrc_gNB_generate_RRCReject",
+          "rrc_gNB_create_ue_context"
+        ],
+        "suspected_configs": [
+          "ra_ContentionResolutionTimer"
+        ],
+        "reason": "The segmentation fault occurs at the line assigning UE->establishment_cause = rrcSetupRequest->establishmentCause, indicating that the UE context pointer (UE) is NULL or uninitialized. This is caused by incomplete handling of the InitialUE_Identity choice in rrc_handle_RRCSetupRequest, where only two cases (randomValue and ng_5G_S_TMSI_Part1) are handled, but no final else clause exists to handle unexpected or unknown ue_Identity.present values. Without this else clause, ue_context_p remains NULL, leading to a NULL pointer dereference when accessing UE->establishment_cause. Additionally, the error handling path must call rrc_gNB_generate_RRCReject to gracefully reject the UE instead of crashing. The missing else clause must initialize ue_context_p properly (using rrc_gNB_create_ue_context) before calling rrc_gNB_generate_RRCReject to avoid segmentation faults. Also, the RA Contention Resolution timer is set to 0 in du_gnb.conf, which can cause RA failures and indirectly lead to unstable UE context states. Setting it to a valid non-zero value (e.g., 8) matching deployment context is recommended.",
+        "config_fix": "{'config_name': 'ra_ContentionResolutionTimer', 'file_path': 'targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf', 'patch_type': 'set_value', 'current_value': '0', 'new_value': '8', 'line_number': '94', 'relevance_score': '0.10', 'description': 'Must match deployment context value to avoid RA procedure failures that can cause unstable UE context states.'}",
+        "code_patches": [],
+        "config_patches": [],
+        "root_cause_analysis": "The segmentation fault is caused by a NULL pointer dereference when accessing UE->establishment_cause because the UE context pointer (ue_context_p) is not initialized if the ue_Identity.present field in the RRCSetupRequest message does not match the handled cases (randomValue or ng_5G_S_TMSI_Part1). The missing else clause in the if-else if chain leads to ue_context_p remaining NULL. When the code later tries to assign UE->establishment_cause, it crashes. Proper handling requires adding a final else clause that initializes ue_context_p (using rrc_gNB_create_ue_context) and calls rrc_gNB_generate_RRCReject to reject the UE connection gracefully. Additionally, the RA Contention Resolution timer is set to 0 in the du_gnb.conf, which can cause RA failures and unstable UE states, indirectly contributing to errors. Setting it to a valid non-zero value (e.g., 8) is recommended.",
+        "investigation_steps": [
+          "Examine the if-else if chain handling rrcSetupRequest->ue_Identity.present values in rrc_handle_RRCSetupRequest.",
+          "Identify that only two cases are handled and no final else clause exists.",
+          "Check that ue_context_p is initialized only in those two cases, leaving it NULL otherwise.",
+          "Trace the code to the line UE->establishment_cause = rrcSetupRequest->establishmentCause, which dereferences UE (from ue_context_p).",
+          "Confirm that if ue_context_p is NULL, this causes segmentation fault.",
+          "Review the call graph and confirm that rrc_gNB_generate_RRCReject is the proper function to call on error paths.",
+          "Check configuration for RA Contention Resolution timer and note it is zero, which can cause RA failures and unstable UE context.",
+          "Propose adding the missing else clause with proper initialization and rejection call.",
+          "Propose fixing the RA Contention Resolution timer to a valid non-zero value."
+        ],
+        "specification_context": "3GPP SPECIFICATION REFERENCE\n================================================================================\n\n**Section: RRCSetupRequest Message Definition and Fields**\n*Source: Page 288-289, Section 6.2.2*\nRRCSetupRequest message is used by UE to request RRC connection establishment.\nMessage structure:\n```\nRRCSetupRequest ::= SEQUENCE {\nrrcSetupRequest RRCSetupRequest-IEs\n}\nRRCSetupRequest-IEs ::= SEQUENCE {\nue-Identity InitialUE-Identity,\nestablishmentCause EstablishmentCause,\nspare BIT STRING (SIZE (1))\n}\n```\n`establishmentCause` is ENUMERATED with values like emergency, highPriorityAccess, mt-Access, mo-Signalling, etc.\nThe gNB should not reject RRCSetupRequest due to unknown establishmentCause values.\nUE identity can be either `ng-5G-S-TMSI-Part1` or a 39-bit random value.\nThis field `establishmentCause` is the exact field assigned in the error line:\n`UE->establishment_cause = rrcSetupRequest->establishmentCause;`\nProper ASN.1 decoding and validation of `establishmentCause` is critical to avoid segmentation faults.\n**Section: RRC Connection Establishment Procedure and RRCSetupRequest Transmission**\n*Source: Page 56, Section 5.3.3.3*\nUE sets contents of RRCSetupRequest before transmission:\nIf upper layers provide 5G-S-TMSI, set `ue-Identity` accordingly; else generate random 39-bit value.\nSet `establishmentCause` based on upper layer input.\nUE submits RRCSetupRequest to lower layers for transmission.\nThis procedure confirms that `establishmentCause` must be properly initialized and passed from upper layers to avoid invalid or null pointers causing segmentation faults.\nEnsuring that the `rrcSetupRequest` pointer and its `establishmentCause` field are valid before assignment is essential.\n**Section: EstablishmentCause ENUMERATION Definition**\n*Source: Page 289, Section 6.2.2*\nEstablishmentCause ::= ENUMERATED {\nemergency, highPriorityAccess, mt-Access, mo-Signalling, mo-Data, mo-VoiceCal\n[Content truncated for display]",
+        "investigation_commands": [
+          {
+            "command": "grep -n \"ra_ContentionResolutionTimer\" /path/to/gnb.conf",
+            "hint": "Check current value of RA Contention Resolution timer in gNB configuration file"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test basic network connectivity to the AMF at IP 192.168.70.132"
+          }
+        ]
+      },
+      "context_summary": {
+        "candidate_functions_count": 39,
+        "candidate_configs_count": 1,
+        "call_graph_entries": 15,
+        "pattern_matched": false
+      },
+      "phase3_llm": {
+        "max_output_tokens": 8000,
+        "json_mode": true,
+        "build_error_mode": false,
+        "finish_reason": "stop",
+        "parse_ok": true,
+        "attempts": [
+          {
+            "attempt": 1,
+            "finish_reason": "stop",
+            "chars": 8070
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 3,
+      "total_configs_analyzed": 1,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "grep -n \"ra_ContentionResolutionTimer\" /path/to/gnb.conf",
+            "explanation": "Check current value of RA Contention Resolution timer in gNB configuration file"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test basic network connectivity to the AMF at IP 192.168.70.132"
+          }
+        ],
+        "command_count": 2
+      },
+      "command_count": 2
+    }
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260530_125841.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

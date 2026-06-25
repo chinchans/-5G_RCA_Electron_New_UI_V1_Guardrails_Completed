@@ -1,0 +1,554 @@
+[
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20251114_115431.json",
+    "timestamp": "2025-11-14T06:25:05.101636",
+    "record": {
+      "commit_hash": "ea9fdbe9",
+      "full_commit_hash": "ea9fdbe9deab2c1a4e4b5f60d41f7162015af303",
+      "commit_message": "Fix gNB configuration issue\n\nError Message: \"No AMF is associated to the gNB\"\n\nApplied 0 code patches and 2 config patches.\n\nSelected Patch Details:\n- Config: GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf) (cu_gnb.conf)\n  Description: Must match deployment context value to ensure the gNB can correctly route to the AMF.\n- Config: amf_ip_address (cu_gnb.conf) (cu_gnb.conf)\n  Description: Must match deployment context value to ensure the gNB can correctly communicate with the AMF.",
+      "commit_output": "[develop ea9fdbe9de] Fix gNB configuration issue\n Committer: Jayasvi Battu <1884596@tcsgenailab.onmicrosoft.com>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly. Run the\nfollowing command and follow the instructions in your editor to edit\nyour configuration file:\n\n    git config --global --edit\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 2 files changed, 80 insertions(+), 2 deletions(-)\n create mode 100644 targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf.backup",
+      "commit_error": null,
+      "commit_details": "ea9fdbe9de Fix gNB configuration issue\n targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf   |  4 +-\n .../GENERIC-NR-5GC/CONF/cu_gnb.conf.backup         | 78 ++++++++++++++++++++++\n 2 files changed, 80 insertions(+), 2 deletions(-)",
+      "code_dir": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20251114_115431.json",
+      "selected_code_patches": [],
+      "selected_config_patches": [
+        "GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf)",
+        "amf_ip_address (cu_gnb.conf)"
+      ]
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20251202_090538.json",
+    "timestamp": "2025-12-02T09:08:42.283964",
+    "record": {
+      "commit_hash": "431edb61",
+      "full_commit_hash": "431edb6189c4fc177f5bb9b942a22b1c35a2105f",
+      "commit_message": "Fix gNB configuration issue\n\nError Message: \"No AMF is associated to the gNB\"\n\nApplied 1 code patches and 2 config patches.\n\nSelected Patch Details:\n- Code: select_amf (ngap_gNB_nas_procedures.c) (ngap_gNB_nas_procedures.c)\n  Description: Adding logging to help trace the AMF selection process and identify if the GUAMI is being processed correctly.\n- Config: GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf) (cu_gnb.conf)\n  Description: Must match deployment context value to ensure the gNB can reach the AMF.\n- Config: amf_ip_address (cu_gnb.conf) (cu_gnb.conf)\n  Description: Must match deployment context value to ensure the gNB can correctly communicate with the AMF.",
+      "commit_output": "[develop 431edb6189] Fix gNB configuration issue\n 4 files changed, 1318 insertions(+), 2 deletions(-)\n create mode 100644 openair3/NGAP/ngap_gNB_nas_procedures.c.backup\n create mode 100644 targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf.backup",
+      "commit_error": null,
+      "commit_details": "431edb6189 Fix gNB configuration issue\n openair3/NGAP/ngap_gNB_nas_procedures.c            |    2 +\n openair3/NGAP/ngap_gNB_nas_procedures.c.backup     | 1236 ++++++++++++++++++++\n targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf   |    4 +-\n .../GENERIC-NR-5GC/CONF/cu_gnb.conf.backup         |   78 ++\n 4 files changed, 1318 insertions(+), 2 deletions(-)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20251202_090538.json",
+      "selected_code_patches": [
+        "select_amf (ngap_gNB_nas_procedures.c)"
+      ],
+      "selected_config_patches": [
+        "GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf)",
+        "amf_ip_address (cu_gnb.conf)"
+      ]
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20251202_091125.json",
+    "timestamp": "2025-12-02T09:15:53.513935",
+    "record": {
+      "commit_hash": "90e73ac9",
+      "full_commit_hash": "90e73ac93515ff1d6f4830c2479de758d9f4f20d",
+      "commit_message": "Fix RRC setup procedure\n\nError Message: \"Segmentation fault in rrc_handle_RRCSetupRequest at line 1065\"\n\nApplied 1 code patches and 0 config patches.\n\nSelected Patch Details:\n- Code: rrc_handle_RRCSetupRequest (rrc_gNB.c) (rrc_gNB.c)\n  Description: This patch adds a missing else clause to handle unrecognized cases for `ue_Identity.present`. It initializes `ue_context_p` before calling `rrc_gNB_generate_RRCReject`, preventing segmentation faults.",
+      "commit_output": "[develop 90e73ac935] Fix RRC setup procedure\n 2 files changed, 3374 insertions(+)\n create mode 100644 openair2/RRC/NR/rrc_gNB.c.backup",
+      "commit_error": null,
+      "commit_details": "90e73ac935 Fix RRC setup procedure\n openair2/RRC/NR/rrc_gNB.c        |    5 +\n openair2/RRC/NR/rrc_gNB.c.backup | 3369 ++++++++++++++++++++++++++++++++++++++\n 2 files changed, 3374 insertions(+)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20251202_091125.json",
+      "selected_code_patches": [
+        "rrc_handle_RRCSetupRequest (rrc_gNB.c)"
+      ],
+      "selected_config_patches": []
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20251202_091741.json",
+    "timestamp": "2025-12-02T09:26:46.770768",
+    "record": {
+      "commit_hash": "c2e2561f",
+      "full_commit_hash": "c2e2561fbe03d6e48b11fb680ccf5230059d8436",
+      "commit_message": "Fix NGAP protocol issue\n\nError Message: \"Segmentation Fault in rrc_gNB_send_NGAP_NAS_FIRST_REQ at /home/tcs/jayasvi/cu/openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c:173\"\n\nApplied 3 code patches and 0 config patches.\n\nSelected Patch Details:\n- Code: rrc_gNB_process_RRCSetupComplete (rrc_gNB.c) (rrc_gNB.c)\n  Description: Remove the rrcSetupComplete=NULL statement that was setting parameter to NULL before use\n- Code: rrc_gNB_process_RRCSetupComplete (rrc_gNB.c) (rrc_gNB.c)\n  Description: Remove the rrcSetupComplete=NULL statement that was setting parameter to NULL before use\n- Code: rrc_gNB_send_NGAP_NAS_FIRST_REQ (rrc_gNB_NGAP.c) (rrc_gNB_NGAP.c)\n  Description: Add NULL check for dedicatedNAS_Message.buf before using it",
+      "commit_output": "[develop c2e2561fbe] Fix NGAP protocol issue\n 4 files changed, 1793 insertions(+)\n create mode 100644 openair2/RRC/NR/rrc_gNB_NGAP.c.backup",
+      "commit_error": null,
+      "commit_details": "c2e2561fbe Fix NGAP protocol issue\n openair2/RRC/NR/rrc_gNB.c             |    6 +\n openair2/RRC/NR/rrc_gNB.c.backup      |    6 +\n openair2/RRC/NR/rrc_gNB_NGAP.c        |    5 +\n openair2/RRC/NR/rrc_gNB_NGAP.c.backup | 1776 +++++++++++++++++++++++++++++++++\n 4 files changed, 1793 insertions(+)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20251202_091741.json",
+      "selected_code_patches": [
+        "rrc_gNB_process_RRCSetupComplete (rrc_gNB.c)",
+        "rrc_gNB_process_RRCSetupComplete (rrc_gNB.c)",
+        "rrc_gNB_send_NGAP_NAS_FIRST_REQ (rrc_gNB_NGAP.c)"
+      ],
+      "selected_config_patches": []
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20251202_092802.json",
+    "timestamp": "2025-12-02T09:29:59.331751",
+    "record": {
+      "commit_hash": "bcd0eb43",
+      "full_commit_hash": "bcd0eb4309f1993693cd5ba71d7cacc8d15a304d",
+      "commit_message": "Fix gNB configuration issue\n\nError Message: \"No AMF is associated to the gNB\"\n\nApplied 1 code patches and 2 config patches.\n\nSelected Patch Details:\n- Code: select_amf (ngap_gNB_nas_procedures.c) (ngap_gNB_nas_procedures.c)\n  Description: From commit 431edb6189c4fc177f5bb9b942a22b1c35a2105f: Fix gNB configuration issue\n- Config: GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf) (cu_gnb.conf)\n  Description: From commit 431edb6189c4fc177f5bb9b942a22b1c35a2105f: Fix gNB configuration issue\n- Config: amf_ip_address (cu_gnb.conf) (cu_gnb.conf)\n  Description: From commit 431edb6189c4fc177f5bb9b942a22b1c35a2105f: Fix gNB configuration issue",
+      "commit_output": "[CI-ho-attenuator bcd0eb4309] Fix gNB configuration issue\n 4 files changed, 1318 insertions(+), 2 deletions(-)\n create mode 100644 openair3/NGAP/ngap_gNB_nas_procedures.c.backup\n create mode 100644 targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf.backup",
+      "commit_error": null,
+      "commit_details": "bcd0eb4309 Fix gNB configuration issue\n openair3/NGAP/ngap_gNB_nas_procedures.c            |    2 +\n openair3/NGAP/ngap_gNB_nas_procedures.c.backup     | 1236 ++++++++++++++++++++\n targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf   |    4 +-\n .../GENERIC-NR-5GC/CONF/cu_gnb.conf.backup         |   78 ++\n 4 files changed, 1318 insertions(+), 2 deletions(-)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-test",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20251202_092802.json",
+      "selected_code_patches": [
+        "select_amf (ngap_gNB_nas_procedures.c)"
+      ],
+      "selected_config_patches": [
+        "GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf)",
+        "amf_ip_address (cu_gnb.conf)"
+      ]
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20251208_121640.json",
+    "timestamp": "2025-12-08T12:33:14.590621",
+    "record": {
+      "commit_hash": "e765a26b",
+      "full_commit_hash": "e765a26b6dc3c0791c4fc5b282a5e0b1b8bdc979",
+      "commit_message": "Fix RRC setup procedure\n\nError Message: \"Segmentation fault in rrc_handle_RRCSetupRequest at line 1065\"\n\nApplied 1 code patches and 0 config patches.\n\nSelected Patch Details:\n- Code: rrc_handle_RRCSetupRequest (rrc_gNB.c) (rrc_gNB.c)\n  Description: From commit 90e73ac93515ff1d6f4830c2479de758d9f4f20d: Fix RRC setup procedure",
+      "commit_output": "[CI-ho-attenuator e765a26b6d] Fix RRC setup procedure\n 2 files changed, 3374 insertions(+)\n create mode 100644 openair2/RRC/NR/rrc_gNB.c.backup",
+      "commit_error": null,
+      "commit_details": "e765a26b6d Fix RRC setup procedure\n openair2/RRC/NR/rrc_gNB.c        |    5 +\n openair2/RRC/NR/rrc_gNB.c.backup | 3369 ++++++++++++++++++++++++++++++++++++++\n 2 files changed, 3374 insertions(+)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-test",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20251208_121640.json",
+      "selected_code_patches": [
+        "rrc_handle_RRCSetupRequest (rrc_gNB.c)"
+      ],
+      "selected_config_patches": []
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20251224_063343.json",
+    "timestamp": "2025-12-24T06:35:54.099177",
+    "record": {
+      "commit_hash": "15137103",
+      "full_commit_hash": "15137103aad70e9c98c94b9241b5eb3b6e8b3545",
+      "commit_message": "Fix gNB configuration issue\n\nError Message: \"No AMF is associated to the gNB\"\n\nApplied 0 code patches and 2 config patches.\n\nSelected Patch Details:\n- Config: amf_ip_address (cu_gnb.conf) (cu_gnb.conf)\n  Description: Must match deployment context value to ensure the gNB can correctly communicate with the AMF.\n- Config: GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf) (cu_gnb.conf)\n  Description: Must match deployment context value to ensure the gNB can correctly communicate with the AMF.",
+      "commit_output": "[develop 15137103aa] Fix gNB configuration issue\n 1 file changed, 1 insertion(+), 1 deletion(-)",
+      "commit_error": null,
+      "commit_details": "15137103aa Fix gNB configuration issue\n targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf.backup | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20251224_063343.json",
+      "selected_code_patches": [],
+      "selected_config_patches": [
+        "amf_ip_address (cu_gnb.conf)",
+        "GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf)"
+      ]
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260407_095224.json",
+    "timestamp": "2026-04-07T09:54:46.639189",
+    "record": {
+      "commit_hash": "5bfe763c",
+      "full_commit_hash": "5bfe763cadfe665e57e3f4826bead90f43730ff6",
+      "commit_message": "Fixed ASN number issues",
+      "commit_output": "[new_feature 5bfe763cad] Fixed ASN number issues\n 6 files changed, 5707 insertions(+)\n create mode 100644 openair2/F1AP/lib/f1ap_interface_management.c.backup\n create mode 100644 openair2/F1AP/lib/f1ap_rrc_message_transfer.c.backup\n create mode 100644 openair2/F1AP/lib/f1ap_ue_context.c.backup",
+      "commit_error": null,
+      "commit_details": "5bfe763cad Fixed ASN number issues\n openair2/F1AP/lib/f1ap_interface_management.c      |   29 +\n .../F1AP/lib/f1ap_interface_management.c.backup    | 2202 +++++++++++++++\n openair2/F1AP/lib/f1ap_rrc_message_transfer.c      |    5 +\n .../F1AP/lib/f1ap_rrc_message_transfer.c.backup    |  485 ++++\n openair2/F1AP/lib/f1ap_ue_context.c                |   65 +\n openair2/F1AP/lib/f1ap_ue_context.c.backup         | 2921 ++++++++++++++++++++\n 6 files changed, 5707 insertions(+)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260407_095224.json",
+      "selected_code_patches": [
+        "decode_initial_ul_rrc_message_transfer (f1ap_rrc_message_transfer.c)",
+        "decode_ul_rrc_message_transfer (f1ap_rrc_message_transfer.c)",
+        "encode_cu_to_du_rrc_info (f1ap_ue_context.c)",
+        "decode_cu_to_du_rrc_info (f1ap_ue_context.c)",
+        "encode_drbs_to_setup (f1ap_ue_context.c)",
+        "decode_drbs_to_setup (f1ap_ue_context.c)",
+        "free_ue_context_setup_req (f1ap_ue_context.c)",
+        "decode_dl_rrc_message_transfer (f1ap_rrc_message_transfer.c)",
+        "encode_drbs_to_setupmod (f1ap_ue_context.c)",
+        "decode_drbs_to_setupmod (f1ap_ue_context.c)",
+        "read_slice_info (f1ap_interface_management.c)",
+        "write_slice_info (f1ap_interface_management.c)",
+        "encode_ue_context_setup_req (f1ap_ue_context.c)",
+        "encode_ue_context_setup_req (f1ap_ue_context.c)",
+        "decode_ue_context_setup_req (f1ap_ue_context.c)",
+        "decode_ue_context_setup_req (f1ap_ue_context.c)",
+        "decode_ue_context_setup_req (f1ap_ue_context.c)",
+        "encode_cells_to_activate (f1ap_interface_management.c)",
+        "decode_cells_to_activate (f1ap_interface_management.c)",
+        "encode_f1ap_setup_request (f1ap_interface_management.c)",
+        "decode_f1ap_setup_request (f1ap_interface_management.c)",
+        "decode_initial_ul_rrc_message_transfer (f1ap_rrc_message_transfer.c)",
+        "decode_f1ap_setup_response (f1ap_interface_management.c)",
+        "decode_f1ap_setup_response (f1ap_interface_management.c)",
+        "free_ue_context_setup_req (f1ap_ue_context.c)",
+        "free_ue_context_setup_req (f1ap_ue_context.c)"
+      ],
+      "selected_config_patches": []
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260407_111131.json",
+    "timestamp": "2026-04-07T11:18:23.738105",
+    "record": {
+      "commit_hash": "1d232dff",
+      "full_commit_hash": "1d232dff6aa7bb22e12856e77c15e5dfecfe29e9",
+      "commit_message": "Fix RRC setup procedure\n\nError Message: \"ERROR MESSAGE:\nCompilation errors in function ‘free_ue_context_setup_req’ in file openair2/F1AP/lib/f1ap_ue_context.c, including:\n- “‘ltm’ undeclared (first use in this function)” at line 1761\n- “incompatible type for argument 1 of ‘free_byte_array’” at lines 1768, 1789, 1795, and 1799\n- Multiple errors related to unknown type names such as ‘F1AP_LTMConfigurationIDMapping_Item_t’ and ‘F1AP_LTMgNB_DU_IDs_Item_t’\n- Numerous “request for member in something not a structure or union” errors indicating invalid structure usage\n\nThese errors prevent successful compilation and thus block system operation and deployment. The build fails with:\n- \"gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:118: openair2/F1AP\n\nHighest Priority Compiler Ground Truth:\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_rrc_message_transfer.c:114 [decode_initial_ul_rrc_message_transfer] (undeclared_identifier) ‘container’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_rrc_message_transfer.c:261 [decode_ul_rrc_message_transfer] (undeclared_identifier) ‘container’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_rrc_message_transfer.c:397 [decode_dl_rrc_message_transfer] (undeclared_identifier) ‘container’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_rrc_message_transfer.c:115 [decode_initial_ul_rrc_message_transfer] (undeclared_identifier) ‘ie’ undeclared (first use in this function); did you mean ‘nice’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_rrc_message_transfer.c:116 [decode_initial_ul_rrc_message_transfer] (compiler_error) redefinition of ‘pIEs’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:384 [read_slice_info] (compiler_error) expected expression before ‘const’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:387 [read_slice_info] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:404 [Unknown] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:410 [write_slice_info] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P34_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_rrc_message_transfer.c:120 [Unknown] (unknown_type_name) unknown type name ‘F1AP_ProtocolIE_Container_10659P31_t’; did you mean ‘F1AP_ProtocolIE_Container_18979P31_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_rrc_message_transfer.c:120 [Unknown] (compiler_error) conflicting types for ‘pIEs’; have ‘int *’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_rrc_message_transfer.c:266 [decode_ul_rrc_message_transfer] (unknown_type_name) unknown type name ‘F1AP_ProtocolIE_Container_10659P33_t’; did you mean ‘F1AP_ProtocolIE_Container_18979P33_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_rrc_message_transfer.c:266 [decode_ul_rrc_message_transfer] (compiler_error) conflicting types for ‘pIEs’; have ‘int *’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_rrc_message_transfer.c:402 [decode_dl_rrc_message_transfer] (unknown_type_name) unknown type name ‘F1AP_ProtocolIE_Container_10659P32_t’; did you mean ‘F1AP_ProtocolIE_Container_18979P32_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_rrc_message_transfer.c:402 [decode_dl_rrc_message_transfer] (compiler_error) conflicting types for ‘pIEs’; have ‘int *’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:387 [Unknown] (undeclared_identifier) ‘F1AP_ProtocolExtensionContainer_10696P34_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P34_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:387 [Unknown] (compiler_error) expected expression before ‘)’ token\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:407 [write_slice_info] (compiler_error) expected expression before ‘F1AP_ProtocolExtensionContainer_19016P34_t’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:623 [encode_cells_to_activate] (undeclared_identifier) ‘cells_to_be_activated_item’ undeclared (first use in this function); did you mean ‘cells_to_be_activated_ies’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:642 [encode_cells_to_activate] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P112_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P112_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:681 [decode_cells_to_activate] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P112_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P112_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:661 [encode_cells_to_activate] (compiler_error) invalid storage class for function ‘decode_cells_to_activate’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:664 [decode_cells_to_activate] (compiler_error) ‘served_cells_to_activate_t’ {aka ‘const struct served_cells_to_activate_s’} has no member named ‘iE_Extensions’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:681 [decode_cells_to_activate] (compiler_error) conflicting types for ‘ext’; have ‘int *’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:681 [decode_cells_to_activate] (compiler_error) expected expression before ‘)’ token\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:681 [decode_cells_to_activate] (undeclared_identifier) ‘F1AP_ProtocolExtensionContainer_10696P112_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P112_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:803 [encode_f1ap_setup_request] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:888 [decode_f1ap_setup_request] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:803 [encode_f1ap_setup_request] (compiler_error) conflicting types for ‘p’; have ‘int *’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:804 [encode_f1ap_setup_request] (compiler_error) redefinition of ‘rrcv_ext’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:823 [decode_f1ap_setup_request] (undeclared_identifier) ‘ie’ undeclared (first use in this function); did you mean ‘in’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:889 [decode_f1ap_setup_request] (undeclared_identifier) ‘F1AP_ProtocolExtensionContainer_10696P228_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:889 [decode_f1ap_setup_request] (compiler_error) expected expression before ‘)’ token\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:938 [decode_f1ap_setup_request] (compiler_error) invalid storage class for function ‘copy_f1ap_gnb_du_system_info’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:1080 [encode_f1ap_setup_response] (undeclared_identifier) ‘p’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:1145 [decode_f1ap_setup_response] (compiler_error) expected expression before ‘)’ token\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:2207 [decode_f1ap_setup_response] (compiler_error) expected declaration or statement at end of input\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:2207 [decode_f1ap_setup_response] (compiler_error) expected declaration or statement at end of input\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:2207 [decode_f1ap_setup_request] (compiler_error) expected declaration or statement at end of input\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:2207 [decode_f1ap_setup_request] (compiler_error) expected declaration or statement at end of input\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:2207 [decode_cells_to_activate] (compiler_error) expected declaration or statement at end of input\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:2207 [decode_cells_to_activate] (compiler_error) expected declaration or statement at end of input\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_interface_management.c:2207 [encode_cells_to_activate] (compiler_error) expected declaration or statement at end of input\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:61 [encode_cu_to_du_rrc_info] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P60_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P60_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:109 [decode_cu_to_du_rrc_info] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P60_t’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:109 [decode_cu_to_du_rrc_info] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P60_t’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:61 [encode_cu_to_du_rrc_info] (compiler_error) conflicting types for ‘p’; have ‘int *’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:695 [encode_drbs_to_setup] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P82_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P82_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:813 [decode_drbs_to_setup] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P82_t’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:813 [decode_drbs_to_setup] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P82_t’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:723 [encode_drbs_to_setupmod] (undeclared_identifier) ‘it’ undeclared (first use in this function); did you mean ‘int’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:780 [decode_drbs_to_setup] (undeclared_identifier) ‘it’ undeclared (first use in this function); did you mean ‘int’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:846 [decode_drbs_to_setupmod] (undeclared_identifier) ‘it’ undeclared (first use in this function); did you mean ‘int’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:754 [encode_drbs_to_setupmod] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P83_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P83_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:880 [decode_drbs_to_setupmod] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P83_t’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:880 [decode_drbs_to_setupmod] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P83_t’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1150 [encode_ue_context_setup_req] (undeclared_identifier) ‘asn_list’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1343 [decode_ue_context_setup_req] (undeclared_identifier) ‘asn_list’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1151 [encode_ue_context_setup_req] (undeclared_identifier) ‘asn_ltm’ undeclared (first use in this function); did you mean ‘asn_item’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1347 [decode_ue_context_setup_req] (undeclared_identifier) ‘asn_ltm’ undeclared (first use in this function); did you mean ‘asn_item’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1254 [encode_ue_context_setup_req] (unknown_type_name) unknown type name ‘F1AP_ReferenceConfiguration_t’; did you mean ‘f1ap_reference_configuration_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1459 [decode_ue_context_setup_req] (unknown_type_name) unknown type name ‘F1AP_ReferenceConfiguration_t’; did you mean ‘f1ap_reference_configuration_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1257 [encode_ue_context_setup_req] (undeclared_identifier) ‘F1AP_ReferenceConfiguration_PR_requestforReferenceConfiguration’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1368 [decode_ue_context_setup_req] (undeclared_identifier) ‘F1AP_ReferenceConfiguration_PR_requestforReferenceConfiguration’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1260 [encode_ue_context_setup_req] (undeclared_identifier) ‘F1AP_ReferenceConfiguration_PR_referenceConfigurationInformation’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1371 [decode_ue_context_setup_req] (undeclared_identifier) ‘F1AP_ReferenceConfiguration_PR_referenceConfigurationInformation’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1269 [encode_ue_context_setup_req] (undeclared_identifier) ‘F1AP_ReferenceConfiguration_PR_NOTHING’ undeclared (first use in this function); did you mean ‘F1AP_ReferenceConfiguration_ExtIEs’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1379 [decode_ue_context_setup_req] (undeclared_identifier) ‘F1AP_ReferenceConfiguration_PR_NOTHING’ undeclared (first use in this function); did you mean ‘F1AP_ReferenceConfiguration_ExtIEs’?\n- /home/tcs/openairinterface-5g-new_feature/common/utils/oai_asn1.h:221 [Unknown] (compiler_error) invalid application of ‘sizeof’ to incomplete type ‘struct F1AP_CSIResourceConfiguration’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1279 [encode_ue_context_setup_req] (compiler_error) invalid use of undefined type ‘struct F1AP_CSIResourceConfiguration’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1284 [encode_ue_context_setup_req] (compiler_error) invalid use of undefined type ‘struct F1AP_CSIResourceConfiguration’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1301 [encode_ue_context_setup_req] (unknown_type_name) unknown type name ‘F1AP_LTMConfigurationIDMapping_Item_t’; did you mean ‘F1AP_LTMConfigurationIDMappingList_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1508 [decode_ue_context_setup_req] (unknown_type_name) unknown type name ‘F1AP_LTMConfigurationIDMapping_Item_t’; did you mean ‘F1AP_LTMConfigurationIDMappingList_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1301 [encode_ue_context_setup_req] (undeclared_identifier) ‘F1AP_LTMConfigurationIDMapping_Item_t’ undeclared (first use in this function); did you mean ‘F1AP_LTMConfigurationIDMapping_Item’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1509 [decode_ue_context_setup_req] (undeclared_identifier) ‘F1AP_LTMConfigurationIDMapping_Item_t’ undeclared (first use in this function); did you mean ‘F1AP_LTMConfigurationIDMapping_Item’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1328 [encode_ue_context_setup_req] (unknown_type_name) unknown type name ‘F1AP_LTMgNB_DU_IDs_Item_t’; did you mean ‘F1AP_LTMgNB_DU_IDsList_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1536 [decode_ue_context_setup_req] (unknown_type_name) unknown type name ‘F1AP_LTMgNB_DU_IDs_Item_t’; did you mean ‘F1AP_LTMgNB_DU_IDsList_t’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1328 [encode_ue_context_setup_req] (undeclared_identifier) ‘F1AP_LTMgNB_DU_IDs_Item_t’ undeclared (first use in this function); did you mean ‘F1AP_LTMgNB_DU_IDs_Item’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1537 [decode_ue_context_setup_req] (undeclared_identifier) ‘F1AP_LTMgNB_DU_IDs_Item_t’ undeclared (first use in this function); did you mean ‘F1AP_LTMgNB_DU_IDs_Item’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1343 [decode_ue_context_setup_req] (undeclared_identifier) ‘j’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1344 [decode_ue_context_setup_req] (undeclared_identifier) ‘lst’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1345 [decode_ue_context_setup_req] (compiler_error) ‘F1AP_LTMConfigurationIDMappingList_t’ {aka ‘const struct F1AP_LTMConfigurationIDMappingList’} has no member named ‘lTMCellID’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1349 [decode_ue_context_setup_req] (undeclared_identifier) ‘ltm’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1761 [free_ue_context_setup_req] (undeclared_identifier) ‘ltm’ undeclared (first use in this function)\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1352 [decode_ue_context_setup_req] (compiler_error) ‘F1AP_ProtocolIE_Container_18979P31_t’ {aka ‘const struct F1AP_ProtocolIE_Container_18979P31’} has no member named ‘cSIResourceConfigToAddModList’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1352 [decode_ue_context_setup_req] (compiler_error) ‘F1AP_ProtocolIE_Container_18979P31_t’ {aka ‘const struct F1AP_ProtocolIE_Container_18979P31’} has no member named ‘cSIResourceConfigToAddModList’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1355 [decode_ue_context_setup_req] (compiler_error) ‘F1AP_ProtocolIE_Container_18979P31_t’ {aka ‘const struct F1AP_ProtocolIE_Container_18979P31’} has no member named ‘cSIResourceConfigToAddModList’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1356 [decode_ue_context_setup_req] (compiler_error) ‘F1AP_ProtocolIE_Container_18979P31_t’ {aka ‘const struct F1AP_ProtocolIE_Container_18979P31’} has no member named ‘cSIResourceConfigToAddModList’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1358 [decode_ue_context_setup_req] (compiler_error) ‘F1AP_ProtocolIE_Container_18979P31_t’ {aka ‘const struct F1AP_ProtocolIE_Container_18979P31’} has no member named ‘cSIResourceConfigToReleaseList’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1358 [decode_ue_context_setup_req] (compiler_error) ‘F1AP_ProtocolIE_Container_18979P31_t’ {aka ‘const struct F1AP_ProtocolIE_Container_18979P31’} has no member named ‘cSIResourceConfigToReleaseList’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1361 [decode_ue_context_setup_req] (compiler_error) ‘F1AP_ProtocolIE_Container_18979P31_t’ {aka ‘const struct F1AP_ProtocolIE_Container_18979P31’} has no member named ‘cSIResourceConfigToReleaseList’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1362 [decode_ue_context_setup_req] (compiler_error) ‘F1AP_ProtocolIE_Container_18979P31_t’ {aka ‘const struct F1AP_ProtocolIE_Container_18979P31’} has no member named ‘cSIResourceConfigToReleaseList’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1367 [decode_ue_context_setup_req] (compiler_error) ‘f1ap_reference_configuration_t’ {aka ‘struct f1ap_reference_configuration_s’} has no member named ‘present’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1373 [decode_ue_context_setup_req] (compiler_error) ‘f1ap_reference_configuration_t’ {aka ‘struct f1ap_reference_configuration_s’} has no member named ‘choice’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1459 [decode_ue_context_setup_req] (undeclared_identifier) ‘F1AP_ReferenceConfiguration_t’ undeclared (first use in this function); did you mean ‘F1AP_ReferenceConfiguration’?\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1459 [decode_ue_context_setup_req] (compiler_error) expected expression before ‘)’ token\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1480 [decode_ue_context_setup_req] (unknown_type_name) unknown type name ‘F1AP_CSIResourceConfiguration_t’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1509 [decode_ue_context_setup_req] (compiler_error) expected expression before ‘)’ token\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1537 [decode_ue_context_setup_req] (compiler_error) expected expression before ‘)’ token\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1768 [free_ue_context_setup_req] (incompatible_argument_type) incompatible type for argument 1 of ‘free_byte_array’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1789 [free_ue_context_setup_req] (incompatible_argument_type) incompatible type for argument 1 of ‘free_byte_array’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1795 [free_ue_context_setup_req] (incompatible_argument_type) incompatible type for argument 1 of ‘free_byte_array’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1799 [free_ue_context_setup_req] (incompatible_argument_type) incompatible type for argument 1 of ‘free_byte_array’\n- /home/tcs/openairinterface-5g-new_feature/openair2/F1AP/lib/f1ap_ue_context.c:1772 [free_ue_context_setup_req] (undeclared_identifier) ‘ue_context’ undeclared (first use in this function)\n(Omitted 27 secondary/cascade compiler cluster(s); fix primary issues first.)\"\n\nApplied 20 code patches and 0 config patches.\n\nSelected Patch Details:\n- Code: decode_initial_ul_rrc_message_transfer (f1ap_rrc_message_transfer.c) (f1ap_rrc_message_transfer.c)\n  Description: Fixes undeclared 'container' by declaring it before use, removes duplicate declarations of 'pIEs', declares 'ie' properly, and replaces outdated ASN.1 type 'F1AP_ProtocolIE_Container_10659P31_t' with 'F1AP_ProtocolIE_Container_18979P31_t' as per compiler hints. This resolves undeclared identifier and redefinition errors.\n- Code: decode_ul_rrc_message_transfer (f1ap_rrc_message_transfer.c) (f1ap_rrc_message_transfer.c)\n  Description: Fixes undeclared 'container' by declaring it before use, removes duplicate declarations of 'pIEs', declares 'ie' properly, and replaces outdated ASN.1 type 'F1AP_ProtocolIE_Container_10659P33_t' with 'F1AP_ProtocolIE_Container_18979P33_t' as per compiler hints. This resolves undeclared identifier and redefinition errors.\n- Code: decode_dl_rrc_message_transfer (f1ap_rrc_message_transfer.c) (f1ap_rrc_message_transfer.c)\n  Description: Fixes undeclared 'container' by declaring it before use, removes duplicate declarations of 'pIEs', declares 'ie' properly, and replaces outdated ASN.1 type 'F1AP_ProtocolIE_Container_10659P32_t' with 'F1AP_ProtocolIE_Container_18979P32_t' as per compiler hints. This resolves undeclared identifier and redefinition errors.\n- Code: read_slice_info (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Fixes syntax error by adding braces around the if block checking plmn->iE_Extensions, replaces outdated type 'F1AP_ProtocolExtensionContainer_10696P34_t' with 'F1AP_ProtocolExtensionContainer_19016P34_t' as per compiler hints, and corrects control flow to prevent invalid early return. This resolves expected expression and unknown type name errors.\n- Code: write_slice_info (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaces outdated type 'F1AP_ProtocolExtensionContainer_10696P34_t' with 'F1AP_ProtocolExtensionContainer_19016P34_t' as per compiler hints, fixes missing braces around if block, and corrects control flow to return allocated pointer instead of NULL when num_ssi is zero. This resolves unknown type name and syntax errors.\n- Code: encode_cells_to_activate (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaces incorrect identifier 'cells_to_be_activated_item' usage before declaration with correct order, replaces outdated type 'F1AP_ProtocolExtensionContainer_10696P112_t' with 'F1AP_ProtocolExtensionContainer_19016P112_t' as per compiler hints, and fixes assignment order to avoid undeclared identifier errors. This resolves undeclared identifier and unknown type name errors.\n- Code: free_ue_context_setup_req (f1ap_ue_context.c) (f1ap_ue_context.c)\n  Description: Removes usage of undeclared variable 'ltm' to fix undeclared identifier error. Replaces incompatible calls to 'free_byte_array' with standard 'free' calls assuming these are pointers to allocated memory, as per compiler hints. This resolves undeclared identifier and incompatible argument type errors in free_ue_context_setup_req.\n- Code: decode_cells_to_activate (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaced outdated type F1AP_ProtocolExtensionContainer_10696P112_t with correct F1AP_ProtocolExtensionContainer_19016P112_t and corrected variable name from cells_to_be_activated_item to cells_to_be_activated_ies as per compiler hints.\n- Code: decode_cells_to_activate (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaced outdated type F1AP_ProtocolExtensionContainer_10696P112_t with correct F1AP_ProtocolExtensionContainer_19016P112_t and corrected variable name from cells_to_be_activated_item to cells_to_be_activated_ies as per compiler hints.\n- Code: encode_f1ap_setup_request (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaced outdated type F1AP_ProtocolExtensionContainer_10696P228_t with correct F1AP_ProtocolExtensionContainer_19016P228_t.\n- Code: decode_f1ap_setup_request (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaced outdated type F1AP_ProtocolExtensionContainer_10696P228_t with correct F1AP_ProtocolExtensionContainer_19016P228_t.\n- Code: encode_f1ap_setup_response (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaced outdated type F1AP_ProtocolExtensionContainer_10696P228_t with correct F1AP_ProtocolExtensionContainer_19016P228_t.\n- Code: decode_f1ap_setup_response (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaced outdated type F1AP_ProtocolExtensionContainer_10696P228_t with correct F1AP_ProtocolExtensionContainer_19016P228_t.\n- Code: encode_cu_to_du_rrc_info (f1ap_ue_context.c) (f1ap_ue_context.c)\n  Description: Replaced duplicate declaration and outdated type F1AP_ProtocolExtensionContainer_10696P60_t with correct F1AP_ProtocolExtensionContainer_19016P60_t and removed duplicate declaration.\n- Code: encode_cu_to_du_rrc_info (f1ap_ue_context.c) (f1ap_ue_context.c)\n  Description: Replaced duplicate declaration and outdated type F1AP_ProtocolExtensionContainer_10696P60_t with correct F1AP_ProtocolExtensionContainer_19016P60_t and removed duplicate declaration.\n- Code: free_ue_context_setup_req (f1ap_ue_context.c) (f1ap_ue_context.c)\n  Description: Removes usage of undeclared variable 'ltm' to fix undeclared identifier error. Replaces incompatible calls to 'free_byte_array' with standard 'free' calls assuming these are pointers to allocated memory, as per compiler hints. This resolves undeclared identifier and incompatible argument type errors in free_ue_context_setup_req.\n- Code: decode_initial_ul_rrc_message_transfer (f1ap_rrc_message_transfer.c) (f1ap_rrc_message_transfer.c)\n  Description: Fixes undeclared 'container' by declaring it before use, removes duplicate declarations of 'pIEs', declares 'ie' properly, and replaces outdated ASN.1 type 'F1AP_ProtocolIE_Container_10659P31_t' with 'F1AP_ProtocolIE_Container_18979P31_t' as per compiler hints. This resolves undeclared identifier and redefinition errors.\n- Code: decode_ue_context_setup_req (f1ap_ue_context.c) (f1ap_ue_context.c)\n  Description: Replaced deprecated and incorrect ASN.1 type names and member identifiers with compiler-suggested correct names, e.g., 'asn_list' → 'asn_item', 'F1AP_LTMConfigurationIDMapping_Item_t' → 'F1AP_LTMConfigurationIDMapping_Item', and fixed member accesses to use correct structure fields. This resolves undeclared identifier and unknown type errors.\n- Code: decode_ue_context_setup_req (f1ap_ue_context.c) (f1ap_ue_context.c)\n  Description: Replaced deprecated and incorrect ASN.1 type names and member identifiers with compiler-suggested correct names, e.g., 'asn_list' → 'asn_item', 'F1AP_LTMConfigurationIDMapping_Item_t' → 'F1AP_LTMConfigurationIDMapping_Item', and fixed member accesses to use correct structure fields. This resolves undeclared identifier and unknown type errors.\n- Code: free_ue_context_setup_req (f1ap_ue_context.c) (f1ap_ue_context.c)\n  Description: Removes usage of undeclared variable 'ltm' to fix undeclared identifier error. Replaces incompatible calls to 'free_byte_array' with standard 'free' calls assuming these are pointers to allocated memory, as per compiler hints. This resolves undeclared identifier and incompatible argument type errors in free_ue_context_setup_req.",
+      "commit_output": "[new_feature 1d232dff6a] Fix RRC setup procedure\n 6 files changed, 664 insertions(+)",
+      "commit_error": null,
+      "commit_details": "1d232dff6a Fix RRC setup procedure\n openair2/F1AP/lib/f1ap_interface_management.c      |  94 ++++++++++++\n .../F1AP/lib/f1ap_interface_management.c.backup    |  98 ++++++++++++\n openair2/F1AP/lib/f1ap_rrc_message_transfer.c      |  97 ++++++++++++\n .../F1AP/lib/f1ap_rrc_message_transfer.c.backup    |  96 ++++++++++++\n openair2/F1AP/lib/f1ap_ue_context.c                | 167 +++++++++++++++++++++\n openair2/F1AP/lib/f1ap_ue_context.c.backup         | 112 ++++++++++++++\n 6 files changed, 664 insertions(+)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260407_111131.json",
+      "selected_code_patches": [
+        "decode_initial_ul_rrc_message_transfer (f1ap_rrc_message_transfer.c)",
+        "decode_ul_rrc_message_transfer (f1ap_rrc_message_transfer.c)",
+        "decode_dl_rrc_message_transfer (f1ap_rrc_message_transfer.c)",
+        "read_slice_info (f1ap_interface_management.c)",
+        "write_slice_info (f1ap_interface_management.c)",
+        "encode_cells_to_activate (f1ap_interface_management.c)",
+        "free_ue_context_setup_req (f1ap_ue_context.c)",
+        "decode_cells_to_activate (f1ap_interface_management.c)",
+        "decode_cells_to_activate (f1ap_interface_management.c)",
+        "encode_f1ap_setup_request (f1ap_interface_management.c)",
+        "decode_f1ap_setup_request (f1ap_interface_management.c)",
+        "encode_f1ap_setup_response (f1ap_interface_management.c)",
+        "decode_f1ap_setup_response (f1ap_interface_management.c)",
+        "encode_cu_to_du_rrc_info (f1ap_ue_context.c)",
+        "encode_cu_to_du_rrc_info (f1ap_ue_context.c)",
+        "free_ue_context_setup_req (f1ap_ue_context.c)",
+        "decode_initial_ul_rrc_message_transfer (f1ap_rrc_message_transfer.c)",
+        "decode_ue_context_setup_req (f1ap_ue_context.c)",
+        "decode_ue_context_setup_req (f1ap_ue_context.c)",
+        "free_ue_context_setup_req (f1ap_ue_context.c)"
+      ],
+      "selected_config_patches": []
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260408_090851.json",
+    "timestamp": "2026-04-08T09:17:59.013479",
+    "record": {
+      "commit_hash": "3aa41631",
+      "full_commit_hash": "3aa416318d4375ad6ae9edcc726d276ebf576941",
+      "commit_message": "Fix F1AP protocol issue\n\nError Message: \"ERROR MESSAGE: Compilation failed with multiple errors in function ‘read_slice_info’ and ‘decode_f1ap_setup_response’ in file openair2/F1AP/lib/f1ap_interface_management.c.  \nSpecifically:  \n- Unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’ at line 386 in ‘read_slice_info’  \n- Unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’ at line 1115 in ‘decode_f1ap_setup_response’  \n- Requests for member ‘list’ in something not a structure or union at lines 387, 390, 1117, and 1118  \nThese errors caused the build to fail with:  \n\"gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o\n\nHighest Priority Compiler Ground Truth:\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (undeclared_identifier) ‘F1AP_ProtocolExtensionContainer_10696P34_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P34_t’?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (compiler_error) expected expression before ‘)’ token\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115 [decode_f1ap_setup_response] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116 [decode_f1ap_setup_response] (undeclared_identifier) ‘F1AP_ProtocolExtensionContainer_10696P228_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116 [decode_f1ap_setup_response] (compiler_error) expected expression before ‘)’ token\n(Omitted 2 secondary/cascade compiler cluster(s); fix primary issues first.)\"\n\nApplied 2 code patches and 0 config patches.\n\nSelected Patch Details:\n- Code: read_slice_info (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaced incorrect type 'F1AP_ProtocolExtensionContainer_10696P34_t' with the correct 'F1AP_ProtocolExtensionContainer_19016P34_t' as suggested by compiler to fix unknown type and member access errors.\n- Code: decode_f1ap_setup_response (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaced incorrect type 'F1AP_ProtocolExtensionContainer_10696P228_t' with the correct 'F1AP_ProtocolExtensionContainer_19016P228_t' as suggested by compiler to fix unknown type and member access errors.Fix F1AP protocol issue\n\nError Message: \"ERROR MESSAGE: Compilation failed with multiple errors in function ‘read_slice_info’ and ‘decode_f1ap_setup_response’ in file openair2/F1AP/lib/f1ap_interface_management.c.  \nSpecifically:  \n- Unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’ at line 386 in ‘read_slice_info’  \n- Unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’ at line 1115 in ‘decode_f1ap_setup_response’  \n- Requests for member ‘list’ in something not a structure or union at lines 387, 390, 1117, and 1118  \nThese errors caused the build to fail with:  \n\"gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o\n\nHighest Priority Compiler Ground Truth:\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (undeclared_identifier) ‘F1AP_ProtocolExtensionContainer_10696P34_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P34_t’?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (compiler_error) expected expression before ‘)’ token\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115 [decode_f1ap_setup_response] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116 [decode_f1ap_setup_response] (undeclared_identifier) ‘F1AP_ProtocolExtensionContainer_10696P228_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116 [decode_f1ap_setup_response] (compiler_error) expected expression before ‘)’ token\n(Omitted 2 secondary/cascade compiler cluster(s); fix primary issues first.)\"\n\nApplied 2 code patches and 0 config patches.\n\nSelected Patch Details:\n- Code: read_slice_info (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaced incorrect type 'F1AP_ProtocolExtensionContainer_10696P34_t' with the correct 'F1AP_ProtocolExtensionContainer_19016P34_t' as suggested by compiler to fix unknown type and member access errors.\n- Code: decode_f1ap_setup_response (f1ap_interface_management.c) (f1ap_interface_management.c)\n  Description: Replaced incorrect type 'F1AP_ProtocolExtensionContainer_10696P228_t' with the correct 'F1AP_ProtocolExtensionContainer_19016P228_t' as suggested by compiler to fix unknown type and member access errors.",
+      "commit_output": "[new_feature 3aa4163] Fix F1AP protocol issue\n 3 files changed, 2181 insertions(+), 3 deletions(-)\n mode change 100755 => 100644 cmake_targets/build_oai\n create mode 100644 openair2/F1AP/lib/f1ap_interface_management.c.backup",
+      "commit_error": null,
+      "commit_details": "3aa4163 Fix F1AP protocol issue\n cmake_targets/build_oai                            |    0\n openair2/F1AP/lib/f1ap_interface_management.c      |    6 +-\n .../F1AP/lib/f1ap_interface_management.c.backup    | 2178 ++++++++++++++++++++\n 3 files changed, 2181 insertions(+), 3 deletions(-)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260408_090851.json",
+      "selected_code_patches": [
+        "read_slice_info (f1ap_interface_management.c)",
+        "decode_f1ap_setup_response (f1ap_interface_management.c)"
+      ],
+      "selected_config_patches": []
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260409_061933.json",
+    "timestamp": "2026-04-09T06:28:24.031974",
+    "record": {
+      "commit_hash": "4e0f4d8f",
+      "full_commit_hash": "4e0f4d8f0ea8983daf900224a3d271d31e9148e4",
+      "commit_message": "Error Message: \"ERROR MESSAGE: \n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel+0x1c028): undefined reference to `asn_DEF_F1AP_LTMConfiguration'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel+0x1fa58): undefined reference to `asn_DEF_F1AP_LTMConfiguration'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel.ro+0x1cf30): undefined reference to `asn_DEF_F1AP_LTMConfiguration'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o\"\n\nApplied 1 code patches and 0 config patches.\n\nSelected Patch Details:\n- Code:  (f1ap-18.6.0.cmake) (f1ap-18.6.0.cmake)\n  Description: Adding the missing ASN.1 generated source file 'F1AP_LTMConfiguration.c' to the list of sources compiled into libasn1_f1ap.a resolves the undefined reference linker errors for 'asn_DEF_F1AP_LTMConfiguration'.",
+      "commit_output": "[new_feature 4e0f4d8] Error Message: \"ERROR MESSAGE: /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel+0x1c028): undefined reference to `asn_DEF_F1AP_LTMConfiguration' /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel+0x1fa58): undefined reference to `asn_DEF_F1AP_LTMConfiguration' /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel.ro+0x1cf30): undefined reference to `asn_DEF_F1AP_LTMConfiguration' /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o\"\n 2 files changed, 3652 insertions(+)\n create mode 100644 openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake.backup",
+      "commit_error": null,
+      "commit_details": "4e0f4d8 Error Message: \"ERROR MESSAGE: /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel+0x1c028): undefined reference to `asn_DEF_F1AP_LTMConfiguration' /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel+0x1fa58): undefined reference to `asn_DEF_F1AP_LTMConfiguration' /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel.ro+0x1cf30): undefined reference to `asn_DEF_F1AP_LTMConfiguration' /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o\"\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake      |   15 +\n .../F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake.backup    | 3637 ++++++++++++++++++++\n 2 files changed, 3652 insertions(+)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260409_061933.json",
+      "selected_code_patches": [
+        " (f1ap-18.6.0.cmake)"
+      ],
+      "selected_config_patches": []
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260409_061933.json",
+    "timestamp": "2026-04-09T07:29:17.931487",
+    "record": {
+      "commit_hash": "fc47f012",
+      "full_commit_hash": "fc47f01252492266238764532755d5a6c8b96a01",
+      "commit_message": "Fix F1AP protocol issue\n\nError Message: \"ERROR MESSAGE: \n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel+0x1c028): undefined reference to `asn_DEF_F1AP_LTMConfiguration'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel+0x1fa58): undefined reference to `asn_DEF_F1AP_LTMConfiguration'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel.ro+0x1cf30): undefined reference to `asn_DEF_F1AP_LTMConfiguration'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o\"\n\nApplied 1 code patches and 0 config patches.\n\nSelected Patch Details:\n- Code:  (f1ap-18.6.0.cmake) (f1ap-18.6.0.cmake)\n  Description: Adding the missing ASN.1 generated source file 'F1AP_LTMConfiguration.c' to the list of sources compiled into libasn1_f1ap.a resolves the undefined reference linker errors for 'asn_DEF_F1AP_LTMConfiguration'.",
+      "commit_output": "[new_feature fc47f01] Fix F1AP protocol issue\n 2 files changed, 3652 insertions(+)\n create mode 100644 openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake.backup",
+      "commit_error": null,
+      "commit_details": "fc47f01 Fix F1AP protocol issue\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake      |   15 +\n .../F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake.backup    | 3637 ++++++++++++++++++++\n 2 files changed, 3652 insertions(+)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260409_061933.json",
+      "selected_code_patches": [
+        " (f1ap-18.6.0.cmake)"
+      ],
+      "selected_config_patches": []
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260410_053929.json",
+    "timestamp": "2026-04-10T05:46:04.716815",
+    "record": {
+      "commit_hash": "63f5dcf8",
+      "full_commit_hash": "63f5dcf84cd7e2a730cd7458e252413b8795e0fe",
+      "commit_message": "Fixed CMake file linkers errors",
+      "commit_output": "[new_feature 63f5dcf] Fixed CMake file linkers errors\n 2 files changed, 3638 insertions(+)\n create mode 100644 openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake.backup",
+      "commit_error": null,
+      "commit_details": "63f5dcf Fixed CMake file linkers errors\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake      |    1 +\n .../F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake.backup    | 3637 ++++++++++++++++++++\n 2 files changed, 3638 insertions(+)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260410_053929.json",
+      "selected_code_patches": [],
+      "selected_config_patches": [
+        "f1ap_source (f1ap-18.6.0.cmake)"
+      ]
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260410_065819.json",
+    "timestamp": "2026-04-10T06:59:44.654283",
+    "record": {
+      "commit_hash": "b2d08749",
+      "full_commit_hash": "b2d08749b1fc1e05ef2d83a6154c5aa66e08326f",
+      "commit_message": "Fix RRC setup procedure",
+      "commit_output": "[new_feature b2d0874] Fix RRC setup procedure\n 2 files changed, 2788 insertions(+)\n create mode 100644 openair2/F1AP/lib/f1ap_ue_context.c.backup",
+      "commit_error": null,
+      "commit_details": "b2d0874 Fix RRC setup procedure\n openair2/F1AP/lib/f1ap_ue_context.c        |   15 +\n openair2/F1AP/lib/f1ap_ue_context.c.backup | 2773 ++++++++++++++++++++++++++++\n 2 files changed, 2788 insertions(+)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260410_065819.json",
+      "selected_code_patches": [
+        "encode_cu_to_du_rrc_info (f1ap_ue_context.c)",
+        "decode_cu_to_du_rrc_info (f1ap_ue_context.c)",
+        "encode_drbs_to_setup (f1ap_ue_context.c)",
+        "decode_drbs_to_setup (f1ap_ue_context.c)",
+        "encode_drbs_to_setupmod (f1ap_ue_context.c)",
+        "decode_drbs_to_setupmod (f1ap_ue_context.c)"
+      ],
+      "selected_config_patches": []
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260410_071534.json",
+    "timestamp": "2026-04-10T07:21:17.214408",
+    "record": {
+      "commit_hash": "ac534d8a",
+      "full_commit_hash": "ac534d8a1bbac6491f8b0a54d04266dba84de234",
+      "commit_message": "Fixed Build Log errors 2",
+      "commit_output": "[new_feature ac534d8] Fixed Build Log errors 2\n 2 files changed, 2766 insertions(+), 6 deletions(-)\n create mode 100644 openair2/F1AP/lib/f1ap_ue_context.c.backup",
+      "commit_error": null,
+      "commit_details": "ac534d8 Fixed Build Log errors 2\n openair2/F1AP/lib/f1ap_ue_context.c        |   12 +-\n openair2/F1AP/lib/f1ap_ue_context.c.backup | 2760 ++++++++++++++++++++++++++++\n 2 files changed, 2766 insertions(+), 6 deletions(-)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260410_071534.json",
+      "selected_code_patches": [
+        "encode_cu_to_du_rrc_info (f1ap_ue_context.c)",
+        "decode_cu_to_du_rrc_info (f1ap_ue_context.c)",
+        "encode_drbs_to_setup (f1ap_ue_context.c)",
+        "decode_drbs_to_setup (f1ap_ue_context.c)",
+        "encode_drbs_to_setupmod (f1ap_ue_context.c)",
+        "decode_drbs_to_setupmod (f1ap_ue_context.c)"
+      ],
+      "selected_config_patches": []
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260410_100047.json",
+    "timestamp": "2026-04-10T10:03:16.134091",
+    "record": {
+      "commit_hash": "d27801fd",
+      "full_commit_hash": "d27801fd79893b3848dbc212a0abbd0d64b801b8",
+      "commit_message": "Fix F1AP protocol issue\n\nError Message: \"ERROR MESSAGE:\n\"/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel.ro+0x20cb0): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMappingList'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel.ro+0x24130): undefined reference to `asn_DEF_F1AP_LTMConfiguration'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel.ro+0x26b30): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMappingList'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP\"\n\nApplied 0 code patches and 1 config patches.\n\nSelected Patch Details:\n- Config: f1ap_source (f1ap-18.6.0.cmake) (f1ap-18.6.0.cmake)\n  Description: Add generated ASN.1 sources `F1AP_LTMConfigurationIDMappingList.c`, `F1AP_LTMConfiguration.c`, `F1AP_LTMIndicator.c` so linker symbols `asn_DEF_F1AP_LTMConfigurationIDMappingList`, `asn_DEF_F1AP_LTMConfiguration`, `asn_DEF_F1AP_LTMIndicator` are included in libasn1.",
+      "commit_output": "[new_feature d27801f] Fix F1AP protocol issue\n 2 files changed, 3 insertions(+), 4 deletions(-)",
+      "commit_error": null,
+      "commit_details": "d27801f Fix F1AP protocol issue\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake        | 3 +++\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake.backup | 4 ----\n 2 files changed, 3 insertions(+), 4 deletions(-)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260410_100047.json",
+      "selected_code_patches": [],
+      "selected_config_patches": [
+        "f1ap_source (f1ap-18.6.0.cmake)"
+      ]
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260410_101252.json",
+    "timestamp": "2026-04-10T10:13:38.936258",
+    "record": {
+      "commit_hash": "b6afd68e",
+      "full_commit_hash": "b6afd68e1277b8e74d29908f9c6874583a0ffe59",
+      "commit_message": "Fix F1AP protocol issue\n\nError Message: \"ERROR MESSAGE:  \n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'  \ncollect2: error: ld returned 1 exit status  \ngmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1  \ngmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2  \ngmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2  \ngmake: *** [Makefile:891: nr-softmodem] Error 2  \n\nContext: Linker error during build of nr-softmod\"\n\nApplied 0 code patches and 1 config patches.\n\nSelected Patch Details:\n- Config: f1ap_source (f1ap-18.6.0.cmake) (f1ap-18.6.0.cmake)\n  Description: Add generated ASN.1 sources `F1AP_LTMConfigurationIDMapping_Item.c` so linker symbols `asn_DEF_F1AP_LTMConfigurationIDMapping_Item` are included in libasn1.",
+      "commit_output": "[new_feature b6afd68] Fix F1AP protocol issue\n 2 files changed, 4 insertions(+)",
+      "commit_error": null,
+      "commit_details": "b6afd68 Fix F1AP protocol issue\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake        | 1 +\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake.backup | 3 +++\n 2 files changed, 4 insertions(+)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260410_101252.json",
+      "selected_code_patches": [],
+      "selected_config_patches": [
+        "f1ap_source (f1ap-18.6.0.cmake)"
+      ]
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260410_112259.json",
+    "timestamp": "2026-04-10T11:25:20.585182",
+    "record": {
+      "commit_hash": "f99d3dae",
+      "full_commit_hash": "f99d3dae1837e1612900031319af63a4fc9882c9",
+      "commit_message": "Fix F1AP protocol issue\n\nError Message: \"ERROR MESSAGE: /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'\nLinker error causing build failure of nr-softmodem executable.\nBuild error location: Linking stage of nr-softmodem (nr-softmodem.c.o)\nBuild failure indicated by:\ncollect2: error: ld returned 1 exit status\ngmake: *** [Makefile:891: nr-softmodem] Error 2\n\nThis undefined reference prevents successful compilation and linking of the nr-softmodem target, thus blocking system operation.\"\n\nApplied 0 code patches and 1 config patches.\n\nSelected Patch Details:\n- Config: f1ap_source (f1ap-18.6.0.cmake) (f1ap-18.6.0.cmake)\n  Description: Add generated ASN.1 sources `F1AP_LTMConfigurationID.c` so linker symbols `asn_DEF_F1AP_LTMConfigurationID` are included in libasn1.",
+      "commit_output": "[new_feature f99d3da] Fix F1AP protocol issue\n 2 files changed, 2 insertions(+)",
+      "commit_error": null,
+      "commit_details": "f99d3da Fix F1AP protocol issue\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake        | 1 +\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake.backup | 1 +\n 2 files changed, 2 insertions(+)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260410_112259.json",
+      "selected_code_patches": [],
+      "selected_config_patches": [
+        "f1ap_source (f1ap-18.6.0.cmake)"
+      ]
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260413_065103.json",
+    "timestamp": "2026-04-13T07:07:13.785363",
+    "record": {
+      "commit_hash": "361ac1dc",
+      "full_commit_hash": "361ac1dc1e4ad9ea4b30e0275217908b9affb7d7",
+      "commit_message": "Fix F1AP protocol issue\n\nError Message: \"ERROR MESSAGE:\n\"/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel.ro+0xaf0): undefined reference to `asn_DEF_F1AP_LTMCellSwitchInformation'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfiguration.c.o):(.data.rel+0x168): undefined reference to `asn_DEF_F1AP_LTMCFRAResourceConfig'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfiguration.c.o):(.data.rel+0x1b8): undefined reference to `asn_DEF_F1AP_LTMCFRAResourceConfig'\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMCFRAResourceConfig-\"\n\nApplied 0 code patches and 1 config patches.\n\nSelected Patch Details:\n- Config: f1ap_source (f1ap-18.6.0.cmake) (f1ap-18.6.0.cmake)\n  Description: Add generated ASN.1 sources `F1AP_LTMCellSwitchInformation.c`, `F1AP_LTMCFRAResourceConfig.c` so linker symbols `asn_DEF_F1AP_LTMCellSwitchInformation`, `asn_DEF_F1AP_LTMCFRAResourceConfig` are included in libasn1.",
+      "commit_output": "[new_feature 361ac1d] Fix F1AP protocol issue\n 2 files changed, 4 insertions(+), 3 deletions(-)",
+      "commit_error": null,
+      "commit_details": "361ac1d Fix F1AP protocol issue\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake        | 2 ++\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake.backup | 5 ++---\n 2 files changed, 4 insertions(+), 3 deletions(-)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260413_065103.json",
+      "selected_code_patches": [],
+      "selected_config_patches": [
+        "f1ap_source (f1ap-18.6.0.cmake)"
+      ]
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260415_061704.json",
+    "timestamp": "2026-04-15T06:18:19.330494",
+    "record": {
+      "commit_hash": "e4f06813",
+      "full_commit_hash": "e4f0681371fe911f2f167da4bec6e901415d14ed",
+      "commit_message": "Fix F1AP protocol i\n\nError Message: \"ERROR MESSAGE:\n\"/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel+0x1c028): undefined reference to `asn_DEF_F1AP_LTMConfiguration'\"\nLinker error causing build failure of nr-softmodem executable.\nBuild terminated with:\n\"collect2: error: ld returned 1 exit status\"\nand subsequent make errors:\n\"gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1\"\n\"gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2\"\n\"gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2\"\n\"gmake: *** [Make\"\n\nApplied 0 code patches and 1 config patches.\n\nSelected Patch Details:\n- Config: f1ap_source (f1ap-18.6.0.cmake) (f1ap-18.6.0.cmake)\n  Description: Add generated ASN.1 sources `F1AP_LTMConfiguration.c` so linker symbols `asn_DEF_F1AP_LTMConfiguration` are included in libasn1.",
+      "commit_output": "[new_feature e4f0681] Fix F1AP protocol i\n 2 files changed, 3 insertions(+), 1 deletion(-)",
+      "commit_error": null,
+      "commit_details": "e4f0681 Fix F1AP protocol i\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake        | 1 +\n openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake.backup | 3 ++-\n 2 files changed, 3 insertions(+), 1 deletion(-)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260415_061704.json",
+      "selected_code_patches": [],
+      "selected_config_patches": [
+        "f1ap_source (f1ap-18.6.0.cmake)"
+      ]
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260518_154742.json",
+    "timestamp": "2026-05-18T10:29:17.953709",
+    "record": {
+      "commit_hash": "32378365",
+      "full_commit_hash": "323783655f970aea8678b9eba14e1c9e7320f1f5",
+      "commit_message": "Fix RRC setup procedure\n\nError Message: \"ERROR MESSAGE:\nCompilation errors in function ‘encode_drbs_to_setupmod’ and related functions in file openair2/F1AP/lib/f1ap_ue_context.c, including:\n\n- \"error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P83_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P83_t’?\" at line 726 in function ‘encode_drbs_to_setupmod’\n\n- Multiple \"error: request for member ‘list’ in something not a structure or union\" at lines 671, 679, 729, 737, 786, 788, 789, 853, 854 in functions ‘encode_drbs_to_setupmod’, ‘decode_drbs_to_setup’, and ‘decode_drbs_to_setupmod’\n\n- \"error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P82_t’\" at line 784 in function ‘decode_drbs_to_setup\n\nHighest Priority Compiler Ground Truth:\n- /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:61 [encode_cu_to_du_rrc_info] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P60_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P60_t’?\n- /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:92 [decode_cu_to_du_rrc_info] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P60_t’\n- /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:92 [decode_cu_to_du_rrc_info] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P60_t’\n- /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:669 [encode_drbs_to_setup] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P82_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P82_t’?\n- /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:784 [decode_drbs_to_setup] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P82_t’\n- /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:784 [decode_drbs_to_setup] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P82_t’\n- /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:726 [encode_drbs_to_setupmod] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P83_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P83_t’?\n- /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:850 [decode_drbs_to_setupmod] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P83_t’\n- /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:850 [decode_drbs_to_setupmod] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P83_t’\n(Omitted 6 secondary/cascade compiler cluster(s); fix primary issues first.)\"\n\nApplied 3 code patches and 0 config patches.\n\nSelected Patch Details:\n- Code: encode_cu_to_du_rrc_info / decode_cu_to_du_rrc_info (f1ap_ue_context.c) (f1ap_ue_context.c)\n  Description: Replace incorrect ASN.1 generated type 'F1AP_ProtocolExtensionContainer_10696P60_t' with the correct 'F1AP_ProtocolExtensionContainer_19016P60_t' as suggested by compiler to fix unknown type errors and enable correct struct member access.\n- Code: encode_drbs_to_setup / encode_drbs_to_setupmod / decode_drbs_to_setup / decode_drbs_to_setupmod (f1ap_ue_context.c) (f1ap_ue_context.c)\n  Description: Replace incorrect ASN.1 generated type 'F1AP_ProtocolExtensionContainer_10696P82_t' with the correct 'F1AP_ProtocolExtensionContainer_19016P82_t' to fix unknown type errors and allow proper access to 'list' member.\n- Code: encode_drbs_to_setupmod / decode_drbs_to_setupmod (f1ap_ue_context.c) (f1ap_ue_context.c)\n  Description: Replace incorrect ASN.1 generated type 'F1AP_ProtocolExtensionContainer_10696P83_t' with the correct 'F1AP_ProtocolExtensionContainer_19016P83_t' as per compiler suggestion to fix unknown type errors and enable correct struct usage.",
+      "commit_output": "[main 323783655f] Fix RRC setup procedure\n 2 files changed, 2494 insertions(+), 3 deletions(-)\n create mode 100644 openair2/F1AP/lib/f1ap_ue_context.c.backup",
+      "commit_error": null,
+      "commit_details": "323783655f Fix RRC setup procedure\n openair2/F1AP/lib/f1ap_ue_context.c        |    6 +-\n openair2/F1AP/lib/f1ap_ue_context.c.backup | 2491 ++++++++++++++++++++++++++++\n 2 files changed, 2494 insertions(+), 3 deletions(-)",
+      "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-test",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260518_154742.json",
+      "selected_code_patches": [
+        "encode_cu_to_du_rrc_info / decode_cu_to_du_rrc_info (f1ap_ue_context.c)",
+        "encode_drbs_to_setup / encode_drbs_to_setupmod / decode_drbs_to_setup / decode_drbs_to_setupmod (f1ap_ue_context.c)",
+        "encode_drbs_to_setupmod / decode_drbs_to_setupmod (f1ap_ue_context.c)"
+      ],
+      "selected_config_patches": []
+    }
+  },
+  {
+    "activity_type": "git-commit",
+    "activity_label": "Git Commit",
+    "title": "bug_analysis_20260601_193738.json",
+    "timestamp": "2026-06-01T14:10:58.890629",
+    "record": {
+      "commit_hash": "0b11db90",
+      "full_commit_hash": "0b11db902dc291601c023d5343eab3c50e6c10cc",
+      "commit_message": "Fix gNB configuration issue\n\nError Message: \"ERROR MESSAGE: \"No AMF is associated to the gNB\"\n\nApplied 0 code patches and 2 config patches.\n\nSelected Patch Details:\n- Config: amf_ip_address (cu_gnb.conf) (cu_gnb.conf)\n  Description: Must match deployment context value to ensure gNB correctly targets the AMF IP for NG interface association.\n- Config: GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf) (cu_gnb.conf)\n  Description: Must match deployment context value to ensure gNB uses correct IP address for NG interface towards AMF.",
+      "commit_output": "[main 0b11db902d] Fix gNB configuration issue\n 3 files changed, 13 insertions(+), 2 deletions(-)",
+      "commit_error": null,
+      "commit_details": "0b11db902d Fix gNB configuration issue\n openair2/RRC/NR/rrc_gNB.c                               | 6 ++++++\n openair2/RRC/NR/rrc_gNB.c.backup                        | 5 +++++\n targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf.backup | 4 ++--\n 3 files changed, 13 insertions(+), 2 deletions(-)",
+      "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+      "should_push": false,
+      "pushed": false,
+      "analysis_filename": "bug_analysis_20260601_193738.json",
+      "selected_code_patches": [],
+      "selected_config_patches": [
+        "amf_ip_address (cu_gnb.conf)",
+        "GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf)"
+      ]
+    }
+  }
+]

@@ -1,0 +1,215 @@
+{
+  "error_message": "ERROR MESSAGE: \"./build_oai: line 503: cmake: command not found - build have failed",
+  "log_file": "version_err.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/version_err.log",
+  "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-test",
+  "timestamp": "2026-05-27T15:19:22.489080",
+  "results": {
+    "error_message": "ERROR MESSAGE: \"./build_oai: line 503: cmake: command not found - build have failed",
+    "extracted_error": false,
+    "error_source": "user_provided",
+    "timestamp": "2026-05-27T15:19:22.437122",
+    "log_file": "log_files/version_err.log",
+    "deployment_context": {
+      "role": "gNB",
+      "active_configs": [],
+      "network_params": {
+        "gnb_ipv4": null,
+        "amf_ipv4": null,
+        "ngap_port": null,
+        "assoc_state": "UNKNOWN"
+      },
+      "log_anchors": [
+        "build have failed"
+      ],
+      "detailed_log_context": {
+        "total_lines": 5,
+        "error_sequences": [
+          {
+            "error_line": "build have failed",
+            "line_number": 5,
+            "context": [
+              "     Will compile gNB",
+              "     OPENAIR_DIR    = /home/tcs/OAI-CU",
+              "     Running \"cmake ../../..\"",
+              "     ./build_oai: line 503: cmake: command not found",
+              " >>> build have failed"
+            ]
+          }
+        ],
+        "debug_values": {},
+        "relevant_sections": []
+      },
+      "compiler_ground_truth_errors": [],
+      "cu_ip_address": "10.138.77.131",
+      "du_ip_address": "10.138.77.131",
+      "gnb_ip_address": "10.138.77.131",
+      "amf_ip_address": "192.168.70.132",
+      "core_network_machine_ip": "10.138.77.217",
+      "local_s_portc": "501",
+      "local_s_portd": "2152",
+      "remote_s_portc": "500",
+      "remote_s_portd": "2152",
+      "dnn": "oai",
+      "nssai_sst": "1",
+      "nssai_sd": "0xc",
+      "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+      "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+      "log_error_kind_raw": "dependency",
+      "log_error_kind": "dependency",
+      "build_log_mode": false,
+      "runtime_log_mode": false,
+      "other_log_mode": false,
+      "cmake_build_system_mode": false,
+      "dependency_advice_mode": true,
+      "full_dependency_log_text": "Will compile gNB\nOPENAIR_DIR    = /home/tcs/OAI-CU\nRunning \"cmake ../../..\"\n./build_oai: line 503: cmake: command not found\nbuild have failed"
+    },
+    "log_error_kind": "dependency",
+    "ground_truth_errors": [],
+    "phase2_analysis": {
+      "suspected_functions": [],
+      "suspected_configs": [],
+      "deployment_context": {
+        "role": "gNB",
+        "active_configs": [],
+        "network_params": {
+          "gnb_ipv4": null,
+          "amf_ipv4": null,
+          "ngap_port": null,
+          "assoc_state": "UNKNOWN"
+        },
+        "log_anchors": [
+          "build have failed"
+        ],
+        "detailed_log_context": {
+          "total_lines": 5,
+          "error_sequences": [
+            {
+              "error_line": "build have failed",
+              "line_number": 5,
+              "context": [
+                "     Will compile gNB",
+                "     OPENAIR_DIR    = /home/tcs/OAI-CU",
+                "     Running \"cmake ../../..\"",
+                "     ./build_oai: line 503: cmake: command not found",
+                " >>> build have failed"
+              ]
+            }
+          ],
+          "debug_values": {},
+          "relevant_sections": []
+        },
+        "compiler_ground_truth_errors": [],
+        "cu_ip_address": "10.138.77.131",
+        "du_ip_address": "10.138.77.131",
+        "gnb_ip_address": "10.138.77.131",
+        "amf_ip_address": "192.168.70.132",
+        "core_network_machine_ip": "10.138.77.217",
+        "local_s_portc": "501",
+        "local_s_portd": "2152",
+        "remote_s_portc": "500",
+        "remote_s_portd": "2152",
+        "dnn": "oai",
+        "nssai_sst": "1",
+        "nssai_sd": "0xc",
+        "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+        "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+        "log_error_kind_raw": "dependency",
+        "log_error_kind": "dependency",
+        "build_log_mode": false,
+        "runtime_log_mode": false,
+        "other_log_mode": false,
+        "cmake_build_system_mode": false,
+        "dependency_advice_mode": true,
+        "full_dependency_log_text": "Will compile gNB\nOPENAIR_DIR    = /home/tcs/OAI-CU\nRunning \"cmake ../../..\"\n./build_oai: line 503: cmake: command not found\nbuild have failed"
+      },
+      "retrieval_method": "dependency_advice_skipped",
+      "ground_truth_errors": [],
+      "compiler_cluster_analysis": {},
+      "build_error_mode": false,
+      "narrow_compiler_phase2": false,
+      "log_error_kind": "dependency",
+      "top_ground_truth_clusters": [],
+      "coverage_stats": {
+        "total_compiler_errors_parsed": 0,
+        "ground_truth_with_function_name": 0,
+        "ground_truth_with_file_path": 0
+      }
+    },
+    "phase3_fixes": {
+      "error_text": "ERROR MESSAGE: \"./build_oai: line 503: cmake: command not found - build have failed",
+      "fix_suggestion": {
+        "suspected_functions": [],
+        "suspected_configs": [],
+        "reason": "The 'cmake' executable is not found in the system PATH, causing the build to fail.\n\nInstall cmake using the system package manager and ensure it is in the PATH.",
+        "config_fix": "Install cmake using the system package manager and ensure it is in the PATH.",
+        "code_patches": [],
+        "config_patches": [],
+        "root_cause_analysis": "The 'cmake' executable is not found in the system PATH, causing the build to fail.",
+        "investigation_steps": [
+          "OS inference: linux (confidence: high) \u2014 The log shows Linux-style paths (/home/tcs/OAI-CU) and a shell script error.",
+          "Suggested commands (Linux):",
+          "  $ sudo apt update",
+          "  $ sudo apt install -y cmake",
+          "  $ cmake --version",
+          "",
+          "Verification:",
+          "  - Run 'cmake --version' to confirm cmake is installed and accessible.",
+          "",
+          "Notes: If using a non-Debian-based Linux distribution, replace 'apt' with the appropriate package manager (e.g., dnf, yum, pacman)."
+        ],
+        "specification_context": "",
+        "dependency_advice_only": true,
+        "dependency_os_detected": "linux",
+        "dependency_commands_by_os": {
+          "linux": [
+            "sudo apt update",
+            "sudo apt install -y cmake",
+            "cmake --version"
+          ],
+          "windows": [],
+          "macos": []
+        }
+      },
+      "context_summary": {
+        "candidate_functions_count": 0,
+        "candidate_configs_count": 0,
+        "call_graph_entries": 0,
+        "pattern_matched": false
+      },
+      "phase3_llm": {
+        "mode": "dependency_advice",
+        "parse_ok": true,
+        "model": "gpt-4o-mini",
+        "os_detected": "linux",
+        "os_detection_confidence": "high"
+      },
+      "dependency_advice_mode": true
+    },
+    "summary": {
+      "log_error_kind": "dependency",
+      "dependency_advice_mode": true,
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "fix_suggestions_generated": true,
+      "context_aware": true,
+      "missing_configs_resolved": 0
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          "sudo apt update",
+          "sudo apt install -y cmake",
+          "cmake --version"
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    }
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260527_151922.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

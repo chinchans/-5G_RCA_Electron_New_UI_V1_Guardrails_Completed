@@ -1,0 +1,51 @@
+frame = 350, slot = 0 : [RRC] UE with RNTI 7245 in RRC_CONNECTED state
+frame = 350, slot = 0 : [GNB] Successfully completed RRC Connection Establishment
+frame = 350, slot = 0 : [NGAP] UE 7245 connected with AMF (AMF UE ID: 762143958)
+frame = 350, slot = 0 : [NGAP] Received Downlink NAS Transport from AMF
+frame = 350, slot = 0 : Function: ngap_gNB_handle_downlink_nas_transport processing
+frame = 350, slot = 1 : [RRC] Forwarding NAS message to UE 7245
+frame = 350, slot = 1 : [RRC] Encapsulating NAS PDU in DL Information Transfer
+frame = 350, slot = 1 : Function: rrc_gNB_encode_dl_dcch processing
+frame = 350, slot = 1 : [MAC] Scheduling PDSCH for UE 7245
+frame = 350, slot = 1 : [PHY] Transmitting PDSCH for UE 7245
+frame = 350, slot = 2 : [RRC] DL Information Transfer sent successfully
+frame = 350, slot = 2 : [PHY] Received PUSCH from UE 7245
+frame = 350, slot = 2 : [MAC] Forwarding UL-DCCH message to RRC
+frame = 350, slot = 2 : [RRC] Received UL Information Transfer from UE 7245
+frame = 350, slot = 3 : Function: rrc_gNB_decode_ul_dcch processing
+frame = 350, slot = 3 : [RRC] Extracted NAS message from UL Information Transfer
+frame = 350, slot = 3 : [NGAP] Forwarding NAS message to AMF
+frame = 350, slot = 3 : Function: ngap_gNB_nas_uplink processing
+frame = 350, slot = 3 : [NGAP] Sent Uplink NAS Transport to AMF
+frame = 350, slot = 4 : [NGAP] Received Initial Context Setup Request from AMF
+frame = 350, slot = 4 : Function: ngap_gNB_handle_initial_context_setup_request processing
+frame = 350, slot = 4 : [NGAP] UE Security Capabilities received from AMF
+frame = 350, slot = 4 : [NGAP] Integrity Algorithms: 128-NIA1, 128-NIA2
+frame = 350, slot = 4 : [NGAP] Ciphering Algorithms: 128-NEA0, 128-NEA1, 128-NEA2
+frame = 350, slot = 5 : [RRC] Processing security information from NGAP
+frame = 350, slot = 5 : Function: rrc_gNB_process_security processing
+frame = 350, slot = 5 : [RRC] Setting up security for UE 7245
+frame = 350, slot = 5 : [SECURITY] Derived KeNB (truncated): 8a9fc712b34d9e5f
+frame = 350, slot = 5 : [SECURITY] Selecting security algorithms
+frame = 350, slot = 5 : [SECURITY] Selected integrity: 128-NIA2, ciphering: 128-NEA2
+frame = 350, slot = 6 : [RRC] Generating Security Mode Command for UE 7245
+frame = 350, slot = 6 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 350, slot = 6 : [RRC] Building SecurityModeCommand message
+frame = 350, slot = 6 : [MAC] Scheduling PDSCH for security mode command
+frame = 350, slot = 6 : [PHY] Transmitting PDSCH to UE 7245
+frame = 350, slot = 7 : [RRC] Security Mode Command sent to UE 7245
+frame = 350, slot = 7 : [PHY] Received PUSCH from UE 7245
+frame = 350, slot = 7 : [MAC] Forwarding UL-DCCH to RRC
+frame = 350, slot = 7 : [RRC] Received Security Mode Complete from UE
+frame = 350, slot = 8 : Function: rrc_gNB_process_SecurityModeComplete processing
+frame = 350, slot = 8 : [RRC] Verifying integrity protection
+frame = 350, slot = 8 : [PDCP] Integrity verification successful
+frame = 350, slot = 8 : [RRC] Activating security on all SRBs
+frame = 350, slot = 8 : [PDCP] Configuring security for SRB1: integrity and ciphering activated
+frame = 350, slot = 8 : [RRC] Security Mode procedure completed successfully
+frame = 350, slot = 9 : [RRC] UE 7245 now operating with secured radio bearers
+frame = 350, slot = 9 : [NGAP] Preparing Initial Context Setup Response
+frame = 350, slot = 9 : Function: ngap_gNB_generate_initial_context_setup_response processing
+frame = 350, slot = 9 : [NGAP] Sending Initial Context Setup Response to AMF
+frame = 351, slot = 0 : [NGAP] AMF acknowledged successful security activation
+frame = 351, slot = 0 : [GNB] Security Mode Procedure successfully completed for UE 7245 

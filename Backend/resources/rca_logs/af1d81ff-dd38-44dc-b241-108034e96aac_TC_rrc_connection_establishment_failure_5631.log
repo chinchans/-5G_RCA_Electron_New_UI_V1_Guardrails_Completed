@@ -1,0 +1,32 @@
+frame = 301, slot = 0 : [PHY] Detected PRACH preamble from new UE
+frame = 301, slot = 0 : Function: handle_nr_prach processing
+frame = 301, slot = 1 : [MAC] Assigning temporary C-RNTI 5631 to new UE
+frame = 301, slot = 1 : [MAC] Preparing Random Access Response (Msg2)
+frame = 301, slot = 1 : Function: nr_generate_Msg2 processing
+frame = 301, slot = 1 : [PHY] Scheduling PDSCH transmission for RAR
+frame = 301, slot = 2 : [MAC] Transmitted RAR to UE with TC-RNTI 5631
+frame = 301, slot = 3 : [MAC] Received Msg3 from UE with TC-RNTI 5631
+frame = 301, slot = 3 : Function: nr_process_msg3 processing
+frame = 301, slot = 3 : [MAC] Contention resolution successful for UE 5631
+frame = 301, slot = 3 : [MAC] Forwarding RRC Connection Request to RRC
+frame = 301, slot = 4 : [RRC] Processing RRC Connection Request from UE with rnti 5631
+frame = 301, slot = 4 : Function: nr_rrc_gNB_decode_ccch processing
+frame = 301, slot = 4 : [RRC] UE 5631 requesting new RRC connection
+frame = 301, slot = 4 : [RRC] UE identity: 0x723f49a821bc
+frame = 301, slot = 4 : [RRC] Establishment cause: mo-Data
+frame = 301, slot = 5 : [RRC] Creating UE context for 5631
+frame = 301, slot = 5 : Function: rrc_gNB_generate_RRCSetup processing
+frame = 301, slot = 5 : [RRC] RRC context allocation failed for UE 5631
+frame = 301, slot = 5 : [RRC] Maximum number of UEs already reached (current: 512, max: 512)
+frame = 301, slot = 5 : ERROR: RRC setup failed for UE with rnti 5631
+frame = 301, slot = 6 : [RRC] Failed to establish RRC connection
+frame = 301, slot = 6 : Function: rrc_gNB_generate_RRCReject processing
+frame = 301, slot = 6 : [RRC] Generating RRC Connection Reject for UE 5631
+frame = 301, slot = 7 : [RRC] RRC Connection Reject sent to UE 5631
+frame = 301, slot = 7 : Function: mac_remove_ue processing
+frame = 301, slot = 7 : [MAC] Removing temporary C-RNTI 5631 from MAC context
+frame = 301, slot = 8 : [RRC] Releasing RRC UE context for RNTI 5631
+frame = 301, slot = 8 : [RRC] RRCConnectionSetup failed, returning to IDLE state
+frame = 301, slot = 8 : Function: rrc_gNB_remove_ue_context processing
+frame = 301, slot = 9 : [RRC] UE context for 5631 has been released
+frame = 301, slot = 9 : [GNB] Radio Link for UE 5631 terminated due to RRC setup failure 

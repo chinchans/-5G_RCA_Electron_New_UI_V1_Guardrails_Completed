@@ -1,0 +1,38 @@
+{
+  "message": "Document uploaded successfully",
+  "file_id": "ed120746-7d07-4de0-a932-25f5aee00d29.txt",
+  "filename": "clean_spec.txt",
+  "file_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/ed120746-7d07-4de0-a932-25f5aee00d29.txt",
+  "file_size": 218,
+  "guardrails": {
+    "passed": true,
+    "blocked": false,
+    "reasons": [],
+    "scan": {
+      "safe": true,
+      "backend": "rules_only",
+      "label": "BENIGN",
+      "score": 0.0,
+      "matched_patterns": [],
+      "chunks_scanned": 1,
+      "unsafe_chunks": 0,
+      "detail": "Full scan: 1 chunk(s); L2 llama_scanned=0; unsafe=0",
+      "findings": []
+    },
+    "layers": {
+      "context": "upload",
+      "source": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/ed120746-7d07-4de0-a932-25f5aee00d29.txt",
+      "text_length": 218,
+      "tiered_scan": {
+        "pipeline": "full_layer2",
+        "layer1_total_chunks": 1,
+        "layer1_suspicious_chunks": null,
+        "layer1_clean_chunks": null,
+        "layer2_llama_scanned_chunks": 0,
+        "layer2_skipped_chunks": 0
+      }
+    }
+  },
+  "uploaded_at": "2026-06-17T12:12:49.623042",
+  "upload_result_json": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/extract/JSON files/ed120746-7d07-4de0-a932-25f5aee00d29.upload.json"
+}

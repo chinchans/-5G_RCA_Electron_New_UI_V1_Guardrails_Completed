@@ -1,0 +1,44 @@
+{
+  "message": "Document uploaded successfully",
+  "file_id": "19633b5e-c6c1-47e1-9c71-c5e6b1516e5a.docx",
+  "filename": "O-RAN_LEVEL-2_TEST-5.docx",
+  "file_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/19633b5e-c6c1-47e1-9c71-c5e6b1516e5a.docx",
+  "file_size": 1727059,
+  "guardrails": {
+    "passed": true,
+    "blocked": false,
+    "reasons": [
+      "Layer 2 Llama Guard full upload scan unavailable \u2014 fell back to tiered Layer 1 scan (You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M.\n401 Client Error. (Request ID: Root=1-6a3270e8-337a1a53028fdfb7579c8de9;c3560c37-aa57-439e-80ad-a8484d7429b9)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M/resolve/main/config.json.\nAccess to model meta-llama/Llama-Prompt-Guard-2-86M is restricted. You must have access to it and be authenticated to access it. Please log in.)."
+    ],
+    "scan": {
+      "safe": true,
+      "backend": "layer1_only",
+      "label": "BENIGN",
+      "score": 0.0,
+      "matched_patterns": [],
+      "chunks_scanned": 61,
+      "unsafe_chunks": 0,
+      "detail": "Tiered scan: 61 chunk(s); L1 suspicious=0; L2 llama_scanned=0; L1 clean (skipped L2)=61; unsafe=0",
+      "findings": []
+    },
+    "layers": {
+      "context": "upload",
+      "source": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/19633b5e-c6c1-47e1-9c71-c5e6b1516e5a.docx",
+      "text_length": 100000,
+      "tiered_scan": {
+        "pipeline": "tiered",
+        "layer1_total_chunks": 61,
+        "layer1_suspicious_chunks": 0,
+        "layer1_clean_chunks": 61,
+        "layer2_llama_scanned_chunks": 0,
+        "layer2_skipped_chunks": 61,
+        "upload_layer2_fallback": true,
+        "requested_pipeline": "full_layer2",
+        "layer2_unavailable": true,
+        "model_error": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M.\n401 Client Error. (Request ID: Root=1-6a3270e8-337a1a53028fdfb7579c8de9;c3560c37-aa57-439e-80ad-a8484d7429b9)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M/resolve/main/config.json.\nAccess to model meta-llama/Llama-Prompt-Guard-2-86M is restricted. You must have access to it and be authenticated to access it. Please log in."
+      }
+    }
+  },
+  "uploaded_at": "2026-06-17T15:33:21.041789",
+  "upload_result_json": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/extract/JSON files/19633b5e-c6c1-47e1-9c71-c5e6b1516e5a.upload.json"
+}

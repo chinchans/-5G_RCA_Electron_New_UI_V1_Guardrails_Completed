@@ -1,0 +1,56 @@
+{
+  "cu_usrp.log": {
+    "file_id": "d8d587fa-68f8-4c38-8c50-7a474a2e03fb",
+    "saved_name": "d8d587fa-68f8-4c38-8c50-7a474a2e03fb_cu_usrp.log",
+    "file_path": "resources\\rca_logs\\d8d587fa-68f8-4c38-8c50-7a474a2e03fb_cu_usrp.log",
+    "upload_date": "2025-10-13T14:58:31.047598"
+  },
+  "TC_initial_context_setup_failures_security_mode_command_failure_7672.log": {
+    "file_id": "326d4bfc-a959-4c58-a44b-183858b576f8",
+    "saved_name": "326d4bfc-a959-4c58-a44b-183858b576f8_TC_initial_context_setup_failures_security_mode_command_failure_7672.log",
+    "file_path": "resources\\rca_logs\\326d4bfc-a959-4c58-a44b-183858b576f8_TC_initial_context_setup_failures_security_mode_command_failure_7672.log",
+    "upload_date": "2025-10-13T14:58:31.044592"
+  },
+  "TC_pdcp_integrity_failure_handover_8245.log": {
+    "file_id": "c0e701d6-c39f-47d5-9a86-c21c97640d5e",
+    "saved_name": "c0e701d6-c39f-47d5-9a86-c21c97640d5e_TC_pdcp_integrity_failure_handover_8245.log",
+    "file_path": "resources\\rca_logs\\c0e701d6-c39f-47d5-9a86-c21c97640d5e_TC_pdcp_integrity_failure_handover_8245.log",
+    "upload_date": "2025-10-13T14:58:31.039599"
+  },
+  "TC_pdcp_integrity_verification_failure_8921.log": {
+    "file_id": "2e7c7ca8-2fc7-419c-9b0f-392514c8773e",
+    "saved_name": "2e7c7ca8-2fc7-419c-9b0f-392514c8773e_TC_pdcp_integrity_verification_failure_8921.log",
+    "file_path": "resources\\rca_logs\\2e7c7ca8-2fc7-419c-9b0f-392514c8773e_TC_pdcp_integrity_verification_failure_8921.log",
+    "upload_date": "2025-10-13T14:58:31.035576"
+  },
+  "TC_pdu_session_setup_failure_6432.log": {
+    "file_id": "cb7f9f29-1970-4b7f-a44c-3b279d779d29",
+    "saved_name": "cb7f9f29-1970-4b7f-a44c-3b279d779d29_TC_pdu_session_setup_failure_6432.log",
+    "file_path": "resources\\rca_logs\\cb7f9f29-1970-4b7f-a44c-3b279d779d29_TC_pdu_session_setup_failure_6432.log",
+    "upload_date": "2025-10-13T14:58:31.030574"
+  },
+  "TC_rrc_connection_establishment_failure_5631.log": {
+    "file_id": "7fe4ae45-ce4a-49bb-996f-d3e298961861",
+    "saved_name": "7fe4ae45-ce4a-49bb-996f-d3e298961861_TC_rrc_connection_establishment_failure_5631.log",
+    "file_path": "resources\\rca_logs\\7fe4ae45-ce4a-49bb-996f-d3e298961861_TC_rrc_connection_establishment_failure_5631.log",
+    "upload_date": "2025-10-13T14:58:31.028571"
+  },
+  "TC_successful_rrc_connection_establishment_5421.log": {
+    "file_id": "2b9bbcf7-4258-40a1-9c02-58488915c8b0",
+    "saved_name": "2b9bbcf7-4258-40a1-9c02-58488915c8b0_TC_successful_rrc_connection_establishment_5421.log",
+    "file_path": "resources\\rca_logs\\2b9bbcf7-4258-40a1-9c02-58488915c8b0_TC_successful_rrc_connection_establishment_5421.log",
+    "upload_date": "2025-10-13T14:58:31.026573"
+  },
+  "TC_successful_security_mode_procedure_7245.log": {
+    "file_id": "08474894-12dd-4ed0-84fc-2acb5e378856",
+    "saved_name": "08474894-12dd-4ed0-84fc-2acb5e378856_TC_successful_security_mode_procedure_7245.log",
+    "file_path": "resources\\rca_logs\\08474894-12dd-4ed0-84fc-2acb5e378856_TC_successful_security_mode_procedure_7245.log",
+    "upload_date": "2025-10-13T14:58:31.024567"
+  },
+  "cu_ngap_failure.log": {
+    "file_id": "f957d5d4-e70c-4a38-b95b-0bff0f53bbb9",
+    "saved_name": "f957d5d4-e70c-4a38-b95b-0bff0f53bbb9_cu_ngap_failure.log",
+    "file_path": "resources\\rca_logs\\f957d5d4-e70c-4a38-b95b-0bff0f53bbb9_cu_ngap_failure.log",
+    "upload_date": "2025-10-16T11:50:14.941616"
+  }
+}

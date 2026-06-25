@@ -1,0 +1,75 @@
+
+
+RRC Establishment:
+After synchronization, the UE initiates the Radio Resource Control (RRC) connection establishment procedure by sending an RRCSetupRequest message to the gNB. The gNB responds with an RRCSetup message, which includes essential configuration information for the UE to access network resources.
+
+
+Registration Request:
+Once the RRC connection is established, the UE sends a Registration Request message to the network (Core Network, specifically the Access and Mobility Management Function, AMF) to register with the 5G network. This message includes important information such as the UE's security credentials and UE's network capability.
+
+Authentication Process:
+To ensure secure communication, the network initiates an authentication process. The AMF generates an authentication challenge for the UE, which includes a random number and an expected authentication response. The UE computes the authentication response based on the challenge and its security credentials, and sends it back to the AMF. If the response matches the expected value, the authentication is successful.
+
+Security Process:
+After successful authentication, the UE and network establish security keys for secure communication. The AMF sends a Security Mode Command to the UE, specifying the security algorithms to be used for ciphering and integrity protection. The UE acknowledges the command with a Security Mode Complete message.
+
+Registration Accept:
+Once the security process is complete, the AMF sends a Registration Accept message to the UE, which includes the UE's 5G-GUTI (Globally Unique Temporary Identifier) and other relevant configuration information. The UE is now successfully registered with the 5G network.
+
+RrcReconfiguration:
+After successful registration, the gNB sends an RRCReconfiguration message to the UE, which includes the configuration information necessary for data transmission, such as the Radio Bearer and Physical Layer configurations.
+
+PDU Session Establishment Request:
+To establish a data session, the UE sends a PDU (Protocol Data Unit) Session Establishment Request message to the network (specifically, the Session Management Function, SMF). This message includes the UE's data session requirements, SSC Mode, PCO, DNN etc.
+
+PDU Session Establishment Accept:
+The SMF processes the PDU Session Establishment Request and allocates the necessary resources for the data session. The SMF sends a PDU Session Establishment Accept message to the UE, which contains the PDU session configuration information, such as the allocated QoS and the IP address. The UE is now ready for data transmission over the established PDU session.
+
+
+✅ 1. RRC Layer (UE ↔ gNB)
+a. RRCSetupRequest
+IEs: {UE Identity}, {Establishment Cause}
+
+b. RRCSetup
+IEs: {RRC Transaction Identifier}, {RadioBearerConfig}
+
+c. RRCSetupComplete
+IEs: {Selected PLMN Identity}, {NAS Message}
+
+✅ 2. NAS Layer (UE ↔ AMF via gNB)
+a. Registration Request
+IEs: {Registration Type}, {5G NAS Key Set Identifier}, {Mobile Identity (SUCI/5G-GUTI)}, {UE Security Capabilities}, {Requested NSSAI}, {Last Visited Registered TAI}, {Uplink NAS Message Container}
+
+b. Authentication Request
+IEs: {RAND}, {AUTN}
+
+c. Authentication Response
+IEs: {RES*}
+
+d. Security Mode Command
+IEs: {Selected NAS Security Algorithms}, {UE Security Capabilities}, {Replay Protection}
+
+e. Security Mode Complete
+IEs: {NAS Message Confirmation}
+
+f. Registration Accept
+IEs: {5G-GUTI}, {TAI List}, {Allowed NSSAI}, {Configuration Update Command (optional)}
+
+g. Registration Complete
+IEs: {Registration Completion Indicator}
+
+✅ 3. NGAP Layer (gNB ↔ AMF)
+a. NGAP Initial UE Message
+IEs: {NAS PDU}, {User Location Information}, {RAN UE NGAP ID}
+
+b. NGAP Initial Context Setup Request
+IEs: {NAS PDU}, {AMF UE NGAP ID}, {Security Capabilities}, {PDU Session Resource Setup List}
+
+c. NGAP Initial Context Setup Response
+IEs: {PDU Session Setup Response}, {RAN UE NGAP ID}
+
+d. UE Context Release Command
+IEs: {Release Cause}, {AMF UE NGAP ID}, {RAN UE NGAP ID}
+
+e. UE Context Release Complete
+IEs: {UE Release Confirmation}

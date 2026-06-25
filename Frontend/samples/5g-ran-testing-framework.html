@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5G RAN Testing Framework</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #0f1629 50%, #141d38 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 150, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(100, 255, 200, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #00ffff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Navigation */
+        .navigation {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+        }
+
+        .nav-item {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: rgba(0, 255, 255, 0.1);
+            color: #00ffff;
+        }
+
+        .nav-item.active {
+            border-bottom-color: #00ffff;
+            background: rgba(0, 255, 255, 0.1);
+            color: #00ffff;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .welcome-message h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #00ffff, #00cc99);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-message p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        /* Task Cards Grid */
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .task-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .task-card:hover::before {
+            left: 100%;
+        }
+
+        .task-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3);
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+
+        .task-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #00ffff, #00cc99);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .task-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #00ffff;
+        }
+
+        .task-card p {
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .launch-btn {
+            background: linear-gradient(135deg, #00ffff, #00cc99);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            color: #0a0e1a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .launch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.4);
+            background: linear-gradient(135deg, #00e6e6, #00b386);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+            
+            .nav-container {
+                flex-wrap: wrap;
+            }
+            
+            .nav-item {
+                padding: 0.8rem 1rem;
+            }
+            
+            .task-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+        }
+
+        /* Coming Soon Message */
+        .coming-soon {
+            text-align: center;
+            padding: 4rem 2rem;
+            opacity: 0.7;
+        }
+
+        .coming-soon h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #00ffff;
+        }
+
+        .coming-soon p {
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">5G RAN Testing Framework</div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <div class="nav-item active" onclick="showSection('home')">Home</div>
+            <div class="nav-item" onclick="showSection('tasks')">Tasks</div>
+            <div class="nav-item" onclick="showSection('templates')">Prompt Templates</div>
+            <div class="nav-item" onclick="showSection('history')">User History</div>
+            <div class="nav-item" onclick="showSection('evaluation')">Response Evaluation</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Section -->
+        <div id="home" class="content-section active">
+            <div class="welcome-message">
+                <h1>Welcome to 5G RAN Testing Framework</h1>
+                <p>Your comprehensive solution for 5G RAN testing, automation, and optimization</p>
+            </div>
+        </div>
+
+        <!-- Tasks Section -->
+        <div id="tasks" class="content-section">
+            <div class="task-grid">
+                <div class="task-card">
+                    <div class="task-icon">🎯</div>
+                    <h3>Dataset Generator</h3>
+                    <p>Process 5G Specifications</p>
+                    <button class="launch-btn">Launch</button>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-icon">📝</div>
+                    <h3>Test Script Generator</h3>
+                    <p>Automate Test Cases</p>
+                    <button class="launch-btn">Launch</button>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-icon">🚀</div>
+                    <h3>Test Deployment</h3>
+                    <p>Deploy to Cloud RAN</p>
+                    <button class="launch-btn">Launch</button>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-icon">⚡</div>
+                    <h3>Test Execution</h3>
+                    <p>Run Automated Tests</p>
+                    <button class="launch-btn">Launch</button>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-icon">🔍</div>
+                    <h3>Bug Discovery</h3>
+                    <p>Analyze Test Logs</p>
+                    <button class="launch-btn">Launch</button>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-icon">🤖</div>
+                    <h3>Code Assistant</h3>
+                    <p>Optimize & Debug</p>
+                    <button class="launch-btn">Launch</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prompt Templates Section -->
+        <div id="templates" class="content-section">
+            <div class="coming-soon">
+                <h2>Prompt Templates</h2>
+                <p>Template management system coming soon...</p>
+            </div>
+        </div>
+
+        <!-- User History Section -->
+        <div id="history" class="content-section">
+            <div class="coming-soon">
+                <h2>User History</h2>
+                <p>User activity tracking coming soon...</p>
+            </div>
+        </div>
+
+        <!-- Response Evaluation Section -->
+        <div id="evaluation" class="content-section">
+            <div class="coming-soon">
+                <h2>Response Evaluation</h2>
+                <p>Response analysis and evaluation tools coming soon...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+
+            // Add active class to clicked nav item
+            event.target.classList.add('active');
+        }
+
+        // Add click handlers for launch buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const launchButtons = document.querySelectorAll('.launch-btn');
+            launchButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const cardTitle = this.parentElement.querySelector('h3').textContent;
+                    alert(`Launching ${cardTitle}...`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

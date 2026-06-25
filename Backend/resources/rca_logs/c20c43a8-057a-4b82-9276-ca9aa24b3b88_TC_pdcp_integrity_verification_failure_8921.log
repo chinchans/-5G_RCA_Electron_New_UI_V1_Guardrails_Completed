@@ -1,0 +1,84 @@
+frame = 530, slot = 0 : [RRC] UE with RNTI 8921 in RRC_CONNECTED state
+frame = 530, slot = 0 : [RRC] Completed RRC Setup procedure for UE 8921
+frame = 530, slot = 0 : [NGAP] UE 8921 connection established with AMF
+frame = 530, slot = 0 : [NGAP] Received Initial Context Setup Request for UE 8921
+frame = 530, slot = 0 : Function: ngap_gNB_handle_initial_context_setup_request processing
+frame = 530, slot = 1 : [RRC] Processing Initial Context Setup Request from NGAP
+frame = 530, slot = 1 : [RRC] Configuring Security Context for UE 8921
+frame = 530, slot = 1 : [SECURITY] Security Key derived: KeNB (truncated): 7a3fc9b12d45e871
+frame = 530, slot = 1 : [SECURITY] Selected algorithms: 128-NEA2 (confidentiality), 128-NIA2 (integrity)
+frame = 530, slot = 1 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 530, slot = 2 : [RRC] Sending Security Mode Command to UE 8921
+frame = 530, slot = 2 : [PDCP] Configuring security for SRB1
+frame = 530, slot = 2 : Function: pdcp_config_set_security processing
+frame = 530, slot = 2 : [PDCP] Successfully configured security for SRB1
+frame = 530, slot = 3 : [RRC] Received Security Mode Complete from UE 8921
+frame = 530, slot = 3 : Function: rrc_gNB_process_SecurityModeComplete processing
+frame = 530, slot = 3 : [RRC] Security Mode procedure completed successfully
+frame = 530, slot = 3 : [RRC] Configuring RRC reconfiguration for UE 8921
+frame = 530, slot = 4 : [RRC] Sending RRC Reconfiguration message to UE 8921
+frame = 530, slot = 4 : Function: rrc_gNB_generate_RRCReconfiguration processing
+frame = 530, slot = 4 : [RRC] RRC Reconfiguration includes 1 DRB configuration
+frame = 530, slot = 4 : [RRC] Setting up DRB1 for default data service
+frame = 530, slot = 5 : [RRC] Starting data transfer for UE with rnti 8921
+frame = 530, slot = 5 : Function: pdcp_data_req processing
+frame = 530, slot = 5 : [PDCP] Transferring data on SRB1 for UE 8921
+frame = 530, slot = 5 : [PDCP] PDCP data request for 37 bytes
+frame = 530, slot = 5 : [PDCP] Setting up security for SRB1
+frame = 530, slot = 6 : Function: pdcp_apply_integrity processing
+frame = 530, slot = 6 : [PDCP] Applying integrity protection
+frame = 530, slot = 6 : [PDCP] Computing MAC-I with algorithm NIA2
+frame = 530, slot = 6 : [PDCP] COUNT: 11, Bearer ID: 1, Direction: 1 (DL)
+frame = 530, slot = 6 : [PDCP] Integrity key detected as all zeros - security context not properly initialized
+frame = 530, slot = 7 : ERROR: PDCP integrity check failed for UE with rnti 8921
+frame = 530, slot = 7 : [PDCP] Integrity verification failed 
+frame = 530, slot = 7 : [PDCP] Security key error during integrity protection
+frame = 530, slot = 7 : Function: rrc_gNB_send_NGAP_PDCP_INTEGRITY_FAILED processing
+frame = 530, slot = 8 : [RRC] Reporting integrity failure to upper layers
+frame = 530, slot = 8 : [NGAP] Sending NGAP Error Indication to AMF
+frame = 530, slot = 8 : [NGAP] Cause: Radio Network Layer - Unspecified
+frame = 530, slot = 9 : [RRC] Maintaining RRC connection, attempting security reconfiguration
+frame = 530, slot = 9 : [RRC] Requesting AMF for new security context
+frame = 531, slot = 0 : [NGAP] Waiting for further instructions from AMF for UE 8921 
+
+[2023-06-12 15:42:31.235] [Frame: 475, Slot: 0] [gNB: 01] [PHY] [RX] Receiving PUSCH data from UE with RNTI 8921
+[2023-06-12 15:42:31.236] [Frame: 475, Slot: 0] [gNB: 01] [MAC] [RX] Successfully received MAC PDU from UE with RNTI 8921, forwarding to RLC
+[2023-06-12 15:42:31.236] [Frame: 475, Slot: 0] [gNB: 01] [RLC] [RX] Received RLC SDU for SRB1 from UE with RNTI 8921, forwarding to PDCP
+[2023-06-12 15:42:31.237] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [RX] Starting PDCP data processing for UE with RNTI 8921
+[2023-06-12 15:42:31.237] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [RX] SRB1 PDCP PDU received, applying integrity verification
+[2023-06-12 15:42:31.237] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [INFO] PDCP sequence number: 7 for RNTI 8921
+[2023-06-12 15:42:31.237] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [INFO] Checking integrity with algorithm: 128-EIA2
+[2023-06-12 15:42:31.238] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [DEBUG] Using KUPint key for integrity verification
+[2023-06-12 15:42:31.238] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [DEBUG] KUPint key value check: all zeros detected
+[2023-06-12 15:42:31.238] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [ERROR] PDCP integrity check failed for UE with rnti 8921
+[2023-06-12 15:42:31.238] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [ERROR] Integrity verification failed
+[2023-06-12 15:42:31.239] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [ERROR] Security key error during integrity protection
+[2023-06-12 15:42:31.239] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [ERROR] Integrity key detected as all zeros
+[2023-06-12 15:42:31.239] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [DEBUG] PDCP COUNT: 0x00000007
+[2023-06-12 15:42:31.239] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [INFO] Function pdcp_apply_integrity returned SECURITY_KEY_ERROR
+[2023-06-12 15:42:31.240] [Frame: 475, Slot: 0] [gNB: 01] [PDCP] [INFO] Discarding PDCP PDU due to integrity check failure
+
+[2023-06-12 15:42:31.240] [Frame: 475, Slot: 0] [gNB: 01] [RRC] [INFO] RRC receives indication of PDCP integrity failure for UE with RNTI 8921
+[2023-06-12 15:42:31.240] [Frame: 475, Slot: 0] [gNB: 01] [RRC] [INFO] UE context found: gNB_UE_ngap_id: 8921, RNTI: 8921
+[2023-06-12 15:42:31.241] [Frame: 475, Slot: 0] [gNB: 01] [RRC] [INFO] Checking security context for UE 8921
+[2023-06-12 15:42:31.241] [Frame: 475, Slot: 0] [gNB: 01] [RRC] [DEBUG] Security key derivation log: KeNB received correctly but KUPint not derived
+[2023-06-12 15:42:31.241] [Frame: 475, Slot: 0] [gNB: 01] [RRC] [ERROR] Security key derivation error for UE with RNTI 8921
+[2023-06-12 15:42:31.242] [Frame: 475, Slot: 0] [gNB: 01] [RRC] [INFO] Attempting to recover by reinitializing security context
+
+[2023-06-12 15:42:31.242] [Frame: 475, Slot: 2] [gNB: 01] [RRC] [INFO] Sending rrc_reconfiguration with security context update
+[2023-06-12 15:42:31.243] [Frame: 475, Slot: 2] [gNB: 01] [PDCP] [INFO] Reinitializing PDCP security context for RNTI 8921
+[2023-06-12 15:42:31.243] [Frame: 475, Slot: 2] [gNB: 01] [PDCP] [DEBUG] Setting up new integrity and ciphering keys for RNTI 8921
+[2023-06-12 15:42:31.243] [Frame: 475, Slot: 2] [gNB: 01] [PDCP] [DEBUG] Key derivation attempt: KeNB -> KRRCint -> KRRCenc -> KUPint -> KUPenc
+[2023-06-12 15:42:31.244] [Frame: 475, Slot: 2] [gNB: 01] [PDCP] [ERROR] Failed to derive KUPint from KeNB
+[2023-06-12 15:42:31.244] [Frame: 475, Slot: 2] [gNB: 01] [PDCP] [ERROR] Security key derivation error persists
+
+[2023-06-12 15:42:31.245] [Frame: 475, Slot: 3] [gNB: 01] [RRC] [INFO] Preparing to notify AMF of security failure
+[2023-06-12 15:42:31.245] [Frame: 475, Slot: 3] [gNB: 01] [NGAP] [INFO] Building NGAP PDU for AMF: Security Context Failure
+[2023-06-12 15:42:31.246] [Frame: 475, Slot: 3] [gNB: 01] [NGAP] [INFO] Sending NGAP_PDCP_INTEGRITY_FAILED message to AMF
+[2023-06-12 15:42:31.246] [Frame: 475, Slot: 3] [gNB: 01] [NGAP] [DEBUG] NGAP message sent with cause: Security Key Error
+[2023-06-12 15:42:31.246] [Frame: 475, Slot: 3] [gNB: 01] [NGAP] [INFO] AMF acknowledged security failure notification
+
+[2023-06-12 15:42:31.350] [Frame: 475, Slot: 8] [gNB: 01] [NGAP] [INFO] Received new Initial Context Setup Request from AMF for UE 8921
+[2023-06-12 15:42:31.350] [Frame: 475, Slot: 8] [gNB: 01] [RRC] [INFO] Processing new security context from AMF
+[2023-06-12 15:42:31.351] [Frame: 475, Slot: 8] [gNB: 01] [RRC] [INFO] Received fresh KeNB for UE with RNTI 8921
+[2023-06-12 15:42:31.351] [Frame: 475, Slot: 8] [gNB: 01] [RRC] [INFO] Initiating Security Mode Procedure with new keys 

@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-10-10T12:59:21.598886",
+  "log_file": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\resources\\rca_logs\\093848d6-dc00-43ca-863b-e76b5295aca3_TC_successful_security_mode_procedure_7245.log",
+  "error_analysis": {
+    "identified_errors": {},
+    "error_counts": {},
+    "error_timestamps": {},
+    "layer_counts": {},
+    "severity_counts": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "meta": {
+      "file": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\resources\\rca_logs\\093848d6-dc00-43ca-863b-e76b5295aca3_TC_successful_security_mode_procedure_7245.log",
+      "lines_analyzed": 51,
+      "protocol_filter": null,
+      "timestamp": "2025-10-10T12:59:21.597882"
+    }
+  },
+  "function_analysis": null,
+  "impact_analysis": null,
+  "kb_analysis": {
+    "issue_matches": {},
+    "function_insights": {},
+    "protocol_references": {},
+    "fix_recommendations": []
+  },
+  "ai_analysis": {
+    "root_cause": "No specific errors identified for analysis.",
+    "suggested_fixes": [],
+    "specifications": [],
+    "function_analysis": []
+  },
+  "meta": {
+    "offline_mode": true,
+    "oai_repo_dir": "openairinterface5g",
+    "components_available": {
+      "error_analyzer": true,
+      "impact_analyzer": false,
+      "function_graph": false,
+      "kb_connector": true,
+      "clang_analyzer": true,
+      "openai_client": false
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "validated": true,
+  "pipeline": [
+    "input_guardrails",
+    "extraction",
+    "dataset_files_on_disk",
+    "schema_validation",
+    "hierarchy_validation",
+    "source_traceability_validation",
+    "nli_groundedness_validation",
+    "save_dataset",
+    "ready_for_test_script_generator"
+  ],
+  "output_guardrails": {
+    "passed": true,
+    "blocked": false,
+    "schema_validation": {
+      "step": "schema_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "hierarchy_validation": {
+      "step": "hierarchy_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "source_traceability_validation": {
+      "step": "source_traceability_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": [
+        "Section title not found near start of extracted section text"
+      ]
+    },
+    "nli_groundedness_validation": {
+      "step": "nli_groundedness_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "metadata": {
+    "source_file_id": "1055ab4c-7a44-4930-bf92-589182cc2100.docx",
+    "source_document_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/1055ab4c-7a44-4930-bf92-589182cc2100.docx",
+    "section": "Functional tests",
+    "subsection": "Idle mode Inter-O-CU mobility",
+    "safe_subsection": "Idle mode Inter-O-CU mobility",
+    "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/extract/datasets/Idle mode Inter-O-CU mobility"
+  },
+  "ready_for_test_script_generator": true
+}

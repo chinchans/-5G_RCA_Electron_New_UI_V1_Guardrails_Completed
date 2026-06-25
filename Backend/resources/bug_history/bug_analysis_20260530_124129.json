@@ -1,0 +1,719 @@
+{
+  "error_message": "Segmentation Fault in rrc_handle_RRCSetupRequest at /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065",
+  "log_file": "cu_rrc_segmentation_error.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/cu_rrc_segmentation_error.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-05-30T12:41:29.948791",
+  "results": {
+    "error_message": "Segmentation Fault in rrc_handle_RRCSetupRequest at /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065",
+    "crash_analysis": true,
+    "phase": "extraction",
+    "timestamp": "2026-05-30T12:41:29.802867",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/cu_rrc_segmentation_error.log",
+    "deployment_context": {
+      "role": "DU",
+      "active_configs": [
+        {
+          "missing": "../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/gnb.sa.band78.fr1.106PRB.usrpb210_with_v2_core_nw.conf",
+          "used": "./openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf",
+          "reason": "Original file not found, using du_gnb.conf"
+        },
+        {
+          "missing": "gnb.sa.band78.fr1.106PRB.usrpb210_with_v2_core_nw.conf",
+          "used": "./openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf",
+          "reason": "Original file not found, using du_gnb.conf"
+        }
+      ],
+      "network_params": {
+        "gnb_ipv4": "10.138.77.32",
+        "amf_ipv4": null,
+        "ngap_port": 1065,
+        "assoc_state": "UNKNOWN"
+      },
+      "log_anchors": [
+        "[NR_MAC]   (719.10) RA Contention Resolution timer expired for UE 0xa67e, RA procedure failed...",
+        "[NR_MAC]   (761.10) RA Contention Resolution timer expired for UE 0xd3a8, RA procedure failed...",
+        "[NR_MAC]   (803.10) RA Contention Resolution timer expired for UE 0x0a0c, RA procedure failed...",
+        "[NR_MAC]   (845.10) RA Contention Resolution timer expired for UE 0x7c05, RA procedure failed...",
+        "[NR_MAC]   (887.10) RA Contention Resolution timer expired for UE 0x5a99, RA procedure failed...",
+        "[NR_MAC]   (929.10) RA Contention Resolution timer expired for UE 0xe48b, RA procedure failed...",
+        "[NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed...",
+        "[GNB_APP]   F1AP: gNB idx 0 gNB_DU_id 0, gNB_DU_name gNB-OAI, TAC 40960 MCC/MNC/length 208/95/2 cellID 1",
+        "[UTIL]   threadCreate() for TASK_SCTP: creating thread with affinity ffffffff, priority 50",
+        "[UTIL]   threadCreate() for TASK_NGAP: creating thread with affinity ffffffff, priority 50",
+        "[NGAP]   Starting NGAP layer",
+        "[NGAP]   Registered new gNB[0] and macro gNB id 0",
+        "[NGAP]   [gNB 0] check the amf registration state",
+        "[NGAP]   Send NGSetupRequest to AMF",
+        "[NGAP]   0 -> 00000000",
+        "[NGAP]   servedGUAMIs.list.count 2",
+        "[NGAP]   PLMNSupportList.list.count 1",
+        "[NGAP]   PLMNSupportList.list.count 3",
+        "[NGAP]   Received NGSetupResponse from AMF",
+        "[GNB_APP]   [gNB 0] Received NGAP_REGISTER_GNB_CNF: associated AMF 1"
+      ]
+    },
+    "crash_info": {
+      "log_file": "log_files/cu_rrc_segmentation_error.log",
+      "timestamp": "2026-05-30T12:30:29.392300",
+      "crash_detected": true,
+      "fault_location": "/home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065",
+      "backtrace": [],
+      "crash_thread": {
+        "id": "9",
+        "name": "TASK_RRC_GNB"
+      },
+      "signal": "SIGSEGV",
+      "faulting_function": "rrc_handle_RRCSetupRequest",
+      "faulting_file": "/home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c",
+      "faulting_line": "1065",
+      "scenario_flow": [
+        "NGAP layer started",
+        "gNB registered with AMF",
+        "F1 interface setup completed",
+        "Random Access Response sent",
+        "CCCH SDU received from UE",
+        "Decoding CCCH message"
+      ],
+      "pre_crash_logs": [
+        "\u001b[0m\u001b[32m[NR_MAC]   921.19 UE RA-RNTI 010b TC-RNTI e48b: Activating RA process index 0",
+        "\u001b[0m[NR_MAC]   UE e48b: Msg3 scheduled at 922.17 (922.7 TDA 3)",
+        "\u001b[0m\u001b[32m[NR_MAC]   UE e48b: 922.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 39",
+        "\u001b[0m\u001b[32m[NR_MAC]   922.7 Send RAR to RA-RNTI 010b",
+        "\u001b[0m[NR_MAC]   Adding new UE context with RNTI 0xe48b",
+        "\u001b[0m\u001b[32m[NR_MAC]    922.17 PUSCH with TC_RNTI 0xe48b received correctly",
+        "\u001b[0m[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e48b",
+        "\u001b[0m[RLC]   Activated srb0 for UE 58507",
+        "\u001b[0m[RLC]   Added srb 1 to UE 58507",
+        "\u001b[0m[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe48b (state WAIT_Msg3)",
+        "\u001b[0m\u001b[93m[NR_MAC]   (929.10) RA Contention Resolution timer expired for UE 0xe48b, RA procedure failed...",
+        "\u001b[0m\u001b[93m[NR_MAC]   UE e48b: no CU-UE ID stored, cannot request release",
+        "\u001b[0m\u001b[93m[RLC]   Remove UE 58507",
+        "\u001b[0m[NR_MAC]   Remove NR rnti 0xe48b",
+        "\u001b[0m\u001b[32m[NR_PHY]   [RAPROC] 963.19 Initiating RA procedure with preamble 4, energy 54.0 dB (I0 0, thres 120), delay 0 start symbol 0 freq index 0",
+        "\u001b[0m\u001b[32m[NR_MAC]   963.19 UE RA-RNTI 010b TC-RNTI e8dc: Activating RA process index 0",
+        "\u001b[0m[NR_MAC]   UE e8dc: Msg3 scheduled at 964.17 (964.7 TDA 3)",
+        "\u001b[0m\u001b[32m[NR_MAC]   UE e8dc: 964.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 4",
+        "\u001b[0m\u001b[32m[NR_MAC]   964.7 Send RAR to RA-RNTI 010b",
+        "\u001b[0m[NR_MAC]   Adding new UE context with RNTI 0xe8dc",
+        "\u001b[0m\u001b[32m[NR_MAC]    964.17 PUSCH with TC_RNTI 0xe8dc received correctly",
+        "\u001b[0m[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e8dc",
+        "\u001b[0m[RLC]   Activated srb0 for UE 59612",
+        "\u001b[0m[RLC]   Added srb 1 to UE 59612",
+        "\u001b[0m[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe8dc (state WAIT_Msg3)",
+        "\u001b[0m\u001b[93m[NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed...",
+        "\u001b[0m\u001b[93m[NR_MAC]   UE e8dc: no CU-UE ID stored, cannot request release",
+        "\u001b[0m\u001b[93m[RLC]   Remove UE 59612",
+        "\u001b[0m[NR_MAC]   Remove NR rnti 0xe8dc",
+        "\u001b[0m"
+      ],
+      "crash_type": "Segmentation fault."
+    },
+    "extraction_summary": {
+      "crash_detected": true,
+      "signal": "SIGSEGV",
+      "crash_type": "Segmentation fault.",
+      "fault_location": "/home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065",
+      "faulting_function": "rrc_handle_RRCSetupRequest",
+      "faulting_file": "/home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c",
+      "faulting_line": "1065",
+      "crash_thread": {
+        "id": "9",
+        "name": "TASK_RRC_GNB"
+      },
+      "backtrace_frames": 0,
+      "scenario_steps_before_crash": 6
+    },
+    "backtrace": [],
+    "scenario_flow": [
+      "NGAP layer started",
+      "gNB registered with AMF",
+      "F1 interface setup completed",
+      "Random Access Response sent",
+      "CCCH SDU received from UE",
+      "Decoding CCCH message"
+    ],
+    "pre_crash_logs": [
+      "\u001b[0m\u001b[32m[NR_MAC]   921.19 UE RA-RNTI 010b TC-RNTI e48b: Activating RA process index 0",
+      "\u001b[0m[NR_MAC]   UE e48b: Msg3 scheduled at 922.17 (922.7 TDA 3)",
+      "\u001b[0m\u001b[32m[NR_MAC]   UE e48b: 922.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 39",
+      "\u001b[0m\u001b[32m[NR_MAC]   922.7 Send RAR to RA-RNTI 010b",
+      "\u001b[0m[NR_MAC]   Adding new UE context with RNTI 0xe48b",
+      "\u001b[0m\u001b[32m[NR_MAC]    922.17 PUSCH with TC_RNTI 0xe48b received correctly",
+      "\u001b[0m[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e48b",
+      "\u001b[0m[RLC]   Activated srb0 for UE 58507",
+      "\u001b[0m[RLC]   Added srb 1 to UE 58507",
+      "\u001b[0m[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe48b (state WAIT_Msg3)",
+      "\u001b[0m\u001b[93m[NR_MAC]   (929.10) RA Contention Resolution timer expired for UE 0xe48b, RA procedure failed...",
+      "\u001b[0m\u001b[93m[NR_MAC]   UE e48b: no CU-UE ID stored, cannot request release",
+      "\u001b[0m\u001b[93m[RLC]   Remove UE 58507",
+      "\u001b[0m[NR_MAC]   Remove NR rnti 0xe48b",
+      "\u001b[0m\u001b[32m[NR_PHY]   [RAPROC] 963.19 Initiating RA procedure with preamble 4, energy 54.0 dB (I0 0, thres 120), delay 0 start symbol 0 freq index 0",
+      "\u001b[0m\u001b[32m[NR_MAC]   963.19 UE RA-RNTI 010b TC-RNTI e8dc: Activating RA process index 0",
+      "\u001b[0m[NR_MAC]   UE e8dc: Msg3 scheduled at 964.17 (964.7 TDA 3)",
+      "\u001b[0m\u001b[32m[NR_MAC]   UE e8dc: 964.7 Generating RA-Msg2 DCI, RA RNTI 0x10b, state 1, CoreSetType 0, RAPID 4",
+      "\u001b[0m\u001b[32m[NR_MAC]   964.7 Send RAR to RA-RNTI 010b",
+      "\u001b[0m[NR_MAC]   Adding new UE context with RNTI 0xe8dc",
+      "\u001b[0m\u001b[32m[NR_MAC]    964.17 PUSCH with TC_RNTI 0xe8dc received correctly",
+      "\u001b[0m[MAC]   [RAPROC] Received SDU for CCCH length 6 for UE e8dc",
+      "\u001b[0m[RLC]   Activated srb0 for UE 59612",
+      "\u001b[0m[RLC]   Added srb 1 to UE 59612",
+      "\u001b[0m[NR_MAC]   Activating scheduling Msg4 for TC_RNTI 0xe8dc (state WAIT_Msg3)",
+      "\u001b[0m\u001b[93m[NR_MAC]   (971.10) RA Contention Resolution timer expired for UE 0xe8dc, RA procedure failed...",
+      "\u001b[0m\u001b[93m[NR_MAC]   UE e8dc: no CU-UE ID stored, cannot request release",
+      "\u001b[0m\u001b[93m[RLC]   Remove UE 59612",
+      "\u001b[0m[NR_MAC]   Remove NR rnti 0xe8dc",
+      "\u001b[0m"
+    ],
+    "source_code_at_fault": null,
+    "summary": {
+      "total_functions_analyzed": 6,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase2_crash_retrieval": {
+      "timestamp": "2026-05-30T12:30:41.301831",
+      "phase": "crash_phase2_retrieval",
+      "crash_info_summary": {
+        "faulting_function": "rrc_handle_RRCSetupRequest",
+        "fault_location": "/home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065",
+        "backtrace_frames": 0
+      },
+      "prioritized_functions": [],
+      "call_chain_expansion": [
+        {
+          "function_name": "BIT_STRING_to_uint64",
+          "file_path": "openairinterface5g-develop/common/utils/oai_asn1.h",
+          "priority_score": 0.85,
+          "source": "crash_downstream",
+          "reason": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call"
+        },
+        {
+          "function_name": "activate_srb",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "priority_score": 0.85,
+          "source": "crash_downstream",
+          "reason": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call"
+        },
+        {
+          "function_name": "nr_rrc_get_measconfig",
+          "file_path": null,
+          "priority_score": 0.85,
+          "source": "crash_downstream",
+          "reason": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call"
+        },
+        {
+          "function_name": "rrc_gNB_create_ue_context",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "priority_score": 0.85,
+          "source": "crash_downstream",
+          "reason": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call"
+        },
+        {
+          "function_name": "rrc_gNB_generate_RRCReject",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "priority_score": 0.85,
+          "source": "crash_downstream",
+          "reason": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call"
+        },
+        {
+          "function_name": "rrc_gNB_generate_RRCSetup",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "priority_score": 0.85,
+          "source": "crash_downstream",
+          "reason": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call"
+        },
+        {
+          "function_name": "rrc_handle_RRCSetupRequest",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "priority_score": 0.85,
+          "source": "crash_downstream",
+          "reason": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call"
+        },
+        {
+          "function_name": "rrc_gNB_process_RRCReestablishmentComplete",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "priority_score": 0.8,
+          "source": "crash_upstream",
+          "reason": "Calls crash function rrc_handle_RRCSetupRequest - check parameter passing"
+        },
+        {
+          "function_name": "rrc_gNB_process_initial_ul_rrc_message",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "priority_score": 0.8,
+          "source": "crash_upstream",
+          "reason": "Calls crash function rrc_handle_RRCSetupRequest - check parameter passing"
+        },
+        {
+          "function_name": "rrc_handle_RRCSetupRequest",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "priority_score": 0.8,
+          "source": "crash_upstream",
+          "reason": "Calls crash function rrc_handle_RRCSetupRequest - check parameter passing"
+        }
+      ],
+      "validation_patterns": [],
+      "similar_crash_fixes": [
+        {
+          "commit_hash": "693dfb9374",
+          "subject": "bugfix: avoid segmentation fault when Redcap tries to connect to gNB as NR_ServingCellConfig_t scd is NULL when Redcap does RA",
+          "author": "Marius Tillner",
+          "date": "2025-07-22T15:51:01+02:00",
+          "relevance_score": 0.6,
+          "is_rca": false,
+          "files_changed": []
+        },
+        {
+          "commit_hash": "40b5e99197",
+          "subject": "Fix segmentation fault when calling get_transformPrecoding function for BWP_id > 0 and rach_ConfigCommon = NULL",
+          "author": "luis_pereira87",
+          "date": "2023-03-18T15:28:52+00:00",
+          "relevance_score": 0.6,
+          "is_rca": false,
+          "files_changed": []
+        },
+        {
+          "commit_hash": "dffd63d35a",
+          "subject": "fix a segfault when uci_01->harq is null",
+          "author": "Mario Joa-Ng",
+          "date": "2021-09-28T18:28:12-04:00",
+          "relevance_score": 0.6,
+          "is_rca": false,
+          "files_changed": []
+        },
+        {
+          "commit_hash": "9ef95055a1",
+          "subject": "fix a crash (at this point \"ue_context_p\" is NULL,",
+          "author": "Cedric Roux",
+          "date": "2015-05-07T08:12:37+00:00",
+          "relevance_score": 0.6,
+          "is_rca": false,
+          "files_changed": []
+        },
+        {
+          "commit_hash": "c137020ca2",
+          "subject": "remove fixed size H_awgn_mimo that may cause segfault in simulator in case of more than 4 antennas",
+          "author": "francescomani",
+          "date": "2025-04-22T12:34:53+02:00",
+          "relevance_score": 0.4,
+          "is_rca": false,
+          "files_changed": []
+        }
+      ],
+      "source_code_enrichment": {},
+      "minimal_configs": []
+    },
+    "phase2_analysis": {
+      "suspected_functions": [
+        {
+          "function_name": "rrc_handle_RRCSetupRequest",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 1,
+          "source": "crash_downstream",
+          "code_snippet": "static void rrc_handle_RRCSetupRequest(gNB_RRC_INST *rrc,\n                                       sctp_assoc_t assoc_id,\n                                       const NR_RRCSetupRequest_IEs_t *rrcSetupRequest,\n                                       const f1ap_initial_ul_rrc_message_t *msg)\n{\n  rrc_gNB_ue_context_t *ue_context_p = NULL;\n  if (NR_InitialUE_Identity_PR_randomValue == rrcSetupRequest->ue_Identity.present) {\n    /* randomValue                         BIT STRING (SIZE (39)) */\n    if (rrcSetupRequest->ue_Identity.choice.randomValue.size != 5) { // 39-bit random value\n      LOG_E(NR_RRC,\n            \"wrong InitialUE-Identity randomValue size, expected 5, provided %lu\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.randomValue.size);\n      return;\n    }\n    uint64_t random_value = 0;\n    memcpy(((uint8_t *)&random_value) + 3,\n           rrcSetupRequest->ue_Identity.choice.randomValue.buf,\n           rrcSetupRequest->ue_Identity.choice.randomValue.size);\n\n    ue_context_p = rrc_gNB_create_ue_context(assoc_id, msg->crnti, rrc, random_value, msg->gNB_DU_ue_id);\n  } else if (NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 == rrcSetupRequest->ue_Identity.present) {\n    /* <5G-S-TMSI> = <AMF Set ID><AMF Pointer><5G-TMSI> 48-bit */\n    /* ng-5G-S-TMSI-Part1                  BIT STRING (SIZE (39)) */\n    if (rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size != 5) {\n      LOG_E(NR_RRC,\n            \"wrong ng_5G_S_TMSI_Part1 size, expected 5, provided %lu \\n\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size);\n      return;\n    }\n\n    uint64_t s_tmsi_part1 = BIT_STRING_to_uint64(&rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1);\n    LOG_I(NR_RRC, \"Received UE 5G-S-TMSI-Part1 %ld\\n\", s_tmsi_part1);\n\n    ue_context_p = rrc_gNB_create_ue_context(assoc_id, msg->crnti, rrc, s_tmsi_part1, msg->gNB_DU_ue_id);\n    AssertFatal(ue_context_p != NULL, \"out of memory\\n\");\n    gNB_RRC_UE_t *UE = &ue_context_p->ue_context;\n    UE->Initialue_identity_5g_s_TMSI.presence = true;\n    UE->ng_5G_S_TMSI_Part1 = s_tmsi_part1;\n  } else {\n    LOG_E(NR_RRC, \"Unhandled ue_Identity.present value: %d\", rrcSetupRequest->ue_Identity.present);\n... [middle truncated] ...\n    return;\n  }\n  NR_CellGroupConfig_t *cellGroupConfig = NULL;\n  asn_dec_rval_t dec_rval = uper_decode_complete(NULL,\n                                                 &asn_DEF_NR_CellGroupConfig,\n                                                 (void **)&cellGroupConfig,\n                                                 msg->du2cu_rrc_container,\n                                                 msg->du2cu_rrc_container_length);\n  AssertFatal(dec_rval.code == RC_OK && dec_rval.consumed > 0, \"Cell group config decode error\\n\");\n\n  gNB_RRC_UE_t *UE = &ue_context_p->ue_context;\n  UE = &ue_context_p->ue_context;\n  UE->establishment_cause = rrcSetupRequest->establishmentCause;\n  UE->nr_cellid = msg->nr_cellid;\n  UE->masterCellGroup = cellGroupConfig;\n  UE->ongoing_reconfiguration = false;\n  UE->measConfig = nr_rrc_get_measconfig(rrc, UE->nr_cellid);\n  activate_srb(UE, 1);\n  rrc_gNB_generate_RRCSetup(0, msg->crnti, ue_context_p, msg->du2cu_rrc_container, msg->du2cu_rrc_container_length);\n}",
+          "reason": "Frame #0 crash point function where segmentation fault occurred at line 1065. It dereferences pointers such as rrcSetupRequest and msg without exhaustive NULL checks, decodes ASN.1 structures, and calls multiple downstream functions. Potential invalid or NULL pointers in rrcSetupRequest or msg could cause the crash.",
+          "role": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call",
+          "frame_number": null,
+          "priority_score": 0.85,
+          "has_source": true
+        },
+        {
+          "function_name": "rrc_gNB_process_initial_ul_rrc_message",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0.95,
+          "source": "crash_upstream",
+          "code_snippet": "void rrc_gNB_process_initial_ul_rrc_message(sctp_assoc_t assoc_id, const f1ap_initial_ul_rrc_message_t *ul_rrc)\n{\n  AssertFatal(assoc_id != 0, \"illegal assoc_id == 0: should be -1 (monolithic) or >0 (split)\\n\");\n\n  gNB_RRC_INST *rrc = RC.nrrrc[0];\n  LOG_I(NR_RRC, \"Decoding CCCH: RNTI %04x, payload_size %d\\n\", ul_rrc->crnti, ul_rrc->rrc_container_length);\n  NR_UL_CCCH_Message_t *ul_ccch_msg = NULL;\n  asn_dec_rval_t dec_rval = uper_decode(NULL,\n                                        &asn_DEF_NR_UL_CCCH_Message,\n                                        (void **)&ul_ccch_msg,\n                                        ul_rrc->rrc_container,\n                                        ul_rrc->rrc_container_length,\n                                        0,\n                                        0);\n  if (dec_rval.code != RC_OK || dec_rval.consumed == 0) {\n    LOG_E(NR_RRC, \" FATAL Error in receiving CCCH\\n\");\n    return;\n  }\n\n  if (ul_ccch_msg->message.present == NR_UL_CCCH_MessageType_PR_c1) {\n    switch (ul_ccch_msg->message.choice.c1->present) {\n      case NR_UL_CCCH_MessageType__c1_PR_NOTHING:\n        LOG_W(NR_RRC, \"Received PR_NOTHING on UL-CCCH-Message, ignoring message\\n\");\n        break;\n\n      case NR_UL_CCCH_MessageType__c1_PR_rrcSetupRequest:\n        LOG_D(NR_RRC, \"Received RRCSetupRequest on UL-CCCH-Message (UE rnti %04x)\\n\", ul_rrc->crnti);\n        rrc_handle_RRCSetupRequest(rrc, assoc_id, &ul_ccch_msg->message.choice.c1->choice.rrcSetupRequest->rrcSetupRequest, ul_rrc);\n        break;\n\n      case NR_UL_CCCH_MessageType__c1_PR_rrcResumeRequest:\n        LOG_E(NR_RRC, \"Received rrcResumeRequest message, but handling is not implemented\\n\");\n        break;\n\n      case NR_UL_CCCH_MessageType__c1_PR_rrcReestablishmentRequest: {\n        LOG_D(NR_RRC, \"Received RRCReestablishmentRequest on UL-CCCH-Message (UE RNTI %04x)\\n\", ul_rrc->crnti);\n        rrc_handle_RRCReestablishmentRequest(\n            rrc,\n            assoc_id,\n            &ul_ccch_msg->message.choice.c1->choice.rrcReestablishmentRequest->rrcReestablishmentRequest,\n            ul_rrc);\n      } break;\n\n      case NR_UL_CCCH_MessageType__c1_PR_rrcSystemInfoRequest:\n        LOG_I(NR_RRC, \"UE %04x receive rrcSystemInfoRequest message \\n\", ul_rrc->crnti);\n        /* TODO */\n        break;\n\n      default:\n        LOG_E(NR_RRC, \"UE %04x Unknown message\\n\", ul_rrc->crnti);\n        break;\n    }\n  }\n  ASN_STRUCT_FREE(asn_DEF_NR_UL_CCCH_Message, ul_ccch_msg);\n}",
+          "reason": "Frame #1 immediate caller of rrc_handle_RRCSetupRequest. It decodes the UL CCCH message and calls rrc_handle_RRCSetupRequest with pointers extracted from ASN.1 decoding. If decoding is incorrect or pointers are invalid, it can propagate invalid data causing crash downstream.",
+          "role": "Calls crash function rrc_handle_RRCSetupRequest - check parameter passing",
+          "frame_number": null,
+          "priority_score": 0.8,
+          "has_source": true
+        },
+        {
+          "function_name": "BIT_STRING_to_uint64",
+          "file_path": "openairinterface5g-develop/common/utils/oai_asn1.h",
+          "relevance_score": 0.85,
+          "source": "crash_downstream",
+          "code_snippet": "static inline uint64_t BIT_STRING_to_uint64(const BIT_STRING_t *asn) {\n  uint64_t result = 0;\n  size_t index;\n  int shift;\n\n  DevCheck ((asn->size > 0) && (asn->size <= 8), asn->size, 0, 0);\n\n  shift = ((asn->size - 1) * 8) - asn->bits_unused;\n  for (index = 0; index < (asn->size - 1); index++) {\n    result |= ((uint64_t)asn->buf[index]) << shift;\n    shift -= 8;\n  }\n\n  result |= ((uint64_t)asn->buf[index]) >> asn->bits_unused;\n\n  return result;\n}",
+          "reason": "Called by rrc_handle_RRCSetupRequest to convert BIT_STRING to uint64_t. It assumes asn pointer is valid and does not check for NULL before dereferencing. If rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1 is NULL or malformed, this can cause segfault.",
+          "role": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call",
+          "frame_number": null,
+          "priority_score": 0.85,
+          "has_source": true
+        },
+        {
+          "function_name": "rrc_gNB_create_ue_context",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0.85,
+          "source": "crash_downstream",
+          "code_snippet": "/*\n * Licensed to the OpenAirInterface (OAI) Software Alliance under one or more\n * contributor license agreements.  See the NOTICE file distributed with\n * this work for additional information regarding copyright ownership.\n * The OpenAirInterface Software Alliance licenses this file to You under\n * the OAI Public License, Version 1.1  (the \"License\"); you may not use this file\n * except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *      http://www.openairinterface.org/?page_id=698\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n *-------------------------------------------------------------------------------\n * For more information about the OpenAirInterface (OAI) Software Alliance:\n *      contact@openairinterface.org\n */\n\n/*! \\file rrc_gNB.c\n * \\brief rrc procedures for gNB\n * \\author Navid Nikaein and  Raymond Knopp , WEI-TAI CHEN\n * \\date 2011 - 2014 , 2018\n * \\version 1.0\n * \\company Eurecom, NTUST\n * \\email: navid.nikaein@eurecom.fr and raymond.knopp@eurecom.fr, kroempa@gmail.com\n */\n#define RRC_GNB_C\n#define RRC_GNB_C\n\n#include <netinet/in.h>\n#include <netinet/sctp.h>\n#include <stdbool.h>\n#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <time.h>\n... [middle truncated] ...\n\n  f1_ue_data_t ue_data = cu_get_f1_ue_data(ue_p->rrc_ue_id);\n  RETURN_IF_INVALID_ASSOC_ID(ue_data.du_assoc_id);\n  f1ap_ue_context_mod_req_t ue_context_modif_req = {\n      .gNB_CU_ue_id = ue_p->rrc_ue_id,\n      .gNB_DU_ue_id = ue_data.secondary_ue,\n      .drbs_len = n_drbs,\n      .drbs = drbs,\n      .drbs_rel_len = n_rel_drbs,\n      .drbs_rel = (f1ap_drb_to_release_t *)rel_drbs,\n      .cu_to_du_rrc_info = cu2du,\n  };\n  rrc->mac_rrc.ue_context_modification_request(ue_data.du_assoc_id, &ue_context_modif_req);\n  // avoid attempt to release rel_drbs\n  ue_context_modif_req.drbs_rel_len = 0;\n  ue_context_modif_req.drbs_rel = NULL;\n  free_ue_context_mod_req(&ue_context_modif_req);\n  LOG_I(RRC, \"UE %d trigger UE context modification request with %d DRBs\\n\", ue_p->rrc_ue_id, n_drbs);\n}\n",
+          "reason": "Called by rrc_handle_RRCSetupRequest to create UE context using parameters derived from rrcSetupRequest and msg. If it returns NULL or corrupts memory, subsequent dereferences in rrc_handle_RRCSetupRequest can cause crash.",
+          "role": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call",
+          "frame_number": null,
+          "priority_score": 0.85,
+          "has_source": true
+        },
+        {
+          "function_name": "activate_srb",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0.8,
+          "source": "crash_downstream",
+          "code_snippet": "void activate_srb(gNB_RRC_UE_t *UE, int srb_id)\n{\n  AssertFatal(srb_id == 1 || srb_id == 2, \"handling only SRB 1 or 2\\n\");\n  if (UE->Srb[srb_id].Active == 1) {\n    LOG_W(RRC, \"UE %d SRB %d already activated\\n\", UE->rrc_ue_id, srb_id);\n    return;\n  }\n  LOG_I(RRC, \"activate SRB %d of UE %d\\n\", srb_id, UE->rrc_ue_id);\n  UE->Srb[srb_id].Active = 1;\n\n  NR_SRB_ToAddModList_t *list = CALLOC(sizeof(*list), 1);\n  asn1cSequenceAdd(list->list, NR_SRB_ToAddMod_t, srb);\n  srb->srb_Identity = srb_id;\n\n  if (srb_id == 1) {\n    nr_pdcp_entity_security_keys_and_algos_t null_security_parameters = {0};\n    nr_pdcp_add_srbs(true, UE->rrc_ue_id, list, &null_security_parameters);\n  } else {\n    nr_pdcp_entity_security_keys_and_algos_t security_parameters;\n    security_parameters.ciphering_algorithm = UE->ciphering_algorithm;\n    security_parameters.integrity_algorithm = UE->integrity_algorithm;\n    nr_derive_key(RRC_ENC_ALG, UE->ciphering_algorithm, UE->kgnb, security_parameters.ciphering_key);\n    nr_derive_key(RRC_INT_ALG, UE->integrity_algorithm, UE->kgnb, security_parameters.integrity_key);\n\n    nr_pdcp_add_srbs(true,\n                     UE->rrc_ue_id,\n                     list,\n                     &security_parameters);\n  }\n  freeSRBlist(list);\n}",
+          "reason": "Called by rrc_handle_RRCSetupRequest with UE pointer. It dereferences UE and its Srb array without NULL checks. If UE is NULL or Srb pointers invalid, it can cause segmentation fault.",
+          "role": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call",
+          "frame_number": null,
+          "priority_score": 0.85,
+          "has_source": true
+        },
+        {
+          "function_name": "rrc_gNB_generate_RRCSetup",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0.8,
+          "source": "crash_downstream",
+          "code_snippet": "static void rrc_gNB_generate_RRCSetup(instance_t instance,\n                                      rnti_t rnti,\n                                      rrc_gNB_ue_context_t *const ue_context_pP,\n                                      const uint8_t *masterCellGroup,\n                                      int masterCellGroup_len)\n//-----------------------------------------------------------------------------\n{\n  LOG_UE_DL_EVENT(&ue_context_pP->ue_context, \"Send RRC Setup\\n\");\n\n  gNB_RRC_UE_t *ue_p = &ue_context_pP->ue_context;\n  gNB_RRC_INST *rrc = RC.nrrrc[instance];\n  unsigned char buf[1024];\n  uint8_t xid = rrc_gNB_get_next_transaction_identifier(instance);\n  ue_p->xids[xid] = RRC_SETUP;\n  NR_SRB_ToAddModList_t *SRBs = createSRBlist(ue_p, false);\n\n  int size = do_RRCSetup(buf, sizeof(buf), xid, masterCellGroup, masterCellGroup_len, &rrc->configuration, SRBs);\n  AssertFatal(size > 0, \"do_RRCSetup failed\\n\");\n  AssertFatal(size <= 1024, \"memory corruption\\n\");\n\n  LOG_DUMPMSG(NR_RRC, DEBUG_RRC, (char *)buf, size, \"[MSG] RRC Setup\\n\");\n  freeSRBlist(SRBs);\n  f1_ue_data_t ue_data = cu_get_f1_ue_data(ue_p->rrc_ue_id);\n  RETURN_IF_INVALID_ASSOC_ID(ue_data.du_assoc_id);\n  int srbid = 0;\n  f1ap_dl_rrc_message_t dl_rrc = {\n    .gNB_CU_ue_id = ue_p->rrc_ue_id,\n    .gNB_DU_ue_id = ue_data.secondary_ue,\n    .rrc_container = buf,\n    .rrc_container_length = size,\n    .srb_id = srbid\n  };\n  rrc->mac_rrc.dl_rrc_message_transfer(ue_data.du_assoc_id, &dl_rrc);\n}",
+          "reason": "Called by rrc_handle_RRCSetupRequest to generate and send RRC Setup message. It accesses UE context and calls functions that expect valid pointers. Invalid UE context or buffers can cause crash.",
+          "role": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call",
+          "frame_number": null,
+          "priority_score": 0.85,
+          "has_source": true
+        },
+        {
+          "function_name": "rrc_gNB_generate_RRCReject",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0.75,
+          "source": "crash_downstream",
+          "code_snippet": "static void rrc_gNB_generate_RRCReject(gNB_RRC_INST *rrc, rrc_gNB_ue_context_t *const ue_context_pP)\n//-----------------------------------------------------------------------------\n{\n  gNB_RRC_UE_t *ue_p = &ue_context_pP->ue_context;\n  LOG_A(NR_RRC, \"Send RRCReject to RNTI %04x\\n\", ue_p->rnti);\n\n  unsigned char buf[1024];\n  int size = do_RRCReject(buf);\n  AssertFatal(size > 0, \"do_RRCReject failed\\n\");\n  AssertFatal(size <= 1024, \"memory corruption\\n\");\n\n  LOG_DUMPMSG(NR_RRC, DEBUG_RRC,\n              (char *)buf,\n              size,\n              \"[MSG] RRCReject \\n\");\n  LOG_I(NR_RRC, \" [RAPROC] ue %04x Logical Channel DL-CCCH, Generating NR_RRCReject (bytes %d)\\n\", ue_p->rnti, size);\n\n  f1_ue_data_t ue_data = cu_get_f1_ue_data(ue_p->rrc_ue_id);\n  RETURN_IF_INVALID_ASSOC_ID(ue_data.du_assoc_id);\n  int srbid = 0;\n  f1ap_dl_rrc_message_t dl_rrc = {\n    .gNB_CU_ue_id = ue_p->rrc_ue_id,\n    .gNB_DU_ue_id = ue_data.secondary_ue,\n    .rrc_container = buf,\n    .rrc_container_length = size,\n    .srb_id = srbid,\n  };\n  rrc->mac_rrc.dl_rrc_message_transfer(ue_data.du_assoc_id, &dl_rrc);\n  /* release the created UE context, we rejected the UE */\n  rrc_remove_ue(rrc, ue_context_pP);\n}",
+          "reason": "Called by rrc_handle_RRCSetupRequest in error scenarios (not shown fully). It accesses UE context and sends reject message. If UE context is invalid or NULL, it can cause crash.",
+          "role": "Called by crash function rrc_handle_RRCSetupRequest - potential null/invalid call",
+          "frame_number": null,
+          "priority_score": 0.85,
+          "has_source": true
+        },
+        {
+          "function_name": "rrc_gNB_process_RRCReestablishmentComplete",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0.65,
+          "source": "crash_upstream",
+          "code_snippet": "static void rrc_gNB_process_RRCReestablishmentComplete(gNB_RRC_INST *rrc, gNB_RRC_UE_t *ue_p, const uint8_t xid)\n{\n  LOG_I(NR_RRC, \"UE %d Processing NR_RRCReestablishmentComplete from UE\\n\", ue_p->rrc_ue_id);\n\n  int i = 0;\n\n  ue_p->xids[xid] = RRC_ACTION_NONE;\n\n  ue_p->Srb[1].Active = 1;\n\n  NR_CellGroupConfig_t *cellGroupConfig = calloc(1, sizeof(NR_CellGroupConfig_t));\n\n  cellGroupConfig->spCellConfig = ue_p->masterCellGroup->spCellConfig;\n  cellGroupConfig->mac_CellGroupConfig = ue_p->masterCellGroup->mac_CellGroupConfig;\n  cellGroupConfig->physicalCellGroupConfig = ue_p->masterCellGroup->physicalCellGroupConfig;\n  cellGroupConfig->rlc_BearerToReleaseList = NULL;\n  cellGroupConfig->rlc_BearerToAddModList = calloc(1, sizeof(*cellGroupConfig->rlc_BearerToAddModList));\n\n  /*\n   * Get SRB2, DRB configuration from the existing UE context,\n   * also start from SRB2 (i=1) and not from SRB1 (i=0).\n   */\n  for (i = 1; i < ue_p->masterCellGroup->rlc_BearerToAddModList->list.count; ++i)\n    asn1cSeqAdd(&cellGroupConfig->rlc_BearerToAddModList->list, ue_p->masterCellGroup->rlc_BearerToAddModList->list.array[i]);\n\n  /*\n   * At this stage, PDCP entity are re-established and reestablishRLC is flagged\n   * with RRCReconfiguration to complete RLC re-establishment of remaining bearers\n   */\n  for (i = 0; i < cellGroupConfig->rlc_BearerToAddModList->list.count; i++) {\n    asn1cCallocOne(cellGroupConfig->rlc_BearerToAddModList->list.array[i]->reestablishRLC,\n                   NR_RLC_BearerConfig__reestablishRLC_true);\n  }\n\n  /* TODO: remove a reconfigurationWithSync, we don't need it for\n   * reestablishment. The whole reason why this might be here is that we store\n   * the CellGroupConfig (after handover), and simply reuse it for\n   * reestablishment, instead of re-requesting the CellGroupConfig from the DU.\n   * Hence, add below hack; the solution would be to request the\n   * CellGroupConfig from the DU when doing reestablishment. */\n... [middle truncated] ...\n                                    .meas_config = ue_p->measConfig,\n                                    .drb_config_list = DRBs,\n                                    .srb_config_list = SRBs,\n                                    .transaction_id = new_xid};\n  byte_array_t msg = do_RRCReconfiguration(&params);\n  if (msg.len <= 0) {\n    LOG_E(NR_RRC, \"UE %d: Failed to generate RRCReconfiguration\\n\", ue_p->rrc_ue_id);\n    return;\n  }\n  LOG_DUMPMSG(NR_RRC, DEBUG_RRC, msg.buf, msg.len, \"[MSG] RRC Reconfiguration\\n\");\n  LOG_I(NR_RRC,\n        \"UE %d RNTI %04x: Generate NR_RRCReconfiguration after reestablishment complete (bytes %ld)\\n\",\n        ue_p->rrc_ue_id,\n        ue_p->rnti,\n        msg.len);\n  const uint32_t msg_id = NR_DL_DCCH_MessageType__c1_PR_rrcReconfiguration;\n  nr_rrc_transfer_protected_rrc_message(rrc, ue_p, DL_SCH_LCID_DCCH, msg_id, msg.buf, msg.len);\n  free_RRCReconfiguration_params(params);\n  free_byte_array(msg);\n}",
+          "reason": "Upstream function that calls rrc_handle_RRCSetupRequest indirectly and manipulates UE context and ASN.1 structures. Potentially relevant if UE context or ASN.1 structures are corrupted.",
+          "role": "Calls crash function rrc_handle_RRCSetupRequest - check parameter passing",
+          "frame_number": null,
+          "priority_score": 0.8,
+          "has_source": true
+        },
+        {
+          "function_name": "rrc_gNB_process_initial_ul_rrc_message",
+          "file_path": "openairinterface5g-develop/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0.6,
+          "source": "crash_upstream",
+          "code_snippet": "void rrc_gNB_process_initial_ul_rrc_message(sctp_assoc_t assoc_id, const f1ap_initial_ul_rrc_message_t *ul_rrc)\n{\n  AssertFatal(assoc_id != 0, \"illegal assoc_id == 0: should be -1 (monolithic) or >0 (split)\\n\");\n\n  gNB_RRC_INST *rrc = RC.nrrrc[0];\n  LOG_I(NR_RRC, \"Decoding CCCH: RNTI %04x, payload_size %d\\n\", ul_rrc->crnti, ul_rrc->rrc_container_length);\n  NR_UL_CCCH_Message_t *ul_ccch_msg = NULL;\n  asn_dec_rval_t dec_rval = uper_decode(NULL,\n                                        &asn_DEF_NR_UL_CCCH_Message,\n                                        (void **)&ul_ccch_msg,\n                                        ul_rrc->rrc_container,\n                                        ul_rrc->rrc_container_length,\n                                        0,\n                                        0);\n  if (dec_rval.code != RC_OK || dec_rval.consumed == 0) {\n    LOG_E(NR_RRC, \" FATAL Error in receiving CCCH\\n\");\n    return;\n  }\n\n  if (ul_ccch_msg->message.present == NR_UL_CCCH_MessageType_PR_c1) {\n    switch (ul_ccch_msg->message.choice.c1->present) {\n      case NR_UL_CCCH_MessageType__c1_PR_NOTHING:\n        LOG_W(NR_RRC, \"Received PR_NOTHING on UL-CCCH-Message, ignoring message\\n\");\n        break;\n\n      case NR_UL_CCCH_MessageType__c1_PR_rrcSetupRequest:\n        LOG_D(NR_RRC, \"Received RRCSetupRequest on UL-CCCH-Message (UE rnti %04x)\\n\", ul_rrc->crnti);\n        rrc_handle_RRCSetupRequest(rrc, assoc_id, &ul_ccch_msg->message.choice.c1->choice.rrcSetupRequest->rrcSetupRequest, ul_rrc);\n        break;\n\n      case NR_UL_CCCH_MessageType__c1_PR_rrcResumeRequest:\n        LOG_E(NR_RRC, \"Received rrcResumeRequest message, but handling is not implemented\\n\");\n        break;\n\n      case NR_UL_CCCH_MessageType__c1_PR_rrcReestablishmentRequest: {\n        LOG_D(NR_RRC, \"Received RRCReestablishmentRequest on UL-CCCH-Message (UE RNTI %04x)\\n\", ul_rrc->crnti);\n        rrc_handle_RRCReestablishmentRequest(\n            rrc,\n            assoc_id,\n            &ul_ccch_msg->message.choice.c1->choice.rrcReestablishmentRequest->rrcReestablishmentRequest,\n            ul_rrc);\n      } break;\n\n      case NR_UL_CCCH_MessageType__c1_PR_rrcSystemInfoRequest:\n        LOG_I(NR_RRC, \"UE %04x receive rrcSystemInfoRequest message \\n\", ul_rrc->crnti);\n        /* TODO */\n        break;\n\n      default:\n        LOG_E(NR_RRC, \"UE %04x Unknown message\\n\", ul_rrc->crnti);\n        break;\n    }\n  }\n  ASN_STRUCT_FREE(asn_DEF_NR_UL_CCCH_Message, ul_ccch_msg);\n}",
+          "reason": "Another upstream caller that handles initial UL RRC messages and calls rrc_handle_RRCSetupRequest. It performs ASN.1 decoding and passes pointers that if invalid can cause crash downstream.",
+          "role": "Calls crash function rrc_handle_RRCSetupRequest - check parameter passing",
+          "frame_number": null,
+          "priority_score": 0.8,
+          "has_source": true
+        }
+      ],
+      "suspected_configs": [],
+      "crash_analysis": true,
+      "retrieval_method": "crash_intelligent_grading"
+    },
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "suspected_functions": [
+          "rrc_handle_RRCSetupRequest",
+          "rrc_gNB_process_initial_ul_rrc_message",
+          "BIT_STRING_to_uint64",
+          "activate_srb",
+          "rrc_gNB_generate_RRCSetup",
+          "rrc_gNB_generate_RRCReject"
+        ],
+        "suspected_configs": [],
+        "reason": "The segmentation fault is caused by missing NULL pointer checks on critical pointers such as rrcSetupRequest, msg, and nested ASN.1 structures before dereferencing in rrc_handle_RRCSetupRequest and its caller rrc_gNB_process_initial_ul_rrc_message. Also, BIT_STRING_to_uint64 assumes a valid pointer without NULL check. These missing validations allow NULL or invalid pointers to be dereferenced, causing the crash.",
+        "config_fix": "",
+        "code_patches": [
+          {
+            "function_name": "rrc_handle_RRCSetupRequest",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "static void rrc_handle_RRCSetupRequest(gNB_RRC_INST *rrc,\n                                       sctp_assoc_t assoc_id,\n                                       const NR_RRCSetupRequest_IEs_t *rrcSetupRequest,\n                                       const f1ap_initial_ul_rrc_message_t *msg)\n{\n  rrc_gNB_ue_context_t *ue_context_p = NULL;\n  if (NR_InitialUE_Identity_PR_randomValue == rrcSetupRequest->ue_Identity.present) {\n    /* randomValue                         BIT STRING (SIZE (39)) */",
+            "patched_code": "static void rrc_handle_RRCSetupRequest(gNB_RRC_INST *rrc,\n                                       sctp_assoc_t assoc_id,\n                                       const NR_RRCSetupRequest_IEs_t *rrcSetupRequest,\n                                       const f1ap_initial_ul_rrc_message_t *msg)\n{\n  if (!rrcSetupRequest) {\n    LOG_E(NR_RRC, \"rrcSetupRequest is NULL, cannot process RRCSetupRequest\\n\");\n    return;\n  }\n  if (!msg) {\n    LOG_E(NR_RRC, \"msg is NULL, cannot process RRCSetupRequest\\n\");\n    return;\n  }\n  rrc_gNB_ue_context_t *ue_context_p = NULL;\n  if (NR_InitialUE_Identity_PR_randomValue == rrcSetupRequest->ue_Identity.present) {\n    /* randomValue                         BIT STRING (SIZE (39)) */",
+            "line_numbers": "1050-1055",
+            "description": "Add NULL pointer checks for rrcSetupRequest and msg at the start of rrc_handle_RRCSetupRequest to prevent dereferencing NULL pointers."
+          },
+          {
+            "function_name": "rrc_handle_RRCSetupRequest",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "    if (rrcSetupRequest->ue_Identity.choice.randomValue.size != 5) { // 39-bit random value\n      LOG_E(NR_RRC,\n            \"wrong InitialUE-Identity randomValue size, expected 5, provided %lu\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.randomValue.size);\n      return;\n    }\n    uint64_t random_value = 0;\n    memcpy(((uint8_t *)&random_value) + 3,\n           rrcSetupRequest->ue_Identity.choice.randomValue.buf,\n           rrcSetupRequest->ue_Identity.choice.randomValue.size);",
+            "patched_code": "    if (!rrcSetupRequest->ue_Identity.choice.randomValue.buf) {\n      LOG_E(NR_RRC, \"randomValue.buf is NULL, cannot copy random value\\n\");\n      return;\n    }\n    if (rrcSetupRequest->ue_Identity.choice.randomValue.size != 5) { // 39-bit random value\n      LOG_E(NR_RRC,\n            \"wrong InitialUE-Identity randomValue size, expected 5, provided %lu\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.randomValue.size);\n      return;\n    }\n    uint64_t random_value = 0;\n    memcpy(((uint8_t *)&random_value) + 3,\n           rrcSetupRequest->ue_Identity.choice.randomValue.buf,\n           rrcSetupRequest->ue_Identity.choice.randomValue.size);",
+            "line_numbers": "1058-1067",
+            "description": "Add NULL check for randomValue.buf before memcpy to avoid dereferencing NULL."
+          },
+          {
+            "function_name": "rrc_handle_RRCSetupRequest",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "  } else if (NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 == rrcSetupRequest->ue_Identity.present) {\n    /* <5G-S-TMSI> = <AMF Set ID><AMF Pointer><5G-TMSI> 48-bit */\n    /* ng-5G-S-TMSI-Part1                  BIT STRING (SIZE (39)) */\n    if (rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size != 5) {\n      LOG_E(NR_RRC,\n            \"wrong ng_5G_S_TMSI_Part1 size, expected 5, provided %lu \\n\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size);\n      return;\n    }\n\n    uint64_t s_tmsi_part1 = BIT_STRING_to_uint64(&rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1);",
+            "patched_code": "  } else if (NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 == rrcSetupRequest->ue_Identity.present) {\n    /* <5G-S-TMSI> = <AMF Set ID><AMF Pointer><5G-TMSI> 48-bit */\n    /* ng-5G-S-TMSI-Part1                  BIT STRING (SIZE (39)) */\n    if (!rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.buf) {\n      LOG_E(NR_RRC, \"ng_5G_S_TMSI_Part1.buf is NULL, cannot convert to uint64\\n\");\n      return;\n    }\n    if (rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size != 5) {\n      LOG_E(NR_RRC,\n            \"wrong ng_5G_S_TMSI_Part1 size, expected 5, provided %lu \\n\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size);\n      return;\n    }\n\n    uint64_t s_tmsi_part1 = BIT_STRING_to_uint64(&rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1);",
+            "line_numbers": "1073-1084",
+            "description": "Add NULL check for ng_5G_S_TMSI_Part1.buf before calling BIT_STRING_to_uint64 to avoid dereferencing NULL."
+          },
+          {
+            "function_name": "rrc_gNB_process_initial_ul_rrc_message",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "void rrc_gNB_process_initial_ul_rrc_message(sctp_assoc_t assoc_id, const f1ap_initial_ul_rrc_message_t *ul_rrc)\n{\n  AssertFatal(assoc_id != 0, \"illegal assoc_id == 0: should be -1 (monolithic) or >0 (split)\\n\");\n\n  gNB_RRC_INST *rrc = RC.nrrrc[0];\n  LOG_I(NR_RRC, \"Decoding CCCH: RNTI %04x, payload_size %d\\n\", ul_rrc->crnti, ul_rrc->rrc_container_length);\n  NR_UL_CCCH_Message_t *ul_ccch_msg = NULL;\n  asn_dec_rval_t dec_rval = uper_decode(NULL,\n                                        &asn_DEF_NR_UL_CCCH_Message,\n                                        (void **)&ul_ccch_msg,\n                                        ul_rrc->rrc_container,\n                                        ul_rrc->rrc_container_length,\n                                        0,\n                                        0);",
+            "patched_code": "void rrc_gNB_process_initial_ul_rrc_message(sctp_assoc_t assoc_id, const f1ap_initial_ul_rrc_message_t *ul_rrc)\n{\n  if (!ul_rrc) {\n    LOG_E(NR_RRC, \"ul_rrc is NULL, cannot process initial UL RRC message\\n\");\n    return;\n  }\n  AssertFatal(assoc_id != 0, \"illegal assoc_id == 0: should be -1 (monolithic) or >0 (split)\\n\");\n\n  gNB_RRC_INST *rrc = RC.nrrrc[0];\n  LOG_I(NR_RRC, \"Decoding CCCH: RNTI %04x, payload_size %d\\n\", ul_rrc->crnti, ul_rrc->rrc_container_length);\n  NR_UL_CCCH_Message_t *ul_ccch_msg = NULL;\n  asn_dec_rval_t dec_rval = uper_decode(NULL,\n                                        &asn_DEF_NR_UL_CCCH_Message,\n                                        (void **)&ul_ccch_msg,\n                                        ul_rrc->rrc_container,\n                                        ul_rrc->rrc_container_length,\n                                        0,\n                                        0);",
+            "line_numbers": "1010-1015",
+            "description": "Add NULL check for ul_rrc parameter at function entry to prevent dereferencing NULL."
+          },
+          {
+            "function_name": "BIT_STRING_to_uint64",
+            "file_path": "openairinterface-5g-develop/common/utils/oai_asn1.h",
+            "patch_type": "null_check_insertion",
+            "original_code": "static inline uint64_t BIT_STRING_to_uint64(const BIT_STRING_t *asn) {\n  uint64_t result = 0;\n  size_t index;\n  int shift;\n\n  DevCheck ((asn->size > 0) && (asn->size <= 8), asn->size, 0, 0);\n\n  shift = ((asn->size - 1) * 8) - asn->bits_unused;\n  for (index = 0; index < (asn->size - 1); index++) {\n    result |= ((uint64_t)asn->buf[index]) << shift;\n    shift -= 8;\n  }\n\n  result |= ((uint64_t)asn->buf[index]) >> asn->bits_unused;\n\n  return result;\n}",
+            "patched_code": "static inline uint64_t BIT_STRING_to_uint64(const BIT_STRING_t *asn) {\n  if (!asn || !asn->buf) {\n    LOG_E(NR_RRC, \"BIT_STRING_to_uint64 called with NULL pointer\\n\");\n    return 0;\n  }\n  uint64_t result = 0;\n  size_t index;\n  int shift;\n\n  DevCheck ((asn->size > 0) && (asn->size <= 8), asn->size, 0, 0);\n\n  shift = ((asn->size - 1) * 8) - asn->bits_unused;\n  for (index = 0; index < (asn->size - 1); index++) {\n    result |= ((uint64_t)asn->buf[index]) << shift;\n    shift -= 8;\n  }\n\n  result |= ((uint64_t)asn->buf[index]) >> asn->bits_unused;\n\n  return result;\n}",
+            "line_numbers": "50-70",
+            "description": "Add NULL pointer check for asn and asn->buf at start of BIT_STRING_to_uint64 to prevent dereferencing NULL."
+          },
+          {
+            "function_name": "activate_srb",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "void activate_srb(gNB_RRC_UE_t *UE, int srb_id)\n{\n  AssertFatal(srb_id == 1 || srb_id == 2, \"handling only SRB 1 or 2\\n\");\n  if (UE->Srb[srb_id].Active == 1) {\n    LOG_W(RRC, \"UE %d SRB %d already activated\\n\", UE->rrc_ue_id, srb_id);\n    return;\n  }\n  LOG_I(RRC, \"activate SRB %d of UE %d\\n\", srb_id, UE->rrc_ue_id);\n  UE->Srb[srb_id].Active = 1;\n\n  NR_SRB_ToAddModList_t *list = CALLOC(sizeof(*list), 1);",
+            "patched_code": "void activate_srb(gNB_RRC_UE_t *UE, int srb_id)\n{\n  if (!UE) {\n    LOG_E(RRC, \"activate_srb called with NULL UE pointer\\n\");\n    return;\n  }\n  AssertFatal(srb_id == 1 || srb_id == 2, \"handling only SRB 1 or 2\\n\");\n  if (UE->Srb[srb_id].Active == 1) {\n    LOG_W(RRC, \"UE %d SRB %d already activated\\n\", UE->rrc_ue_id, srb_id);\n    return;\n  }\n  LOG_I(RRC, \"activate SRB %d of UE %d\\n\", srb_id, UE->rrc_ue_id);\n  UE->Srb[srb_id].Active = 1;\n\n  NR_SRB_ToAddModList_t *list = CALLOC(sizeof(*list), 1);",
+            "line_numbers": "1200-1210",
+            "description": "Add NULL check for UE pointer at start of activate_srb to prevent dereferencing NULL."
+          }
+        ],
+        "config_patches": [],
+        "root_cause_analysis": "The crash occurs due to dereferencing NULL pointers in rrc_handle_RRCSetupRequest and its caller functions. The code lacks defensive NULL pointer checks for critical input parameters and nested ASN.1 buffers before usage. Additionally, BIT_STRING_to_uint64 assumes valid input without NULL checks. Adding these checks prevents invalid memory access and segmentation faults.",
+        "investigation_steps": [
+          "Step 1: Reviewed all suspected functions for NULL pointer assignments and found none setting pointers to NULL before use.",
+          "Step 2: Identified missing NULL pointer validation before dereferencing critical pointers in rrc_handle_RRCSetupRequest and rrc_gNB_process_initial_ul_rrc_message.",
+          "Step 3: Added defensive NULL checks in these functions and in BIT_STRING_to_uint64 and activate_srb to prevent segmentation faults."
+        ],
+        "specification_context": "",
+        "investigation_commands": [
+          {
+            "command": "grep -n \"RRCSetupRequest\" openair2/RRC/NR/rrc_gNB.c",
+            "hint": "Verify the implementation and recent changes in the RRCSetupRequest handling function for potential issues"
+          },
+          {
+            "command": "tcpdump -i eth0 host 10.138.77.131 and port 500",
+            "hint": "Capture SCTP packets on port 500 to monitor RRCSetupRequest messages and check for malformed or missing data"
+          }
+        ]
+      }
+    },
+    "crash_detailed_fixes": {
+      "error_text": "SIGSEGV - Segmentation fault in rrc_handle_RRCSetupRequest at /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065 (Thread: TASK_RRC_GNB)",
+      "fix_suggestion": {
+        "suspected_functions": [
+          "rrc_handle_RRCSetupRequest",
+          "rrc_gNB_process_initial_ul_rrc_message",
+          "BIT_STRING_to_uint64",
+          "activate_srb",
+          "rrc_gNB_generate_RRCSetup",
+          "rrc_gNB_generate_RRCReject"
+        ],
+        "suspected_configs": [],
+        "reason": "The segmentation fault is caused by missing NULL pointer checks on critical pointers such as rrcSetupRequest, msg, and nested ASN.1 structures before dereferencing in rrc_handle_RRCSetupRequest and its caller rrc_gNB_process_initial_ul_rrc_message. Also, BIT_STRING_to_uint64 assumes a valid pointer without NULL check. These missing validations allow NULL or invalid pointers to be dereferenced, causing the crash.",
+        "config_fix": "",
+        "code_patches": [
+          {
+            "function_name": "rrc_handle_RRCSetupRequest",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "static void rrc_handle_RRCSetupRequest(gNB_RRC_INST *rrc,\n                                       sctp_assoc_t assoc_id,\n                                       const NR_RRCSetupRequest_IEs_t *rrcSetupRequest,\n                                       const f1ap_initial_ul_rrc_message_t *msg)\n{\n  rrc_gNB_ue_context_t *ue_context_p = NULL;\n  if (NR_InitialUE_Identity_PR_randomValue == rrcSetupRequest->ue_Identity.present) {\n    /* randomValue                         BIT STRING (SIZE (39)) */",
+            "patched_code": "static void rrc_handle_RRCSetupRequest(gNB_RRC_INST *rrc,\n                                       sctp_assoc_t assoc_id,\n                                       const NR_RRCSetupRequest_IEs_t *rrcSetupRequest,\n                                       const f1ap_initial_ul_rrc_message_t *msg)\n{\n  if (!rrcSetupRequest) {\n    LOG_E(NR_RRC, \"rrcSetupRequest is NULL, cannot process RRCSetupRequest\\n\");\n    return;\n  }\n  if (!msg) {\n    LOG_E(NR_RRC, \"msg is NULL, cannot process RRCSetupRequest\\n\");\n    return;\n  }\n  rrc_gNB_ue_context_t *ue_context_p = NULL;\n  if (NR_InitialUE_Identity_PR_randomValue == rrcSetupRequest->ue_Identity.present) {\n    /* randomValue                         BIT STRING (SIZE (39)) */",
+            "line_numbers": "1050-1055",
+            "description": "Add NULL pointer checks for rrcSetupRequest and msg at the start of rrc_handle_RRCSetupRequest to prevent dereferencing NULL pointers."
+          },
+          {
+            "function_name": "rrc_handle_RRCSetupRequest",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "    if (rrcSetupRequest->ue_Identity.choice.randomValue.size != 5) { // 39-bit random value\n      LOG_E(NR_RRC,\n            \"wrong InitialUE-Identity randomValue size, expected 5, provided %lu\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.randomValue.size);\n      return;\n    }\n    uint64_t random_value = 0;\n    memcpy(((uint8_t *)&random_value) + 3,\n           rrcSetupRequest->ue_Identity.choice.randomValue.buf,\n           rrcSetupRequest->ue_Identity.choice.randomValue.size);",
+            "patched_code": "    if (!rrcSetupRequest->ue_Identity.choice.randomValue.buf) {\n      LOG_E(NR_RRC, \"randomValue.buf is NULL, cannot copy random value\\n\");\n      return;\n    }\n    if (rrcSetupRequest->ue_Identity.choice.randomValue.size != 5) { // 39-bit random value\n      LOG_E(NR_RRC,\n            \"wrong InitialUE-Identity randomValue size, expected 5, provided %lu\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.randomValue.size);\n      return;\n    }\n    uint64_t random_value = 0;\n    memcpy(((uint8_t *)&random_value) + 3,\n           rrcSetupRequest->ue_Identity.choice.randomValue.buf,\n           rrcSetupRequest->ue_Identity.choice.randomValue.size);",
+            "line_numbers": "1058-1067",
+            "description": "Add NULL check for randomValue.buf before memcpy to avoid dereferencing NULL."
+          },
+          {
+            "function_name": "rrc_handle_RRCSetupRequest",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "  } else if (NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 == rrcSetupRequest->ue_Identity.present) {\n    /* <5G-S-TMSI> = <AMF Set ID><AMF Pointer><5G-TMSI> 48-bit */\n    /* ng-5G-S-TMSI-Part1                  BIT STRING (SIZE (39)) */\n    if (rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size != 5) {\n      LOG_E(NR_RRC,\n            \"wrong ng_5G_S_TMSI_Part1 size, expected 5, provided %lu \\n\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size);\n      return;\n    }\n\n    uint64_t s_tmsi_part1 = BIT_STRING_to_uint64(&rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1);",
+            "patched_code": "  } else if (NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 == rrcSetupRequest->ue_Identity.present) {\n    /* <5G-S-TMSI> = <AMF Set ID><AMF Pointer><5G-TMSI> 48-bit */\n    /* ng-5G-S-TMSI-Part1                  BIT STRING (SIZE (39)) */\n    if (!rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.buf) {\n      LOG_E(NR_RRC, \"ng_5G_S_TMSI_Part1.buf is NULL, cannot convert to uint64\\n\");\n      return;\n    }\n    if (rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size != 5) {\n      LOG_E(NR_RRC,\n            \"wrong ng_5G_S_TMSI_Part1 size, expected 5, provided %lu \\n\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size);\n      return;\n    }\n\n    uint64_t s_tmsi_part1 = BIT_STRING_to_uint64(&rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1);",
+            "line_numbers": "1073-1084",
+            "description": "Add NULL check for ng_5G_S_TMSI_Part1.buf before calling BIT_STRING_to_uint64 to avoid dereferencing NULL."
+          },
+          {
+            "function_name": "rrc_gNB_process_initial_ul_rrc_message",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "void rrc_gNB_process_initial_ul_rrc_message(sctp_assoc_t assoc_id, const f1ap_initial_ul_rrc_message_t *ul_rrc)\n{\n  AssertFatal(assoc_id != 0, \"illegal assoc_id == 0: should be -1 (monolithic) or >0 (split)\\n\");\n\n  gNB_RRC_INST *rrc = RC.nrrrc[0];\n  LOG_I(NR_RRC, \"Decoding CCCH: RNTI %04x, payload_size %d\\n\", ul_rrc->crnti, ul_rrc->rrc_container_length);\n  NR_UL_CCCH_Message_t *ul_ccch_msg = NULL;\n  asn_dec_rval_t dec_rval = uper_decode(NULL,\n                                        &asn_DEF_NR_UL_CCCH_Message,\n                                        (void **)&ul_ccch_msg,\n                                        ul_rrc->rrc_container,\n                                        ul_rrc->rrc_container_length,\n                                        0,\n                                        0);",
+            "patched_code": "void rrc_gNB_process_initial_ul_rrc_message(sctp_assoc_t assoc_id, const f1ap_initial_ul_rrc_message_t *ul_rrc)\n{\n  if (!ul_rrc) {\n    LOG_E(NR_RRC, \"ul_rrc is NULL, cannot process initial UL RRC message\\n\");\n    return;\n  }\n  AssertFatal(assoc_id != 0, \"illegal assoc_id == 0: should be -1 (monolithic) or >0 (split)\\n\");\n\n  gNB_RRC_INST *rrc = RC.nrrrc[0];\n  LOG_I(NR_RRC, \"Decoding CCCH: RNTI %04x, payload_size %d\\n\", ul_rrc->crnti, ul_rrc->rrc_container_length);\n  NR_UL_CCCH_Message_t *ul_ccch_msg = NULL;\n  asn_dec_rval_t dec_rval = uper_decode(NULL,\n                                        &asn_DEF_NR_UL_CCCH_Message,\n                                        (void **)&ul_ccch_msg,\n                                        ul_rrc->rrc_container,\n                                        ul_rrc->rrc_container_length,\n                                        0,\n                                        0);",
+            "line_numbers": "1010-1015",
+            "description": "Add NULL check for ul_rrc parameter at function entry to prevent dereferencing NULL."
+          },
+          {
+            "function_name": "BIT_STRING_to_uint64",
+            "file_path": "openairinterface-5g-develop/common/utils/oai_asn1.h",
+            "patch_type": "null_check_insertion",
+            "original_code": "static inline uint64_t BIT_STRING_to_uint64(const BIT_STRING_t *asn) {\n  uint64_t result = 0;\n  size_t index;\n  int shift;\n\n  DevCheck ((asn->size > 0) && (asn->size <= 8), asn->size, 0, 0);\n\n  shift = ((asn->size - 1) * 8) - asn->bits_unused;\n  for (index = 0; index < (asn->size - 1); index++) {\n    result |= ((uint64_t)asn->buf[index]) << shift;\n    shift -= 8;\n  }\n\n  result |= ((uint64_t)asn->buf[index]) >> asn->bits_unused;\n\n  return result;\n}",
+            "patched_code": "static inline uint64_t BIT_STRING_to_uint64(const BIT_STRING_t *asn) {\n  if (!asn || !asn->buf) {\n    LOG_E(NR_RRC, \"BIT_STRING_to_uint64 called with NULL pointer\\n\");\n    return 0;\n  }\n  uint64_t result = 0;\n  size_t index;\n  int shift;\n\n  DevCheck ((asn->size > 0) && (asn->size <= 8), asn->size, 0, 0);\n\n  shift = ((asn->size - 1) * 8) - asn->bits_unused;\n  for (index = 0; index < (asn->size - 1); index++) {\n    result |= ((uint64_t)asn->buf[index]) << shift;\n    shift -= 8;\n  }\n\n  result |= ((uint64_t)asn->buf[index]) >> asn->bits_unused;\n\n  return result;\n}",
+            "line_numbers": "50-70",
+            "description": "Add NULL pointer check for asn and asn->buf at start of BIT_STRING_to_uint64 to prevent dereferencing NULL."
+          },
+          {
+            "function_name": "activate_srb",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "void activate_srb(gNB_RRC_UE_t *UE, int srb_id)\n{\n  AssertFatal(srb_id == 1 || srb_id == 2, \"handling only SRB 1 or 2\\n\");\n  if (UE->Srb[srb_id].Active == 1) {\n    LOG_W(RRC, \"UE %d SRB %d already activated\\n\", UE->rrc_ue_id, srb_id);\n    return;\n  }\n  LOG_I(RRC, \"activate SRB %d of UE %d\\n\", srb_id, UE->rrc_ue_id);\n  UE->Srb[srb_id].Active = 1;\n\n  NR_SRB_ToAddModList_t *list = CALLOC(sizeof(*list), 1);",
+            "patched_code": "void activate_srb(gNB_RRC_UE_t *UE, int srb_id)\n{\n  if (!UE) {\n    LOG_E(RRC, \"activate_srb called with NULL UE pointer\\n\");\n    return;\n  }\n  AssertFatal(srb_id == 1 || srb_id == 2, \"handling only SRB 1 or 2\\n\");\n  if (UE->Srb[srb_id].Active == 1) {\n    LOG_W(RRC, \"UE %d SRB %d already activated\\n\", UE->rrc_ue_id, srb_id);\n    return;\n  }\n  LOG_I(RRC, \"activate SRB %d of UE %d\\n\", srb_id, UE->rrc_ue_id);\n  UE->Srb[srb_id].Active = 1;\n\n  NR_SRB_ToAddModList_t *list = CALLOC(sizeof(*list), 1);",
+            "line_numbers": "1200-1210",
+            "description": "Add NULL check for UE pointer at start of activate_srb to prevent dereferencing NULL."
+          }
+        ],
+        "config_patches": [],
+        "root_cause_analysis": "The crash occurs due to dereferencing NULL pointers in rrc_handle_RRCSetupRequest and its caller functions. The code lacks defensive NULL pointer checks for critical input parameters and nested ASN.1 buffers before usage. Additionally, BIT_STRING_to_uint64 assumes valid input without NULL checks. Adding these checks prevents invalid memory access and segmentation faults.",
+        "investigation_steps": [
+          "Step 1: Reviewed all suspected functions for NULL pointer assignments and found none setting pointers to NULL before use.",
+          "Step 2: Identified missing NULL pointer validation before dereferencing critical pointers in rrc_handle_RRCSetupRequest and rrc_gNB_process_initial_ul_rrc_message.",
+          "Step 3: Added defensive NULL checks in these functions and in BIT_STRING_to_uint64 and activate_srb to prevent segmentation faults."
+        ],
+        "specification_context": "",
+        "investigation_commands": [
+          {
+            "command": "grep -n \"RRCSetupRequest\" openair2/RRC/NR/rrc_gNB.c",
+            "hint": "Verify the implementation and recent changes in the RRCSetupRequest handling function for potential issues"
+          },
+          {
+            "command": "tcpdump -i eth0 host 10.138.77.131 and port 500",
+            "hint": "Capture SCTP packets on port 500 to monitor RRCSetupRequest messages and check for malformed or missing data"
+          }
+        ]
+      },
+      "context_summary": {
+        "candidate_functions_count": 9,
+        "candidate_configs_count": 0,
+        "call_graph_entries": 0,
+        "pattern_matched": false
+      }
+    },
+    "fix_suggestions": {
+      "fix_suggestion": {
+        "suspected_functions": [
+          "rrc_handle_RRCSetupRequest",
+          "rrc_gNB_process_initial_ul_rrc_message",
+          "BIT_STRING_to_uint64",
+          "activate_srb",
+          "rrc_gNB_generate_RRCSetup",
+          "rrc_gNB_generate_RRCReject"
+        ],
+        "suspected_configs": [],
+        "reason": "The segmentation fault is caused by missing NULL pointer checks on critical pointers such as rrcSetupRequest, msg, and nested ASN.1 structures before dereferencing in rrc_handle_RRCSetupRequest and its caller rrc_gNB_process_initial_ul_rrc_message. Also, BIT_STRING_to_uint64 assumes a valid pointer without NULL check. These missing validations allow NULL or invalid pointers to be dereferenced, causing the crash.",
+        "config_fix": "",
+        "code_patches": [
+          {
+            "function_name": "rrc_handle_RRCSetupRequest",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "static void rrc_handle_RRCSetupRequest(gNB_RRC_INST *rrc,\n                                       sctp_assoc_t assoc_id,\n                                       const NR_RRCSetupRequest_IEs_t *rrcSetupRequest,\n                                       const f1ap_initial_ul_rrc_message_t *msg)\n{\n  rrc_gNB_ue_context_t *ue_context_p = NULL;\n  if (NR_InitialUE_Identity_PR_randomValue == rrcSetupRequest->ue_Identity.present) {\n    /* randomValue                         BIT STRING (SIZE (39)) */",
+            "patched_code": "static void rrc_handle_RRCSetupRequest(gNB_RRC_INST *rrc,\n                                       sctp_assoc_t assoc_id,\n                                       const NR_RRCSetupRequest_IEs_t *rrcSetupRequest,\n                                       const f1ap_initial_ul_rrc_message_t *msg)\n{\n  if (!rrcSetupRequest) {\n    LOG_E(NR_RRC, \"rrcSetupRequest is NULL, cannot process RRCSetupRequest\\n\");\n    return;\n  }\n  if (!msg) {\n    LOG_E(NR_RRC, \"msg is NULL, cannot process RRCSetupRequest\\n\");\n    return;\n  }\n  rrc_gNB_ue_context_t *ue_context_p = NULL;\n  if (NR_InitialUE_Identity_PR_randomValue == rrcSetupRequest->ue_Identity.present) {\n    /* randomValue                         BIT STRING (SIZE (39)) */",
+            "line_numbers": "1050-1055",
+            "description": "Add NULL pointer checks for rrcSetupRequest and msg at the start of rrc_handle_RRCSetupRequest to prevent dereferencing NULL pointers."
+          },
+          {
+            "function_name": "rrc_handle_RRCSetupRequest",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "    if (rrcSetupRequest->ue_Identity.choice.randomValue.size != 5) { // 39-bit random value\n      LOG_E(NR_RRC,\n            \"wrong InitialUE-Identity randomValue size, expected 5, provided %lu\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.randomValue.size);\n      return;\n    }\n    uint64_t random_value = 0;\n    memcpy(((uint8_t *)&random_value) + 3,\n           rrcSetupRequest->ue_Identity.choice.randomValue.buf,\n           rrcSetupRequest->ue_Identity.choice.randomValue.size);",
+            "patched_code": "    if (!rrcSetupRequest->ue_Identity.choice.randomValue.buf) {\n      LOG_E(NR_RRC, \"randomValue.buf is NULL, cannot copy random value\\n\");\n      return;\n    }\n    if (rrcSetupRequest->ue_Identity.choice.randomValue.size != 5) { // 39-bit random value\n      LOG_E(NR_RRC,\n            \"wrong InitialUE-Identity randomValue size, expected 5, provided %lu\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.randomValue.size);\n      return;\n    }\n    uint64_t random_value = 0;\n    memcpy(((uint8_t *)&random_value) + 3,\n           rrcSetupRequest->ue_Identity.choice.randomValue.buf,\n           rrcSetupRequest->ue_Identity.choice.randomValue.size);",
+            "line_numbers": "1058-1067",
+            "description": "Add NULL check for randomValue.buf before memcpy to avoid dereferencing NULL."
+          },
+          {
+            "function_name": "rrc_handle_RRCSetupRequest",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "  } else if (NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 == rrcSetupRequest->ue_Identity.present) {\n    /* <5G-S-TMSI> = <AMF Set ID><AMF Pointer><5G-TMSI> 48-bit */\n    /* ng-5G-S-TMSI-Part1                  BIT STRING (SIZE (39)) */\n    if (rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size != 5) {\n      LOG_E(NR_RRC,\n            \"wrong ng_5G_S_TMSI_Part1 size, expected 5, provided %lu \\n\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size);\n      return;\n    }\n\n    uint64_t s_tmsi_part1 = BIT_STRING_to_uint64(&rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1);",
+            "patched_code": "  } else if (NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 == rrcSetupRequest->ue_Identity.present) {\n    /* <5G-S-TMSI> = <AMF Set ID><AMF Pointer><5G-TMSI> 48-bit */\n    /* ng-5G-S-TMSI-Part1                  BIT STRING (SIZE (39)) */\n    if (!rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.buf) {\n      LOG_E(NR_RRC, \"ng_5G_S_TMSI_Part1.buf is NULL, cannot convert to uint64\\n\");\n      return;\n    }\n    if (rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size != 5) {\n      LOG_E(NR_RRC,\n            \"wrong ng_5G_S_TMSI_Part1 size, expected 5, provided %lu \\n\",\n            (long unsigned int)rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1.size);\n      return;\n    }\n\n    uint64_t s_tmsi_part1 = BIT_STRING_to_uint64(&rrcSetupRequest->ue_Identity.choice.ng_5G_S_TMSI_Part1);",
+            "line_numbers": "1073-1084",
+            "description": "Add NULL check for ng_5G_S_TMSI_Part1.buf before calling BIT_STRING_to_uint64 to avoid dereferencing NULL."
+          },
+          {
+            "function_name": "rrc_gNB_process_initial_ul_rrc_message",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "void rrc_gNB_process_initial_ul_rrc_message(sctp_assoc_t assoc_id, const f1ap_initial_ul_rrc_message_t *ul_rrc)\n{\n  AssertFatal(assoc_id != 0, \"illegal assoc_id == 0: should be -1 (monolithic) or >0 (split)\\n\");\n\n  gNB_RRC_INST *rrc = RC.nrrrc[0];\n  LOG_I(NR_RRC, \"Decoding CCCH: RNTI %04x, payload_size %d\\n\", ul_rrc->crnti, ul_rrc->rrc_container_length);\n  NR_UL_CCCH_Message_t *ul_ccch_msg = NULL;\n  asn_dec_rval_t dec_rval = uper_decode(NULL,\n                                        &asn_DEF_NR_UL_CCCH_Message,\n                                        (void **)&ul_ccch_msg,\n                                        ul_rrc->rrc_container,\n                                        ul_rrc->rrc_container_length,\n                                        0,\n                                        0);",
+            "patched_code": "void rrc_gNB_process_initial_ul_rrc_message(sctp_assoc_t assoc_id, const f1ap_initial_ul_rrc_message_t *ul_rrc)\n{\n  if (!ul_rrc) {\n    LOG_E(NR_RRC, \"ul_rrc is NULL, cannot process initial UL RRC message\\n\");\n    return;\n  }\n  AssertFatal(assoc_id != 0, \"illegal assoc_id == 0: should be -1 (monolithic) or >0 (split)\\n\");\n\n  gNB_RRC_INST *rrc = RC.nrrrc[0];\n  LOG_I(NR_RRC, \"Decoding CCCH: RNTI %04x, payload_size %d\\n\", ul_rrc->crnti, ul_rrc->rrc_container_length);\n  NR_UL_CCCH_Message_t *ul_ccch_msg = NULL;\n  asn_dec_rval_t dec_rval = uper_decode(NULL,\n                                        &asn_DEF_NR_UL_CCCH_Message,\n                                        (void **)&ul_ccch_msg,\n                                        ul_rrc->rrc_container,\n                                        ul_rrc->rrc_container_length,\n                                        0,\n                                        0);",
+            "line_numbers": "1010-1015",
+            "description": "Add NULL check for ul_rrc parameter at function entry to prevent dereferencing NULL."
+          },
+          {
+            "function_name": "BIT_STRING_to_uint64",
+            "file_path": "openairinterface-5g-develop/common/utils/oai_asn1.h",
+            "patch_type": "null_check_insertion",
+            "original_code": "static inline uint64_t BIT_STRING_to_uint64(const BIT_STRING_t *asn) {\n  uint64_t result = 0;\n  size_t index;\n  int shift;\n\n  DevCheck ((asn->size > 0) && (asn->size <= 8), asn->size, 0, 0);\n\n  shift = ((asn->size - 1) * 8) - asn->bits_unused;\n  for (index = 0; index < (asn->size - 1); index++) {\n    result |= ((uint64_t)asn->buf[index]) << shift;\n    shift -= 8;\n  }\n\n  result |= ((uint64_t)asn->buf[index]) >> asn->bits_unused;\n\n  return result;\n}",
+            "patched_code": "static inline uint64_t BIT_STRING_to_uint64(const BIT_STRING_t *asn) {\n  if (!asn || !asn->buf) {\n    LOG_E(NR_RRC, \"BIT_STRING_to_uint64 called with NULL pointer\\n\");\n    return 0;\n  }\n  uint64_t result = 0;\n  size_t index;\n  int shift;\n\n  DevCheck ((asn->size > 0) && (asn->size <= 8), asn->size, 0, 0);\n\n  shift = ((asn->size - 1) * 8) - asn->bits_unused;\n  for (index = 0; index < (asn->size - 1); index++) {\n    result |= ((uint64_t)asn->buf[index]) << shift;\n    shift -= 8;\n  }\n\n  result |= ((uint64_t)asn->buf[index]) >> asn->bits_unused;\n\n  return result;\n}",
+            "line_numbers": "50-70",
+            "description": "Add NULL pointer check for asn and asn->buf at start of BIT_STRING_to_uint64 to prevent dereferencing NULL."
+          },
+          {
+            "function_name": "activate_srb",
+            "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+            "patch_type": "null_check_insertion",
+            "original_code": "void activate_srb(gNB_RRC_UE_t *UE, int srb_id)\n{\n  AssertFatal(srb_id == 1 || srb_id == 2, \"handling only SRB 1 or 2\\n\");\n  if (UE->Srb[srb_id].Active == 1) {\n    LOG_W(RRC, \"UE %d SRB %d already activated\\n\", UE->rrc_ue_id, srb_id);\n    return;\n  }\n  LOG_I(RRC, \"activate SRB %d of UE %d\\n\", srb_id, UE->rrc_ue_id);\n  UE->Srb[srb_id].Active = 1;\n\n  NR_SRB_ToAddModList_t *list = CALLOC(sizeof(*list), 1);",
+            "patched_code": "void activate_srb(gNB_RRC_UE_t *UE, int srb_id)\n{\n  if (!UE) {\n    LOG_E(RRC, \"activate_srb called with NULL UE pointer\\n\");\n    return;\n  }\n  AssertFatal(srb_id == 1 || srb_id == 2, \"handling only SRB 1 or 2\\n\");\n  if (UE->Srb[srb_id].Active == 1) {\n    LOG_W(RRC, \"UE %d SRB %d already activated\\n\", UE->rrc_ue_id, srb_id);\n    return;\n  }\n  LOG_I(RRC, \"activate SRB %d of UE %d\\n\", srb_id, UE->rrc_ue_id);\n  UE->Srb[srb_id].Active = 1;\n\n  NR_SRB_ToAddModList_t *list = CALLOC(sizeof(*list), 1);",
+            "line_numbers": "1200-1210",
+            "description": "Add NULL check for UE pointer at start of activate_srb to prevent dereferencing NULL."
+          }
+        ],
+        "config_patches": [],
+        "root_cause_analysis": "The crash occurs due to dereferencing NULL pointers in rrc_handle_RRCSetupRequest and its caller functions. The code lacks defensive NULL pointer checks for critical input parameters and nested ASN.1 buffers before usage. Additionally, BIT_STRING_to_uint64 assumes valid input without NULL checks. Adding these checks prevents invalid memory access and segmentation faults.",
+        "investigation_steps": [
+          "Step 1: Reviewed all suspected functions for NULL pointer assignments and found none setting pointers to NULL before use.",
+          "Step 2: Identified missing NULL pointer validation before dereferencing critical pointers in rrc_handle_RRCSetupRequest and rrc_gNB_process_initial_ul_rrc_message.",
+          "Step 3: Added defensive NULL checks in these functions and in BIT_STRING_to_uint64 and activate_srb to prevent segmentation faults."
+        ],
+        "specification_context": "",
+        "investigation_commands": [
+          {
+            "command": "grep -n \"RRCSetupRequest\" openair2/RRC/NR/rrc_gNB.c",
+            "hint": "Verify the implementation and recent changes in the RRCSetupRequest handling function for potential issues"
+          },
+          {
+            "command": "tcpdump -i eth0 host 10.138.77.131 and port 500",
+            "hint": "Capture SCTP packets on port 500 to monitor RRCSetupRequest messages and check for malformed or missing data"
+          }
+        ]
+      },
+      "error_text": "Segmentation Fault in rrc_handle_RRCSetupRequest at /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065"
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "grep -n \"RRCSetupRequest\" openair2/RRC/NR/rrc_gNB.c",
+            "explanation": "Verify the implementation and recent changes in the RRCSetupRequest handling function for potential issues"
+          },
+          {
+            "command": "tcpdump -i eth0 host 10.138.77.131 and port 500",
+            "explanation": "Capture SCTP packets on port 500 to monitor RRCSetupRequest messages and check for malformed or missing data"
+          }
+        ],
+        "command_count": 2
+      },
+      "command_count": 2
+    }
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260530_124129.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

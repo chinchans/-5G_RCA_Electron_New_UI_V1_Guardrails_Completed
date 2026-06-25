@@ -1,0 +1,5 @@
+3GPP TS 38.331 Radio Resource Control specification.
+
+This clause describes the RRC connection establishment procedure.
+The UE shall act as specified in section 5.3.3.
+System architecture follows O-RAN WG4 guidelines.

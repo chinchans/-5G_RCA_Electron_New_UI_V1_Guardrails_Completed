@@ -1,0 +1,53 @@
+{
+  "validated": true,
+  "pipeline": [
+    "input_guardrails",
+    "extraction",
+    "dataset_files_on_disk",
+    "schema_validation",
+    "hierarchy_validation",
+    "source_traceability_validation",
+    "nli_groundedness_validation",
+    "save_dataset",
+    "ready_for_test_script_generator"
+  ],
+  "output_guardrails": {
+    "passed": true,
+    "blocked": false,
+    "schema_validation": {
+      "step": "schema_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "hierarchy_validation": {
+      "step": "hierarchy_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "source_traceability_validation": {
+      "step": "source_traceability_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": [
+        "Section title not found near start of extracted section text"
+      ]
+    },
+    "nli_groundedness_validation": {
+      "step": "nli_groundedness_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "metadata": {
+    "source_file_id": "59b75973-acb3-4fea-9539-505d74774af2.docx",
+    "source_document_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/59b75973-acb3-4fea-9539-505d74774af2.docx",
+    "section": "Services tests",
+    "subsection": "Voice Service \u2013 EPS Fallback tests",
+    "safe_subsection": "Voice Service \u2013 EPS Fallback tests",
+    "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/extract/datasets/Voice Service \u2013 EPS Fallback tests"
+  },
+  "ready_for_test_script_generator": true
+}

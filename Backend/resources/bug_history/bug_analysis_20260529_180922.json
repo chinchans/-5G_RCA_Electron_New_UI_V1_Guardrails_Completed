@@ -1,0 +1,2314 @@
+{
+  "error_message": "ERROR MESSAGE:  \nCompilation failed with multiple critical errors in function \u2018read_slice_info\u2019 and \u2018decode_f1ap_setup_response\u2019 in file openair2/F1AP/lib/f1ap_interface_management.c.  \nSpecifically:  \n- Unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 at line 386 in function \u2018read_slice_info\u2019.  \n- Unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 at line 1115 in function \u2018decode_f1ap_setup_response\u2019.  \n- Requests for member \u2018list\u2019 in something not a structure or union at lines 387, 390, 1117, and 1118.  \nThese errors caused the build to fail with:  \n\"gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1\n\nHighest Priority Compiler Ground Truth:\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (unknown_type_name) unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (undeclared_identifier) \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (compiler_error) expected expression before \u2018)\u2019 token\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115 [decode_f1ap_setup_response] (unknown_type_name) unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116 [decode_f1ap_setup_response] (undeclared_identifier) \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116 [decode_f1ap_setup_response] (compiler_error) expected expression before \u2018)\u2019 token\n(Omitted 2 secondary/cascade compiler cluster(s); fix primary issues first.)",
+  "log_file": "Build_gNB_failed.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/Build_gNB_failed.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-test",
+  "timestamp": "2026-05-29T18:09:22.221258",
+  "results": {
+    "error_message": "ERROR MESSAGE:  \nCompilation failed with multiple critical errors in function \u2018read_slice_info\u2019 and \u2018decode_f1ap_setup_response\u2019 in file openair2/F1AP/lib/f1ap_interface_management.c.  \nSpecifically:  \n- Unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 at line 386 in function \u2018read_slice_info\u2019.  \n- Unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 at line 1115 in function \u2018decode_f1ap_setup_response\u2019.  \n- Requests for member \u2018list\u2019 in something not a structure or union at lines 387, 390, 1117, and 1118.  \nThese errors caused the build to fail with:  \n\"gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1",
+    "extracted_error": false,
+    "error_source": "user_provided",
+    "timestamp": "2026-05-29T18:09:22.137312",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/Build_gNB_failed.log",
+    "deployment_context": {
+      "role": "CU",
+      "active_configs": [],
+      "network_params": {
+        "gnb_ipv4": null,
+        "amf_ipv4": null,
+        "ngap_port": null,
+        "assoc_state": "UNKNOWN"
+      },
+      "log_anchors": [
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:9: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before \u2018)\u2019 token",
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member \u2018list\u2019 in something not a structure or union",
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:49: error: request for member \u2018list\u2019 in something not a structure or union",
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115:11: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before \u2018)\u2019 token",
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member \u2018list\u2019 in something not a structure or union",
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+        "gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+        "gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+        "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+        "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+        "ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+        "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+        "build have failed",
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+        "WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+        "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:"
+      ],
+      "detailed_log_context": {
+        "total_lines": 78,
+        "error_sequences": [
+          {
+            "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:9: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+            "line_number": 30,
+            "context": [
+              "     Consolidate compiler generated dependencies of target e1_if",
+              "     [ 53%] Built target e1_if",
+              "     Consolidate compiler generated dependencies of target asn1_nr_rrc",
+              "     [ 77%] Built target asn1_lte_rrc",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:",
+              " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:9: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+              "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+              "     |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+              "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+              "     |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            ]
+          },
+          {
+            "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+            "line_number": 33,
+            "context": [
+              "     [ 77%] Built target asn1_lte_rrc",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:9: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+              "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+              "     |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+              " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+              "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+              "     |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+              "     |                                                          F1AP_ProtocolExtensionContainer_19016P34_t",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: note: each undeclared identifier is reported only once for each function it appears in",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before \u2018)\u2019 token"
+            ]
+          },
+          {
+            "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before \u2018)\u2019 token",
+            "line_number": 38,
+            "context": [
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+              "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+              "     |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+              "     |                                                          F1AP_ProtocolExtensionContainer_19016P34_t",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: note: each undeclared identifier is reported only once for each function it appears in",
+              " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before \u2018)\u2019 token",
+              "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+              "     |                                                                                                      ^",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     387 |   if (p->list.count == 0)",
+              "     |        ^~"
+            ]
+          },
+          {
+            "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member \u2018list\u2019 in something not a structure or union",
+            "line_number": 41,
+            "context": [
+              "     |                                                          F1AP_ProtocolExtensionContainer_19016P34_t",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: note: each undeclared identifier is reported only once for each function it appears in",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before \u2018)\u2019 token",
+              "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+              "     |                                                                                                      ^",
+              " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     387 |   if (p->list.count == 0)",
+              "     |        ^~",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:49: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     390 |   const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];",
+              "     |                                                 ^~"
+            ]
+          },
+          {
+            "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:49: error: request for member \u2018list\u2019 in something not a structure or union",
+            "line_number": 44,
+            "context": [
+              "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+              "     |                                                                                                      ^",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     387 |   if (p->list.count == 0)",
+              "     |        ^~",
+              " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:49: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     390 |   const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];",
+              "     |                                                 ^~",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_request\u2019:",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+              "     872 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];"
+            ]
+          },
+          {
+            "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115:11: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+            "line_number": 52,
+            "context": [
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_request\u2019:",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+              "     872 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];",
+              "     |                                                 ^~~",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_response\u2019:",
+              " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115:11: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+              "     1115 |           F1AP_ProtocolExtensionContainer_10696P228_t *ext =",
+              "     |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+              "     |           F1AP_ProtocolExtensionContainer_19016P228_t",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+              "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;"
+            ]
+          },
+          {
+            "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+            "line_number": 56,
+            "context": [
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_response\u2019:",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115:11: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+              "     1115 |           F1AP_ProtocolExtensionContainer_10696P228_t *ext =",
+              "     |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+              "     |           F1AP_ProtocolExtensionContainer_19016P228_t",
+              " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+              "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;",
+              "     |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+              "     |                F1AP_ProtocolExtensionContainer_19016P228_t",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before \u2018)\u2019 token",
+              "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;"
+            ]
+          },
+          {
+            "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before \u2018)\u2019 token",
+            "line_number": 60,
+            "context": [
+              "     |           F1AP_ProtocolExtensionContainer_19016P228_t",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+              "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;",
+              "     |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+              "     |                F1AP_ProtocolExtensionContainer_19016P228_t",
+              " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before \u2018)\u2019 token",
+              "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;",
+              "     |                                                             ^",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     1117 |           if (ext->list.count > 0) {",
+              "     |                  ^~"
+            ]
+          },
+          {
+            "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member \u2018list\u2019 in something not a structure or union",
+            "line_number": 63,
+            "context": [
+              "     |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+              "     |                F1AP_ProtocolExtensionContainer_19016P228_t",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before \u2018)\u2019 token",
+              "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;",
+              "     |                                                             ^",
+              " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     1117 |           if (ext->list.count > 0) {",
+              "     |                  ^~",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];",
+              "     |                                                    ^~"
+            ]
+          },
+          {
+            "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+            "line_number": 66,
+            "context": [
+              "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;",
+              "     |                                                             ^",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     1117 |           if (ext->list.count > 0) {",
+              "     |                  ^~",
+              " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];",
+              "     |                                                    ^~",
+              "     gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+              "     gmake[2]: *** Waiting for unfinished jobs...."
+            ]
+          },
+          {
+            "error_line": "gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+            "line_number": 69,
+            "context": [
+              "     1117 |           if (ext->list.count > 0) {",
+              "     |                  ^~",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];",
+              "     |                                                    ^~",
+              " >>> gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+              "     gmake[2]: *** Waiting for unfinished jobs....",
+              "     [100%] Built target asn1_nr_rrc",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2"
+            ]
+          },
+          {
+            "error_line": "gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+            "line_number": 70,
+            "context": [
+              "     |                  ^~",
+              "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+              "     1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];",
+              "     |                                                    ^~",
+              "     gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+              " >>> gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+              "     gmake[2]: *** Waiting for unfinished jobs....",
+              "     [100%] Built target asn1_nr_rrc",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt"
+            ]
+          },
+          {
+            "error_line": "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+            "line_number": 73,
+            "context": [
+              "     |                                                    ^~",
+              "     gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+              "     gmake[2]: *** Waiting for unfinished jobs....",
+              "     [100%] Built target asn1_nr_rrc",
+              " >>> gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+              "     ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+            "line_number": 74,
+            "context": [
+              "     gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+              "     gmake[2]: *** Waiting for unfinished jobs....",
+              "     [100%] Built target asn1_nr_rrc",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              " >>> gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+              "     ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+            "line_number": 76,
+            "context": [
+              "     gmake[2]: *** Waiting for unfinished jobs....",
+              "     [100%] Built target asn1_nr_rrc",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+              " >>> ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+            "line_number": 77,
+            "context": [
+              "     [100%] Built target asn1_nr_rrc",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+              "     ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+              " >>> compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "build have failed",
+            "line_number": 78,
+            "context": [
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+              "     ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              " >>> build have failed"
+            ]
+          }
+        ],
+        "debug_values": {},
+        "relevant_sections": []
+      },
+      "compiler_ground_truth_errors": [
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 386,
+          "column_number": 9,
+          "function_name": "read_slice_info",
+          "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+          "error_code_category": "unknown_type_name",
+          "symbol_candidates": [
+            "F1AP_ProtocolExtensionContainer_10696P34_t"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 386,
+          "column_number": 58,
+          "function_name": "read_slice_info",
+          "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+          "error_code_category": "undeclared_identifier",
+          "symbol_candidates": [
+            "F1AP_ProtocolExtensionContainer_10696P34_t",
+            "F1AP_ProtocolExtensionContainer_19016P34_t"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 386,
+          "column_number": 102,
+          "function_name": "read_slice_info",
+          "error_text": "expected expression before \u2018)\u2019 token",
+          "error_code_category": "compiler_error",
+          "symbol_candidates": [
+            ")"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 387,
+          "column_number": 8,
+          "function_name": "read_slice_info",
+          "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+          "error_code_category": "member_access_on_non_struct",
+          "symbol_candidates": [
+            "list"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 390,
+          "column_number": 49,
+          "function_name": "read_slice_info",
+          "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+          "error_code_category": "member_access_on_non_struct",
+          "symbol_candidates": [
+            "list"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 1115,
+          "column_number": 11,
+          "function_name": "decode_f1ap_setup_response",
+          "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+          "error_code_category": "unknown_type_name",
+          "symbol_candidates": [
+            "F1AP_ProtocolExtensionContainer_10696P228_t",
+            "F1AP_ProtocolExtensionContainer_19016P228_t"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 1116,
+          "column_number": 16,
+          "function_name": "decode_f1ap_setup_response",
+          "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+          "error_code_category": "undeclared_identifier",
+          "symbol_candidates": [
+            "F1AP_ProtocolExtensionContainer_10696P228_t",
+            "F1AP_ProtocolExtensionContainer_19016P228_t"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 1116,
+          "column_number": 61,
+          "function_name": "decode_f1ap_setup_response",
+          "error_text": "expected expression before \u2018)\u2019 token",
+          "error_code_category": "compiler_error",
+          "symbol_candidates": [
+            ")"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 1117,
+          "column_number": 18,
+          "function_name": "decode_f1ap_setup_response",
+          "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+          "error_code_category": "member_access_on_non_struct",
+          "symbol_candidates": [
+            "list"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 1118,
+          "column_number": 52,
+          "function_name": "decode_f1ap_setup_response",
+          "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+          "error_code_category": "member_access_on_non_struct",
+          "symbol_candidates": [
+            "list"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        }
+      ],
+      "cu_ip_address": "10.138.77.131",
+      "du_ip_address": "10.138.77.131",
+      "gnb_ip_address": "10.138.77.131",
+      "amf_ip_address": "192.168.70.132",
+      "core_network_machine_ip": "10.138.77.217",
+      "local_s_portc": "501",
+      "local_s_portd": "2152",
+      "remote_s_portc": "500",
+      "remote_s_portd": "2152",
+      "dnn": "oai",
+      "nssai_sst": "1",
+      "nssai_sd": "0xc",
+      "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+      "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+      "log_error_kind_raw": "build",
+      "log_error_kind": "build",
+      "build_log_mode": true,
+      "runtime_log_mode": false,
+      "other_log_mode": false,
+      "cmake_build_system_mode": false,
+      "dependency_advice_mode": false,
+      "compiler_cluster_analysis": {
+        "clusters": [
+          {
+            "cluster_id": "c0",
+            "cluster_key": "unknown_type_name|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P34_t",
+            "category": "unknown_type_name",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "read_slice_info"
+            ],
+            "error_count": 1,
+            "min_line": 386,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 386,
+                "column_number": 9,
+                "function_name": "read_slice_info",
+                "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+                "error_code_category": "unknown_type_name",
+                "symbol_candidates": [
+                  "F1AP_ProtocolExtensionContainer_10696P34_t"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c1",
+            "cluster_key": "undeclared_identifier|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P34_t",
+            "category": "undeclared_identifier",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "read_slice_info"
+            ],
+            "error_count": 1,
+            "min_line": 386,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 386,
+                "column_number": 58,
+                "function_name": "read_slice_info",
+                "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+                "error_code_category": "undeclared_identifier",
+                "symbol_candidates": [
+                  "F1AP_ProtocolExtensionContainer_10696P34_t",
+                  "F1AP_ProtocolExtensionContainer_19016P34_t"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c2",
+            "cluster_key": "compiler_error|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|read_slice_info|386",
+            "category": "compiler_error",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "read_slice_info"
+            ],
+            "error_count": 1,
+            "min_line": 386,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 386,
+                "column_number": 102,
+                "function_name": "read_slice_info",
+                "error_text": "expected expression before \u2018)\u2019 token",
+                "error_code_category": "compiler_error",
+                "symbol_candidates": [
+                  ")"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c3",
+            "cluster_key": "member_access_on_non_struct|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|read_slice_info|list",
+            "category": "member_access_on_non_struct",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "read_slice_info"
+            ],
+            "error_count": 2,
+            "min_line": 387,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 387,
+                "column_number": 8,
+                "function_name": "read_slice_info",
+                "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                "error_code_category": "member_access_on_non_struct",
+                "symbol_candidates": [
+                  "list"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              },
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 390,
+                "column_number": 49,
+                "function_name": "read_slice_info",
+                "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                "error_code_category": "member_access_on_non_struct",
+                "symbol_candidates": [
+                  "list"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "secondary",
+            "likely_resolved_by": [
+              "c0"
+            ]
+          },
+          {
+            "cluster_id": "c4",
+            "cluster_key": "unknown_type_name|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P228_t",
+            "category": "unknown_type_name",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "decode_f1ap_setup_response"
+            ],
+            "error_count": 1,
+            "min_line": 1115,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 1115,
+                "column_number": 11,
+                "function_name": "decode_f1ap_setup_response",
+                "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+                "error_code_category": "unknown_type_name",
+                "symbol_candidates": [
+                  "F1AP_ProtocolExtensionContainer_10696P228_t",
+                  "F1AP_ProtocolExtensionContainer_19016P228_t"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c5",
+            "cluster_key": "undeclared_identifier|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P228_t",
+            "category": "undeclared_identifier",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "decode_f1ap_setup_response"
+            ],
+            "error_count": 1,
+            "min_line": 1116,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 1116,
+                "column_number": 16,
+                "function_name": "decode_f1ap_setup_response",
+                "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+                "error_code_category": "undeclared_identifier",
+                "symbol_candidates": [
+                  "F1AP_ProtocolExtensionContainer_10696P228_t",
+                  "F1AP_ProtocolExtensionContainer_19016P228_t"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c6",
+            "cluster_key": "compiler_error|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|decode_f1ap_setup_response|1116",
+            "category": "compiler_error",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "decode_f1ap_setup_response"
+            ],
+            "error_count": 1,
+            "min_line": 1116,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 1116,
+                "column_number": 61,
+                "function_name": "decode_f1ap_setup_response",
+                "error_text": "expected expression before \u2018)\u2019 token",
+                "error_code_category": "compiler_error",
+                "symbol_candidates": [
+                  ")"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c7",
+            "cluster_key": "member_access_on_non_struct|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|decode_f1ap_setup_response|list",
+            "category": "member_access_on_non_struct",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "decode_f1ap_setup_response"
+            ],
+            "error_count": 2,
+            "min_line": 1117,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 1117,
+                "column_number": 18,
+                "function_name": "decode_f1ap_setup_response",
+                "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                "error_code_category": "member_access_on_non_struct",
+                "symbol_candidates": [
+                  "list"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              },
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 1118,
+                "column_number": 52,
+                "function_name": "decode_f1ap_setup_response",
+                "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                "error_code_category": "member_access_on_non_struct",
+                "symbol_candidates": [
+                  "list"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "secondary",
+            "likely_resolved_by": [
+              "c4"
+            ]
+          }
+        ],
+        "primary_cluster_ids": [
+          "c0",
+          "c1",
+          "c2",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "secondary_cluster_ids": [
+          "c3",
+          "c7"
+        ]
+      },
+      "build_error_mode": true
+    },
+    "log_error_kind": "build",
+    "ground_truth_errors": [
+      {
+        "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+        "line_number": 386,
+        "column_number": 9,
+        "function_name": "read_slice_info",
+        "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+        "error_code_category": "unknown_type_name",
+        "symbol_candidates": [
+          "F1AP_ProtocolExtensionContainer_10696P34_t"
+        ],
+        "confidence": 1,
+        "priority_score": 1,
+        "source": "compiler_ground_truth"
+      },
+      {
+        "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+        "line_number": 386,
+        "column_number": 58,
+        "function_name": "read_slice_info",
+        "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+        "error_code_category": "undeclared_identifier",
+        "symbol_candidates": [
+          "F1AP_ProtocolExtensionContainer_10696P34_t",
+          "F1AP_ProtocolExtensionContainer_19016P34_t"
+        ],
+        "confidence": 1,
+        "priority_score": 1,
+        "source": "compiler_ground_truth"
+      },
+      {
+        "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+        "line_number": 386,
+        "column_number": 102,
+        "function_name": "read_slice_info",
+        "error_text": "expected expression before \u2018)\u2019 token",
+        "error_code_category": "compiler_error",
+        "symbol_candidates": [
+          ")"
+        ],
+        "confidence": 1,
+        "priority_score": 1,
+        "source": "compiler_ground_truth"
+      },
+      {
+        "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+        "line_number": 387,
+        "column_number": 8,
+        "function_name": "read_slice_info",
+        "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+        "error_code_category": "member_access_on_non_struct",
+        "symbol_candidates": [
+          "list"
+        ],
+        "confidence": 1,
+        "priority_score": 1,
+        "source": "compiler_ground_truth"
+      },
+      {
+        "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+        "line_number": 390,
+        "column_number": 49,
+        "function_name": "read_slice_info",
+        "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+        "error_code_category": "member_access_on_non_struct",
+        "symbol_candidates": [
+          "list"
+        ],
+        "confidence": 1,
+        "priority_score": 1,
+        "source": "compiler_ground_truth"
+      },
+      {
+        "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+        "line_number": 1115,
+        "column_number": 11,
+        "function_name": "decode_f1ap_setup_response",
+        "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+        "error_code_category": "unknown_type_name",
+        "symbol_candidates": [
+          "F1AP_ProtocolExtensionContainer_10696P228_t",
+          "F1AP_ProtocolExtensionContainer_19016P228_t"
+        ],
+        "confidence": 1,
+        "priority_score": 1,
+        "source": "compiler_ground_truth"
+      },
+      {
+        "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+        "line_number": 1116,
+        "column_number": 16,
+        "function_name": "decode_f1ap_setup_response",
+        "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+        "error_code_category": "undeclared_identifier",
+        "symbol_candidates": [
+          "F1AP_ProtocolExtensionContainer_10696P228_t",
+          "F1AP_ProtocolExtensionContainer_19016P228_t"
+        ],
+        "confidence": 1,
+        "priority_score": 1,
+        "source": "compiler_ground_truth"
+      },
+      {
+        "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+        "line_number": 1116,
+        "column_number": 61,
+        "function_name": "decode_f1ap_setup_response",
+        "error_text": "expected expression before \u2018)\u2019 token",
+        "error_code_category": "compiler_error",
+        "symbol_candidates": [
+          ")"
+        ],
+        "confidence": 1,
+        "priority_score": 1,
+        "source": "compiler_ground_truth"
+      },
+      {
+        "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+        "line_number": 1117,
+        "column_number": 18,
+        "function_name": "decode_f1ap_setup_response",
+        "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+        "error_code_category": "member_access_on_non_struct",
+        "symbol_candidates": [
+          "list"
+        ],
+        "confidence": 1,
+        "priority_score": 1,
+        "source": "compiler_ground_truth"
+      },
+      {
+        "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+        "line_number": 1118,
+        "column_number": 52,
+        "function_name": "decode_f1ap_setup_response",
+        "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+        "error_code_category": "member_access_on_non_struct",
+        "symbol_candidates": [
+          "list"
+        ],
+        "confidence": 1,
+        "priority_score": 1,
+        "source": "compiler_ground_truth"
+      }
+    ],
+    "phase2_analysis": {
+      "suspected_functions": [
+        {
+          "function_name": "read_slice_info",
+          "file_path": "openair2/F1AP/lib/f1ap_interface_management.c",
+          "relevance_score": 1,
+          "source": "compiler_ground_truth_primary",
+          "code_snippet": "        }\n        break;\n      default:\n        AssertError(true, return false, \"Reset Acknowledge: ProtocolIE id %ld not implemented, ignoring IE\\n\", ie->id);\n        break;\n    }\n  }\n  return true;\n}\n\nvoid free_f1ap_reset_ack(f1ap_reset_ack_t *msg)\n{\n  for (int i = 0; i < msg->num_ue_to_reset; ++i)\n    free_f1ap_ue_to_reset(&msg->ue_to_reset[i]);\n  free(msg->ue_to_reset);\n}\n\nbool eq_f1ap_reset_ack(const f1ap_reset_ack_t *a, const f1ap_reset_ack_t *b)\n{\n  _F1_EQ_CHECK_LONG(a->transaction_id, b->transaction_id);\n  _F1_EQ_CHECK_INT(a->num_ue_to_reset, b->num_ue_to_reset);\n  for (int i = 0; i < a->num_ue_to_reset; ++i) {\n    if (!eq_f1ap_ue_to_reset(&a->ue_to_reset[i], &b->ue_to_reset[i]))\n      return false;\n  }\n  return true;\n}\n\nf1ap_reset_ack_t cp_f1ap_reset_ack(const f1ap_reset_ack_t *orig)\n{\n  f1ap_reset_ack_t cp = {.transaction_id = orig->transaction_id, .num_ue_to_reset = orig->num_ue_to_reset};\n  if (cp.num_ue_to_reset > 0) {\n    cp.ue_to_reset = calloc_or_fail(cp.num_ue_to_reset, sizeof(*cp.ue_to_reset));\n    for (int i = 0; i < cp.num_ue_to_reset; ++i)\n      cp.ue_to_reset[i] = cp_f1ap_ue_to_reset(&orig->ue_to_reset[i]);\n  }\n  return cp;\n}\n\nstatic const int nrb_lut[29] = {11,  18,  24,  25,  31,  32,  38,  51,  52,  65,  66,  78,  79,  93, 106,\n                                107, 121, 132, 133, 135, 160, 162, 189, 216, 217, 245, 264, 270, 273};\n\nstatic int to_NRNRB(int nrb)\n{\n  for (int i = 0; i < sizeofArray(nrb_lut); i++)\n    if (nrb_lut[i] == nrb)\n      return i;\n  AssertFatal(1 == 0, \"nrb %d is not in the list of possible NRNRB\\n\", nrb);\n}\n\nstatic int read_slice_info(const F1AP_ServedPLMNs_Item_t *plmn, nssai_t *nssai, int max_nssai)\n{\n  if (plmn->iE_Extensions == NULL)\n    return 0;\n\n  const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;\n  if (p->list.count == 0)\n    return 0;\n\n  const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];\n  DevAssert(splmn->id == F1AP_ProtocolIE_ID_id_TAISliceSupportList);\n  DevAssert(splmn->extensionValue.present == F1AP_ServedPLMNs_ItemExtIEs__extensionValue_PR_SliceSupportList);\n  const F1AP_SliceSupportList_t *ssl = &splmn->extensionValue.choice.SliceSupportList;\n  AssertFatal(ssl->list.count <= max_nssai, \"cannot handle more than 16 slices\\n\");\n  for (int s = 0; s < ssl->list.count; ++s) {\n    const F1AP_SliceSupportItem_t *sl = ssl->list.array[s];\n    nssai[s] = decode_nssai(&sl->sNSSAI);\n  }\n\n  return ssl->list.count;\n}\n\nstatic F1AP_ProtocolExtensionContainer_10696P34_t *write_slice_info(int num_ssi, const nssai_t *nssai)\n{\n  if (num_ssi == 0)\n    return NULL;\n\n  F1AP_ProtocolExtensionContainer_10696P34_t *p = calloc_or_fail(1, sizeof(*p));\n  asn1cSequenceAdd(p->list, F1AP_ServedPLMNs_ItemExtIEs_t, served_plmns_itemExtIEs);\n  served_plmns_itemExtIEs->criticality = F1AP_Criticality_ignore;\n  served_plmns_itemExtIEs->id = F1AP_ProtocolIE_ID_id_TAISliceSupportList;\n  served_plmns_itemExtIEs->extensionValue.present = F1AP_ServedPLMNs_ItemExtIEs__extensionValue_PR_SliceSupportList;\n  F1AP_SliceSupportList_t *slice_support_list = &served_plmns_itemExtIEs->extensionValue.choice.SliceSupportList;\n\n  for (int s = 0; s < num_ssi; s++) {\n    asn1cSequenceAdd(slice_support_list->list, F1AP_SliceSupportItem_t, slice);\n    slice->sNSSAI = encode_nssai(&nssai[s]);\n  }\n\n  return p;\n}\n\n/**\n * @brief F1AP Setup Request memory management\n */\nvoid free_f1ap_cell(const f1ap_served_cell_info_t *info, const f1ap_gnb_du_system_info_t *sys_info)\n{\n  if (sys_info) {\n    free(sys_info->mib);\n    free(sys_info->sib1);\n    free((void *)sys_info);\n  }\n  free(info->measurement_timing_config);\n  free(info->tac);\n}\n\n/**\n * @brief Encode NR Frequency Info (9.3.1.17 of 3GPP TS 38.473)\n */\nstatic F1AP_NRFreqInfo_t encode_frequency_info(const f1ap_nr_frequency_info_t *info)\n",
+          "reason": "Primary compiler cluster [unknown_type_name]: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019"
+        },
+        {
+          "function_name": "decode_f1ap_setup_response",
+          "file_path": "openair2/F1AP/lib/f1ap_interface_management.c",
+          "relevance_score": 1,
+          "source": "compiler_ground_truth_primary",
+          "code_snippet": "\n  F1AP_ProtocolExtensionContainer_10696P228_t *p = calloc_or_fail(1, sizeof(*p));\n  asn1cSequenceAdd(p->list, F1AP_RRC_Version_ExtIEs_t, rrcv_ext);\n  rrcv_ext->id = F1AP_ProtocolIE_ID_id_latest_RRC_Version_Enhanced;\n  rrcv_ext->criticality = F1AP_Criticality_ignore;\n  rrcv_ext->extensionValue.present = F1AP_RRC_Version_ExtIEs__extensionValue_PR_OCTET_STRING_SIZE_3_;\n  OCTET_STRING_t *os = &rrcv_ext->extensionValue.choice.OCTET_STRING_SIZE_3_;\n  os->size = sizeofArray(msg->rrc_ver);\n  os->buf = malloc_or_fail(sizeof(msg->rrc_ver));\n  for (int i = 0; i < sizeofArray(msg->rrc_ver); ++i)\n    os->buf[i] = msg->rrc_ver[i];\n  ie4->value.choice.RRC_Version.iE_Extensions = (struct F1AP_ProtocolExtensionContainer *)p;\n\n  return pdu;\n}\n\n/**\n * @brief F1 Setup Response decoding (9.2.1.5 of 3GPP TS 38.473)\n *        gNB-CU \u2192 gNB-DU\n */\nbool decode_f1ap_setup_response(const F1AP_F1AP_PDU_t *pdu, f1ap_setup_resp_t *out)\n{\n  /* Check presence of message type */\n  _F1_EQ_CHECK_INT(pdu->present, F1AP_F1AP_PDU_PR_successfulOutcome);\n  _F1_EQ_CHECK_LONG(pdu->choice.successfulOutcome->procedureCode, F1AP_ProcedureCode_id_F1Setup);\n  _F1_EQ_CHECK_INT(pdu->choice.successfulOutcome->value.present, F1AP_SuccessfulOutcome__value_PR_F1SetupResponse);\n  /* Check presence of mandatory IEs */\n  F1AP_F1SetupResponse_t *in = &pdu->choice.successfulOutcome->value.choice.F1SetupResponse;\n  F1AP_F1SetupResponseIEs_t *ie;\n  F1AP_LIB_FIND_IE(F1AP_F1SetupResponseIEs_t, ie, &in->protocolIEs.list, F1AP_ProtocolIE_ID_id_TransactionID, true);\n  F1AP_LIB_FIND_IE(F1AP_F1SetupResponseIEs_t, ie, &in->protocolIEs.list, F1AP_ProtocolIE_ID_id_GNB_CU_RRC_Version, true);\n  /* Loop over all IEs */\n  for (int i = 0; i < in->protocolIEs.list.count; i++) {\n    ie = in->protocolIEs.list.array[i];\n    switch (ie->id) {\n      case F1AP_ProtocolIE_ID_id_TransactionID:\n      // Transaction ID (M)\n        _F1_EQ_CHECK_INT(ie->value.present, F1AP_F1SetupResponseIEs__value_PR_TransactionID);\n        AssertError(ie->value.choice.TransactionID != -1, return false, \"ie->value.choice.TransactionID is -1\");\n        out->transaction_id = ie->value.choice.TransactionID;\n        break;\n\n      case F1AP_ProtocolIE_ID_id_gNB_CU_Name: {\n        // gNB-CU Name (O)\n        _F1_EQ_CHECK_INT(ie->value.present, F1AP_F1SetupResponseIEs__value_PR_GNB_CU_Name);\n        const F1AP_GNB_CU_Name_t *cu_name = &ie->value.choice.GNB_CU_Name;\n        out->gNB_CU_name = calloc_or_fail(cu_name->size + 1, sizeof(*out->gNB_CU_name));\n        strncpy(out->gNB_CU_name, (char *)cu_name->buf, cu_name->size);\n        } break;\n\n      case F1AP_ProtocolIE_ID_id_GNB_CU_RRC_Version:\n      // gNB-CU RRC version (M)\n        _F1_EQ_CHECK_INT(ie->value.present, F1AP_F1SetupResponseIEs__value_PR_RRC_Version);\n        // RRC Version: \"This IE is not used in this release.\"\n        if (ie->value.choice.RRC_Version.iE_Extensions) {\n          F1AP_ProtocolExtensionContainer_10696P228_t *ext =\n              (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;\n          if (ext->list.count > 0) {\n            F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];\n            OCTET_STRING_t *os = &rrcext->extensionValue.choice.OCTET_STRING_SIZE_3_;\n            for (int i = 0; i < sizeofArray(out->rrc_ver); i++)\n              out->rrc_ver[i] = os->buf[i];\n          }\n        }\n        break;\n\n      case F1AP_ProtocolIE_ID_id_Cells_to_be_Activated_List: {\n        // Cells to be Activated List (O)\n        if (ie->value.present != F1AP_F1SetupResponseIEs__value_PR_Cells_to_be_Activated_List)\n          break;\n        struct F1AP_Cells_to_be_Activated_List *Cells_to_be_Activated_List = &ie->value.choice.Cells_to_be_Activated_List;\n        out->num_cells_to_activate = Cells_to_be_Activated_List->list.count;\n        // Loop Cells to be Activated List Items (count >= 1)\n        AssertError(out->num_cells_to_activate > 0, return false, \"At least 1 cell must be present\");\n        for (int i = 0; i < out->num_cells_to_activate; i++) {\n          const F1AP_Cells_to_be_Activated_List_ItemIEs_t *itemIEs\n            = (F1AP_Cells_to_be_Activated_List_ItemIEs_t *)Cells_to_be_Activated_List->list.array[i];\n          if (!decode_cells_to_activate(&out->cells_to_activate[i], itemIEs))\n            return false;\n        }\n        break;\n      }\n      default:\n        AssertError(1 == 0, return false, \"F1AP_ProtocolIE_ID_id %ld unknown\\n\", ie->id);\n        break;\n    }\n  }\n\n  return true;\n}\n\n/**\n * @brief F1AP Setup Response equality check\n */\nbool eq_f1ap_setup_response(const f1ap_setup_resp_t *a, const f1ap_setup_resp_t *b)\n{\n  _F1_EQ_CHECK_STR(a->gNB_CU_name, b->gNB_CU_name);\n  _F1_EQ_CHECK_INT(a->num_cells_to_activate, b->num_cells_to_activate);\n  _F1_EQ_CHECK_LONG(a->transaction_id, b->transaction_id);\n  if (a->num_cells_to_activate) {\n    for (int i = 0; i < a->num_cells_to_activate; i++) {\n      const served_cells_to_activate_t *a_cell = &a->cells_to_activate[i];\n      const served_cells_to_activate_t *b_cell = &b->cells_to_activate[i];\n      _F1_EQ_CHECK_LONG(a_cell->nr_cellid, b_cell->nr_cellid);\n      _F1_EQ_CHECK_INT(a_cell->nrpci, b_cell->nrpci);\n      _F1_EQ_CHECK_INT(a_cell->num_SI, b_cell->num_SI);\n      _F1_EQ_CHECK_LONG(a_cell->nr_cellid, b_cell->nr_cellid);\n      if (!eq_f1ap_plmn(&a_cell->plmn, &b_cell->plmn))\n        return false;\n      if (sizeofArray(a->cells_to_activate[i].SI_msg) != sizeofArray(b->cells_to_activate[i].SI_msg))\n",
+          "reason": "Primary compiler cluster [unknown_type_name]: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?"
+        }
+      ],
+      "suspected_configs": [],
+      "deployment_context": {
+        "role": "CU",
+        "active_configs": [],
+        "network_params": {
+          "gnb_ipv4": null,
+          "amf_ipv4": null,
+          "ngap_port": null,
+          "assoc_state": "UNKNOWN"
+        },
+        "log_anchors": [
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:9: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before \u2018)\u2019 token",
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member \u2018list\u2019 in something not a structure or union",
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:49: error: request for member \u2018list\u2019 in something not a structure or union",
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115:11: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before \u2018)\u2019 token",
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member \u2018list\u2019 in something not a structure or union",
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+          "gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+          "gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+          "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+          "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+          "ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+          "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+          "build have failed",
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+          "WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+          "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:"
+        ],
+        "detailed_log_context": {
+          "total_lines": 78,
+          "error_sequences": [
+            {
+              "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:9: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+              "line_number": 30,
+              "context": [
+                "     Consolidate compiler generated dependencies of target e1_if",
+                "     [ 53%] Built target e1_if",
+                "     Consolidate compiler generated dependencies of target asn1_nr_rrc",
+                "     [ 77%] Built target asn1_lte_rrc",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:",
+                " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:9: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+                "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+                "     |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+                "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+                "     |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+              ]
+            },
+            {
+              "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+              "line_number": 33,
+              "context": [
+                "     [ 77%] Built target asn1_lte_rrc",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:9: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+                "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+                "     |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+                "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+                "     |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "     |                                                          F1AP_ProtocolExtensionContainer_19016P34_t",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: note: each undeclared identifier is reported only once for each function it appears in",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before \u2018)\u2019 token"
+              ]
+            },
+            {
+              "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before \u2018)\u2019 token",
+              "line_number": 38,
+              "context": [
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+                "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+                "     |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "     |                                                          F1AP_ProtocolExtensionContainer_19016P34_t",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: note: each undeclared identifier is reported only once for each function it appears in",
+                " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before \u2018)\u2019 token",
+                "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+                "     |                                                                                                      ^",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     387 |   if (p->list.count == 0)",
+                "     |        ^~"
+              ]
+            },
+            {
+              "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member \u2018list\u2019 in something not a structure or union",
+              "line_number": 41,
+              "context": [
+                "     |                                                          F1AP_ProtocolExtensionContainer_19016P34_t",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: note: each undeclared identifier is reported only once for each function it appears in",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before \u2018)\u2019 token",
+                "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+                "     |                                                                                                      ^",
+                " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     387 |   if (p->list.count == 0)",
+                "     |        ^~",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:49: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     390 |   const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];",
+                "     |                                                 ^~"
+              ]
+            },
+            {
+              "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:49: error: request for member \u2018list\u2019 in something not a structure or union",
+              "line_number": 44,
+              "context": [
+                "     386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;",
+                "     |                                                                                                      ^",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     387 |   if (p->list.count == 0)",
+                "     |        ^~",
+                " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:49: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     390 |   const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];",
+                "     |                                                 ^~",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_request\u2019:",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+                "     872 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];"
+              ]
+            },
+            {
+              "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115:11: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+              "line_number": 52,
+              "context": [
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_request\u2019:",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+                "     872 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];",
+                "     |                                                 ^~~",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_response\u2019:",
+                " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115:11: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+                "     1115 |           F1AP_ProtocolExtensionContainer_10696P228_t *ext =",
+                "     |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "     |           F1AP_ProtocolExtensionContainer_19016P228_t",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+                "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;"
+              ]
+            },
+            {
+              "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+              "line_number": 56,
+              "context": [
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_response\u2019:",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115:11: error: unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+                "     1115 |           F1AP_ProtocolExtensionContainer_10696P228_t *ext =",
+                "     |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "     |           F1AP_ProtocolExtensionContainer_19016P228_t",
+                " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+                "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;",
+                "     |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "     |                F1AP_ProtocolExtensionContainer_19016P228_t",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before \u2018)\u2019 token",
+                "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;"
+              ]
+            },
+            {
+              "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before \u2018)\u2019 token",
+              "line_number": 60,
+              "context": [
+                "     |           F1AP_ProtocolExtensionContainer_19016P228_t",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+                "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;",
+                "     |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "     |                F1AP_ProtocolExtensionContainer_19016P228_t",
+                " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before \u2018)\u2019 token",
+                "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;",
+                "     |                                                             ^",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     1117 |           if (ext->list.count > 0) {",
+                "     |                  ^~"
+              ]
+            },
+            {
+              "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member \u2018list\u2019 in something not a structure or union",
+              "line_number": 63,
+              "context": [
+                "     |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "     |                F1AP_ProtocolExtensionContainer_19016P228_t",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before \u2018)\u2019 token",
+                "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;",
+                "     |                                                             ^",
+                " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     1117 |           if (ext->list.count > 0) {",
+                "     |                  ^~",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];",
+                "     |                                                    ^~"
+              ]
+            },
+            {
+              "error_line": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+              "line_number": 66,
+              "context": [
+                "     1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;",
+                "     |                                                             ^",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     1117 |           if (ext->list.count > 0) {",
+                "     |                  ^~",
+                " >>> /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];",
+                "     |                                                    ^~",
+                "     gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+                "     gmake[2]: *** Waiting for unfinished jobs...."
+              ]
+            },
+            {
+              "error_line": "gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+              "line_number": 69,
+              "context": [
+                "     1117 |           if (ext->list.count > 0) {",
+                "     |                  ^~",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];",
+                "     |                                                    ^~",
+                " >>> gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+                "     gmake[2]: *** Waiting for unfinished jobs....",
+                "     [100%] Built target asn1_nr_rrc",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2"
+              ]
+            },
+            {
+              "error_line": "gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+              "line_number": 70,
+              "context": [
+                "     |                  ^~",
+                "     /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member \u2018list\u2019 in something not a structure or union",
+                "     1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];",
+                "     |                                                    ^~",
+                "     gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+                " >>> gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+                "     gmake[2]: *** Waiting for unfinished jobs....",
+                "     [100%] Built target asn1_nr_rrc",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt"
+              ]
+            },
+            {
+              "error_line": "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "line_number": 73,
+              "context": [
+                "     |                                                    ^~",
+                "     gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+                "     gmake[2]: *** Waiting for unfinished jobs....",
+                "     [100%] Built target asn1_nr_rrc",
+                " >>> gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+                "     ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "line_number": 74,
+              "context": [
+                "     gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2",
+                "     gmake[2]: *** Waiting for unfinished jobs....",
+                "     [100%] Built target asn1_nr_rrc",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                " >>> gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+                "     ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+              "line_number": 76,
+              "context": [
+                "     gmake[2]: *** Waiting for unfinished jobs....",
+                "     [100%] Built target asn1_nr_rrc",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+                " >>> ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "line_number": 77,
+              "context": [
+                "     [100%] Built target asn1_nr_rrc",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+                "     ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+                " >>> compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "build have failed",
+              "line_number": 78,
+              "context": [
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+                "     ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                " >>> build have failed"
+              ]
+            }
+          ],
+          "debug_values": {},
+          "relevant_sections": []
+        },
+        "compiler_ground_truth_errors": [
+          {
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "line_number": 386,
+            "column_number": 9,
+            "function_name": "read_slice_info",
+            "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+            "error_code_category": "unknown_type_name",
+            "symbol_candidates": [
+              "F1AP_ProtocolExtensionContainer_10696P34_t"
+            ],
+            "confidence": 1,
+            "priority_score": 1,
+            "source": "compiler_ground_truth"
+          },
+          {
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "line_number": 386,
+            "column_number": 58,
+            "function_name": "read_slice_info",
+            "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+            "error_code_category": "undeclared_identifier",
+            "symbol_candidates": [
+              "F1AP_ProtocolExtensionContainer_10696P34_t",
+              "F1AP_ProtocolExtensionContainer_19016P34_t"
+            ],
+            "confidence": 1,
+            "priority_score": 1,
+            "source": "compiler_ground_truth"
+          },
+          {
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "line_number": 386,
+            "column_number": 102,
+            "function_name": "read_slice_info",
+            "error_text": "expected expression before \u2018)\u2019 token",
+            "error_code_category": "compiler_error",
+            "symbol_candidates": [
+              ")"
+            ],
+            "confidence": 1,
+            "priority_score": 1,
+            "source": "compiler_ground_truth"
+          },
+          {
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "line_number": 387,
+            "column_number": 8,
+            "function_name": "read_slice_info",
+            "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+            "error_code_category": "member_access_on_non_struct",
+            "symbol_candidates": [
+              "list"
+            ],
+            "confidence": 1,
+            "priority_score": 1,
+            "source": "compiler_ground_truth"
+          },
+          {
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "line_number": 390,
+            "column_number": 49,
+            "function_name": "read_slice_info",
+            "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+            "error_code_category": "member_access_on_non_struct",
+            "symbol_candidates": [
+              "list"
+            ],
+            "confidence": 1,
+            "priority_score": 1,
+            "source": "compiler_ground_truth"
+          },
+          {
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "line_number": 1115,
+            "column_number": 11,
+            "function_name": "decode_f1ap_setup_response",
+            "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+            "error_code_category": "unknown_type_name",
+            "symbol_candidates": [
+              "F1AP_ProtocolExtensionContainer_10696P228_t",
+              "F1AP_ProtocolExtensionContainer_19016P228_t"
+            ],
+            "confidence": 1,
+            "priority_score": 1,
+            "source": "compiler_ground_truth"
+          },
+          {
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "line_number": 1116,
+            "column_number": 16,
+            "function_name": "decode_f1ap_setup_response",
+            "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+            "error_code_category": "undeclared_identifier",
+            "symbol_candidates": [
+              "F1AP_ProtocolExtensionContainer_10696P228_t",
+              "F1AP_ProtocolExtensionContainer_19016P228_t"
+            ],
+            "confidence": 1,
+            "priority_score": 1,
+            "source": "compiler_ground_truth"
+          },
+          {
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "line_number": 1116,
+            "column_number": 61,
+            "function_name": "decode_f1ap_setup_response",
+            "error_text": "expected expression before \u2018)\u2019 token",
+            "error_code_category": "compiler_error",
+            "symbol_candidates": [
+              ")"
+            ],
+            "confidence": 1,
+            "priority_score": 1,
+            "source": "compiler_ground_truth"
+          },
+          {
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "line_number": 1117,
+            "column_number": 18,
+            "function_name": "decode_f1ap_setup_response",
+            "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+            "error_code_category": "member_access_on_non_struct",
+            "symbol_candidates": [
+              "list"
+            ],
+            "confidence": 1,
+            "priority_score": 1,
+            "source": "compiler_ground_truth"
+          },
+          {
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "line_number": 1118,
+            "column_number": 52,
+            "function_name": "decode_f1ap_setup_response",
+            "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+            "error_code_category": "member_access_on_non_struct",
+            "symbol_candidates": [
+              "list"
+            ],
+            "confidence": 1,
+            "priority_score": 1,
+            "source": "compiler_ground_truth"
+          }
+        ],
+        "cu_ip_address": "10.138.77.131",
+        "du_ip_address": "10.138.77.131",
+        "gnb_ip_address": "10.138.77.131",
+        "amf_ip_address": "192.168.70.132",
+        "core_network_machine_ip": "10.138.77.217",
+        "local_s_portc": "501",
+        "local_s_portd": "2152",
+        "remote_s_portc": "500",
+        "remote_s_portd": "2152",
+        "dnn": "oai",
+        "nssai_sst": "1",
+        "nssai_sd": "0xc",
+        "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+        "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+        "log_error_kind_raw": "build",
+        "log_error_kind": "build",
+        "build_log_mode": true,
+        "runtime_log_mode": false,
+        "other_log_mode": false,
+        "cmake_build_system_mode": false,
+        "dependency_advice_mode": false,
+        "compiler_cluster_analysis": {
+          "clusters": [
+            {
+              "cluster_id": "c0",
+              "cluster_key": "unknown_type_name|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P34_t",
+              "category": "unknown_type_name",
+              "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+              "function_names": [
+                "read_slice_info"
+              ],
+              "error_count": 1,
+              "min_line": 386,
+              "errors": [
+                {
+                  "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                  "line_number": 386,
+                  "column_number": 9,
+                  "function_name": "read_slice_info",
+                  "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+                  "error_code_category": "unknown_type_name",
+                  "symbol_candidates": [
+                    "F1AP_ProtocolExtensionContainer_10696P34_t"
+                  ],
+                  "confidence": 1,
+                  "priority_score": 1,
+                  "source": "compiler_ground_truth"
+                }
+              ],
+              "role": "primary",
+              "likely_resolved_by": []
+            },
+            {
+              "cluster_id": "c1",
+              "cluster_key": "undeclared_identifier|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P34_t",
+              "category": "undeclared_identifier",
+              "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+              "function_names": [
+                "read_slice_info"
+              ],
+              "error_count": 1,
+              "min_line": 386,
+              "errors": [
+                {
+                  "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                  "line_number": 386,
+                  "column_number": 58,
+                  "function_name": "read_slice_info",
+                  "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+                  "error_code_category": "undeclared_identifier",
+                  "symbol_candidates": [
+                    "F1AP_ProtocolExtensionContainer_10696P34_t",
+                    "F1AP_ProtocolExtensionContainer_19016P34_t"
+                  ],
+                  "confidence": 1,
+                  "priority_score": 1,
+                  "source": "compiler_ground_truth"
+                }
+              ],
+              "role": "primary",
+              "likely_resolved_by": []
+            },
+            {
+              "cluster_id": "c2",
+              "cluster_key": "compiler_error|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|read_slice_info|386",
+              "category": "compiler_error",
+              "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+              "function_names": [
+                "read_slice_info"
+              ],
+              "error_count": 1,
+              "min_line": 386,
+              "errors": [
+                {
+                  "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                  "line_number": 386,
+                  "column_number": 102,
+                  "function_name": "read_slice_info",
+                  "error_text": "expected expression before \u2018)\u2019 token",
+                  "error_code_category": "compiler_error",
+                  "symbol_candidates": [
+                    ")"
+                  ],
+                  "confidence": 1,
+                  "priority_score": 1,
+                  "source": "compiler_ground_truth"
+                }
+              ],
+              "role": "primary",
+              "likely_resolved_by": []
+            },
+            {
+              "cluster_id": "c3",
+              "cluster_key": "member_access_on_non_struct|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|read_slice_info|list",
+              "category": "member_access_on_non_struct",
+              "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+              "function_names": [
+                "read_slice_info"
+              ],
+              "error_count": 2,
+              "min_line": 387,
+              "errors": [
+                {
+                  "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                  "line_number": 387,
+                  "column_number": 8,
+                  "function_name": "read_slice_info",
+                  "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                  "error_code_category": "member_access_on_non_struct",
+                  "symbol_candidates": [
+                    "list"
+                  ],
+                  "confidence": 1,
+                  "priority_score": 1,
+                  "source": "compiler_ground_truth"
+                },
+                {
+                  "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                  "line_number": 390,
+                  "column_number": 49,
+                  "function_name": "read_slice_info",
+                  "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                  "error_code_category": "member_access_on_non_struct",
+                  "symbol_candidates": [
+                    "list"
+                  ],
+                  "confidence": 1,
+                  "priority_score": 1,
+                  "source": "compiler_ground_truth"
+                }
+              ],
+              "role": "secondary",
+              "likely_resolved_by": [
+                "c0"
+              ]
+            },
+            {
+              "cluster_id": "c4",
+              "cluster_key": "unknown_type_name|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P228_t",
+              "category": "unknown_type_name",
+              "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+              "function_names": [
+                "decode_f1ap_setup_response"
+              ],
+              "error_count": 1,
+              "min_line": 1115,
+              "errors": [
+                {
+                  "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                  "line_number": 1115,
+                  "column_number": 11,
+                  "function_name": "decode_f1ap_setup_response",
+                  "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+                  "error_code_category": "unknown_type_name",
+                  "symbol_candidates": [
+                    "F1AP_ProtocolExtensionContainer_10696P228_t",
+                    "F1AP_ProtocolExtensionContainer_19016P228_t"
+                  ],
+                  "confidence": 1,
+                  "priority_score": 1,
+                  "source": "compiler_ground_truth"
+                }
+              ],
+              "role": "primary",
+              "likely_resolved_by": []
+            },
+            {
+              "cluster_id": "c5",
+              "cluster_key": "undeclared_identifier|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P228_t",
+              "category": "undeclared_identifier",
+              "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+              "function_names": [
+                "decode_f1ap_setup_response"
+              ],
+              "error_count": 1,
+              "min_line": 1116,
+              "errors": [
+                {
+                  "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                  "line_number": 1116,
+                  "column_number": 16,
+                  "function_name": "decode_f1ap_setup_response",
+                  "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+                  "error_code_category": "undeclared_identifier",
+                  "symbol_candidates": [
+                    "F1AP_ProtocolExtensionContainer_10696P228_t",
+                    "F1AP_ProtocolExtensionContainer_19016P228_t"
+                  ],
+                  "confidence": 1,
+                  "priority_score": 1,
+                  "source": "compiler_ground_truth"
+                }
+              ],
+              "role": "primary",
+              "likely_resolved_by": []
+            },
+            {
+              "cluster_id": "c6",
+              "cluster_key": "compiler_error|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|decode_f1ap_setup_response|1116",
+              "category": "compiler_error",
+              "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+              "function_names": [
+                "decode_f1ap_setup_response"
+              ],
+              "error_count": 1,
+              "min_line": 1116,
+              "errors": [
+                {
+                  "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                  "line_number": 1116,
+                  "column_number": 61,
+                  "function_name": "decode_f1ap_setup_response",
+                  "error_text": "expected expression before \u2018)\u2019 token",
+                  "error_code_category": "compiler_error",
+                  "symbol_candidates": [
+                    ")"
+                  ],
+                  "confidence": 1,
+                  "priority_score": 1,
+                  "source": "compiler_ground_truth"
+                }
+              ],
+              "role": "primary",
+              "likely_resolved_by": []
+            },
+            {
+              "cluster_id": "c7",
+              "cluster_key": "member_access_on_non_struct|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|decode_f1ap_setup_response|list",
+              "category": "member_access_on_non_struct",
+              "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+              "function_names": [
+                "decode_f1ap_setup_response"
+              ],
+              "error_count": 2,
+              "min_line": 1117,
+              "errors": [
+                {
+                  "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                  "line_number": 1117,
+                  "column_number": 18,
+                  "function_name": "decode_f1ap_setup_response",
+                  "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                  "error_code_category": "member_access_on_non_struct",
+                  "symbol_candidates": [
+                    "list"
+                  ],
+                  "confidence": 1,
+                  "priority_score": 1,
+                  "source": "compiler_ground_truth"
+                },
+                {
+                  "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                  "line_number": 1118,
+                  "column_number": 52,
+                  "function_name": "decode_f1ap_setup_response",
+                  "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                  "error_code_category": "member_access_on_non_struct",
+                  "symbol_candidates": [
+                    "list"
+                  ],
+                  "confidence": 1,
+                  "priority_score": 1,
+                  "source": "compiler_ground_truth"
+                }
+              ],
+              "role": "secondary",
+              "likely_resolved_by": [
+                "c4"
+              ]
+            }
+          ],
+          "primary_cluster_ids": [
+            "c0",
+            "c1",
+            "c2",
+            "c4",
+            "c5",
+            "c6"
+          ],
+          "secondary_cluster_ids": [
+            "c3",
+            "c7"
+          ]
+        },
+        "build_error_mode": true
+      },
+      "retrieval_method": "compiler_ground_truth_primary_only",
+      "ground_truth_errors": [
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 386,
+          "column_number": 9,
+          "function_name": "read_slice_info",
+          "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+          "error_code_category": "unknown_type_name",
+          "symbol_candidates": [
+            "F1AP_ProtocolExtensionContainer_10696P34_t"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 386,
+          "column_number": 58,
+          "function_name": "read_slice_info",
+          "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+          "error_code_category": "undeclared_identifier",
+          "symbol_candidates": [
+            "F1AP_ProtocolExtensionContainer_10696P34_t",
+            "F1AP_ProtocolExtensionContainer_19016P34_t"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 386,
+          "column_number": 102,
+          "function_name": "read_slice_info",
+          "error_text": "expected expression before \u2018)\u2019 token",
+          "error_code_category": "compiler_error",
+          "symbol_candidates": [
+            ")"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 387,
+          "column_number": 8,
+          "function_name": "read_slice_info",
+          "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+          "error_code_category": "member_access_on_non_struct",
+          "symbol_candidates": [
+            "list"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 390,
+          "column_number": 49,
+          "function_name": "read_slice_info",
+          "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+          "error_code_category": "member_access_on_non_struct",
+          "symbol_candidates": [
+            "list"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 1115,
+          "column_number": 11,
+          "function_name": "decode_f1ap_setup_response",
+          "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+          "error_code_category": "unknown_type_name",
+          "symbol_candidates": [
+            "F1AP_ProtocolExtensionContainer_10696P228_t",
+            "F1AP_ProtocolExtensionContainer_19016P228_t"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 1116,
+          "column_number": 16,
+          "function_name": "decode_f1ap_setup_response",
+          "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+          "error_code_category": "undeclared_identifier",
+          "symbol_candidates": [
+            "F1AP_ProtocolExtensionContainer_10696P228_t",
+            "F1AP_ProtocolExtensionContainer_19016P228_t"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 1116,
+          "column_number": 61,
+          "function_name": "decode_f1ap_setup_response",
+          "error_text": "expected expression before \u2018)\u2019 token",
+          "error_code_category": "compiler_error",
+          "symbol_candidates": [
+            ")"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 1117,
+          "column_number": 18,
+          "function_name": "decode_f1ap_setup_response",
+          "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+          "error_code_category": "member_access_on_non_struct",
+          "symbol_candidates": [
+            "list"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "line_number": 1118,
+          "column_number": 52,
+          "function_name": "decode_f1ap_setup_response",
+          "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+          "error_code_category": "member_access_on_non_struct",
+          "symbol_candidates": [
+            "list"
+          ],
+          "confidence": 1,
+          "priority_score": 1,
+          "source": "compiler_ground_truth"
+        }
+      ],
+      "compiler_cluster_analysis": {
+        "clusters": [
+          {
+            "cluster_id": "c0",
+            "cluster_key": "unknown_type_name|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P34_t",
+            "category": "unknown_type_name",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "read_slice_info"
+            ],
+            "error_count": 1,
+            "min_line": 386,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 386,
+                "column_number": 9,
+                "function_name": "read_slice_info",
+                "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019",
+                "error_code_category": "unknown_type_name",
+                "symbol_candidates": [
+                  "F1AP_ProtocolExtensionContainer_10696P34_t"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c1",
+            "cluster_key": "undeclared_identifier|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P34_t",
+            "category": "undeclared_identifier",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "read_slice_info"
+            ],
+            "error_count": 1,
+            "min_line": 386,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 386,
+                "column_number": 58,
+                "function_name": "read_slice_info",
+                "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?",
+                "error_code_category": "undeclared_identifier",
+                "symbol_candidates": [
+                  "F1AP_ProtocolExtensionContainer_10696P34_t",
+                  "F1AP_ProtocolExtensionContainer_19016P34_t"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c2",
+            "cluster_key": "compiler_error|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|read_slice_info|386",
+            "category": "compiler_error",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "read_slice_info"
+            ],
+            "error_count": 1,
+            "min_line": 386,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 386,
+                "column_number": 102,
+                "function_name": "read_slice_info",
+                "error_text": "expected expression before \u2018)\u2019 token",
+                "error_code_category": "compiler_error",
+                "symbol_candidates": [
+                  ")"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c3",
+            "cluster_key": "member_access_on_non_struct|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|read_slice_info|list",
+            "category": "member_access_on_non_struct",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "read_slice_info"
+            ],
+            "error_count": 2,
+            "min_line": 387,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 387,
+                "column_number": 8,
+                "function_name": "read_slice_info",
+                "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                "error_code_category": "member_access_on_non_struct",
+                "symbol_candidates": [
+                  "list"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              },
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 390,
+                "column_number": 49,
+                "function_name": "read_slice_info",
+                "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                "error_code_category": "member_access_on_non_struct",
+                "symbol_candidates": [
+                  "list"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "secondary",
+            "likely_resolved_by": [
+              "c0"
+            ]
+          },
+          {
+            "cluster_id": "c4",
+            "cluster_key": "unknown_type_name|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P228_t",
+            "category": "unknown_type_name",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "decode_f1ap_setup_response"
+            ],
+            "error_count": 1,
+            "min_line": 1115,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 1115,
+                "column_number": 11,
+                "function_name": "decode_f1ap_setup_response",
+                "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+                "error_code_category": "unknown_type_name",
+                "symbol_candidates": [
+                  "F1AP_ProtocolExtensionContainer_10696P228_t",
+                  "F1AP_ProtocolExtensionContainer_19016P228_t"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c5",
+            "cluster_key": "undeclared_identifier|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|F1AP_ProtocolExtensionContainer_10696P228_t",
+            "category": "undeclared_identifier",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "decode_f1ap_setup_response"
+            ],
+            "error_count": 1,
+            "min_line": 1116,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 1116,
+                "column_number": 16,
+                "function_name": "decode_f1ap_setup_response",
+                "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?",
+                "error_code_category": "undeclared_identifier",
+                "symbol_candidates": [
+                  "F1AP_ProtocolExtensionContainer_10696P228_t",
+                  "F1AP_ProtocolExtensionContainer_19016P228_t"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c6",
+            "cluster_key": "compiler_error|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|decode_f1ap_setup_response|1116",
+            "category": "compiler_error",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "decode_f1ap_setup_response"
+            ],
+            "error_count": 1,
+            "min_line": 1116,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 1116,
+                "column_number": 61,
+                "function_name": "decode_f1ap_setup_response",
+                "error_text": "expected expression before \u2018)\u2019 token",
+                "error_code_category": "compiler_error",
+                "symbol_candidates": [
+                  ")"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "primary",
+            "likely_resolved_by": []
+          },
+          {
+            "cluster_id": "c7",
+            "cluster_key": "member_access_on_non_struct|/home/tcs/phani/gnb-cu/openair2/f1ap/lib/f1ap_interface_management.c|decode_f1ap_setup_response|list",
+            "category": "member_access_on_non_struct",
+            "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+            "function_names": [
+              "decode_f1ap_setup_response"
+            ],
+            "error_count": 2,
+            "min_line": 1117,
+            "errors": [
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 1117,
+                "column_number": 18,
+                "function_name": "decode_f1ap_setup_response",
+                "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                "error_code_category": "member_access_on_non_struct",
+                "symbol_candidates": [
+                  "list"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              },
+              {
+                "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+                "line_number": 1118,
+                "column_number": 52,
+                "function_name": "decode_f1ap_setup_response",
+                "error_text": "request for member \u2018list\u2019 in something not a structure or union",
+                "error_code_category": "member_access_on_non_struct",
+                "symbol_candidates": [
+                  "list"
+                ],
+                "confidence": 1,
+                "priority_score": 1,
+                "source": "compiler_ground_truth"
+              }
+            ],
+            "role": "secondary",
+            "likely_resolved_by": [
+              "c4"
+            ]
+          }
+        ],
+        "primary_cluster_ids": [
+          "c0",
+          "c1",
+          "c2",
+          "c4",
+          "c5",
+          "c6"
+        ],
+        "secondary_cluster_ids": [
+          "c3",
+          "c7"
+        ]
+      },
+      "build_error_mode": true,
+      "narrow_compiler_phase2": true,
+      "log_error_kind": "build",
+      "top_ground_truth_clusters": [
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "function_name": "read_slice_info",
+          "error_count": 5,
+          "priority_reason": "direct_compiler_error",
+          "top_errors": [
+            {
+              "line_number": 386,
+              "error_code_category": "unknown_type_name",
+              "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019"
+            },
+            {
+              "line_number": 386,
+              "error_code_category": "undeclared_identifier",
+              "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?"
+            },
+            {
+              "line_number": 386,
+              "error_code_category": "compiler_error",
+              "error_text": "expected expression before \u2018)\u2019 token"
+            },
+            {
+              "line_number": 387,
+              "error_code_category": "member_access_on_non_struct",
+              "error_text": "request for member \u2018list\u2019 in something not a structure or union"
+            }
+          ]
+        },
+        {
+          "file_path": "/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c",
+          "function_name": "decode_f1ap_setup_response",
+          "error_count": 5,
+          "priority_reason": "direct_compiler_error",
+          "top_errors": [
+            {
+              "line_number": 1115,
+              "error_code_category": "unknown_type_name",
+              "error_text": "unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?"
+            },
+            {
+              "line_number": 1116,
+              "error_code_category": "undeclared_identifier",
+              "error_text": "\u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?"
+            },
+            {
+              "line_number": 1116,
+              "error_code_category": "compiler_error",
+              "error_text": "expected expression before \u2018)\u2019 token"
+            },
+            {
+              "line_number": 1117,
+              "error_code_category": "member_access_on_non_struct",
+              "error_text": "request for member \u2018list\u2019 in something not a structure or union"
+            }
+          ]
+        }
+      ],
+      "coverage_stats": {
+        "total_compiler_errors_parsed": 10,
+        "ground_truth_with_function_name": 10,
+        "ground_truth_with_file_path": 10
+      }
+    },
+    "phase3_fixes": {
+      "error_text": "ERROR MESSAGE:  \nCompilation failed with multiple critical errors in function \u2018read_slice_info\u2019 and \u2018decode_f1ap_setup_response\u2019 in file openair2/F1AP/lib/f1ap_interface_management.c.  \nSpecifically:  \n- Unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 at line 386 in function \u2018read_slice_info\u2019.  \n- Unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 at line 1115 in function \u2018decode_f1ap_setup_response\u2019.  \n- Requests for member \u2018list\u2019 in something not a structure or union at lines 387, 390, 1117, and 1118.  \nThese errors caused the build to fail with:  \n\"gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1\n\nHighest Priority Compiler Ground Truth:\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (unknown_type_name) unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (undeclared_identifier) \u2018F1AP_ProtocolExtensionContainer_10696P34_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P34_t\u2019?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386 [read_slice_info] (compiler_error) expected expression before \u2018)\u2019 token\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115 [decode_f1ap_setup_response] (unknown_type_name) unknown type name \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019; did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116 [decode_f1ap_setup_response] (undeclared_identifier) \u2018F1AP_ProtocolExtensionContainer_10696P228_t\u2019 undeclared (first use in this function); did you mean \u2018F1AP_ProtocolExtensionContainer_19016P228_t\u2019?\n- /home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116 [decode_f1ap_setup_response] (compiler_error) expected expression before \u2018)\u2019 token\n(Omitted 2 secondary/cascade compiler cluster(s); fix primary issues first.)",
+      "fix_suggestion": {
+        "suspected_functions": [
+          "read_slice_info",
+          "decode_f1ap_setup_response"
+        ],
+        "suspected_configs": [],
+        "reason": "The root cause of the compilation errors is the use of incorrect ASN.1 generated type names for protocol extension containers in the F1AP interface management code. The compiler errors indicate unknown type names 'F1AP_ProtocolExtensionContainer_10696P34_t' and 'F1AP_ProtocolExtensionContainer_10696P228_t', which do not exist in the ASN.1 generated headers. The compiler suggests the correct types are 'F1AP_ProtocolExtensionContainer_19016P34_t' and 'F1AP_ProtocolExtensionContainer_19016P228_t' respectively. These type mismatches cause undeclared identifier errors and invalid member accesses. The errors occur in the functions 'read_slice_info' and 'decode_f1ap_setup_response' where these types are used to cast IE extensions and access their lists. Correcting these type names to the suggested ones resolves the compilation errors by matching the actual ASN.1 generated types. No configuration changes are needed as this is purely a code-level type mismatch issue.",
+        "config_fix": "",
+        "code_patches": [
+          {
+            "function_name": "read_slice_info",
+            "file_path": "openairinterface-5g-test/openair2/F1AP/lib/f1ap_interface_management.c",
+            "patch_type": "targeted_insertion_or_adjustment",
+            "original_code": "  const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;\n  if (p->list.count == 0)\n    return 0;\n\n  const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];\n  DevAssert(splmn->id == F1AP_ProtocolIE_ID_id_TAISliceSupportList);\n  DevAssert(splmn->extensionValue.present == F1AP_ServedPLMNs_ItemExtIEs__extensionValue_PR_SliceSupportList);\n  const F1AP_SliceSupportList_t *ssl = &splmn->extensionValue.choice.SliceSupportList;\n  AssertFatal(ssl->list.count <= max_nssai, \"cannot handle more than 16 slices\\n\");\n  for (int s = 0; s < ssl->list.count; ++s) {\n    const F1AP_SliceSupportItem_t *sl = ssl->list.array[s];\n    nssai[s] = decode_nssai(&sl->sNSSAI);\n  }\n\n  return ssl->list.count;",
+            "patched_code": "  const F1AP_ProtocolExtensionContainer_19016P34_t *p = (F1AP_ProtocolExtensionContainer_19016P34_t *)plmn->iE_Extensions;\n  if (p->list.count == 0)\n    return 0;\n\n  const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];\n  DevAssert(splmn->id == F1AP_ProtocolIE_ID_id_TAISliceSupportList);\n  DevAssert(splmn->extensionValue.present == F1AP_ServedPLMNs_ItemExtIEs__extensionValue_PR_SliceSupportList);\n  const F1AP_SliceSupportList_t *ssl = &splmn->extensionValue.choice.SliceSupportList;\n  AssertFatal(ssl->list.count <= max_nssai, \"cannot handle more than 16 slices\\n\");\n  for (int s = 0; s < ssl->list.count; ++s) {\n    const F1AP_SliceSupportItem_t *sl = ssl->list.array[s];\n    nssai[s] = decode_nssai(&sl->sNSSAI);\n  }\n\n  return ssl->list.count;",
+            "line_numbers": "386-399",
+            "description": "Replaced incorrect type 'F1AP_ProtocolExtensionContainer_10696P34_t' with correct 'F1AP_ProtocolExtensionContainer_19016P34_t' as suggested by compiler to fix unknown type and undeclared identifier errors."
+          },
+          {
+            "function_name": "decode_f1ap_setup_response",
+            "file_path": "openairinterface-5g-test/openair2/F1AP/lib/f1ap_interface_management.c",
+            "patch_type": "targeted_insertion_or_adjustment",
+            "original_code": "  F1AP_ProtocolExtensionContainer_10696P228_t *p = calloc_or_fail(1, sizeof(*p));\n  asn1cSequenceAdd(p->list, F1AP_RRC_Version_ExtIEs_t, rrcv_ext);\n  rrcv_ext->id = F1AP_ProtocolIE_ID_id_latest_RRC_Version_Enhanced;\n  rrcv_ext->criticality = F1AP_Criticality_ignore;\n  rrcv_ext->extensionValue.present = F1AP_RRC_Version_ExtIEs__extensionValue_PR_OCTET_STRING_SIZE_3_;\n  OCTET_STRING_t *os = &rrcv_ext->extensionValue.choice.OCTET_STRING_SIZE_3_;\n  os->size = sizeofArray(msg->rrc_ver);\n  os->buf = malloc_or_fail(sizeof(msg->rrc_ver));\n  for (int i = 0; i < sizeofArray(msg->rrc_ver); ++i)\n    os->buf[i] = msg->rrc_ver[i];\n  ie4->value.choice.RRC_Version.iE_Extensions = (struct F1AP_ProtocolExtensionContainer *)p;\n\n  return pdu;\n}\n\nbool decode_f1ap_setup_response(const F1AP_F1AP_PDU_t *pdu, f1ap_setup_resp_t *out)\n{\n  /* Check presence of message type */\n  _F1_EQ_CHECK_INT(pdu->present, F1AP_F1AP_PDU_PR_successfulOutcome);\n  _F1_EQ_CHECK_LONG(pdu->choice.successfulOutcome->procedureCode, F1AP_ProcedureCode_id_F1Setup);\n  _F1_EQ_CHECK_INT(pdu->choice.successfulOutcome->value.present, F1AP_SuccessfulOutcome__value_PR_F1SetupResponse);\n  /* Check presence of mandatory IEs */\n  F1AP_F1SetupResponse_t *in = &pdu->choice.successfulOutcome->value.choice.F1SetupResponse;\n  F1AP_F1SetupResponseIEs_t *ie;\n  F1AP_LIB_FIND_IE(F1AP_F1SetupResponseIEs_t, ie, &in->protocolIEs.list, F1AP_ProtocolIE_ID_id_TransactionID, true);\n  F1AP_LIB_FIND_IE(F1AP_F1SetupResponseIEs_t, ie, &in->protocolIEs.list, F1AP_ProtocolIE_ID_id_GNB_CU_RRC_Version, true);\n  /* Loop over all IEs */\n  for (int i = 0; i < in->protocolIEs.list.count; i++) {\n    ie = in->protocolIEs.list.array[i];\n    switch (ie->id) {\n      case F1AP_ProtocolIE_ID_id_TransactionID:\n      // Transaction ID (M)\n        _F1_EQ_CHECK_INT(ie->value.present, F1AP_F1SetupResponseIEs__value_PR_TransactionID);\n        AssertError(ie->value.choice.TransactionID != -1, return false, \"ie->value.choice.TransactionID is -1\");\n        out->transaction_id = ie->value.choice.TransactionID;\n        break;\n\n      case F1AP_ProtocolIE_ID_id_gNB_CU_Name: {\n        // gNB-CU Name (O)\n        _F1_EQ_CHECK_INT(ie->value.present, F1AP_F1SetupResponseIEs__value_PR_GNB_CU_Name);\n        const F1AP_GNB_CU_Name_t *cu_name = &ie->value.choice.GNB_CU_Name;\n        out->gNB_CU_name = calloc_or_fail(cu_name->size + 1, sizeof(*out->gNB_CU_name));\n        strncpy(out->gNB_CU_name, (char *)cu_name->buf, cu_name->size);\n        } break;\n\n      case F1AP_ProtocolIE_ID_id_GNB_CU_RRC_Version:\n      // gNB-CU RRC version (M)\n        _F1_EQ_CHECK_INT(ie->value.present, F1AP_F1SetupResponseIEs__value_PR_RRC_Version);\n        // RRC Version: \"This IE is not used in this release.\"\n        if (ie->value.choice.RRC_Version.iE_Extensions) {\n          F1AP_ProtocolExtensionContainer_10696P228_t *ext =\n              (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;\n          if (ext->list.count > 0) {\n            F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];\n            OCTET_STRING_t *os = &rrcext->extensionValue.choice.OCTET_STRING_SIZE_3_;\n            for (int i = 0; i < sizeofArray(out->rrc_ver); i++)\n              out->rrc_ver[i] = os->buf[i];\n          }\n        }\n        break;",
+            "patched_code": "  F1AP_ProtocolExtensionContainer_19016P228_t *p = calloc_or_fail(1, sizeof(*p));\n  asn1cSequenceAdd(p->list, F1AP_RRC_Version_ExtIEs_t, rrcv_ext);\n  rrcv_ext->id = F1AP_ProtocolIE_ID_id_latest_RRC_Version_Enhanced;\n  rrcv_ext->criticality = F1AP_Criticality_ignore;\n  rrcv_ext->extensionValue.present = F1AP_RRC_Version_ExtIEs__extensionValue_PR_OCTET_STRING_SIZE_3_;\n  OCTET_STRING_t *os = &rrcv_ext->extensionValue.choice.OCTET_STRING_SIZE_3_;\n  os->size = sizeofArray(msg->rrc_ver);\n  os->buf = malloc_or_fail(sizeof(msg->rrc_ver));\n  for (int i = 0; i < sizeofArray(msg->rrc_ver); ++i)\n    os->buf[i] = msg->rrc_ver[i];\n  ie4->value.choice.RRC_Version.iE_Extensions = (struct F1AP_ProtocolExtensionContainer *)p;\n\n  return pdu;\n}\n\nbool decode_f1ap_setup_response(const F1AP_F1AP_PDU_t *pdu, f1ap_setup_resp_t *out)\n{\n  /* Check presence of message type */\n  _F1_EQ_CHECK_INT(pdu->present, F1AP_F1AP_PDU_PR_successfulOutcome);\n  _F1_EQ_CHECK_LONG(pdu->choice.successfulOutcome->procedureCode, F1AP_ProcedureCode_id_F1Setup);\n  _F1_EQ_CHECK_INT(pdu->choice.successfulOutcome->value.present, F1AP_SuccessfulOutcome__value_PR_F1SetupResponse);\n  /* Check presence of mandatory IEs */\n  F1AP_F1SetupResponse_t *in = &pdu->choice.successfulOutcome->value.choice.F1SetupResponse;\n  F1AP_F1SetupResponseIEs_t *ie;\n  F1AP_LIB_FIND_IE(F1AP_F1SetupResponseIEs_t, ie, &in->protocolIEs.list, F1AP_ProtocolIE_ID_id_TransactionID, true);\n  F1AP_LIB_FIND_IE(F1AP_F1SetupResponseIEs_t, ie, &in->protocolIEs.list, F1AP_ProtocolIE_ID_id_GNB_CU_RRC_Version, true);\n  /* Loop over all IEs */\n  for (int i = 0; i < in->protocolIEs.list.count; i++) {\n    ie = in->protocolIEs.list.array[i];\n    switch (ie->id) {\n      case F1AP_ProtocolIE_ID_id_TransactionID:\n      // Transaction ID (M)\n        _F1_EQ_CHECK_INT(ie->value.present, F1AP_F1SetupResponseIEs__value_PR_TransactionID);\n        AssertError(ie->value.choice.TransactionID != -1, return false, \"ie->value.choice.TransactionID is -1\");\n        out->transaction_id = ie->value.choice.TransactionID;\n        break;\n\n      case F1AP_ProtocolIE_ID_id_gNB_CU_Name: {\n        // gNB-CU Name (O)\n        _F1_EQ_CHECK_INT(ie->value.present, F1AP_F1SetupResponseIEs__value_PR_GNB_CU_Name);\n        const F1AP_GNB_CU_Name_t *cu_name = &ie->value.choice.GNB_CU_Name;\n        out->gNB_CU_name = calloc_or_fail(cu_name->size + 1, sizeof(*out->gNB_CU_name));\n        strncpy(out->gNB_CU_name, (char *)cu_name->buf, cu_name->size);\n        } break;\n\n      case F1AP_ProtocolIE_ID_id_GNB_CU_RRC_Version:\n      // gNB-CU RRC version (M)\n        _F1_EQ_CHECK_INT(ie->value.present, F1AP_F1SetupResponseIEs__value_PR_RRC_Version);\n        // RRC Version: \"This IE is not used in this release.\"\n        if (ie->value.choice.RRC_Version.iE_Extensions) {\n          F1AP_ProtocolExtensionContainer_19016P228_t *ext =\n              (F1AP_ProtocolExtensionContainer_19016P228_t *)ie->value.choice.RRC_Version.iE_Extensions;\n          if (ext->list.count > 0) {\n            F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];\n            OCTET_STRING_t *os = &rrcext->extensionValue.choice.OCTET_STRING_SIZE_3_;\n            for (int i = 0; i < sizeofArray(out->rrc_ver); i++)\n              out->rrc_ver[i] = os->buf[i];\n          }\n        }\n        break;",
+            "line_numbers": "1115-1155",
+            "description": "Replaced incorrect type 'F1AP_ProtocolExtensionContainer_10696P228_t' with correct 'F1AP_ProtocolExtensionContainer_19016P228_t' as suggested by compiler to fix unknown type and undeclared identifier errors."
+          }
+        ],
+        "config_patches": [],
+        "root_cause_analysis": "The compilation errors stem from the use of outdated or incorrect ASN.1 generated type names for protocol extension containers in the F1AP interface management source file. The types 'F1AP_ProtocolExtensionContainer_10696P34_t' and 'F1AP_ProtocolExtensionContainer_10696P228_t' do not exist in the current ASN.1 generated headers. The compiler suggests the correct types are 'F1AP_ProtocolExtensionContainer_19016P34_t' and 'F1AP_ProtocolExtensionContainer_19016P228_t', which correspond to the ASN.1 module version or specification release currently used. This mismatch causes undeclared identifier errors and invalid member accesses, leading to build failure. Correcting these type names to the compiler-suggested ones aligns the code with the actual ASN.1 generated types and resolves the errors.",
+        "investigation_steps": [
+          "Examine compiler error messages for unknown type names and undeclared identifiers.",
+          "Identify the exact lines and functions where these types are used (read_slice_info and decode_f1ap_setup_response).",
+          "Check compiler suggestions for correct type names (F1AP_ProtocolExtensionContainer_19016P34_t and F1AP_ProtocolExtensionContainer_19016P228_t).",
+          "Verify ASN.1 generated headers to confirm the correct type names.",
+          "Replace incorrect type names with the correct ones in the source code.",
+          "Rebuild the project to confirm that the errors are resolved."
+        ],
+        "specification_context": "- No 3GPP specification context found (embeddings file missing)",
+        "investigation_commands": [
+          {
+            "command": "grep -E \"F1AP_ProtocolExtensionContainer_10696P34_t|F1AP_ProtocolExtensionContainer_10696P228_t\" openair2/F1AP/lib/f1ap_interface_management.c",
+            "hint": "Verify occurrences of incorrect type names in source code to locate and confirm needed replacements"
+          },
+          {
+            "command": "sed -i 's/F1AP_ProtocolExtensionContainer_10696P34_t/F1AP_ProtocolExtensionContainer_19016P34_t/g; s/F1AP_ProtocolExtensionContainer_10696P228_t/F1AP_ProtocolExtensionContainer_19016P228_t/g' openair2/F1AP/lib/f1ap_interface_management.c",
+            "hint": "Replace incorrect ASN.1 generated type names with correct ones in source code"
+          },
+          {
+            "command": "gmake -C openair2/F1AP/lib clean && gmake -C openair2/F1AP/lib",
+            "hint": "Clean and rebuild the F1AP library to verify that compilation errors are resolved"
+          }
+        ]
+      },
+      "context_summary": {
+        "candidate_functions_count": 2,
+        "candidate_configs_count": 0,
+        "call_graph_entries": 1,
+        "pattern_matched": false
+      },
+      "phase3_llm": {
+        "max_output_tokens": 16384,
+        "json_mode": true,
+        "build_error_mode": true,
+        "finish_reason": "stop",
+        "parse_ok": true,
+        "attempts": [
+          {
+            "attempt": 1,
+            "finish_reason": "stop",
+            "chars": 11822
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 2,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "grep -E \"F1AP_ProtocolExtensionContainer_10696P34_t|F1AP_ProtocolExtensionContainer_10696P228_t\" openair2/F1AP/lib/f1ap_interface_management.c",
+            "explanation": "Verify occurrences of incorrect type names in source code to locate and confirm needed replacements"
+          },
+          {
+            "command": "sed -i 's/F1AP_ProtocolExtensionContainer_10696P34_t/F1AP_ProtocolExtensionContainer_19016P34_t/g; s/F1AP_ProtocolExtensionContainer_10696P228_t/F1AP_ProtocolExtensionContainer_19016P228_t/g' openair2/F1AP/lib/f1ap_interface_management.c",
+            "explanation": "Replace incorrect ASN.1 generated type names with correct ones in source code"
+          },
+          {
+            "command": "gmake -C openair2/F1AP/lib clean && gmake -C openair2/F1AP/lib",
+            "explanation": "Clean and rebuild the F1AP library to verify that compilation errors are resolved"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    }
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260529_180922.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

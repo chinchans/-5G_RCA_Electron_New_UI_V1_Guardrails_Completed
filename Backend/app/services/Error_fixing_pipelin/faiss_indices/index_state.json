@@ -1,0 +1,13 @@
+{
+  "last_indexed_commit": "0b11db902dc291601c023d5343eab3c50e6c10cc",
+  "metadata_version": 1,
+  "baseline_initialized_at": "2026-05-30T10:11:54.296611",
+  "openair_codebase_file_name": "openairinterface-5g-develop",
+  "repo_path": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "last_sync_at": "2026-06-01T19:47:26.922657",
+  "last_sync_changed_files_count": 0,
+  "last_sync_new_functions": 0,
+  "last_sync_changed_files": [
+    "openair2/rrc/nr/rrc_gnb.c"
+  ]
+}

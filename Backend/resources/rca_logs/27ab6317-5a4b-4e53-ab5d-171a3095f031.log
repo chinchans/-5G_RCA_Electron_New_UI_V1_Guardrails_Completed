@@ -1,0 +1,37 @@
+frame = 612, slot = 0 : [RRC] UE with RNTI 6432 in RRC_CONNECTED state
+frame = 612, slot = 0 : [RRC] Security Mode procedure completed for UE 6432
+frame = 612, slot = 0 : [NGAP] AMF UE ID: 102937456, gNB UE ID: 82763
+frame = 612, slot = 0 : [NGAP] UE 6432 fully registered with network
+frame = 612, slot = 0 : [NGAP] Received PDU Session Resource Setup Request from AMF
+frame = 612, slot = 1 : Function: ngap_gNB_handle_pdu_session_resource_setup processing
+frame = 612, slot = 1 : [NGAP] PDU Session ID: 5, SST: 1, SD: 0x000001
+frame = 612, slot = 1 : [NGAP] Requested default QoS: 5QI=9, ARP=6
+frame = 612, slot = 1 : [NGAP] Protocol Configuration Options included
+frame = 612, slot = 1 : [NGAP] UL TEID allocated: 0x7a13c62f, UL IP: 192.168.20.31
+frame = 612, slot = 2 : [RRC] Processing PDU Session Resource Setup Request
+frame = 612, slot = 2 : Function: rrc_gNB_process_NGAP_PDUSESSION_SETUP_REQ processing
+frame = 612, slot = 2 : [RRC] Adding PDU session for UE with rnti 6432
+frame = 612, slot = 2 : [RRC] Allocating PDCP/RLC resources for DRB
+frame = 612, slot = 3 : [RRC] Setting up DRB for PDU Session ID 5
+frame = 612, slot = 3 : Function: rrc_gNB_process_drb_setup processing
+frame = 612, slot = 3 : [RRC] Configuring DRB with ID 1
+frame = 612, slot = 3 : [PDCP] Creating PDCP entity for DRB1
+frame = 612, slot = 3 : [RLC] Creating RLC entity for DRB1
+frame = 612, slot = 4 : [MAC] Allocating logical channel for DRB1
+frame = 612, slot = 4 : Function: mac_rlc_data_req processing
+frame = 612, slot = 4 : [MAC] Error allocating logical channel resources
+frame = 612, slot = 4 : [MAC] Maximum number of DRBs reached for UE
+frame = 612, slot = 4 : [RLC] Failed to configure RLC for DRB1
+frame = 612, slot = 5 : [PDCP] Releasing PDCP entity for DRB1
+frame = 612, slot = 5 : [RRC] DRB configuration failed - insufficient resources
+frame = 612, slot = 5 : ERROR: DRB configuration failed - insufficient resources
+frame = 612, slot = 6 : Function: send_ngap_pdu_session_setup_resp_fail processing
+frame = 612, slot = 6 : [NGAP] Preparing PDU Session Setup Response
+frame = 612, slot = 6 : [NGAP] Marking PDU Session ID 5 as failed
+frame = 612, slot = 6 : [NGAP] Cause: Radio Network Layer - resources not available
+frame = 612, slot = 7 : [NGAP] Adding PDU Session Item to failed list
+frame = 612, slot = 7 : Function: ngap_gNB_generate_PDUSESSION_SETUP_RESPONSE processing
+frame = 612, slot = 7 : [NGAP] Sending PDU Session Setup Response with failed items
+frame = 612, slot = 8 : [NGAP] PDU Session Resource Setup Response sent to AMF
+frame = 612, slot = 8 : [RRC] UE 6432 remains in RRC_CONNECTED with existing bearers
+frame = 612, slot = 9 : [NGAP] Waiting for further instructions from AMF for UE 6432 

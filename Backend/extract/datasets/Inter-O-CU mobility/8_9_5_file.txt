@@ -1,0 +1,64 @@
+8.9.5	Change of gNB-CU-UP
+Figure 8.9.5-1 shows the procedure used for the change of gNB-CU-UP within a gNB.
+
+Figure 8.9.5-1: Change of gNB-CU-UP
+1.	Change of gNB-CU-UP is triggered in gNB-CU-CP based on e.g., measurement report from the UE.
+2-3.	Bearer Context Setup procedure is performed as described in clause 8.9.2.
+4.	F1 UE Context Modification procedure is performed to change the UL TNL address information for F1-U for one or more bearers in the gNB-DU.
+5-6.	Bearer Context Modification procedure (gNB-CU-CP initiated) is performed to enable the gNB-CU-CP to retrieve the PDCP UL/DL status and to exchange data forwarding information for the bearer.
+7-8.	Bearer Context Modification procedure is performed as described in clause 8.9.2.
+9.	Data Forwarding may be performed from the source gNB-CU-UP to the target gNB-CU-UP.
+10-12.	PDU Session Resource Modify Indication procedure is performed to update the DL TNL address information for the NG-U towards the core network.
+13-14.	Bearer Context Release procedure (gNB-CU-CP initiated) is performed as described in clause 8.9.3.
+Clause:	Clause 8.9.2	8.9.2	Bearer context setup over F1-U
+Figure 8.9.2-1 shows the procedure used to setup the bearer context in the gNB-CU-UP.
+
+Figure 8.9.2-1: Bearer context setup over F1-U
+0.	Bearer context setup (e.g., following an SGNB ADDITION REQUEST message from the MeNB) is triggered in gNB-CU-CP.
+1.	The gNB-CU-CP sends a BEARER CONTEXT SETUP REQUEST message containing UL TNL address information for S1-U or NG-U, and if required, DL TNL address information for X2-U to setup the bearer context in the gNB-CU-UP. For NG-RAN, the gNB-CU-CP decides flow-to-DRB mapping and sends the generated SDAP and PDCP configuration to the gNB-CU-UP.
+NOTE 1:	In case of Conditional Handover or Conditional PSCell Addition/Change, the BEARER CONTEXT SETUP REQUEST message indicates to ignore the included security context and not to initiate sending downlink packets until the UE successfully accesses. Up to implementation, the gNB-CU-CP may request to establish bearer context as if a regular HO was requested.
+2.	The gNB-CU-UP responds with a BEARER CONTEXT SETUP RESPONSE message containing the UL TNL address information for F1-U, and DL TNL address information for S1-U or NG-U, and if required, UL TNL address information for X2-U or Xn-U.
+NOTE 2:	The indirect data transmission for split bearer through the gNB-CU-UP is not precluded.
+3.	F1 UE context setup procedure is performed to setup one or more bearers in the gNB-DU.
+4.	The gNB-CU-CP sends a BEARER CONTEXT MODIFICATION REQUEST message containing the DL TNL address information for F1-U or Xn-U, and PDCP status.
+NOTE 3:	In case the indirect path indication is received in step 4, the gNB-CU-UP may not discard the DL data based on the Downlink Data Delivery Status frame received from the gNB-DU. During the inter-gNB indirect-to-direct or indirect-to-indirect path switching, the source gNB-CU-UP forwards the buffered DL data to the target gNB as specified in TS 38.300 [2]. In case of the PDCP duplication, the gNB-CU-UP should not request the discard of the duplicated DL data to the gNB-DU for the direct path based on the Downlink Data Delivery Status frame received from the gNB-DU for the indirect path, and only act as specified in TS 38.323 [36].
+5.	The gNB-CU-UP responds with a BEARER CONTEXT MODIFICATION RESPONSE message.
+Clause:	Clause 8.9.2	8.9.2	Bearer context setup over F1-U
+Figure 8.9.2-1 shows the procedure used to setup the bearer context in the gNB-CU-UP.
+
+Figure 8.9.2-1: Bearer context setup over F1-U
+0.	Bearer context setup (e.g., following an SGNB ADDITION REQUEST message from the MeNB) is triggered in gNB-CU-CP.
+1.	The gNB-CU-CP sends a BEARER CONTEXT SETUP REQUEST message containing UL TNL address information for S1-U or NG-U, and if required, DL TNL address information for X2-U to setup the bearer context in the gNB-CU-UP. For NG-RAN, the gNB-CU-CP decides flow-to-DRB mapping and sends the generated SDAP and PDCP configuration to the gNB-CU-UP.
+NOTE 1:	In case of Conditional Handover or Conditional PSCell Addition/Change, the BEARER CONTEXT SETUP REQUEST message indicates to ignore the included security context and not to initiate sending downlink packets until the UE successfully accesses. Up to implementation, the gNB-CU-CP may request to establish bearer context as if a regular HO was requested.
+2.	The gNB-CU-UP responds with a BEARER CONTEXT SETUP RESPONSE message containing the UL TNL address information for F1-U, and DL TNL address information for S1-U or NG-U, and if required, UL TNL address information for X2-U or Xn-U.
+NOTE 2:	The indirect data transmission for split bearer through the gNB-CU-UP is not precluded.
+3.	F1 UE context setup procedure is performed to setup one or more bearers in the gNB-DU.
+4.	The gNB-CU-CP sends a BEARER CONTEXT MODIFICATION REQUEST message containing the DL TNL address information for F1-U or Xn-U, and PDCP status.
+NOTE 3:	In case the indirect path indication is received in step 4, the gNB-CU-UP may not discard the DL data based on the Downlink Data Delivery Status frame received from the gNB-DU. During the inter-gNB indirect-to-direct or indirect-to-indirect path switching, the source gNB-CU-UP forwards the buffered DL data to the target gNB as specified in TS 38.300 [2]. In case of the PDCP duplication, the gNB-CU-UP should not request the discard of the duplicated DL data to the gNB-DU for the direct path based on the Downlink Data Delivery Status frame received from the gNB-DU for the indirect path, and only act as specified in TS 38.323 [36].
+5.	The gNB-CU-UP responds with a BEARER CONTEXT MODIFICATION RESPONSE message.
+Clause:	Clause 8.9.3	8.9.3	Bearer context release over F1-U
+
+
+8.9.3.1	gNB-CU-CP initiated bearer context release
+Figure 8.9.3.1-1 shows the procedure used to release the bearer context in the gNB-CU-UP initiated by the gNB-CU-CP.
+
+Figure 8.9.3.1-1: Bearer context release over F1-U – gNB-CU-CP initiated
+0.	Bearer context release (e.g., following an SGNB RELEASE REQUEST message from the MeNB) is triggered in gNB-CU-CP.
+1.	The gNB-CU-CP sends a BEARER CONTEXT MODIFICATION REQUEST message to the gNB-CU-UP.
+2.	The gNB-CU-UP responds with a BEARER CONTEXT MODIFICATION RESPONSE carrying the PDCP UL/DL status.
+3.	F1 UE context modification procedure is performed to stop the data transmission for the UE. It is up to gNB-DU implementation when to stop the UE scheduling.
+NOTE: step 1-3 are performed only if the PDCP status of the bearer(s) needs to be preserved e.g., for bearer type change.
+4.	The gNB-CU-CP may receive the UE CONTEXT RELEASE message from the MeNB in EN-DC operation as described in clause 8.4.2.1.
+5.	and 7. Bearer context release procedure is performed.
+6.	F1 UE context release procedure is performed to release the UE context in the gNB-DU.
+
+8.9.3.2	gNB-CU-UP initiated bearer context release
+Figure 8.9.3.2-1 shows the procedure used to release the bearer context in the gNB-CU-UP initiated by the gNB-CU-UP.
+
+Figure 8.9.3.2-1: Bearer context release over F1-U – gNB-CU-UP initiated
+0.	Bearer context release is triggered in gNB-CU-UP e.g., due to local failure.
+1.	The gNB-CU-UP sends a BEARER CONTEXT RELEASE REQUEST message to request the release of the bearer context in the gNB-CU-UP. This message may contain the PDCP status.
+2.- 5. If the PDCP status needs to be preserved, the E1 Bearer Context Modification and the F1 UE Context Modification procedures are performed. The E1 Bearer Context Modification procedure is used to convey data forwarding information to the gNB-CU-UP. The gNB-CU-CP may receive the UE Context Release from the MeNB.
+6. The gNB-CU-CP sends a BEARER CONTEXT RELEASE COMMAND message to release the bearer context in the gNB-CU-UP.
+7.	The gNB-CU-UP responds with a BEARER CONTEXT RELEASE COMPLETE to confirm the release of the bearer context including also data forwarding information.
+8.	F1 UE context release procedure may be performed to release the UE context in the gNB-DU.

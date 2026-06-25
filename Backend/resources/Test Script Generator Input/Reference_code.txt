@@ -1,0 +1,89 @@
+# Base code to check if UE is attached or not
+def is_ue_attached():
+    folder = "path/to/logs"
+    os.chdir(folder)
+    with open("log_file_name.log",'r') as file:
+        content = file.read()
+        sentence = re.split(r'\s{2}|\n', content)
+        list1 = []
+        list2 = ['attach_success=']
+        for i in sentence:
+            for j in list2:
+                if j in i:
+                    list1.append(i.split("="))
+        dict1 = {}
+        for i in list1:
+            if i[0] not in dict1.keys():
+                dict1[i[0]] = int(i[1])
+            else:
+                if dict1[i[0]] < int(i[1]):
+                    dict1[i[0]] = int(i[1])
+        if dict1:
+            for inx, val in dict1.items():
+                return [inx, val]
+        else:
+            return None
+
+# Base code for UE attach, this function helps in bringing up the 5G test setup by switching on the UE
+def test_5g_ue_attachment():
+    import paramiko
+    import time
+
+    host = '<REMOTE_HOST>'
+    port = 22
+    username = '<USERNAME>'
+    password = '<PASSWORD>'
+    sudo_password = '<SUDO_PASSWORD>'
+    password_client = '<CLIENT_PASSWORD>'
+    command = 'service lte restart\n'
+
+    remote_file_path = '/root/ue/config/<CONFIG_FILE>.cfg'
+    local_file_path = '/home/user/<CONFIG_VARIANT>.cfg'
+
+    ssh_client = paramiko.SSHClient()
+    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    try:
+            ssh_client.connect(hostname=host, port=port, username=username, password=password)
+            shell = ssh_client.invoke_shell()
+            shell.send('sudo su\n')
+            time.sleep(1)
+            output = shell.recv(65535).decode('utf-8')
+            if '[sudo] password for' in output:
+                shell.send(sudo_password + '\n')
+                time.sleep(1)
+            shell.send('cd /root/ue/config/\n')
+        shell.send(f'scp {remote_file_path} <LOCAL_USER>@<LOCAL_HOST>:{local_file_path}\n')
+            time.sleep(1)
+            output = shell.recv(65535).decode('utf-8')
+            if 'password:' in output:
+                shell.send(password_client + '\n')
+        
+        with open(local_file_path, 'r') as file:
+            content = file.read()
+            sentence = re.split(r'\s{2}|\n', content)
+            ue_ids = [int(i.split(":")[1].replace(',', '')) for i in sentence if '"ue_id":' in i]
+            total_ues = max(ue_ids) if ue_ids else 0
+
+        shell.send(command)
+        time.sleep(2)
+    finally:
+        ssh_client.close()
+
+    start_time = time.time()
+    test_duration = 60  # example timeout
+    attach_status = None
+    while time.time() - start_time < test_duration:
+        attach_status = is_ue_attached()
+        if attach_status:
+            break
+
+    if attach_status:
+        print(f"\nTotal No of UEs={total_ues}")
+        print(f"No of UEs Attached={attach_status[1]}")
+        print(f"attach_success={attach_status[1]}")
+        print(f"No of UEs not attached={total_ues - attach_status[1]}")
+    else:
+        print(f"\nTotal No of UEs={total_ues}")
+        print("No of UEs Attached=0")
+        print(f"No of UEs not attached={total_ues}")

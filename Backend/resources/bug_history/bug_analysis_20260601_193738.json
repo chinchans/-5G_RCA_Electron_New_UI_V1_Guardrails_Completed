@@ -1,0 +1,2316 @@
+{
+  "error_message": "ERROR MESSAGE: \"No AMF is associated to the gNB",
+  "log_file": "cu_ngap_failure.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/cu_ngap_failure.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-06-01T19:37:38.381706",
+  "results": {
+    "error_message": "ERROR MESSAGE: \"No AMF is associated to the gNB",
+    "extracted_error": false,
+    "error_source": "user_provided",
+    "timestamp": "2026-06-01T19:37:38.105984",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/cu_ngap_failure.log",
+    "deployment_context": {
+      "role": "CU",
+      "active_configs": [
+        {
+          "missing": "cu_simnovus.conf",
+          "used": "./openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+          "reason": "Original file not found, using cu_gnb.conf"
+        },
+        {
+          "missing": "../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+          "used": "./openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+          "reason": "Original file not found, using cu_gnb.conf"
+        }
+      ],
+      "network_params": {
+        "gnb_ipv4": "10.138.77.131",
+        "amf_ipv4": null,
+        "ngap_port": null,
+        "assoc_state": "DISCONNECTED"
+      },
+      "log_anchors": [
+        "[NGAP]   No AMF is associated to the gNB",
+        "[ITTI]   Starting itti queue: TASK_NGAP as task 17",
+        "[ITTI]   Starting itti queue: TASK_SCTP as task 24",
+        "[ITTI]   Created Posix thread TASK_SCTP",
+        "[NGAP]   Starting NGAP layer",
+        "[ITTI]   Created Posix thread TASK_NGAP",
+        "[GNB_APP]   F1AP: gNB_CU_id[0] 0",
+        "[GNB_APP]   F1AP: gNB_CU_name[0] gNB-Eurecom-CU",
+        "[LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+        "[LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+        "[NGAP]   Registered new gNB[0] and macro gNB id 0",
+        "[NGAP]   [gNB 0] check the amf registration state",
+        "[F1AP]   Starting F1AP at CU",
+        "[F1AP]   F1AP_CU_SCTP_REQ(create socket)",
+        "[F1AP]   CU Task Received SCTP_NEW_ASSOCIATION_IND for instance 0",
+        "[F1AP]   CU Task Received SCTP_NEW_ASSOCIATION_RESP for instance 0",
+        "[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0",
+        "[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_F1Setup",
+        "[F1AP]   Calling handler with instance 0",
+        "[F1AP]   Received Cell in 1 context"
+      ],
+      "detailed_log_context": {
+        "total_lines": 292,
+        "error_sequences": [
+          {
+            "error_line": "[LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+            "line_number": 98,
+            "context": [
+              "     CMDLINE: \"./nr-softmodem\" \"-O\" \"../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf\" \"--sa\" \"--gNBs.[0].force_256qam_off\"",
+              "     [CONFIG] get parameters from libconfig ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf , debug flags: 0x00000000",
+              "     [LIBCONFIG] Path for include directive set to: ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF",
+              "     [CONFIG] function config_libconfig_init returned 0",
+              "     [CONFIG] config module libconfig loaded",
+              " >>> [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+            "line_number": 99,
+            "context": [
+              "     [CONFIG] get parameters from libconfig ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf , debug flags: 0x00000000",
+              "     [LIBCONFIG] Path for include directive set to: ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF",
+              "     [CONFIG] function config_libconfig_init returned 0",
+              "     [CONFIG] config module libconfig loaded",
+              "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              " >>> [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+            "line_number": 100,
+            "context": [
+              "     [LIBCONFIG] Path for include directive set to: ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF",
+              "     [CONFIG] function config_libconfig_init returned 0",
+              "     [CONFIG] config module libconfig loaded",
+              "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+              " >>> [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     Reading in command-line options"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+            "line_number": 101,
+            "context": [
+              "     [CONFIG] function config_libconfig_init returned 0",
+              "     [CONFIG] config module libconfig loaded",
+              "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+              " >>> [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     Reading in command-line options",
+              "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+            "line_number": 102,
+            "context": [
+              "     [CONFIG] config module libconfig loaded",
+              "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              " >>> [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     Reading in command-line options",
+              "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+            "line_number": 103,
+            "context": [
+              "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              " >>> [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     Reading in command-line options",
+              "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+            "line_number": 106,
+            "context": [
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     Reading in command-line options",
+              " >>> [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] list MACRLCs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list RUs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+            "line_number": 107,
+            "context": [
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     Reading in command-line options",
+              "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              " >>> [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] list MACRLCs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list RUs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list THREAD_STRUCT not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+            "line_number": 108,
+            "context": [
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     Reading in command-line options",
+              "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+              " >>> [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] list MACRLCs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list RUs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list THREAD_STRUCT not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [CONFIG] parallel_conf is set to 2"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+            "line_number": 116,
+            "context": [
+              "     [LIBCONFIG] list RUs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list THREAD_STRUCT not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [CONFIG] parallel_conf is set to 2",
+              "     [CONFIG] worker_conf is set to 1",
+              "     Configuration: nb_rrc_inst 1, nb_nr_L1_inst 0, nb_ru 0",
+              " >>> [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+              "     configuring for RAU/RRU",
+              "     CPU Freq is 2.419351",
+              "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+            "line_number": 119,
+            "context": [
+              "     [CONFIG] worker_conf is set to 1",
+              "     Configuration: nb_rrc_inst 1, nb_nr_L1_inst 0, nb_ru 0",
+              "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+              "     configuring for RAU/RRU",
+              "     CPU Freq is 2.419351",
+              " >>> [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+            "line_number": 120,
+            "context": [
+              "     Configuration: nb_rrc_inst 1, nb_nr_L1_inst 0, nb_ru 0",
+              "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+              "     configuring for RAU/RRU",
+              "     CPU Freq is 2.419351",
+              "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              " >>> [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+            "line_number": 121,
+            "context": [
+              "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+              "     configuring for RAU/RRU",
+              "     CPU Freq is 2.419351",
+              "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+            "line_number": 122,
+            "context": [
+              "     configuring for RAU/RRU",
+              "     CPU Freq is 2.419351",
+              "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+            "line_number": 123,
+            "context": [
+              "     CPU Freq is 2.419351",
+              "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+              " >>> [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+            "line_number": 124,
+            "context": [
+              "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+            "line_number": 127,
+            "context": [
+              "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              " >>> [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+              "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     NRRRC 0: Southbound Transport f1"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+            "line_number": 128,
+            "context": [
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+              "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     NRRRC 0: Southbound Transport f1",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+            "line_number": 129,
+            "context": [
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+              "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     NRRRC 0: Southbound Transport f1",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+            "line_number": 130,
+            "context": [
+              "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+              "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     NRRRC 0: Southbound Transport f1",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+            "line_number": 133,
+            "context": [
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+              "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     NRRRC 0: Southbound Transport f1",
+              " >>> [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+            "line_number": 134,
+            "context": [
+              "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+              "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     NRRRC 0: Southbound Transport f1",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+            "line_number": 135,
+            "context": [
+              "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+              "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     NRRRC 0: Southbound Transport f1",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              " >>> [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+            "line_number": 136,
+            "context": [
+              "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+              "     NRRRC 0: Southbound Transport f1",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+              " >>> [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+            "line_number": 137,
+            "context": [
+              "     NRRRC 0: Southbound Transport f1",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+            "line_number": 138,
+            "context": [
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+            "line_number": 139,
+            "context": [
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+              "     [GTPU]   Configuring GTPu"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+            "line_number": 140,
+            "context": [
+              "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+              "     [GTPU]   Configuring GTPu",
+              "     [GTPU]   SA mode"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+            "line_number": 141,
+            "context": [
+              "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+              "     [GTPU]   Configuring GTPu",
+              "     [GTPU]   SA mode",
+              "     [GTPU]   Configuring GTPu address : 10.138.77.131 -> 834d8a0a"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+            "line_number": 142,
+            "context": [
+              "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+              "     [GTPU]   Configuring GTPu",
+              "     [GTPU]   SA mode",
+              "     [GTPU]   Configuring GTPu address : 10.138.77.131 -> 834d8a0a",
+              "     [GNB_APP]   [gNB 0] gNB_app_register for instance 0"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+            "line_number": 143,
+            "context": [
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+              "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+              " >>> [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+              "     [GTPU]   Configuring GTPu",
+              "     [GTPU]   SA mode",
+              "     [GTPU]   Configuring GTPu address : 10.138.77.131 -> 834d8a0a",
+              "     [GNB_APP]   [gNB 0] gNB_app_register for instance 0",
+              "     [NR_MAC]   NR band duplex spacing is 0 KHz (nr_bandtable[37].band = 78)"
+            ]
+          }
+        ],
+        "debug_values": {
+          "UE_IDs": [
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_PHY_UE as task 30"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_MAC_UE as task 31"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RLC_UE as task 32"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_PDCP_UE as task 33"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RRC_UE as task 34"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RRC_NRUE as task 35"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_NAS_UE as task 36"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RAL_UE as task 37"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RRC_NSA_UE as task 45"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RRC_NSA_NRUE as task 46"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_NAS_NRUE as task 47"
+            },
+            {
+              "value": "Dec",
+              "line": "[HW]   Version: Branch: master Abrev. Hash: 25baf4e Date: Tue Dec 20 06:13:23 2022 +0000"
+            },
+            {
+              "value": "19c5",
+              "line": "[NR_RRC]   new UE rnti 9410 (coming with random value) is already there as UE 19c5, removing 19c5 from MAC/PHY"
+            },
+            {
+              "value": "60af",
+              "line": "[NR_RRC]   new UE rnti a9eb (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+            },
+            {
+              "value": "60af",
+              "line": "[NR_RRC]   new UE rnti b3bd (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+            },
+            {
+              "value": "60af",
+              "line": "[NR_RRC]   new UE rnti e3cf (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+            },
+            {
+              "value": "60af",
+              "line": "[NR_RRC]   new UE rnti 4535 (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+            }
+          ],
+          "RNTI_values": [
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 0] Init..."
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 0] Checking release"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 0] gNB:OPENAIR NR RRC IN...."
+            },
+            {
+              "value": "19c5",
+              "line": "[F1AP]   Adding a new UE with RNTI 19c5 and cu/du ue_f1ap_id 6597"
+            },
+            {
+              "value": "19c5",
+              "line": "[NR_RRC]   Decoding CCCH: RNTI 19c5, inst 0, payload_size 6"
+            },
+            {
+              "value": "19c5",
+              "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 19c5"
+            },
+            {
+              "value": "19c5",
+              "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 6597 associated with UE RNTI 19c5 (instance 0)"
+            },
+            {
+              "value": "19c5",
+              "line": "[F1AP]   GNB_DU_UE_F1AP_ID 6597 associated with UE RNTI 19c5"
+            },
+            {
+              "value": "9410",
+              "line": "[F1AP]   Adding a new UE with RNTI 9410 and cu/du ue_f1ap_id 37904"
+            },
+            {
+              "value": "9410",
+              "line": "[NR_RRC]   Decoding CCCH: RNTI 9410, inst 0, payload_size 6"
+            },
+            {
+              "value": "9410",
+              "line": "[NR_RRC]   new UE rnti 9410 (coming with random value) is already there as UE 19c5, removing 19c5 from MAC/PHY"
+            },
+            {
+              "value": "9410",
+              "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 9410"
+            },
+            {
+              "value": "9410",
+              "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 37904 associated with UE RNTI 9410 (instance 0)"
+            },
+            {
+              "value": "9410",
+              "line": "[F1AP]   GNB_DU_UE_F1AP_ID 37904 associated with UE RNTI 9410"
+            },
+            {
+              "value": "9410",
+              "line": "[F1AP]   Calling pdcp_data_ind for UE RNTI 9410 srb_id 1 with size 33 (DCCH)"
+            },
+            {
+              "value": "9410",
+              "line": "[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 9410] [RAPROC] Logical Channel UL-DCCH, processing NR_RRCSetupComplete from UE (SRB1 Active)"
+            },
+            {
+              "value": "9410",
+              "line": "[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 9410] UE State = NR_RRC_CONNECTED"
+            },
+            {
+              "value": "60af",
+              "line": "[F1AP]   Adding a new UE with RNTI 60af and cu/du ue_f1ap_id 24751"
+            },
+            {
+              "value": "60af",
+              "line": "[NR_RRC]   Decoding CCCH: RNTI 60af, inst 0, payload_size 6"
+            },
+            {
+              "value": "60af",
+              "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 60af"
+            },
+            {
+              "value": "60af",
+              "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 24751 associated with UE RNTI 60af (instance 0)"
+            },
+            {
+              "value": "60af",
+              "line": "[F1AP]   GNB_DU_UE_F1AP_ID 24751 associated with UE RNTI 60af"
+            },
+            {
+              "value": "a9eb",
+              "line": "[F1AP]   Adding a new UE with RNTI a9eb and cu/du ue_f1ap_id 43499"
+            },
+            {
+              "value": "a9eb",
+              "line": "[NR_RRC]   Decoding CCCH: RNTI a9eb, inst 0, payload_size 6"
+            },
+            {
+              "value": "a9eb",
+              "line": "[NR_RRC]   new UE rnti a9eb (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+            },
+            {
+              "value": "a9eb",
+              "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI a9eb"
+            },
+            {
+              "value": "a9eb",
+              "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 43499 associated with UE RNTI a9eb (instance 0)"
+            },
+            {
+              "value": "a9eb",
+              "line": "[F1AP]   GNB_DU_UE_F1AP_ID 43499 associated with UE RNTI a9eb"
+            },
+            {
+              "value": "b3bd",
+              "line": "[F1AP]   Adding a new UE with RNTI b3bd and cu/du ue_f1ap_id 46013"
+            },
+            {
+              "value": "b3bd",
+              "line": "[NR_RRC]   Decoding CCCH: RNTI b3bd, inst 0, payload_size 6"
+            },
+            {
+              "value": "b3bd",
+              "line": "[NR_RRC]   new UE rnti b3bd (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+            },
+            {
+              "value": "b3bd",
+              "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI b3bd"
+            },
+            {
+              "value": "b3bd",
+              "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 46013 associated with UE RNTI b3bd (instance 0)"
+            },
+            {
+              "value": "b3bd",
+              "line": "[F1AP]   GNB_DU_UE_F1AP_ID 46013 associated with UE RNTI b3bd"
+            },
+            {
+              "value": "e3cf",
+              "line": "[F1AP]   Adding a new UE with RNTI e3cf and cu/du ue_f1ap_id 58319"
+            },
+            {
+              "value": "e3cf",
+              "line": "[NR_RRC]   Decoding CCCH: RNTI e3cf, inst 0, payload_size 6"
+            },
+            {
+              "value": "e3cf",
+              "line": "[NR_RRC]   new UE rnti e3cf (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+            },
+            {
+              "value": "e3cf",
+              "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI e3cf"
+            },
+            {
+              "value": "e3cf",
+              "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 58319 associated with UE RNTI e3cf (instance 0)"
+            },
+            {
+              "value": "e3cf",
+              "line": "[F1AP]   GNB_DU_UE_F1AP_ID 58319 associated with UE RNTI e3cf"
+            },
+            {
+              "value": "4535",
+              "line": "[F1AP]   Adding a new UE with RNTI 4535 and cu/du ue_f1ap_id 17717"
+            },
+            {
+              "value": "4535",
+              "line": "[NR_RRC]   Decoding CCCH: RNTI 4535, inst 0, payload_size 6"
+            },
+            {
+              "value": "4535",
+              "line": "[NR_RRC]   new UE rnti 4535 (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+            },
+            {
+              "value": "4535",
+              "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 4535"
+            },
+            {
+              "value": "4535",
+              "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 17717 associated with UE RNTI 4535 (instance 0)"
+            },
+            {
+              "value": "4535",
+              "line": "[F1AP]   GNB_DU_UE_F1AP_ID 17717 associated with UE RNTI 4535"
+            }
+          ]
+        },
+        "relevant_sections": []
+      },
+      "compiler_ground_truth_errors": [],
+      "cu_ip_address": "10.138.77.131",
+      "du_ip_address": "10.138.77.131",
+      "gnb_ip_address": "10.138.77.131",
+      "amf_ip_address": "192.168.70.132",
+      "core_network_machine_ip": "10.138.77.217",
+      "local_s_portc": "501",
+      "local_s_portd": "2152",
+      "remote_s_portc": "500",
+      "remote_s_portd": "2152",
+      "dnn": "oai",
+      "nssai_sst": "1",
+      "nssai_sd": "0xc",
+      "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+      "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+      "log_error_kind_raw": "runtime",
+      "log_error_kind": "runtime",
+      "build_log_mode": false,
+      "runtime_log_mode": true,
+      "other_log_mode": false,
+      "cmake_build_system_mode": false,
+      "dependency_advice_mode": false
+    },
+    "log_error_kind": "runtime",
+    "ground_truth_errors": [],
+    "phase2_analysis": {
+      "suspected_functions": [
+        {
+          "function_name": "select_amf",
+          "file_path": "openairinterface-5g/openair3/NGAP/ngap_gNB_nas_procedures.c",
+          "relevance_score": 0.8,
+          "source": "pattern_hint_direct",
+          "code_snippet": "",
+          "reason": "File is ngap_gNB_nas_procedures.c, directly related to NGAP NAS procedures on gNB, very relevant to AMF association errors."
+        },
+        {
+          "function_name": "ngap_gNB_handle_nas_first_req",
+          "file_path": "openairinterface-5g/openair3/NGAP/ngap_gNB_nas_procedures.c",
+          "relevance_score": 0.8,
+          "source": "pattern_hint_direct",
+          "code_snippet": "",
+          "reason": "Same as 1, same file, likely similar relevance.\n\n4-10: 0.0 - No info, no code, unknown files.\n\nFinal:"
+        },
+        {
+          "function_name": "ngap_gNB_nnsf_select_amf",
+          "file_path": "openairinterface-5g/openair3/NGAP/ngap_gNB_nnsf.c",
+          "relevance_score": 0.4,
+          "source": "pattern_hint_direct",
+          "code_snippet": "",
+          "reason": "File is ngap_gNB_nnsf.c, related to network slice selection, somewhat related but less direct to AMF association error."
+        },
+        {
+          "function_name": "rrc_gNB_generate_RRCReject",
+          "file_path": "openairinterface-5g/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0.7,
+          "source": "error_handling_pattern",
+          "code_snippet": "",
+          "reason": "CRITICAL RRC REJECTION FUNCTION: This function is essential for handling RRC setup failures. When an RRC setup request fails or encounters errors, this function generates and sends an RRCReject message to the UE, properly handling the rejection scenario. For segmentation faults in rrc_handle_RRCSetupRequest, this function should be called in error handling paths to gracefully reject the connection instead of crashing."
+        },
+        {
+          "function_name": "perror",
+          "file_path": "openairinterface-5g/radio/ETHERNET/ethernet_lib.c",
+          "relevance_score": 0.3,
+          "source": "error_handling_pattern",
+          "code_snippet": "",
+          "reason": "No grade provided"
+        },
+        {
+          "function_name": "perror",
+          "file_path": "openairinterface-5g/radio/ETHERNET/eth_udp.c",
+          "relevance_score": 0.3,
+          "source": "error_handling_pattern",
+          "code_snippet": "",
+          "reason": "No grade provided"
+        },
+        {
+          "function_name": "aw2s_oricleanup",
+          "file_path": "openairinterface-5g/radio/AW2SORI/oaiori.c",
+          "relevance_score": 0.3,
+          "source": "error_handling_pattern",
+          "code_snippet": "",
+          "reason": "No grade provided"
+        },
+        {
+          "function_name": "socketError",
+          "file_path": "openairinterface-5g/radio/rfsimulator/simulator.c",
+          "relevance_score": 0.3,
+          "source": "error_handling_pattern",
+          "code_snippet": "",
+          "reason": "No grade provided"
+        },
+        {
+          "function_name": "AssertError",
+          "file_path": "openairinterface-5g/radio/fhi_72/mplane/subscribe-mplane.c",
+          "relevance_score": 0.3,
+          "source": "error_handling_pattern",
+          "code_snippet": "",
+          "reason": "No grade provided"
+        },
+        {
+          "function_name": "AssertError",
+          "file_path": "openairinterface-5g/radio/fhi_72/mplane/rpc-send-recv.c",
+          "relevance_score": 0.3,
+          "source": "error_handling_pattern",
+          "code_snippet": "",
+          "reason": "No grade provided"
+        },
+        {
+          "function_name": "INT24_TO_OCTET_STRING",
+          "file_path": "openairinterface5g-develop\\openair3\\UTILS\\conversions.h",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "INT24_TO_OCTET_STRING(x, aSN);  \\\n    (aSN)->bits_unused = 0;         \\\n} while(0)\n#define INT8_TO_OCTET_STRING(x, aSN)            \\\ndo {                                            \\\n    (aSN)->buf = calloc(1, sizeof(uint8_t));    \\\n    (aSN)->size = 1;                            \\\n    INT8_TO_BUFFER(x, (aSN)->buf);              \\\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "ngap_gNB_encode_pdu",
+          "file_path": "openairinterface5g-develop\\openair3\\NGAP\\ngap_gNB_encoder.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "int ngap_gNB_encode_pdu(NGAP_NGAP_PDU_t *pdu, uint8_t **buffer, uint32_t *len)\n{\n  int ret = -1;\n  DevAssert(pdu != NULL);\n  DevAssert(buffer != NULL);\n  DevAssert(len != NULL);\n  if (asn1_xer_print) {\n    xer_fprint(stdout, &asn_DEF_NGAP_NGAP_PDU, (void *)pdu);\n  }\n  switch (pdu->present) {\n    case NGAP_NGAP_PDU_PR_initiatingMessage:\n      ret = ngap_gNB_encode_initiating(pdu, buffer, len);\n      break;\n    case NGAP_NGAP_PDU_PR_successfulOutcome:\n      ret = ngap_gNB_encode_successfull_outcome(pdu, buffer, len);\n      break;\n    case NGAP_NGAP_PDU_PR_unsuccessfulOutcome:\n      ret = ngap_gNB_encode_unsuccessfull_outcome(pdu, buffer, len);\n      break;\n    default:\n      NGAP_DEBUG(\"Unknown message outcome (%d) or not implemented\", (int)pdu->present);\n      return -1;\n  }\n  ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_NGAP_NGAP_PDU, pdu);\n  return ret;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "NGAP_WARN",
+          "file_path": "openairinterface5g-develop\\openair3\\NGAP\\ngap_gNB_handlers.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "NGAP_WARN(\"Received NG setup failure for AMF... AMF is not ready\\n\");\n  } else {\n    NGAP_ERROR(\"Received NG setup failure for AMF... please check your parameters\\n\");\n  }",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "ngap_gNB_itti_send_sctp_data_req",
+          "file_path": "openairinterface5g-develop\\openair3\\NGAP\\ngap_gNB_itti_messaging.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "void ngap_gNB_itti_send_sctp_data_req(instance_t instance,\n                                      sctp_assoc_t assoc_id,\n                                      uint8_t *buffer,\n                                      uint32_t buffer_length,\n                                      uint16_t stream)\n{\n  MessageDef      *message_p;\n  sctp_data_req_t *sctp_data_req;\n  message_p = itti_alloc_new_message(TASK_NGAP, 0, SCTP_DATA_REQ);\n  sctp_data_req = &message_p->ittiMsg.sctp_data_req;\n  sctp_data_req->assoc_id      = assoc_id;\n  sctp_data_req->buffer        = buffer;\n  sctp_data_req->buffer_length = buffer_length;\n  sctp_data_req->stream = stream;\n  itti_send_msg_to_task(TASK_SCTP, instance, message_p);\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "DevCheck",
+          "file_path": "openairinterface5g-develop\\openair3\\NGAP\\ngap_gNB.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "DevCheck(new_instance->default_drx == ngap_register_gNB->default_drx, new_instance->default_drx, ngap_register_gNB->default_drx, 0);\n  } else {\n    new_instance = calloc(1, sizeof(ngap_gNB_instance_t));\n    DevAssert(new_instance != NULL);\n    RB_INIT(&new_instance->ngap_amf_head);\n    /* Copy usefull parameters */\n    new_instance->instance         = instance;\n    new_instance->gNB_name         = ngap_register_gNB->gNB_name;\n    new_instance->gNB_id           = ngap_register_gNB->gNB_id;\n    new_instance->cell_type        = ngap_register_gNB->cell_type;\n    new_instance->tac              = ngap_register_gNB->tac;\n    memcpy(&new_instance->gNB_ng_ip,\n       &ngap_register_gNB->gnb_ip_address,\n       sizeof(ngap_register_gNB->gnb_ip_address));\n    for (int i = 0; i < ngap_register_gNB->num_plmn; i++) {\n      new_instance->plmn[i].plmn.mcc = ngap_register_gNB->plmn[i].plmn.mcc;\n      new_instance->plmn[i].plmn.mnc = ngap_register_gNB->plmn[i].plmn.mnc;\n      new_instance->plmn[i].plmn.mnc_digit_length = ngap_register_gNB->plmn[i].plmn.mnc_digit_length;\n      new_instance->plmn[i].num_nssai = ngap_register_gNB->plmn[i].num_nssai;\n      memcpy(&new_instance->plmn[i].s_nssai, &ngap_register_gNB->plmn[i].s_nssai, sizeof(ngap_register_gNB->plmn[i].s_nssai));\n    }\n    new_instance->num_plmn         = ngap_register_gNB->num_plmn;\n    new_instance->default_drx      = ngap_register_gNB->default_drx;\n    /* Add the new instance to the list of gNB (meaningfull in virtual mode) */\n    ngap_gNB_insert_new_instance(new_instance);\n    NGAP_INFO(\"Registered new gNB[%ld] and %s gNB id %u\\n\",\n              instance,\n              ngap_register_gNB->cell_type == CELL_MACRO_GNB ? \"macro\" : \"home\",\n              ngap_register_gNB->gNB_id);\n  }",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "OCTET_STRING_fromBuf",
+          "file_path": "openairinterface5g-develop\\openair3\\UTILS\\conversions.h",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "OCTET_STRING_fromBuf(tBCDsTRING, _buf, 3);                       \\\n} while(0)\n#define TBCD_TO_MCC_MNC(tBCDsTRING, mCC, mNC, mNCdIGITlENGTH)    \\\ndo {                                                             \\\n    int mNC_hundred;                                             \\\n    DevAssert((tBCDsTRING)->size == 3);                          \\\n    mNC_hundred = (((tBCDsTRING)->buf[1] & 0xf0) >> 4);          \\\n    if (mNC_hundred == 0xf) {                                    \\\n        mNC_hundred = 0;                                         \\\n        mNCdIGITlENGTH = 2;                                      \\\n    } else {                                                     \\\n            mNCdIGITlENGTH = 3;                                  \\\n    }                                                            \\\n    mCC = (((((tBCDsTRING)->buf[0]) & 0xf0) >> 4) * 10) +        \\\n        ((((tBCDsTRING)->buf[0]) & 0x0f) * 100) +                \\\n        (((tBCDsTRING)->buf[1]) & 0x0f);                         \\\n    mNC = (mNC_hundred * 100) +                                  \\\n        ((((tBCDsTRING)->buf[2]) & 0xf0) >> 4) +                 \\\n        ((((tBCDsTRING)->buf[2]) & 0x0f) * 10);                  \\\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "ngap_gNB_nnsf_select_amf_by_amf_setid",
+          "file_path": "openairinterface5g-develop\\openair3\\NGAP\\ngap_gNB_nnsf.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "ngap_gNB_amf_data_t *ngap_gNB_nnsf_select_amf_by_amf_setid(ngap_gNB_instance_t *instance_p,\n                                                           const ngap_rrc_establishment_cause_t cause,\n                                                           const plmn_id_t selected_plmn_identity,\n                                                           uint8_t amf_setid)\n{\n  struct ngap_gNB_amf_data_s *amf_data_p = NULL;\n  RB_FOREACH(amf_data_p, ngap_amf_map, &instance_p->ngap_amf_head) {\n    struct served_guami_s *guami_p = NULL;\n    if (amf_data_p->state != NGAP_GNB_STATE_CONNECTED) {\n      /* The association between AMF and gNB is not ready for the moment,\n       * go to the next known AMF.\n       */\n      if (amf_data_p->state == NGAP_GNB_OVERLOAD) {\n        /* AMF is overloaded. We have to check the RRC establishment\n         * cause and take decision to the select this AMF depending on\n         * the overload state.\n         */\n        if ((cause == NGAP_RRC_CAUSE_MO_DATA)\n            && (amf_data_p->overload_state == NGAP_OVERLOAD_REJECT_MO_DATA)) {\n          continue;\n        }\n        if ((amf_data_p->overload_state == NGAP_OVERLOAD_REJECT_ALL_SIGNALLING)\n            && ((cause == NGAP_RRC_CAUSE_MO_SIGNALLING) || (cause == NGAP_RRC_CAUSE_MO_DATA))) {\n          continue;\n        }\n        if ((amf_data_p->overload_state == NGAP_OVERLOAD_ONLY_EMERGENCY_AND_MT)\n            && ((cause == NGAP_RRC_CAUSE_MO_SIGNALLING) || (cause == NGAP_RRC_CAUSE_MO_DATA)\n                || (cause == NGAP_RRC_CAUSE_HIGH_PRIO_ACCESS))) {\n          continue;\n        }\n        /* At this point, the RRC establishment can be handled by the AMF\n         * even if it is in overload state.\n         */\n      } else {\n        /* The AMF is not overloaded, association is simply not ready. */\n        continue;\n      }\n    }\n    /* Looking for AMF code matching the one provided by NAS */\n    STAILQ_FOREACH(guami_p, &amf_data_p->served_guami, next) {\n      struct amf_set_id_s      *amf_setid_p = NULL;\n      struct plmn_identity_s   *served_plmn_p = NULL;\n      STAILQ_FOREACH(served_plmn_p, &guami_p->served_plmns, next) {\n        if ((served_plmn_p->mcc == selected_plmn_identity.mcc) && (served_plmn_p->mnc == selected_plmn_identity.mnc)) {\n          break;\n        }\n      }\n      STAILQ_FOREACH(amf_setid_p, &guami_p->amf_set_ids, next) {\n        if (amf_setid_p->amf_set_id == amf_setid) {\n          break;\n        }\n      }\n      /* The AMF matches the parameters provided by the NAS layer ->\n      * the AMF is knwown and the association is ready.\n      * Return the reference to the AMF to use it for this UE.\n      */\n      if (amf_setid_p && served_plmn_p) {\n        return amf_data_p;\n      }\n    }\n  }\n  NGAP_WARN(\"No matching AMF found for PLMN (MCC=%03d MNC=%0*d) and AMF SetID=%u\\n\",\n            selected_plmn_identity.mcc,\n            selected_plmn_identity.mnc_digit_length,\n            selected_plmn_identity.mnc,\n            amf_setid);\n  /* At this point no AMF matches the selected PLMN and AMF code. In this case,\n   * return NULL. That way the RRC layer should know about it and reject RRC\n   * connectivity. */\n  return NULL;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "RB_FOREACH",
+          "file_path": "openairinterface5g-develop\\common\\utils\\telnetsrv\\telnetsrv_bearer.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "RB_FOREACH(ue_context_p, rrc_nr_ue_tree_s, &(RC.nrrrc[0]->rrc_ue_head)) {\n    return ue_context_p->ue_context.rnti;\n  }",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "do_RRCReject",
+          "file_path": "openairinterface5g-develop\\openair2\\RRC\\NR\\MESSAGES\\asn1_msg.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "int do_RRCReject(uint8_t *const buffer)\n{\n    asn_enc_rval_t                                   enc_rval;\n    NR_DL_CCCH_Message_t                             dl_ccch_msg;\n    NR_RRCReject_t                                   *rrcReject;\n    memset((void *)&dl_ccch_msg, 0, sizeof(NR_DL_CCCH_Message_t));\n    dl_ccch_msg.message.present = NR_DL_CCCH_MessageType_PR_c1;\n    dl_ccch_msg.message.choice.c1          = CALLOC(1, sizeof(struct NR_DL_CCCH_MessageType__c1));\n    dl_ccch_msg.message.choice.c1->present = NR_DL_CCCH_MessageType__c1_PR_rrcReject;\n    dl_ccch_msg.message.choice.c1->choice.rrcReject = CALLOC(1,sizeof(NR_RRCReject_t));\n    rrcReject = dl_ccch_msg.message.choice.c1->choice.rrcReject;\n    rrcReject->criticalExtensions.choice.rrcReject           = CALLOC(1, sizeof(struct NR_RRCReject_IEs));\n    rrcReject->criticalExtensions.choice.rrcReject->waitTime = CALLOC(1, sizeof(NR_RejectWaitTime_t));\n    *rrcReject->criticalExtensions.choice.rrcReject->waitTime = 10;\n    rrcReject->criticalExtensions.present = NR_RRCReject__criticalExtensions_PR_rrcReject;\n    if ( LOG_DEBUGFLAG(DEBUG_ASN1) ) {\n        xer_fprint(stdout, &asn_DEF_NR_DL_CCCH_Message, (void *)&dl_ccch_msg);\n    }\n    enc_rval = uper_encode_to_buffer(&asn_DEF_NR_DL_CCCH_Message,\n                                    NULL,\n                                    (void *)&dl_ccch_msg,\n                                    buffer,\n                                    100);\n    AssertFatal(enc_rval.encoded > 0, \"ASN1 message encoding failed (%s, %lu)!\\n\",\n                enc_rval.failed_type->name, enc_rval.encoded);\n    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_NR_DL_CCCH_Message, &dl_ccch_msg);\n    LOG_D(NR_RRC,\"RRCReject Encoded %zd bits (%zd bytes)\\n\",\n            enc_rval.encoded,(enc_rval.encoded+7)/8);\n    return (enc_rval.encoded + 7) / 8;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "rrc_remove_ue",
+          "file_path": "openairinterface5g-develop\\openair2\\RRC\\NR\\rrc_gNB.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "void rrc_remove_ue(gNB_RRC_INST *rrc, rrc_gNB_ue_context_t *ue_context_p)\n{\n  gNB_RRC_UE_t *UE = &ue_context_p->ue_context;\n  /* we call nr_pdcp_remove_UE() in the handler of E1 bearer release, but if we\n   * are in E1, we also need to free the UE in the CU-CP, so call it twice to\n   * cover all cases */\n  nr_pdcp_remove_UE(UE->rrc_ue_id);\n  LOG_I(NR_RRC, \"removed UE CU UE ID %u/RNTI %04x \\n\", UE->rrc_ue_id, UE->rnti);\n  rrc_delete_ue_data(UE);\n  rrc_gNB_remove_ue_context(rrc, ue_context_p);\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "ngap_gNB_nnsf_select_amf_by_guami",
+          "file_path": "openairinterface5g-develop\\openair3\\NGAP\\ngap_gNB_nnsf.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "ngap_gNB_amf_data_t *ngap_gNB_nnsf_select_amf_by_guami(ngap_gNB_instance_t *instance_p,\n                                                       const ngap_rrc_establishment_cause_t cause,\n                                                       const nr_guami_t guami)\n{\n  struct ngap_gNB_amf_data_s *amf_data_p             = NULL;\n  RB_FOREACH(amf_data_p, ngap_amf_map, &instance_p->ngap_amf_head) {\n    struct served_guami_s *guami_p = NULL;\n    if (amf_data_p->state != NGAP_GNB_STATE_CONNECTED) {\n      /* The association between AMF and gNB is not ready for the moment,\n       * go to the next known AMF.\n       */\n      if (amf_data_p->state == NGAP_GNB_OVERLOAD) {\n        /* AMF is overloaded. We have to check the RRC establishment\n         * cause and take decision to the select this AMF depending on\n         * the overload state.\n         */\n        if ((cause == NGAP_RRC_CAUSE_MO_DATA)\n            && (amf_data_p->overload_state == NGAP_OVERLOAD_REJECT_MO_DATA)) {\n          continue;\n        }\n        if ((amf_data_p->overload_state == NGAP_OVERLOAD_REJECT_ALL_SIGNALLING)\n            && ((cause == NGAP_RRC_CAUSE_MO_SIGNALLING) || (cause == NGAP_RRC_CAUSE_MO_DATA))) {\n          continue;\n        }\n        if ((amf_data_p->overload_state == NGAP_OVERLOAD_ONLY_EMERGENCY_AND_MT)\n            && ((cause == NGAP_RRC_CAUSE_MO_SIGNALLING) || (cause == NGAP_RRC_CAUSE_MO_DATA)\n                || (cause == NGAP_RRC_CAUSE_HIGH_PRIO_ACCESS))) {\n          continue;\n        }\n        /* At this point, the RRC establishment can be handled by the AMF\n         * even if it is in overload state.\n         */\n      } else {\n        /* The AMF is not overloaded, association is simply not ready. */\n        continue;\n      }\n    }\n    /* Looking for AMF guami matching the one provided by NAS */\n    STAILQ_FOREACH(guami_p, &amf_data_p->served_guami, next) {\n      struct served_region_id_s *region_id_p = NULL;\n      struct amf_set_id_s       *amf_set_id_p = NULL;\n      struct amf_pointer_s      *pointer_p = NULL;\n      struct plmn_identity_s   *served_plmn_p = NULL;\n      STAILQ_FOREACH(served_plmn_p, &guami_p->served_plmns, next) {\n        if ((served_plmn_p->mcc == guami.mcc) &&\n            (served_plmn_p->mnc == guami.mnc)) {\n          break;\n        }\n      }\n      STAILQ_FOREACH(region_id_p, &guami_p->served_region_ids, next) {\n        if (region_id_p->amf_region_id == guami.amf_region_id) {\n          break;\n        }\n      }\n      STAILQ_FOREACH(amf_set_id_p, &guami_p->amf_set_ids, next) {\n        if (amf_set_id_p->amf_set_id == guami.amf_set_id) {\n          break;\n        }\n      }\n      STAILQ_FOREACH(pointer_p, &guami_p->amf_pointers, next) {\n        if (pointer_p->amf_pointer == guami.amf_pointer) {\n          break;\n        }\n      }\n      /* The AMF matches the parameters provided by the NAS layer ->\n      * the AMF is knwown and the association is ready.\n      * Return the reference to the AMF to use it for this UE.\n      */\n      if ((region_id_p != NULL) &&\n          (amf_set_id_p != NULL) &&\n          (pointer_p != NULL) &&\n          (served_plmn_p != NULL)) {\n        return amf_data_p;\n      }\n    }\n  }\n  NGAP_WARN(\"No matching AMF found for GUAMI (MCC=%03d MNC=%0*d RegionID=%d SetID=%d Pointer=%d)\\n\",\n            guami.mcc,\n            guami.mnc_len,\n            guami.mnc,\n            guami.amf_region_id,\n            guami.amf_set_id,\n            guami.amf_pointer);\n  /* At this point no AMF matches the provided GUAMI. In this case, return\n   * NULL. That way the RRC layer should know about it and reject RRC\n   * connectivity. */\n  return NULL;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "cu_get_f1_ue_data",
+          "file_path": "openairinterface5g-develop\\openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "f1_ue_data_t cu_get_f1_ue_data(uint32_t ue_id)\n{\n  pthread_mutex_lock(&cu2du_mutex);\n  DevAssert(cu2du_ue_mapping != NULL);\n  f1_ue_data_t ued = *get_hashtable_data(cu2du_ue_mapping, ue_id);\n  pthread_mutex_unlock(&cu2du_mutex);\n  return ued;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "NGAP_INFO",
+          "file_path": "openairinterface5g-develop\\openair3\\NGAP\\ngap_gNB_nas_procedures.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "NGAP_INFO(\"UE %d: Chose AMF '%s' (assoc_id %d) through selected PLMN MCC=%03d MNC=%0*d\\n\",\n              msg->gNB_ue_ngap_id,\n              amf->amf_name,\n              amf->assoc_id,\n              msg->plmn.mcc,\n              msg->plmn.mnc_digit_length,\n              msg->plmn.mnc);\n    return amf;\n  } else {\n    // Select the AMF with the highest capacity\n    amf = ngap_gNB_nnsf_select_amf(instance_p, msg->establishment_cause);\n    if (amf) {\n      NGAP_INFO(\"UE %d: Chose AMF '%s' (assoc_id %d) through highest relative capacity\\n\",\n                msg->gNB_ue_ngap_id,\n                amf->amf_name,\n                amf->assoc_id);\n      return amf;\n    }\n  }",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "ngap_gNB_get_instance",
+          "file_path": "openairinterface5g-develop\\openair3\\NGAP\\ngap_gNB_management_procedures.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "ngap_gNB_instance_t *ngap_gNB_get_instance(instance_t instance)\n{\n  ngap_gNB_instance_t *temp = NULL;\n  STAILQ_FOREACH(temp, &ngap_gNB_internal_data.ngap_gNB_instances_head,\n                 ngap_gNB_entries) {\n    if (temp->instance == instance) {\n      /* Matching occurence */\n      return temp;\n    }\n  }\n  return NULL;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "dl_rrc_message_transfer",
+          "file_path": "openairinterface5g-develop\\openair2\\LAYER2\\NR_MAC_gNB\\mac_rrc_dl_handler.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "void dl_rrc_message_transfer(const f1ap_dl_rrc_message_t *dl_rrc)\n{\n  LOG_D(NR_MAC,\n        \"DL RRC Message Transfer with %d bytes for RNTI %04x SRB %d\\n\",\n        dl_rrc->rrc_container_length,\n        dl_rrc->gNB_DU_ue_id,\n        dl_rrc->srb_id);\n  gNB_MAC_INST *mac = RC.nrmac[0];\n  pthread_mutex_lock(&mac->sched_lock);\n  /* check first that the scheduler knows such UE */\n  NR_UE_info_t *UE = find_nr_UE(&mac->UE_info, dl_rrc->gNB_DU_ue_id);\n  UE = UE ? UE : find_ra_UE(&mac->UE_info, dl_rrc->gNB_DU_ue_id);\n  if (UE == NULL) {\n    LOG_E(MAC, \"ERROR: unknown UE with RNTI %04x, ignoring DL RRC Message Transfer\\n\", dl_rrc->gNB_DU_ue_id);\n    pthread_mutex_unlock(&mac->sched_lock);\n    return;\n  }\n  pthread_mutex_unlock(&mac->sched_lock);\n  if (!du_exists_f1_ue_data(dl_rrc->gNB_DU_ue_id)) {\n    LOG_D(NR_MAC, \"No CU UE ID stored for UE RNTI %04x, adding CU UE ID %d\\n\", dl_rrc->gNB_DU_ue_id, dl_rrc->gNB_CU_ue_id);\n    f1_ue_data_t new_ue_data = {.secondary_ue = dl_rrc->gNB_CU_ue_id};\n    bool success = du_add_f1_ue_data(dl_rrc->gNB_DU_ue_id, &new_ue_data);\n    DevAssert(success);\n  }\n  /* if we get the old-gNB-DU-UE-ID, this means there is a reestablishment\n   * ongoing. */\n  if (dl_rrc->old_gNB_DU_ue_id != NULL) {\n    AssertFatal(*dl_rrc->old_gNB_DU_ue_id != dl_rrc->gNB_DU_ue_id,\n                \"logic bug: current and old gNB DU UE ID cannot be the same\\n\");\n    /* 38.401 says: \"Find UE context based on old gNB-DU UE F1AP ID, replace\n     * old C-RNTI/PCI with new C-RNTI/PCI\". Below, we do the inverse: we keep\n     * the new UE context (with new C-RNTI), but set up everything to reuse the\n     * old config. */\n    NR_UE_info_t *oldUE = find_nr_UE(&mac->UE_info, *dl_rrc->old_gNB_DU_ue_id);\n    AssertFatal(oldUE, \"CU claims we should know UE %04x, but we don't\\n\", *dl_rrc->old_gNB_DU_ue_id);\n    pthread_mutex_lock(&mac->sched_lock);\n    uid_t temp_uid = UE->uid;\n    UE->uid = oldUE->uid;\n    oldUE->uid = temp_uid;\n    for (int i = 1; i < seq_arr_size(&oldUE->UE_sched_ctrl.lc_config); ++i) {\n      const nr_lc_config_t *c = seq_arr_at(&oldUE->UE_sched_ctrl.lc_config, i);\n      nr_lc_config_t new = *c;\n      new.suspended = true;\n      nr_mac_add_lcid(&UE->UE_sched_ctrl, &new);\n    }\n    ASN_STRUCT_FREE(asn_DEF_NR_CellGroupConfig, UE->CellGroup);\n    UE->CellGroup = oldUE->CellGroup;\n    oldUE->CellGroup = NULL;\n    UE->mac_stats = oldUE->mac_stats;\n    /* 38.331 5.3.7.2 says that the UE releases the spCellConfig, so we drop it\n     * from the current configuration. It will be reapplied when the\n     * reconfiguration has succeeded (indicated by the CU) */\n    UE->reconfigSpCellConfig = UE->CellGroup->spCellConfig;\n    UE->CellGroup->spCellConfig = NULL;\n    mac_remove_nr_ue(mac, *dl_rrc->old_gNB_DU_ue_id);\n    pthread_mutex_unlock(&mac->sched_lock);\n    nr_rlc_remove_ue(dl_rrc->gNB_DU_ue_id);\n    nr_rlc_update_id(*dl_rrc->old_gNB_DU_ue_id, dl_rrc->gNB_DU_ue_id);\n    /* 38.331 clause 5.3.7.4: apply the specified configuration defined in 9.2.1 for SRB1 */\n    nr_rlc_reconfigure_entity(dl_rrc->gNB_DU_ue_id, 1, NULL);\n    instance_t f1inst = get_f1_gtp_instance();\n    if (f1inst >= 0) // we actually use F1-U\n      gtpv1u_update_ue_id(f1inst, *dl_rrc->old_gNB_DU_ue_id, dl_rrc->gNB_DU_ue_id);\n  }\n  /* the DU ue id is the RNTI */\n  nr_rlc_srb_recv_sdu(dl_rrc->gNB_DU_ue_id, dl_rrc->srb_id, dl_rrc->rrc_container, dl_rrc->rrc_container_length);\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "ngap_store_ue_context",
+          "file_path": "openairinterface5g-develop\\openair3\\NGAP\\ngap_gNB_ue_context.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "void ngap_store_ue_context(const ngap_gNB_ue_context_t *ue)\n{\n  LOG_I(NGAP, \"Create UE context (ID %d) for AMF '%s' (assoc_id %d)\\n\", ue->gNB_ue_ngap_id, ue->amf_ref->amf_name, ue->amf_ref->assoc_id);\n  ngap_gNB_ue_context_t *ue_desc_p = calloc_or_fail(1, sizeof(*ue_desc_p));\n  *ue_desc_p = *ue;\n  if (RB_INSERT(ngap_ue_map, &ngap_ue_head, ue_desc_p))\n    LOG_E(NGAP, \"Bug in UE uniq number allocation %u, we try to add a existing UE\\n\", ue_desc_p->gNB_ue_ngap_id);\n  return;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "nr_pdcp_remove_UE",
+          "file_path": "openair2\\LAYER2\\nr_pdcp\\nr_pdcp_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_pdcp_remove_UE(ue_id_t ue_id)\n{\n  nr_pdcp_manager_lock(nr_pdcp_ue_manager);\n  nr_pdcp_manager_remove_ue(nr_pdcp_ue_manager, ue_id);\n  nr_pdcp_manager_unlock(nr_pdcp_ue_manager);\n}",
+          "reason": "KG evidence: function calls 'rrc_remove_ue' -> called function expands execution flow."
+        },
+        {
+          "function_name": "rrc_delete_ue_data",
+          "file_path": "openair2\\RRC\\NR\\rrc_gNB.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static void rrc_delete_ue_data(gNB_RRC_UE_t *UE)\n{\n  ASN_STRUCT_FREE(asn_DEF_NR_UE_NR_Capability, UE->UE_Capability_nr);\n  ASN_STRUCT_FREE(asn_DEF_NR_CellGroupConfig, UE->masterCellGroup);\n  ASN_STRUCT_FREE(asn_DEF_NR_MeasResults, UE->measResults);\n  FREE_AND_ZERO_BYTE_ARRAY(UE->ue_cap_buffer);\n  free_MeasConfig(UE->measConfig);\n}",
+          "reason": "KG evidence: function calls 'rrc_remove_ue' -> called function expands execution flow."
+        },
+        {
+          "function_name": "rrc_gNB_remove_ue_context",
+          "file_path": "openair2\\RRC\\NR\\rrc_gNB_UE_context.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void rrc_gNB_remove_ue_context(gNB_RRC_INST *rrc_instance_pP, rrc_gNB_ue_context_t *ue_context_pP)\n//------------------------------------------------------------------------------\n{\n  if (rrc_instance_pP == NULL) {\n    LOG_E(NR_RRC, \" Bad RRC instance\\n\");\n    return;\n  }\n  if (ue_context_pP == NULL) {\n    LOG_E(NR_RRC, \"Trying to free a NULL UE context\\n\");\n    return;\n  }\n  LOG_UE_EVENT(&ue_context_pP->ue_context, \"Remove UE context\\n\");\n  RB_REMOVE(rrc_nr_ue_tree_s, &rrc_instance_pP->rrc_ue_head, ue_context_pP);\n  uid_linear_allocator_free(&rrc_instance_pP->uid_allocator, ue_context_pP->ue_context.rrc_ue_id - 1);\n  cu_remove_f1_ue_data(ue_context_pP->ue_context.rrc_ue_id);\n  rrc_gNB_free_mem_ue_context(ue_context_pP);\n}",
+          "reason": "KG evidence: function calls 'rrc_remove_ue' -> called function expands execution flow."
+        },
+        {
+          "function_name": "calloc_or_fail",
+          "file_path": "common\\utils\\utils.h",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static inline void *calloc_or_fail(size_t nmemb, size_t size)\n{\n  void *ptr = calloc(nmemb, size);\n  if (ptr == NULL) {\n    fprintf(stderr, \"Failed to calloc() %zu elements of %zu bytes: out of memory\", nmemb, size);\n    abort();\n  }\n  return ptr;\n}",
+          "reason": "KG evidence: function calls 'ngap_store_ue_context' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_update_id",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool nr_rlc_update_id(int from_id, int to_id)\n{\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_ue_t *ue = nr_rlc_manager_get_ue(nr_rlc_ue_manager, from_id);\n  if (ue == NULL) {\n    nr_rlc_manager_unlock(nr_rlc_ue_manager);\n    LOG_E(RLC, \"Cannot find RLC entity for UE %d\\n\", from_id);\n    return false;\n  }\n  ue->ue_id = to_id;\n  LOG_I(RLC, \"Update old UE ID %d context to ID %d\\n\", from_id, to_id);\n  /* re-establish RLC for SRB1: according to 5.3.7.4 of TS 38.331 */\n  if (ue->srb[0]) {\n    LOG_I(RLC, \"Re-establish RLC for SRB 1\\n\");\n    ue->srb[0]->reestablishment(ue->srb[0]);\n  }\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n  return true;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "du_add_f1_ue_data",
+          "file_path": "openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool du_add_f1_ue_data(uint32_t ue_id, const f1_ue_data_t *data)\n{\n  pthread_mutex_lock(&du2cu_mutex);\n  DevAssert(du2cu_ue_mapping != NULL);\n  uint64_t key = ue_id;\n  if (hashtable_is_key_exists(du2cu_ue_mapping, key) == HASH_TABLE_OK) {\n    pthread_mutex_unlock(&du2cu_mutex);\n    return false;\n  }\n  bool ret = add_hashtable_data(du2cu_ue_mapping, key, data);\n  pthread_mutex_unlock(&du2cu_mutex);\n  return ret;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "find_ra_UE",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "NR_UE_info_t *find_ra_UE(NR_UEs_t *UEs, rnti_t rntiP)\n{\n  UE_iterator(UEs->access_ue_list, UE) {\n    if (UE->rnti == rntiP) {\n      LOG_D(NR_MAC,\"Search and found rnti: %04x\\n\", rntiP);\n      return UE;\n    }\n  }\n  return NULL;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "seq_arr_size",
+          "file_path": "common\\utils\\ds\\seq_arr.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "size_t seq_arr_size(seq_arr_t const* arr)\n{\n  assert(arr != NULL);\n  return arr->size;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "seq_arr_at",
+          "file_path": "common\\utils\\ds\\seq_arr.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void* seq_arr_at(seq_arr_t const* arr, uint32_t pos)\n{\n  assert(arr != NULL);\n  assert(arr->data != NULL);\n  assert(pos < arr->size);\n  return arr->data + pos * arr->elt_size;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_remove_ue",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_rlc_remove_ue(int ue_id)\n{\n  LOG_W(RLC, \"Remove UE %d\\n\", ue_id);\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_manager_remove_ue(nr_rlc_ue_manager, ue_id);\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "find_nr_UE",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "NR_UE_info_t *find_nr_UE(NR_UEs_t *UEs, rnti_t rntiP)\n{\n  UE_iterator(UEs->connected_ue_list, UE) {\n    if (UE->rnti == rntiP) {\n      LOG_D(NR_MAC,\"Search and found rnti: %04x\\n\", rntiP);\n      return UE;\n    }\n  }\n  return NULL;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "mac_remove_nr_ue",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void mac_remove_nr_ue(gNB_MAC_INST *nr_mac, rnti_t rnti)\n{\n  /* already mutex protected */\n  NR_SCHED_ENSURE_LOCKED(&nr_mac->sched_lock);\n  NR_UEs_t *UE_info = &nr_mac->UE_info;\n  NR_SCHED_LOCK(&UE_info->mutex);\n  NR_UE_info_t *UE = remove_UE_from_list(MAX_MOBILES_PER_GNB + 1, UE_info->connected_ue_list, rnti);\n  NR_SCHED_UNLOCK(&UE_info->mutex);\n  if (UE)\n    delete_nr_ue_data(UE, nr_mac->common_channels, &UE_info->uid_allocator);\n  else\n    nr_release_ra_UE(nr_mac, rnti);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_mac_add_lcid",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool nr_mac_add_lcid(NR_UE_sched_ctrl_t* sched_ctrl, const nr_lc_config_t *c)\n{\n  elm_arr_t elm = find_if(&sched_ctrl->lc_config, (void *) c, eq_lcid_config);\n  if (elm.found) {\n    LOG_I(NR_MAC, \"cannot add LCID %d: already present, updating configuration\\n\", c->lcid);\n    nr_lc_config_t *exist = (nr_lc_config_t *)elm.it;\n    *exist = *c;\n  } else {\n    LOG_D(NR_MAC, \"Add LCID %d\\n\", c->lcid);\n    seq_arr_push_back(&sched_ctrl->lc_config, (void*) c, sizeof(*c));\n  }\n  void *base = seq_arr_front(&sched_ctrl->lc_config);\n  size_t nmemb = seq_arr_size(&sched_ctrl->lc_config);\n  size_t size = sizeof(*c);\n  qsort(base, nmemb, size, cmp_lc_config);\n  return true;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_reconfigure_entity",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_rlc_reconfigure_entity(int ue_id, int lc_id, NR_RLC_Config_t *rlc_Config)\n{\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_ue_t *ue = nr_rlc_manager_get_ue(nr_rlc_ue_manager, ue_id);\n  if (ue == NULL)\n    LOG_E(RLC, \"RLC instance for the given UE was not found \\n\");\n  nr_rlc_entity_t *rb = get_rlc_entity_from_lcid(ue, lc_id);\n  if (rlc_Config) {\n    AssertFatal(rb->stats.mode != NR_RLC_TM, \"Cannot reconfigure TM mode\\n\");\n    if (rb->stats.mode == NR_RLC_AM) {\n      AssertFatal(rlc_Config->present == NR_RLC_Config_PR_am, \"Invalid RLC Config type\\n\");\n      struct NR_RLC_Config__am *am = rlc_Config->choice.am;\n      int t_reassembly = decode_t_reassembly(am->dl_AM_RLC.t_Reassembly);\n      int t_status_prohibit = decode_t_status_prohibit(am->dl_AM_RLC.t_StatusProhibit);\n      int t_poll_retransmit = decode_t_poll_retransmit(am->ul_AM_RLC.t_PollRetransmit);\n      int poll_pdu = decode_poll_pdu(am->ul_AM_RLC.pollPDU);\n      int poll_byte = decode_poll_byte(am->ul_AM_RLC.pollByte);\n      int max_retx_threshold = decode_max_retx_threshold(am->ul_AM_RLC.maxRetxThreshold);\n      int _sn_field_length;\n      int *sn_field_length = NULL;\n      if (am->dl_AM_RLC.sn_FieldLength) {\n        AssertFatal(am->ul_AM_RLC.sn_FieldLength != NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n        if (am->ul_AM_RLC.sn_FieldLength) {\n          AssertFatal(*am->dl_AM_RLC.sn_FieldLength == *am->ul_AM_RLC.sn_FieldLength,\n                      \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n          _sn_field_length = decode_sn_field_length_am(*am->dl_AM_RLC.sn_FieldLength);\n          sn_field_length = &_sn_field_length;\n        }\n      } else\n        AssertFatal(am->ul_AM_RLC.sn_FieldLength == NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n      nr_rlc_entity_am_reconfigure(rb,\n                                   t_poll_retransmit,\n                                   t_reassembly,\n                                   t_status_prohibit,\n                                   poll_pdu,\n                                   poll_byte,\n                                   max_retx_threshold,\n                                   sn_field_length);\n    } else { // UM\n      AssertFatal(rlc_Config->present == NR_RLC_Config_PR_um_Bi_Directional, \"Invalid RLC Config type\\n\");\n      struct NR_RLC_Config__um_Bi_Directional *um = rlc_Config->choice.um_Bi_Directional;\n      int t_reassembly = decode_t_reassembly(um->dl_UM_RLC.t_Reassembly);\n      int _sn_field_length;\n      int *sn_field_length = NULL;\n      if (um->dl_UM_RLC.sn_FieldLength) {\n        AssertFatal(um->ul_UM_RLC.sn_FieldLength != NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n        if (um->ul_UM_RLC.sn_FieldLength) {\n          AssertFatal(*um->dl_UM_RLC.sn_FieldLength == *um->ul_UM_RLC.sn_FieldLength,\n                      \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n          _sn_field_length = decode_sn_field_length_um(*um->dl_UM_RLC.sn_FieldLength);\n          sn_field_length = &_sn_field_length;\n        }\n      } else\n        AssertFatal(um->ul_UM_RLC.sn_FieldLength == NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n      nr_rlc_entity_um_reconfigure(rb, t_reassembly, sn_field_length);\n    }\n  } else {\n    AssertFatal(rb->stats.mode == NR_RLC_AM, \"Invalid RLC mode\\n\");\n    // default values as in 9.2.1 of 38.331\n    int sn_field_length = 12;\n    nr_rlc_entity_am_reconfigure(rb,\n                                 45, //t_poll_retransmit\n                                 35, //t_reassembly\n                                 0, //t_status_prohibit\n                                 -1, //poll_pdu\n                                 -1, //poll_byte\n                                 8, //max_retx_threshold\n                                 &sn_field_length);\n  }\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "get_f1_gtp_instance",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\mac_rrc_dl_handler.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static instance_t get_f1_gtp_instance(void)\n{\n  const f1ap_cudu_inst_t *inst = getCxt(0);\n  if (!inst)\n    return -1; // means no F1\n  return inst->gtpInst;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "du_exists_f1_ue_data",
+          "file_path": "openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool du_exists_f1_ue_data(uint32_t ue_id)\n{\n  pthread_mutex_lock(&du2cu_mutex);\n  DevAssert(du2cu_ue_mapping != NULL);\n  uint64_t key = ue_id;\n  hashtable_rc_t ret = hashtable_is_key_exists(du2cu_ue_mapping, key);\n  pthread_mutex_unlock(&du2cu_mutex);\n  return ret == HASH_TABLE_OK;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_srb_recv_sdu",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_rlc_srb_recv_sdu(const int ue_id, const logical_chan_id_t channel_id, unsigned char *buf, int size)\n{\n  T(T_ENB_RLC_DL, T_INT(0), T_INT(ue_id), T_INT(0), T_INT(size));\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_ue_t *ue = nr_rlc_manager_get_ue(nr_rlc_ue_manager, ue_id);\n  nr_rlc_entity_t *rb = NULL;\n  if (channel_id == 0) {\n    rb = ue->srb0;\n  } else {\n    rb = ue->srb[channel_id - 1];\n  }\n  AssertFatal(rb != NULL, \"SDU sent to unknown RB UE-ID %d SRB %d\\n\", ue_id, channel_id);\n  rb->set_time(rb, get_nr_rlc_current_time());\n  rb->recv_sdu(rb, (char *)buf, size, -1);\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "get_hashtable_data",
+          "file_path": "openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static f1_ue_data_t *get_hashtable_data(hash_table_t *ht, uint64_t ue_id)\n{\n  void *data = NULL;\n  hashtable_rc_t ret = hashtable_get(ht, ue_id, &data);\n  AssertFatal(ret == HASH_TABLE_OK && data != NULL, \"element for ue_id %ld not found\\n\", ue_id);\n  return data;\n}",
+          "reason": "KG evidence: function calls 'cu_get_f1_ue_data' -> called function expands execution flow."
+        },
+        {
+          "function_name": "ngap_gNB_encode_initiating",
+          "file_path": "openair3\\NGAP\\ngap_gNB_encoder.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static inline int ngap_gNB_encode_initiating(NGAP_NGAP_PDU_t *pdu, uint8_t **buffer, uint32_t *len)\n{\n  DevAssert(pdu != NULL);\n  const NGAP_ProcedureCode_t tmp[] = {NGAP_ProcedureCode_id_NGSetup,\n                                      NGAP_ProcedureCode_id_UplinkNASTransport,\n                                      NGAP_ProcedureCode_id_UERadioCapabilityInfoIndication,\n                                      NGAP_ProcedureCode_id_InitialUEMessage,\n                                      NGAP_ProcedureCode_id_NASNonDeliveryIndication,\n                                      NGAP_ProcedureCode_id_UEContextReleaseRequest,\n                                      NGAP_ProcedureCode_id_PathSwitchRequest,\n                                      NGAP_ProcedureCode_id_PDUSessionResourceModifyIndication};\n  int i;\n  for (i = 0; i < sizeofArray(tmp); i++)\n    if (pdu->choice.initiatingMessage->procedureCode == tmp[i])\n      break;\n  if (i == sizeofArray(tmp)) {\n    NGAP_DEBUG(\"Unknown procedure ID (%d) for initiating message\\n\", (int)pdu->choice.initiatingMessage->procedureCode);\n    return -1;\n  }\n  asn_encode_to_new_buffer_result_t res = asn_encode_to_new_buffer(NULL, ATS_ALIGNED_CANONICAL_PER, &asn_DEF_NGAP_NGAP_PDU, pdu);\n  AssertFatal(res.result.encoded > 0, \"failed to encode NGAP msg\\n\");\n  *buffer = res.buffer;\n  *len = res.result.encoded;\n  return 0;\n}",
+          "reason": "KG evidence: function calls 'ngap_gNB_encode_pdu' -> called function expands execution flow."
+        },
+        {
+          "function_name": "ngap_gNB_encode_unsuccessfull_outcome",
+          "file_path": "openair3\\NGAP\\ngap_gNB_encoder.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static inline int ngap_gNB_encode_unsuccessfull_outcome(NGAP_NGAP_PDU_t *pdu, uint8_t **buffer, uint32_t *len)\n{\n  DevAssert(pdu != NULL);\n  if (pdu->choice.unsuccessfulOutcome->procedureCode != NGAP_ProcedureCode_id_InitialContextSetup) {\n    NGAP_DEBUG(\"Unknown procedure ID (%d) for unsuccessfull outcome message\\n\", (int)pdu->choice.unsuccessfulOutcome->procedureCode);\n    return -1;\n  }\n  asn_encode_to_new_buffer_result_t res = asn_encode_to_new_buffer(NULL, ATS_ALIGNED_CANONICAL_PER, &asn_DEF_NGAP_NGAP_PDU, pdu);\n  AssertFatal(res.result.encoded > 0, \"failed to encode NGAP msg\\n\");\n  *buffer = res.buffer;\n  *len = res.result.encoded;\n  return 0;\n}",
+          "reason": "KG evidence: function calls 'ngap_gNB_encode_pdu' -> called function expands execution flow."
+        },
+        {
+          "function_name": "ngap_gNB_encode_successfull_outcome",
+          "file_path": "openair3\\NGAP\\ngap_gNB_encoder.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static inline int ngap_gNB_encode_successfull_outcome(NGAP_NGAP_PDU_t *pdu, uint8_t **buffer, uint32_t *len)\n{\n  DevAssert(pdu != NULL);\n  const NGAP_ProcedureCode_t tmp[] = {NGAP_ProcedureCode_id_InitialContextSetup,\n                                      NGAP_ProcedureCode_id_UEContextRelease,\n                                      NGAP_ProcedureCode_id_PDUSessionResourceSetup,\n                                      NGAP_ProcedureCode_id_PDUSessionResourceModify,\n                                      NGAP_ProcedureCode_id_PDUSessionResourceRelease};\n  int i;\n  for (i = 0; i < sizeofArray(tmp); i++)\n    if (pdu->choice.successfulOutcome->procedureCode == tmp[i])\n      break;\n  if (i == sizeofArray(tmp)) {\n    NGAP_WARN(\"Unknown procedure ID (%ld) for successfull outcome message\\n\", pdu->choice.successfulOutcome->procedureCode);\n    return -1;\n  }\n  asn_encode_to_new_buffer_result_t res = asn_encode_to_new_buffer(NULL, ATS_ALIGNED_CANONICAL_PER, &asn_DEF_NGAP_NGAP_PDU, pdu);\n  AssertFatal(res.result.encoded > 0, \"failed to encode NGAP msg\\n\");\n  *buffer = res.buffer;\n  *len = res.result.encoded;\n  return 0;\n}",
+          "reason": "KG evidence: function calls 'ngap_gNB_encode_pdu' -> called function expands execution flow."
+        },
+        {
+          "function_name": "ngap_gNB_nnsf_select_amf_by_plmn_id",
+          "file_path": "openair3\\NGAP\\ngap_gNB_nnsf.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "",
+          "reason": "KG evidence: function calls 'select_amf' -> called function expands execution flow."
+        },
+        {
+          "function_name": "get_single_ue_rnti",
+          "file_path": "common\\utils\\telnetsrv\\telnetsrv_bearer.c",
+          "relevance_score": 0.45,
+          "source": "kg_expansion_shared_struct_variable",
+          "code_snippet": "static int get_single_ue_rnti(void)\n{\n  rrc_gNB_ue_context_t *ue_context_p = NULL;\n  RB_FOREACH(ue_context_p, rrc_nr_ue_tree_s, &(RC.nrrrc[0]->rrc_ue_head)) {\n    return ue_context_p->ue_context.rnti;\n  }\n  return -1;\n}",
+          "reason": "KG evidence: shares struct/variable usage with candidate-related code (struct/variable -> other using functions)."
+        }
+      ],
+      "suspected_configs": [
+        {
+          "param_name": "amf_ip_address",
+          "file_path": "targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+          "param_value": "({ ipv4 = \"192.168.70.130\"; })",
+          "relevance_score": 0.9,
+          "source": "context_aware_retrieval",
+          "config_context": "   33:         SCTP_OUTSTREAMS = 2;\n   34:     };\n   35: \n   36: \n   37:     ////////// AMF parameters:\n   38: amf_ip_address = ({ ipv4 = \"192.168.70.130\"; });  <-- TARGET PARAMETER\n   39: \n   40:     NETWORK_INTERFACES :\n   41:     {\n   42: \n   43: GNB_IPV4_ADDRESS_FOR_NG_AMF = \"10.138.77.130\";",
+          "line_number": 38,
+          "reason": "No reason provided"
+        },
+        {
+          "param_name": "GNB_IPV4_ADDRESS_FOR_NG_AMF",
+          "file_path": "targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+          "param_value": "\"10.138.77.130\"",
+          "relevance_score": 0.8,
+          "source": "context_aware_retrieval",
+          "config_context": "   38: amf_ip_address = ({ ipv4 = \"192.168.70.130\"; });\n   39: \n   40:     NETWORK_INTERFACES :\n   41:     {\n   42: \n   43: GNB_IPV4_ADDRESS_FOR_NG_AMF = \"10.138.77.130\";  <-- TARGET PARAMETER\n   44:         GNB_IPV4_ADDRESS_FOR_NGU                 = \"192.168.18.207\";\n   45:         GNB_PORT_FOR_S1U                         = 2152; # Spec 2152\n   46:     };\n   47:   }\n   48: );",
+          "line_number": 43,
+          "reason": "No reason provided"
+        },
+        {
+          "param_name": "gNB_ID",
+          "file_path": "targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+          "param_value": "0xe00",
+          "relevance_score": 0.6,
+          "source": "context_aware_retrieval",
+          "config_context": "    4: \n    5: gNBs =\n    6: (\n    7:  {\n    8:     ////////// Identification parameters:\n    9:     gNB_ID = 0xe00;  <-- TARGET PARAMETER\n   10: \n   11: #     cell_type =  \"CELL_MACRO_GNB\";\n   12: \n   13:     gNB_name  =  \"gNB-Eurecom-CU\";\n   14: ",
+          "line_number": 9,
+          "reason": "No reason provided"
+        },
+        {
+          "param_name": "gNB_name",
+          "file_path": "targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+          "param_value": "\"gNB-Eurecom-CU\"",
+          "relevance_score": 0.5,
+          "source": "context_aware_retrieval",
+          "config_context": "    8:     ////////// Identification parameters:\n    9:     gNB_ID = 0xe00;\n   10: \n   11: #     cell_type =  \"CELL_MACRO_GNB\";\n   12: \n   13:     gNB_name  =  \"gNB-Eurecom-CU\";  <-- TARGET PARAMETER\n   14: \n   15:     // Tracking area code, 0x0000 and 0xfffe are reserved values\n   16:     tracking_area_code  =  1;\n   17:     plmn_list = ({ mcc = 208; mnc = 99; mnc_length = 2; snssaiList = ({ sst = 1 }) });\n   18: ",
+          "line_number": 13,
+          "reason": "No reason provided"
+        },
+        {
+          "param_name": "Active_gNBs",
+          "file_path": "targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+          "param_value": "( \"gNB-Eurecom-CU\")",
+          "relevance_score": 0.4,
+          "source": "context_aware_retrieval",
+          "config_context": "    1: Active_gNBs = ( \"gNB-Eurecom-CU\");  <-- TARGET PARAMETER\n    2: # Asn1_verbosity, choice in: none, info, annoying\n    3: Asn1_verbosity = \"none\";\n    4: \n    5: gNBs =\n    6: (",
+          "line_number": 1,
+          "reason": "No reason provided"
+        },
+        {
+          "param_name": "GNB_PORT_FOR_S1U",
+          "file_path": "targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+          "param_value": "2152; # Spec 2152",
+          "relevance_score": 0.3,
+          "source": "context_aware_retrieval",
+          "config_context": "   40:     NETWORK_INTERFACES :\n   41:     {\n   42: \n   43: GNB_IPV4_ADDRESS_FOR_NG_AMF = \"10.138.77.130\";\n   44:         GNB_IPV4_ADDRESS_FOR_NGU                 = \"192.168.18.207\";\n   45:         GNB_PORT_FOR_S1U                         = 2152; # Spec 2152  <-- TARGET PARAMETER\n   46:     };\n   47:   }\n   48: );\n   49: \n   50: security = {",
+          "line_number": 45,
+          "reason": "No reason provided"
+        },
+        {
+          "param_name": "drb_integrity",
+          "file_path": "targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+          "param_value": "\"no\"",
+          "relevance_score": 0.1,
+          "source": "context_aware_retrieval",
+          "config_context": "   59:   integrity_algorithms = ( \"nia2\", \"nia0\" );\n   60: \n   61:   # setting 'drb_ciphering' to \"no\" disables ciphering for DRBs, no matter\n   62:   # what 'ciphering_algorithms' configures; same thing for 'drb_integrity'\n   63:   drb_ciphering = \"yes\";\n   64:   drb_integrity = \"no\";  <-- TARGET PARAMETER\n   65: };\n   66:      log_config :\n   67:      {\n   68:        global_log_level                      =\"info\";\n   69:        hw_log_level                          =\"info\";",
+          "line_number": 64,
+          "reason": "No reason provided"
+        }
+      ],
+      "deployment_context": {
+        "role": "CU",
+        "active_configs": [
+          {
+            "missing": "cu_simnovus.conf",
+            "used": "./openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+            "reason": "Original file not found, using cu_gnb.conf"
+          },
+          {
+            "missing": "../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+            "used": "./openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+            "reason": "Original file not found, using cu_gnb.conf"
+          }
+        ],
+        "network_params": {
+          "gnb_ipv4": "10.138.77.131",
+          "amf_ipv4": null,
+          "ngap_port": null,
+          "assoc_state": "DISCONNECTED"
+        },
+        "log_anchors": [
+          "[NGAP]   No AMF is associated to the gNB",
+          "[ITTI]   Starting itti queue: TASK_NGAP as task 17",
+          "[ITTI]   Starting itti queue: TASK_SCTP as task 24",
+          "[ITTI]   Created Posix thread TASK_SCTP",
+          "[NGAP]   Starting NGAP layer",
+          "[ITTI]   Created Posix thread TASK_NGAP",
+          "[GNB_APP]   F1AP: gNB_CU_id[0] 0",
+          "[GNB_APP]   F1AP: gNB_CU_name[0] gNB-Eurecom-CU",
+          "[LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+          "[LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+          "[NGAP]   Registered new gNB[0] and macro gNB id 0",
+          "[NGAP]   [gNB 0] check the amf registration state",
+          "[F1AP]   Starting F1AP at CU",
+          "[F1AP]   F1AP_CU_SCTP_REQ(create socket)",
+          "[F1AP]   CU Task Received SCTP_NEW_ASSOCIATION_IND for instance 0",
+          "[F1AP]   CU Task Received SCTP_NEW_ASSOCIATION_RESP for instance 0",
+          "[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0",
+          "[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_F1Setup",
+          "[F1AP]   Calling handler with instance 0",
+          "[F1AP]   Received Cell in 1 context"
+        ],
+        "detailed_log_context": {
+          "total_lines": 292,
+          "error_sequences": [
+            {
+              "error_line": "[LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "line_number": 98,
+              "context": [
+                "     CMDLINE: \"./nr-softmodem\" \"-O\" \"../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf\" \"--sa\" \"--gNBs.[0].force_256qam_off\"",
+                "     [CONFIG] get parameters from libconfig ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf , debug flags: 0x00000000",
+                "     [LIBCONFIG] Path for include directive set to: ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF",
+                "     [CONFIG] function config_libconfig_init returned 0",
+                "     [CONFIG] config module libconfig loaded",
+                " >>> [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+              "line_number": 99,
+              "context": [
+                "     [CONFIG] get parameters from libconfig ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf , debug flags: 0x00000000",
+                "     [LIBCONFIG] Path for include directive set to: ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF",
+                "     [CONFIG] function config_libconfig_init returned 0",
+                "     [CONFIG] config module libconfig loaded",
+                "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                " >>> [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+              "line_number": 100,
+              "context": [
+                "     [LIBCONFIG] Path for include directive set to: ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF",
+                "     [CONFIG] function config_libconfig_init returned 0",
+                "     [CONFIG] config module libconfig loaded",
+                "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+                " >>> [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     Reading in command-line options"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "line_number": 101,
+              "context": [
+                "     [CONFIG] function config_libconfig_init returned 0",
+                "     [CONFIG] config module libconfig loaded",
+                "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+                " >>> [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     Reading in command-line options",
+                "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "line_number": 102,
+              "context": [
+                "     [CONFIG] config module libconfig loaded",
+                "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                " >>> [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     Reading in command-line options",
+                "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+                "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "line_number": 103,
+              "context": [
+                "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                " >>> [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     Reading in command-line options",
+                "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+                "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              "line_number": 106,
+              "context": [
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     Reading in command-line options",
+                " >>> [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+                "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] list MACRLCs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list RUs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+              "line_number": 107,
+              "context": [
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     Reading in command-line options",
+                "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+                " >>> [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] list MACRLCs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list RUs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list THREAD_STRUCT not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "line_number": 108,
+              "context": [
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     Reading in command-line options",
+                "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+                "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+                " >>> [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] list MACRLCs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list RUs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list THREAD_STRUCT not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [CONFIG] parallel_conf is set to 2"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+              "line_number": 116,
+              "context": [
+                "     [LIBCONFIG] list RUs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list THREAD_STRUCT not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [CONFIG] parallel_conf is set to 2",
+                "     [CONFIG] worker_conf is set to 1",
+                "     Configuration: nb_rrc_inst 1, nb_nr_L1_inst 0, nb_ru 0",
+                " >>> [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+                "     configuring for RAU/RRU",
+                "     CPU Freq is 2.419351",
+                "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              "line_number": 119,
+              "context": [
+                "     [CONFIG] worker_conf is set to 1",
+                "     Configuration: nb_rrc_inst 1, nb_nr_L1_inst 0, nb_ru 0",
+                "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+                "     configuring for RAU/RRU",
+                "     CPU Freq is 2.419351",
+                " >>> [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "line_number": 120,
+              "context": [
+                "     Configuration: nb_rrc_inst 1, nb_nr_L1_inst 0, nb_ru 0",
+                "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+                "     configuring for RAU/RRU",
+                "     CPU Freq is 2.419351",
+                "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+                " >>> [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+              "line_number": 121,
+              "context": [
+                "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+                "     configuring for RAU/RRU",
+                "     CPU Freq is 2.419351",
+                "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+              "line_number": 122,
+              "context": [
+                "     configuring for RAU/RRU",
+                "     CPU Freq is 2.419351",
+                "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "line_number": 123,
+              "context": [
+                "     CPU Freq is 2.419351",
+                "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+                " >>> [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "line_number": 124,
+              "context": [
+                "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "line_number": 127,
+              "context": [
+                "     [LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                " >>> [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+                "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     NRRRC 0: Southbound Transport f1"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "line_number": 128,
+              "context": [
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+                "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     NRRRC 0: Southbound Transport f1",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "line_number": 129,
+              "context": [
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+                "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     NRRRC 0: Southbound Transport f1",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+              "line_number": 130,
+              "context": [
+                "     [LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+                "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     NRRRC 0: Southbound Transport f1",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+              "line_number": 133,
+              "context": [
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+                "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     NRRRC 0: Southbound Transport f1",
+                " >>> [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "line_number": 134,
+              "context": [
+                "     [LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+                "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     NRRRC 0: Southbound Transport f1",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+              "line_number": 135,
+              "context": [
+                "     [LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)",
+                "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     NRRRC 0: Southbound Transport f1",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                " >>> [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+              "line_number": 136,
+              "context": [
+                "     [LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf",
+                "     NRRRC 0: Southbound Transport f1",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+                " >>> [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+              "line_number": 137,
+              "context": [
+                "     NRRRC 0: Southbound Transport f1",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+              "line_number": 138,
+              "context": [
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+              "line_number": 139,
+              "context": [
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+                "     [GTPU]   Configuring GTPu"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+              "line_number": 140,
+              "context": [
+                "     [LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+                "     [GTPU]   Configuring GTPu",
+                "     [GTPU]   SA mode"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+              "line_number": 141,
+              "context": [
+                "     [LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+                "     [GTPU]   Configuring GTPu",
+                "     [GTPU]   SA mode",
+                "     [GTPU]   Configuring GTPu address : 10.138.77.131 -> 834d8a0a"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+              "line_number": 142,
+              "context": [
+                "     [LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+                "     [GTPU]   Configuring GTPu",
+                "     [GTPU]   SA mode",
+                "     [GTPU]   Configuring GTPu address : 10.138.77.131 -> 834d8a0a",
+                "     [GNB_APP]   [gNB 0] gNB_app_register for instance 0"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+              "line_number": 143,
+              "context": [
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)",
+                "     [LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)",
+                " >>> [LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0",
+                "     [GTPU]   Configuring GTPu",
+                "     [GTPU]   SA mode",
+                "     [GTPU]   Configuring GTPu address : 10.138.77.131 -> 834d8a0a",
+                "     [GNB_APP]   [gNB 0] gNB_app_register for instance 0",
+                "     [NR_MAC]   NR band duplex spacing is 0 KHz (nr_bandtable[37].band = 78)"
+              ]
+            }
+          ],
+          "debug_values": {
+            "UE_IDs": [
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_PHY_UE as task 30"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_MAC_UE as task 31"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RLC_UE as task 32"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_PDCP_UE as task 33"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RRC_UE as task 34"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RRC_NRUE as task 35"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_NAS_UE as task 36"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RAL_UE as task 37"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RRC_NSA_UE as task 45"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RRC_NSA_NRUE as task 46"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_NAS_NRUE as task 47"
+              },
+              {
+                "value": "Dec",
+                "line": "[HW]   Version: Branch: master Abrev. Hash: 25baf4e Date: Tue Dec 20 06:13:23 2022 +0000"
+              },
+              {
+                "value": "19c5",
+                "line": "[NR_RRC]   new UE rnti 9410 (coming with random value) is already there as UE 19c5, removing 19c5 from MAC/PHY"
+              },
+              {
+                "value": "60af",
+                "line": "[NR_RRC]   new UE rnti a9eb (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+              },
+              {
+                "value": "60af",
+                "line": "[NR_RRC]   new UE rnti b3bd (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+              },
+              {
+                "value": "60af",
+                "line": "[NR_RRC]   new UE rnti e3cf (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+              },
+              {
+                "value": "60af",
+                "line": "[NR_RRC]   new UE rnti 4535 (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+              }
+            ],
+            "RNTI_values": [
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 0] Init..."
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 0] Checking release"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 0] gNB:OPENAIR NR RRC IN...."
+              },
+              {
+                "value": "19c5",
+                "line": "[F1AP]   Adding a new UE with RNTI 19c5 and cu/du ue_f1ap_id 6597"
+              },
+              {
+                "value": "19c5",
+                "line": "[NR_RRC]   Decoding CCCH: RNTI 19c5, inst 0, payload_size 6"
+              },
+              {
+                "value": "19c5",
+                "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 19c5"
+              },
+              {
+                "value": "19c5",
+                "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 6597 associated with UE RNTI 19c5 (instance 0)"
+              },
+              {
+                "value": "19c5",
+                "line": "[F1AP]   GNB_DU_UE_F1AP_ID 6597 associated with UE RNTI 19c5"
+              },
+              {
+                "value": "9410",
+                "line": "[F1AP]   Adding a new UE with RNTI 9410 and cu/du ue_f1ap_id 37904"
+              },
+              {
+                "value": "9410",
+                "line": "[NR_RRC]   Decoding CCCH: RNTI 9410, inst 0, payload_size 6"
+              },
+              {
+                "value": "9410",
+                "line": "[NR_RRC]   new UE rnti 9410 (coming with random value) is already there as UE 19c5, removing 19c5 from MAC/PHY"
+              },
+              {
+                "value": "9410",
+                "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 9410"
+              },
+              {
+                "value": "9410",
+                "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 37904 associated with UE RNTI 9410 (instance 0)"
+              },
+              {
+                "value": "9410",
+                "line": "[F1AP]   GNB_DU_UE_F1AP_ID 37904 associated with UE RNTI 9410"
+              },
+              {
+                "value": "9410",
+                "line": "[F1AP]   Calling pdcp_data_ind for UE RNTI 9410 srb_id 1 with size 33 (DCCH)"
+              },
+              {
+                "value": "9410",
+                "line": "[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 9410] [RAPROC] Logical Channel UL-DCCH, processing NR_RRCSetupComplete from UE (SRB1 Active)"
+              },
+              {
+                "value": "9410",
+                "line": "[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 9410] UE State = NR_RRC_CONNECTED"
+              },
+              {
+                "value": "60af",
+                "line": "[F1AP]   Adding a new UE with RNTI 60af and cu/du ue_f1ap_id 24751"
+              },
+              {
+                "value": "60af",
+                "line": "[NR_RRC]   Decoding CCCH: RNTI 60af, inst 0, payload_size 6"
+              },
+              {
+                "value": "60af",
+                "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 60af"
+              },
+              {
+                "value": "60af",
+                "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 24751 associated with UE RNTI 60af (instance 0)"
+              },
+              {
+                "value": "60af",
+                "line": "[F1AP]   GNB_DU_UE_F1AP_ID 24751 associated with UE RNTI 60af"
+              },
+              {
+                "value": "a9eb",
+                "line": "[F1AP]   Adding a new UE with RNTI a9eb and cu/du ue_f1ap_id 43499"
+              },
+              {
+                "value": "a9eb",
+                "line": "[NR_RRC]   Decoding CCCH: RNTI a9eb, inst 0, payload_size 6"
+              },
+              {
+                "value": "a9eb",
+                "line": "[NR_RRC]   new UE rnti a9eb (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+              },
+              {
+                "value": "a9eb",
+                "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI a9eb"
+              },
+              {
+                "value": "a9eb",
+                "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 43499 associated with UE RNTI a9eb (instance 0)"
+              },
+              {
+                "value": "a9eb",
+                "line": "[F1AP]   GNB_DU_UE_F1AP_ID 43499 associated with UE RNTI a9eb"
+              },
+              {
+                "value": "b3bd",
+                "line": "[F1AP]   Adding a new UE with RNTI b3bd and cu/du ue_f1ap_id 46013"
+              },
+              {
+                "value": "b3bd",
+                "line": "[NR_RRC]   Decoding CCCH: RNTI b3bd, inst 0, payload_size 6"
+              },
+              {
+                "value": "b3bd",
+                "line": "[NR_RRC]   new UE rnti b3bd (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+              },
+              {
+                "value": "b3bd",
+                "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI b3bd"
+              },
+              {
+                "value": "b3bd",
+                "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 46013 associated with UE RNTI b3bd (instance 0)"
+              },
+              {
+                "value": "b3bd",
+                "line": "[F1AP]   GNB_DU_UE_F1AP_ID 46013 associated with UE RNTI b3bd"
+              },
+              {
+                "value": "e3cf",
+                "line": "[F1AP]   Adding a new UE with RNTI e3cf and cu/du ue_f1ap_id 58319"
+              },
+              {
+                "value": "e3cf",
+                "line": "[NR_RRC]   Decoding CCCH: RNTI e3cf, inst 0, payload_size 6"
+              },
+              {
+                "value": "e3cf",
+                "line": "[NR_RRC]   new UE rnti e3cf (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+              },
+              {
+                "value": "e3cf",
+                "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI e3cf"
+              },
+              {
+                "value": "e3cf",
+                "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 58319 associated with UE RNTI e3cf (instance 0)"
+              },
+              {
+                "value": "e3cf",
+                "line": "[F1AP]   GNB_DU_UE_F1AP_ID 58319 associated with UE RNTI e3cf"
+              },
+              {
+                "value": "4535",
+                "line": "[F1AP]   Adding a new UE with RNTI 4535 and cu/du ue_f1ap_id 17717"
+              },
+              {
+                "value": "4535",
+                "line": "[NR_RRC]   Decoding CCCH: RNTI 4535, inst 0, payload_size 6"
+              },
+              {
+                "value": "4535",
+                "line": "[NR_RRC]   new UE rnti 4535 (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY"
+              },
+              {
+                "value": "4535",
+                "line": "[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 4535"
+              },
+              {
+                "value": "4535",
+                "line": "[F1AP]   Setting GNB_CU_UE_F1AP_ID 17717 associated with UE RNTI 4535 (instance 0)"
+              },
+              {
+                "value": "4535",
+                "line": "[F1AP]   GNB_DU_UE_F1AP_ID 17717 associated with UE RNTI 4535"
+              }
+            ]
+          },
+          "relevant_sections": []
+        },
+        "compiler_ground_truth_errors": [],
+        "cu_ip_address": "10.138.77.131",
+        "du_ip_address": "10.138.77.131",
+        "gnb_ip_address": "10.138.77.131",
+        "amf_ip_address": "192.168.70.132",
+        "core_network_machine_ip": "10.138.77.217",
+        "local_s_portc": "501",
+        "local_s_portd": "2152",
+        "remote_s_portc": "500",
+        "remote_s_portd": "2152",
+        "dnn": "oai",
+        "nssai_sst": "1",
+        "nssai_sd": "0xc",
+        "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+        "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+        "log_error_kind_raw": "runtime",
+        "log_error_kind": "runtime",
+        "build_log_mode": false,
+        "runtime_log_mode": true,
+        "other_log_mode": false,
+        "cmake_build_system_mode": false,
+        "dependency_advice_mode": false
+      },
+      "retrieval_method": "context_aware",
+      "ground_truth_errors": [],
+      "compiler_cluster_analysis": {},
+      "build_error_mode": false,
+      "narrow_compiler_phase2": false,
+      "log_error_kind": "runtime",
+      "top_ground_truth_clusters": [],
+      "coverage_stats": {
+        "total_compiler_errors_parsed": 0,
+        "ground_truth_with_function_name": 0,
+        "ground_truth_with_file_path": 0
+      }
+    },
+    "phase3_fixes": {
+      "error_text": "ERROR MESSAGE: \"No AMF is associated to the gNB",
+      "fix_suggestion": {
+        "suspected_functions": [
+          "select_amf",
+          "ngap_gNB_handle_nas_first_req",
+          "ngap_gNB_nnsf_select_amf_by_amf_setid",
+          "ngap_gNB_nnsf_select_amf_by_guami",
+          "rrc_gNB_generate_RRCReject"
+        ],
+        "suspected_configs": [
+          "amf_ip_address",
+          "GNB_IPV4_ADDRESS_FOR_NG_AMF"
+        ],
+        "reason": "The error 'No AMF is associated to the gNB' indicates that the gNB cannot find or associate with any AMF instance. This is often caused by misconfiguration of the AMF IP address or the gNB IP address used for NG interface. The select_amf function and related NGAP NAS procedures attempt to select an AMF based on PLMN and GUAMI parameters but fail due to no matching AMF being registered or reachable. The runtime logs show the gNB IP and AMF IP are set to .131 and .130 respectively, which do not match the deployment context IPs. This mismatch causes the gNB to fail to associate with the AMF, leading to the error. Additionally, incomplete or missing handling in RRC setup rejection paths (rrc_gNB_generate_RRCReject) can cause crashes or improper error handling when AMF association fails.",
+        "config_fix": "In the cu_gnb.conf configuration file, update the amf_ip_address to '192.168.70.132' and GNB_IPV4_ADDRESS_FOR_NG_AMF to '10.138.77.131' to match the deployment context. This ensures the gNB correctly targets the AMF IP and uses the correct gNB IP for NG interface, enabling proper AMF association.",
+        "code_patches": [],
+        "config_patches": [
+          {
+            "config_name": "amf_ip_address",
+            "file_path": "openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+            "patch_type": "set_value",
+            "current_value": "({ ipv4 = \"192.168.70.130\"; })",
+            "new_value": "({ ipv4 = \"192.168.70.132\"; })",
+            "line_number": "38",
+            "relevance_score": 0.9,
+            "description": "Must match deployment context value to ensure gNB correctly targets the AMF IP for NG interface association."
+          },
+          {
+            "config_name": "GNB_IPV4_ADDRESS_FOR_NG_AMF",
+            "file_path": "openairinterface-5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+            "patch_type": "set_value",
+            "current_value": "\"10.138.77.130\"",
+            "new_value": "\"10.138.77.131\"",
+            "line_number": "43",
+            "relevance_score": 0.8,
+            "description": "Must match deployment context value to ensure gNB uses correct IP address for NG interface towards AMF."
+          }
+        ],
+        "root_cause_analysis": "The root cause of the error 'No AMF is associated to the gNB' is a configuration mismatch between the gNB and the AMF IP addresses. The gNB configuration currently points to an AMF IP (192.168.70.130) and gNB IP (10.138.77.130) that do not match the deployment context (AMF IP 192.168.70.132 and gNB IP 10.138.77.131). This mismatch prevents the gNB from establishing a proper NGAP association with the AMF, causing the select_amf function and related NGAP NAS procedures to fail to find a valid AMF. Additionally, incomplete conditional handling in RRC setup request processing (missing else clause) can cause segmentation faults when unexpected UE identity types are received. Properly adding the missing else clause with UE context creation and RRCReject generation prevents crashes and gracefully rejects unsupported requests.",
+        "investigation_steps": [
+          "Verify the gNB configuration file cu_gnb.conf for correct AMF IP address and gNB IP address matching the deployment context.",
+          "Check the NGAP logs for AMF association attempts and confirm if any AMF instances are registered and in connected state.",
+          "Review the select_amf function to ensure it handles the case when no AMF is found by returning NULL and logging a warning.",
+          "Inspect the RRC setup request handling code to confirm all ue_Identity.present cases are handled with a final else clause that creates UE context and sends RRCReject to avoid segmentation faults.",
+          "Test network connectivity between gNB and AMF IP addresses to ensure reachability and SCTP association establishment.",
+          "Restart the gNB after applying configuration fixes and monitor logs for successful AMF association."
+        ],
+        "specification_context": "3GPP SPECIFICATION REFERENCE\n================================================================================\n\n**Section: 5.3.2.3 Reception of the Paging message by the UE**\n*Page: 60*\nUE behavior upon receiving Paging message includes verifying UE identity and initiating RRC connection resumption or establishment procedures (5.3.13) based on access type and stored identities.\nRRC connection establishment procedure involves RRCSetupRequest, RRCSetup, and RRCSetupComplete signaling.\nFailure handling: If connection establishment fails, UE increments failure counter (max 8), informs upper layers, and may discard failure info after 48 hours.\nAbortion of RRC connection establishment requires stopping timer T300, resetting MAC, releasing MAC config, and re-establishing RLC for all RBs.\n**Relevance:** Ensures proper RRC connection setup which is prerequisite for AMF association; failure here may cause \"No AMF is associated to the gNB\" error.\n**Section: AMF-Identifier Information Element (IE)**\n*Page: 347, Section 6.3.1*\nAMF-Identifier (AMFI) comprises AMF Region ID, AMF Set ID, and AMF Pointer as per TS 23.003 clause 2.10.1.\nThis IE is critical for associating the gNB with the correct AMF instance.\n**Relevance:** Missing or incorrect AMF-Identifier configuration in gNB or signaling can cause the error \"No AMF is associated to the gNB.\"\n**Section: General RRC Procedures and Message Processing**\n*Page: 53, Section 5.1.2*\nUE must process received RRC messages in order and complete processing before next message.\nUpon receiving setup or release commands, UE applies or clears configurations accordingly.\nProper handling of transaction identifiers and message sequences is mandatory.\n**Relevance:** Ensures correct RRC signaling flow and resource configuration, which is necessary for successful AMF association.\n**Summary for Fixing the Error:**\nVerify that the gNB is correctly configured with the AMF-Identifier IE matching the deployed AMF(s).\nEnsure RRC connection establishment\n[Content truncated for display]",
+        "investigation_commands": [
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test basic network connectivity from gNB to AMF IP"
+          },
+          {
+            "command": "ip route add 192.168.70.132 via 10.138.77.217 dev eth0",
+            "hint": "Add static route to reach AMF IP via core network IP on interface eth0"
+          }
+        ]
+      },
+      "context_summary": {
+        "candidate_functions_count": 49,
+        "candidate_configs_count": 7,
+        "call_graph_entries": 21,
+        "pattern_matched": false
+      },
+      "phase3_llm": {
+        "max_output_tokens": 8000,
+        "json_mode": true,
+        "build_error_mode": false,
+        "finish_reason": "stop",
+        "parse_ok": true,
+        "attempts": [
+          {
+            "attempt": 1,
+            "finish_reason": "stop",
+            "chars": 9296
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 5,
+      "total_configs_analyzed": 2,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test basic network connectivity from gNB to AMF IP"
+          },
+          {
+            "command": "ip route add 192.168.70.132 via 10.138.77.217 dev eth0",
+            "explanation": "Add static route to reach AMF IP via core network IP on interface eth0"
+          }
+        ],
+        "command_count": 2
+      },
+      "command_count": 2
+    }
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260601_193738.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

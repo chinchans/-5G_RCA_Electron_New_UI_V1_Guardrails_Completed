@@ -1,0 +1,35 @@
+5G SA registration and deregistration of single UE
+Test description and applicability
+The purpose of the test is to verify the full registration and de-registration procedure with a single UE. The test also verifies the PDU session establishment and release procedures.
+The test focuses on the procedure of ‘Initial registration’ as defined in 3GPP TS 23.502 [28] Clause 4.2.2.2.2.
+The test focuses on the procedure of ‘UE-initiated de-registration’ as defined in 3GPP TS 23.502 [28] Clause 4.2.2.3.2.
+This test also validates PDU session establishment and release procedures. 
+The test validates the 3GPP standard registration/de-registration procedure and the latency of the procedure. Bi-directional data transmission shall be observed before the de-registration procedure to verify the stability of the network slice.
+Test setup and configuration
+The test setup is a single cell scenario (i.e. isolated cell without any inter-cell interference – see Clause 4.7) with a stationary UE (real or emulated) placed under excellent radio conditions as defined in Clause 4.6, using SS-RSRP as the metric. Within the cell there shall be only one active UE. The application server should be placed as close as possible to the core/core emulator and connected to the core/core emulator via a transport link with enough capacity so as not to limit the expected data throughput. The UE, RAN, and 5G Core shall support the network slicing, at least for one Single Network Slice Selection Assistance Information (S-NSSAI). The test is suitable for lab as well as field environments.  
+Test configuration: The test configuration is not specified. The utilized test configuration (parameters) shall be recorded in the test report.  
+Laboratory setup: The radio conditions experienced by the UE can be modified using a variable attenuator/fading generator inserted between the antenna connectors (if available) of the O-RU and the UE, or appropriately emulated using a UE emulator. The test environment should be setup to achieve excellent radio conditions (using SS-RSRP as defined in Clause 4.6) for the UE, but the minimum coupling loss (see Clause 4.6) should not be exceeded.  The UE should be placed inside an RF shielded box or RF shielded room if the UE is not connected via cable.
+Field setup: The UE is placed in the centre of cell close to the radiated eNB/gNB antenna(s), where excellent radio conditions (SS-RSRP as defined in Clause 4.6) should be observed. The minimum coupling loss (see 4.6) should not be exceeded.
+Please refer Figure 6-1 for E2E test setup for 5G SA.
+Test procedure
+Below are the test procedure steps
+The test setup is configured according to the test configuration. The test configuration shall be recorded in the test report. The serving cell under test is activated and unloaded. All other cells are powered off.
+Power on the UE and the UE shall send REGISTRATION REQUEST message.  UE shall successfully register to the 5G SA network. 
+Full-buffer UDP bi-directional data transmission (see Clause 4.4) between the application server and UE is initiated.
+The registration procedure messages shall be captured, and the latency of the registration procedure shall be measured and recorded in Table 5-6. The duration of the test shall be at least 3 minutes when the throughput is stable. The PDU session establishment procedure messages shall also be captured and verified.
+Power off the UE and UE shall send DEREGISTRATION REQUEST message. UE shall successfully de-register from the 5G SA network.
+The de-registration procedure messages shall be captured, and the latency of de-registration procedure shall be measured and recorded in Table 5-6. The PDU session release procedure messages shall also be captured and verified.
+Repeat steps 2 to 6, for a total of 10 times and record the KPIs mentioned in Table 5-6.
+Test requirements (expected results)
+In addition to the common minimum set of configuration parameters (see Clause 4.3), the following metrics and counters shall be captured and reported in the test report for the performance assessment.
+Radio parameters such as RSRP, RSRQ, CQI, PDSCH SINR (average sample per second)
+Latency KPI mentioned in Table 5-6
+Validate from collected logs registration (as per 3GPP TS 23.502 [28] Clause 4.2.2.2.2) and deregistration (as per 3GPP TS 23.502 [28] Clause 4.2.2.3.2) procedures and also validate ‘UE Requested PDU Session Establishment for Non-roaming and Roaming with Local Breakout case’ as defined in 3GPP TS 23.502 [28] Clause 4.3.2.2.1, and the procedure of ‘PDU Session Release for UE or network requested PDU Session Release for Non-Roaming and Roaming with Local Breakout case’ as defined in 3GPP TS 23.502 [28] Clause 4.3.4.2. The procedure shall pass 10 consecutive times to mark the test case as passing. The gap analysis shall be provided for the measured and the expected target KPIs.
+The Registration Time latency is measured by calculating the time between Registration Request to Registration Complete; The De-registration Time latency is measured by calculating the time between De-registration Request to Signaling Connection Release. Capture the latency for each iteration and sort the latency value observed for each iteration in ascending order. Record the Minimum, Average (Sum of all latency value/ Total Iterations, Total Iterations are 10 in this case) and Maximum latency value observed in Table 5-6. 
+Table 5-6 5G SA registration/de-registration latency KPI record table of single UE
+
+
+==================================================
+RECURSIVE EXTRACTION RESULTS
+==================================================
+

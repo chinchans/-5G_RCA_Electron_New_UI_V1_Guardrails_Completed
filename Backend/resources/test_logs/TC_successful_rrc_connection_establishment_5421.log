@@ -1,0 +1,50 @@
+frame = 245, slot = 0 : [PHY] Detected PRACH preamble #31 from new UE
+frame = 245, slot = 0 : Function: nr_handle_prach processing
+frame = 245, slot = 0 : [PHY] PRACH rx power: -79.3 dBm
+frame = 245, slot = 0 : [PHY] PRACH SNR estimate: 15.7 dB
+frame = 245, slot = 0 : [PHY] PRACH timing advance estimate: 16 samples (0.52 us)
+frame = 245, slot = 1 : [MAC] Processing PRACH request
+frame = 245, slot = 1 : Function: nr_process_prach_indication processing
+frame = 245, slot = 1 : [MAC] Assigning TC-RNTI 5421 to new UE
+frame = 245, slot = 1 : [MAC] Allocating RACH resources for UE
+frame = 245, slot = 1 : [MAC] Preparing Random Access Response (Msg2)
+frame = 245, slot = 1 : Function: nr_generate_Msg2 processing
+frame = 245, slot = 2 : [MAC] Scheduling PDSCH transmission for RAR
+frame = 245, slot = 2 : [PHY] Configuring DL transmission for PDSCH
+frame = 245, slot = 2 : [PHY] Allocated RBs: 10, MCS: 5
+frame = 245, slot = 2 : [MAC] Transmitted RAR to UE with TC-RNTI 5421
+frame = 245, slot = 2 : [MAC] UL grant provided for Msg3
+frame = 245, slot = 3 : [PHY] Received PUSCH transmission from UE 5421
+frame = 245, slot = 3 : [PHY] PUSCH decoding successful, CRC check passed
+frame = 245, slot = 3 : [MAC] Received Msg3 from UE with TC-RNTI 5421
+frame = 245, slot = 3 : Function: nr_process_msg3 processing
+frame = 245, slot = 3 : [MAC] Contention resolution successful for UE 5421
+frame = 245, slot = 3 : [MAC] Forwarding RRC Connection Request to RRC
+frame = 245, slot = 4 : [RRC] Processing RRC Connection Request from UE with rnti 5421
+frame = 245, slot = 4 : Function: nr_rrc_gNB_decode_ccch processing
+frame = 245, slot = 4 : [RRC] UE 5421 requesting new RRC connection
+frame = 245, slot = 4 : [RRC] UE identity: 0x54b837a921c7
+frame = 245, slot = 4 : [RRC] Establishment cause: mo-Signalling
+frame = 245, slot = 5 : [RRC] Creating UE context for 5421
+frame = 245, slot = 5 : Function: rrc_gNB_generate_RRCSetup processing
+frame = 245, slot = 5 : [RRC] Configured SRB1 for UE 5421
+frame = 245, slot = 5 : [RRC] Scheduling RRCSetup message transmission
+frame = 245, slot = 6 : [MAC] Configuring PDSCH for RRCSetup
+frame = 245, slot = 6 : [PHY] Transmitting PDSCH for UE 5421
+frame = 245, slot = 6 : [RRC] RRCSetup message sent to UE 5421
+frame = 245, slot = 6 : [RRC] Waiting for RRC Setup Complete
+frame = 245, slot = 7 : [PHY] Received PUSCH with UCI from UE 5421
+frame = 245, slot = 7 : [MAC] Received UL-DCCH message from UE 5421
+frame = 245, slot = 7 : [RRC] Received RRC Setup Complete from UE 5421
+frame = 245, slot = 7 : Function: rrc_gNB_process_RRCSetupComplete processing
+frame = 245, slot = 7 : [RRC] UE 5421 provided 5G-S-TMSI: 0xc37a92f1
+frame = 245, slot = 8 : [RRC] RRC connection successfully established
+frame = 245, slot = 8 : [RRC] UE 5421 state changed to RRC_CONNECTED
+frame = 245, slot = 8 : [RRC] Initiating NGAP Initial UE Message
+frame = 245, slot = 8 : Function: ngap_gNB_initial_ue_message processing
+frame = 245, slot = 9 : [NGAP] Preparing Initial UE Message
+frame = 245, slot = 9 : [NGAP] Including NAS-PDU with Registration Request
+frame = 245, slot = 9 : [NGAP] Including UE location information
+frame = 245, slot = 9 : [NGAP] Sending Initial UE Message to AMF
+frame = 246, slot = 0 : [NGAP] Successfully sent Initial UE Message for UE 5421
+frame = 246, slot = 0 : [GNB] Successful RRC Connection Establishment procedure completed for UE 5421 

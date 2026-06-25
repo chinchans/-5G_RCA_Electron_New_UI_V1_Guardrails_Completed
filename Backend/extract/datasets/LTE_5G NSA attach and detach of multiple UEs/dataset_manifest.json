@@ -1,0 +1,47 @@
+{
+  "validated": true,
+  "pipeline": [
+    "input_guardrails",
+    "extraction",
+    "dataset_files_on_disk",
+    "schema_validation",
+    "hierarchy_validation",
+    "source_traceability_validation",
+    "save_dataset",
+    "ready_for_test_script_generator"
+  ],
+  "output_guardrails": {
+    "passed": true,
+    "blocked": false,
+    "schema_validation": {
+      "step": "schema_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "hierarchy_validation": {
+      "step": "hierarchy_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "source_traceability_validation": {
+      "step": "source_traceability_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": [
+        "Section title not found near start of extracted section text",
+        "Subsection identifier not reflected in total_content header"
+      ]
+    }
+  },
+  "metadata": {
+    "source_file_id": "d0f93a23-22c3-4635-a950-25380c9aeda1.docx",
+    "source_document_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/d0f93a23-22c3-4635-a950-25380c9aeda1.docx",
+    "section": "Functional tests",
+    "subsection": "LTE/5G NSA attach and detach of multiple UEs",
+    "safe_subsection": "LTE_5G NSA attach and detach of multiple UEs",
+    "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/extract/datasets/LTE_5G NSA attach and detach of multiple UEs"
+  },
+  "ready_for_test_script_generator": true
+}

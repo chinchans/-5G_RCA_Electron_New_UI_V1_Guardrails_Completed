@@ -1,0 +1,113 @@
+{
+  "validated": true,
+  "pipeline": [
+    "input_guardrails",
+    "extraction",
+    "dataset_files_on_disk",
+    "schema_validation",
+    "hierarchy_validation",
+    "source_traceability_validation",
+    "nli_groundedness_validation",
+    "save_dataset",
+    "ready_for_test_script_generator"
+  ],
+  "output_guardrails": {
+    "passed": true,
+    "blocked": false,
+    "schema_validation": {
+      "step": "schema_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "hierarchy_validation": {
+      "step": "hierarchy_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "source_traceability_validation": {
+      "step": "source_traceability_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": [
+        "Section title not found near start of extracted section text",
+        "Subsection identifier not reflected in total_content header"
+      ]
+    },
+    "nli_groundedness_validation": {
+      "step": "nli_groundedness_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": [
+        "NLI neutral (0.83) for O-RAN source: ==================================================",
+        "NLI neutral (0.95) for clause '10.4.1': The Secondary Node Release procedure may be initiated either by the MN or by the SN and is used to initiate the relea...",
+        "NLI neutral (0.94) for clause '10.4.1': The recipient node of this request can reject it, e.g., if a SN change procedure is triggered by the SN.",
+        "NLI neutral (0.95) for clause '10.4.1': In case of CPA or inter-SN CPC, this procedure may be initiated either by the MN or the candidate SN, and it is used...",
+        "NLI neutral (0.96) for clause '10.4.1': Figure 10.4.1-1: SN Release procedure \u2013 MN initiated",
+        "NLI neutral (0.93) for clause '10.4.1': Figure 10.4.1-1 shows an example signalling flow for the MN initiated Secondary Node Release procedure when SN Releas...",
+        "NLI neutral (0.96) for clause '10.4.1': The MN initiates the procedure by sending the SgNB Release Request message.",
+        "NLI neutral (0.95) for clause '10.4.1': If applicable, the MN provides data forwarding addresses to the SN.",
+        "NLI neutral (0.97) for clause '10.4.1': The SN confirms SN Release by sending the SgNB Release Request Acknowledge message.",
+        "NLI neutral (0.97) for clause '10.4.1': If appropriate, the SN may reject SN Release, e.g.",
+        "NLI neutral (0.96) for clause '10.4.1': if the SN change procedure is triggered by the SN.",
+        "NLI neutral (0.95) for clause '10.4.1': NOTE 0: If inter-SN CPC is configured, upon reception of the SgNB Release Request Acknowledge message from the source...",
+        "NLI neutral (0.94) for clause '10.4.1': NOTE 0a: If CPA or inter-SN CPC is configured, upon reception of the SgNB Release Request Acknowledge message from a...",
+        "NLI neutral (0.96) for clause '10.4.1': In case of SN initiated inter-SN CPC, the MN triggers the Conditional PSCell Change Cancel procedure towards the sour...",
+        "NLI neutral (0.96) for clause '10.4.1': If required, the MN indicates in the RRCConnectionReconfiguration message towards the UE that the UE shall release th...",
+        "NLI neutral (0.94) for clause '10.4.1': In case the UE is unable to comply with (part of) the configuration included in the RRCConnectionReconfiguration mess...",
+        "NLI neutral (0.97) for clause '10.4.1': NOTE 1: If data forwarding is applied, timely coordination between steps 1 and 2 may minimize gaps in service provisi...",
+        "NLI neutral (0.96) for clause '10.4.1': For bearers using RLC AM, the SN sends the SN Status Transfer message.",
+        "NLI neutral (0.47) for clause '10.4.1': Data forwarding from the SN to the MN may start.",
+        "NLI neutral (0.97) for clause '10.4.1': The SN sends the Secondary RAT Data Usage Report message to the MN and includes the data volumes delivered to and rec..."
+      ],
+      "details": {
+        "available": true,
+        "pairs_checked": 21,
+        "passed": true,
+        "contradictions": [],
+        "warnings": [
+          "NLI neutral (0.83) for O-RAN source: ==================================================",
+          "NLI neutral (0.95) for clause '10.4.1': The Secondary Node Release procedure may be initiated either by the MN or by the SN and is used to initiate the relea...",
+          "NLI neutral (0.94) for clause '10.4.1': The recipient node of this request can reject it, e.g., if a SN change procedure is triggered by the SN.",
+          "NLI neutral (0.95) for clause '10.4.1': In case of CPA or inter-SN CPC, this procedure may be initiated either by the MN or the candidate SN, and it is used...",
+          "NLI neutral (0.96) for clause '10.4.1': Figure 10.4.1-1: SN Release procedure \u2013 MN initiated",
+          "NLI neutral (0.93) for clause '10.4.1': Figure 10.4.1-1 shows an example signalling flow for the MN initiated Secondary Node Release procedure when SN Releas...",
+          "NLI neutral (0.96) for clause '10.4.1': The MN initiates the procedure by sending the SgNB Release Request message.",
+          "NLI neutral (0.95) for clause '10.4.1': If applicable, the MN provides data forwarding addresses to the SN.",
+          "NLI neutral (0.97) for clause '10.4.1': The SN confirms SN Release by sending the SgNB Release Request Acknowledge message.",
+          "NLI neutral (0.97) for clause '10.4.1': If appropriate, the SN may reject SN Release, e.g.",
+          "NLI neutral (0.96) for clause '10.4.1': if the SN change procedure is triggered by the SN.",
+          "NLI neutral (0.95) for clause '10.4.1': NOTE 0: If inter-SN CPC is configured, upon reception of the SgNB Release Request Acknowledge message from the source...",
+          "NLI neutral (0.94) for clause '10.4.1': NOTE 0a: If CPA or inter-SN CPC is configured, upon reception of the SgNB Release Request Acknowledge message from a...",
+          "NLI neutral (0.96) for clause '10.4.1': In case of SN initiated inter-SN CPC, the MN triggers the Conditional PSCell Change Cancel procedure towards the sour...",
+          "NLI neutral (0.96) for clause '10.4.1': If required, the MN indicates in the RRCConnectionReconfiguration message towards the UE that the UE shall release th...",
+          "NLI neutral (0.94) for clause '10.4.1': In case the UE is unable to comply with (part of) the configuration included in the RRCConnectionReconfiguration mess...",
+          "NLI neutral (0.97) for clause '10.4.1': NOTE 1: If data forwarding is applied, timely coordination between steps 1 and 2 may minimize gaps in service provisi...",
+          "NLI neutral (0.96) for clause '10.4.1': For bearers using RLC AM, the SN sends the SN Status Transfer message.",
+          "NLI neutral (0.47) for clause '10.4.1': Data forwarding from the SN to the MN may start.",
+          "NLI neutral (0.97) for clause '10.4.1': The SN sends the Secondary RAT Data Usage Report message to the MN and includes the data volumes delivered to and rec..."
+        ],
+        "errors": [],
+        "load_error": null,
+        "metadata": {
+          "model": "cross-encoder/nli-deberta-v3-small",
+          "contradiction_threshold": 0.65,
+          "strict_mode": false,
+          "oran_pairs_checked": 1,
+          "clause_pairs_checked": 20,
+          "oran_source_used": true
+        }
+      }
+    }
+  },
+  "metadata": {
+    "source_file_id": "3503a9ac-dabd-4e2d-a0c3-da7d9c83b7f8.docx",
+    "source_document_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/3503a9ac-dabd-4e2d-a0c3-da7d9c83b7f8.docx",
+    "section": "Functional tests",
+    "subsection": "LTE/5G NSA attach and detach of single UE",
+    "safe_subsection": "LTE_5G NSA attach and detach of single UE",
+    "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/extract/datasets/LTE_5G NSA attach and detach of single UE"
+  },
+  "ready_for_test_script_generator": true
+}

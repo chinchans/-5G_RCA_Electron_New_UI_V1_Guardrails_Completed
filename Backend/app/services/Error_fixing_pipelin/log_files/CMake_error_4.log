@@ -1,0 +1,40 @@
+bash: ./build_oai: Permission denied
+Will compile gNB
+OPENAIR_DIR    = /home/tcs/Downloads/OAI-CU
+Running "cmake ../../.."
+-- Ccache not found. Consider installing it for faster compilation. Command: sudo apt/dnf install ccache
+-- Check if /opt/asn1c/bin/asn1c supports -gen-APER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-UPER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-JER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-BER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-OER
+-- CMAKE_BUILD_TYPE is RelWithDebInfo
+-- CPU architecture is x86_64
+-- AVX512 intrinsics are OFF
+-- AVX2 intrinsics are ON
+-- LTTNG support disabled
+-- Checking for module 'libcap'
+--   No package 'libcap' found
+-- Checking for module 'cblas'
+--   No package 'cblas' found
+-- No Doxygen documentation requested
+-- No Support for Aerial
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build
+cd /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build
+Running "cmake --build .  --target  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim -- -j4"
+Log file for compilation is being written to: /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt
+/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel.ro+0xaf0): undefined reference to `asn_DEF_F1AP_LTMCellSwitchInformation'
+/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfiguration.c.o):(.data.rel+0x168): undefined reference to `asn_DEF_F1AP_LTMCFRAResourceConfig'
+/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfiguration.c.o):(.data.rel+0x1b8): undefined reference to `asn_DEF_F1AP_LTMCFRAResourceConfig'
+/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMCFRAResourceConfig-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMCFRAResourceConfig'
+/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMCFRAResourceConfig-Item.c.o):(.data.rel+0x118): undefined reference to `asn_DEF_F1AP_LTMCFRAResourceConfig'
+collect2: error: ld returned 1 exit status
+gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2
+gmake: *** [Makefile:891: nr-softmodem] Error 2
+ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt
+compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed
+build have failed

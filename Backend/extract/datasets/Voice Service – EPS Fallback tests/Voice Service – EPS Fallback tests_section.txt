@@ -1,0 +1,70 @@
+Voice Service – EPS Fallback tests
+7.4.0 	Voice service - EPS fall back tests introduction
+Voice service is one of the basic services which must be supported on every telecom network. Upgrade of telecom network occurs in phases, and this is no different for 5G. The telecom network may not be able to support voice service on 5G during this phase for multiple reasons – the 5G network may not be deployed nationwide, or 5G network may not be tuned to support voice service or the devices may not be able to support voice service on 5G. However, there can be no interruption to voice service during this transition phase. EPS fallback is the method used to support voice services during this phase, where voice services are continued to be supported on the legacy LTE network using VoLTE by forcing the device to fallback to LTE to make or receive a call. The KPIs which shall be monitored to assess the voice service are included below
+CSSR – Call Setup Success Rate % – Total number of calls which were successful by the total number of calls made as a percentage.
+CST – Call Setup Time – Time taken from the initial SIP INVITE to when the SIP 180 Ringing is received in seconds.
+MOS Score – Mean Opinion Score for the voice call. This KPI shall be measured on both ends of the Voice call – mobile originated and mobile terminated.
+Mute Rate % – Percentage of calls which were muted in both directions (calls with RTP loss of > 3-4s in both directions are considered muted call). This KPI shall be measured on both ends of the Voice call – mobile originated and mobile terminated and counted only once per call.
+One Way Calls % – Percentage of calls which were muted in any one direction (calls with RTP loss of > 3-4s in one direction only are considered one-way calls). This KPI shall be monitored on both ends of the Voice call – mobile originated and mobile terminated and counted only once per call.
+RTP Packet Loss % - Number of RTP packets which were dropped/lost in uplink/downlink direction as a percentage of total packets. This KPI shall be measured on both ends of the Voice call – mobile originated and mobile terminated.
+
+Along with the monitoring and validation of these services utilizing user experience KPIs, the O-RAN systems also shall be monitored. The end user service experience can also be impacted by some of the features available on the O-RAN system. Some of these features have been included below. As a part of the voice services testing, details of these features shall be included in the test report to get a comprehensive view of the setup used for testing. If additional features or functionalities have been enabled during this testing that impact the end user voice experience, these shall be included in the test report as well. 
+EPS Fallback for IMS Voice
+NR to EPS Mobility
+RLC in Unacknowledged Mode
+Robust Header Compression
+DRX
+Dynamic GBR Admission Control
+TTI Bundling
+VoLTE Inactivity Timer
+Frequency Hopping
+Multi-Target RRC Connection Re-Establishment
+VoLTE HARQ
+Coordinated Multi Point (DL and UL)
+VoLTE Quality Enhancement
+Packet Loss Detection
+Voice Codec Aware scheduler
+
+Please see Table 7-13 for a summary of test cases and applicable technology. 
+Table 7-13: EPS Fallback Test Case Selection summary
+
+
+
+EPS Fallback Test
+7.4.1.0 				Test Overview
+This scenario tests the voice service when an end user device (UE) is in 5G SA coverage and performs an EPS fallback to 4G to make or receive a voice call.
+Test Description
+This clause tests the voice service on a 5G SA network when it uses EPS fallback mechanism to fallback to the LTE network and use VoLTE to support voice service. This testing only applies to 5G SA deployment and in this scenario the UE is connected to the 5G SA Core and registered with the IMS core for voice service. When the end user device (UE) wants to make a voice call or receive a voice call, the network informs the device to fallback to the LTE network to make/receive the voice call. The EPS fallback does increase the Call Setup Time due to the time needed to fallback before making/receiving the voice call. 
+There are two mechanisms in which EPS fallback is supported on the 5G core, and the methodology used impacts the time taken to perform the fallback to LTE, and hence impacts the Call Setup Time. The two mechanisms that may be used to perform EPS fallback are included below. These two mechanisms do change the test setup, but do not change the testing procedure.
+With N26 interface – The AMF in the 5G core communicates with the MME in the 4G over the N26 interface. In this scenario the UE performs a handover from the 5G network to the 4G network.
+Without N26 interface – The AMF in the 5G core does not communicate directly with the 4G core, instead uses the UDM/HSS to store and transfer relevant session information to the 4G core. In this scenario the UE performs a Release with Redirect from the 5G network to the 4G network.
+Test Setup
+The SUT in this test case is an O-eNB along with a gNB (O-RU, O-DU and O-CU-CP/O-CU-UP). An interworking 4G-5G core (referred to as 4G-5G core going forward) which supports a combined anchor point, i.e. SMF+PGW-C and UPF+PGW-U is required. The O-eNB connects to a 4G-5G core over the 4G interfaces like S1 to provide 4G LTE service and the gNB (O-RU, O-DU and O-CU-CP/O-CU-UP) will connect to the 4G-5G core over the 5G interfaces like N2 and N3 to provide 5G SA service. The O-eNB, gNB and the components within these shall comply with the O-RAN specifications and support EPS fallback. The 4G-5G core will support the basic functionality to authenticate and register an end user device in order to setup a PDN connection/PDU session. The IMS core will  support registration of the end user device and will be integrated with the 4G-5G core to support voice services over VoLTE and EPS fallback. The 4G-5G core will interwork either using the N26 interface or without using N26 interface depending on the desired core network configuration. The existence of the N26 interface does reduce the EPS fallback time, reducing Call Setup Time and provides better end user experience. The 4G-5G and IMS cores may be a completely emulated, partially emulated or real non-emulated cores. At least two end user devices (UE) shall be used. which either can be real UEs or emulated, and both shall support voice service using VoLTE and EPS fallback procedure. The end user devices will serve as Mobile Originated (MO) and Mobile Terminated (MT) end user devices forming the two ends of the voice call. For the sake of clarity, these end user devices will be addressed as UE-1 and UE-2 in this clause. The test setup shall include tools which can collect traces on the elements and/or packet captures of communication between the elements. This can be a built-in capability of the emulated/non-emulated network elements or an external tool. Optionally, if some of the network elements are located remotely either in a cloud or on the internet, the additional latency should be calculated and accounted for. 
+The O-eNB, gNB and their components (O-RU, O-DU and O-CU-CP/O-CU-UP) shall have the right configuration and software load. The end user device shall be configured with the right user credentials to be able to register and authenticate with the O-RAN system and the 4G-5G core. The end user devices shall be provisioned with the user credentials to attach to the 4G-5G core and register with the IMS core to perform voice call using VoLTE and EPS fallback. The 4G-5G core network and IMS core shall be configured to support voice service on the end user devices used for testing, which includes dynamically setting up dedicated bearers for voice calls. 
+All the elements in the network like O-RAN system, 4G-5G core and the IMS Core should have the ability to capture traces to validate the successful execution of the test cases. The end user devices should have the capability to capture traces/packets to calculate the VoLTE KPIs. Optionally, the network can have network taps deployed in various legs of the network to get packet captures to validate successful execution of the test cases. Finally, all these different components shall have connectivity with each other – the end user device shall be able to connect to O-RAN system(O-eNBs and gNBs), O-RAN system shall be connected to the 4G-5G core which in turn shall have connectivity to the IMS Core.
+Test Methodology/Procedure
+Ensure the end user devices, O-RAN system, 4G-5G core and the IMS Core have all been configured as outlined in clause 7.4.1.2. In this test scenario, one of the end user device will be connected over the 4G O-eNB to the 4G-5G core, while the other end user device will be connected over 5G gNB (O-RU, O-DU and O-CU-CP/O-CU-UP) to the 4G-5G core. All traces and packet captures shall be enabled for the duration of the testing to ensure all communication between network elements can be captured and validated.
+Power on the two end user devices and ensure UE-1 is in LTE coverage, and UE-2 is in the 5G coverage. Validate both end user devices register to the 4G-5G core.
+Once the registration is complete, UE-1 and UE-2 shall establish a PDN connection and PDU session respectively with the 4G-5G core. Once the PDN connection and PDU session have been setup, both the end user devices shall register with the IMS core to support voice services.
+Use UE-1 as the MO end user device to call UE-2. Validate the UE-2 performs EPS fallback to LTE to receive the call. 
+Answer the call on UE-2 and continue to have two-way communication for at least 5 minutes and terminate the call. Measure the voice KPIs included in clause 7.4. 
+At this point UE-2 should have completed the call and moved back to connect to the 4G-5G Core over 5G gNB.
+Use UE-2 as the MO end user device to call UE-1. Validate the UE-2 performs EPS fallback to LTE  before making the call. 
+Answer the call on UE-1 and continue to have two-way communication for at least 5 minutes and terminate the call. Measure the voice KPIs included in clause 7.4. 
+Repeat the test multiple times (>10 times) and gather results.
+
+Test Expectation (expected results)
+As a pre-validation, use the traces to validate end user device UE-1 can perform a successful registration and PDN connection setup while using the O-eNB in LTE coverage. Similarly, use the traces to validate end user device UE-2 can perform a successful registration and PDU session setup while using gNB in 5G coverage. Verify both the end user devices can register with the IMS core for voice services. This is a prerequisite before these tests can be completed.
+Validate the end user devices can make a voice call between each other by dynamically setting up a QCI-1 bearer to transfer voice packets over RTP. Validate the device which is in the 5G coverage falls back to 4G before receiving or making a voice call, in other words the EPS fallback procedure was executed successfully. The Call Setup Time will be higher than VoLTE due to the delay associated with executing the EPS fallback procedure. Even though this test case does not directly impact the quality of the voice call, for the sake of consistency, ensure the voice quality from both parties are clear and audible without one-way or intermittent muting. Use the packet captures to validate there are no RTP packet drops or high RTP packet jitter which can cause voice muting issues. Use the packet captures to ensure there are no out-of-sequence packets which can impact customer’s voice experience. 
+The average range of values for the KPIs are included in Table 7-14 for guidance. These values are applicable when the testing is performed in a controlled environment in good radio condition without the interference of external factors which can impact the KPIs. For example: use of internet to connect to remote network nodes can add latency, jitter and packet loss issues to the connection, thus impacting the KPIs. As there are multiple variables which can impact the testing in this scenario, a KPI outcome outside the range does not necessarily point to a failure in the SUT. 
+Table 7-14 Typical Voice KPI values in controlled environments with good radio conditions
+
+These end user voice KPI values included in clause 7.3 shall be included in the test report along with the minimum configuration parameters included in clause 4.3. The following information should also be included in the test report to provide a comprehensive view of the test setup.
+End user device side (real or emulated UE):
+Radio parameters such as RSRP, RSRQ, PDSCH SINR (average sample per second)
+PDSCH BLER, PDSCH MCS, MIMO rank (number of layers) (average sample per second)
+Downlink transmission mode
+Channel utilization, i.e. Number of allocated/occupied downlink PRBs and Number of allocated/occupied slots (average sample per second)
+Table 7-15 gives an example of the test report considering the mean and standard deviation of all test results that have been captured. 
+Table 7-15 Example Test Report for Voice Service Testing – EPS Fallback
+The end user VoLTE experience can also be impacted by some of the features available (see clause 7.3) on the O-eNB, O-RU, O-DU and O-CU-CP/O-CU-UP. The details of these features, along with any other features/functionality which can impact the end user’s voice service experience should be included in the test report to provide a comprehensive view of the testing.

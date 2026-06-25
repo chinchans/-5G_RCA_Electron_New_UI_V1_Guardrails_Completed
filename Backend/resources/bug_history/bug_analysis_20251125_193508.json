@@ -1,0 +1,228 @@
+{
+  "error_message": "No AMF is associated to the gNB",
+  "log_file": "cu_ngap_failure.log",
+  "log_path": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\app\\services\\Error_fixing_pipelin\\log_files\\cu_ngap_failure.log",
+  "code_dir": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-test",
+  "timestamp": "2025-11-25T19:35:08.968543",
+  "results": {
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "code_patches": [],
+        "config_patches": [
+          {
+            "parameter_name": "GNB_IPV4_ADDRESS_FOR_NG_AMF",
+            "config_name": "GNB_IPV4_ADDRESS_FOR_NG_AMF",
+            "file_path": "cu_gnb.conf",
+            "current_value": "",
+            "new_value": "",
+            "suggested_value": "",
+            "description": "From commit e6a97149d5d742ca5c4dff9589507859639e8f82: Fix gNB configuration issue",
+            "commit_hash": "e6a97149d5d742ca5c4dff9589507859639e8f82",
+            "confidence": "medium-high",
+            "similarity_score": 0.6681820154190063
+          },
+          {
+            "parameter_name": "amf_ip_address",
+            "config_name": "amf_ip_address",
+            "file_path": "cu_gnb.conf",
+            "current_value": "",
+            "new_value": "",
+            "suggested_value": "",
+            "description": "From commit e6a97149d5d742ca5c4dff9589507859639e8f82: Fix gNB configuration issue",
+            "commit_hash": "e6a97149d5d742ca5c4dff9589507859639e8f82",
+            "confidence": "medium-high",
+            "similarity_score": 0.6681820154190063
+          }
+        ],
+        "fix_strategy": "RCA fix with 67% confidence",
+        "confidence_level": "medium-high",
+        "commit_info": {
+          "hash": "e6a97149d5d742ca5c4dff9589507859639e8f82",
+          "subject": "Fix gNB configuration issue",
+          "author": "Jayasvi Battu",
+          "date": "Mon Nov 24 18:22:07 2025 +0530",
+          "similarity_score": 0.6681820154190063
+        }
+      }
+    }
+  },
+  "history_file": "resources\\bug_history\\bug_analysis_20251125_193508.json",
+  "source": "existing_fix",
+  "from_git_history": true,
+  "git_metadata": {
+    "git_diff": "commit e6a97149d5d742ca5c4dff9589507859639e8f82\nAuthor:     Jayasvi Battu <1884596@tcsgenailab.onmicrosoft.com>\nAuthorDate: Mon Nov 24 18:22:07 2025 +0530\nCommit:     Jayasvi Battu <1884596@tcsgenailab.onmicrosoft.com>\nCommitDate: Mon Nov 24 18:22:07 2025 +0530\n\n    Fix gNB configuration issue\n    \n    Error Message: \"No AMF is associated to the gNB\"\n    \n    Applied 0 code patches and 2 config patches.\n    \n    Selected Patch Details:\n    - Config: GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf) (cu_gnb.conf)\n      Description: Must match deployment context value to ensure the gNB can reach the AMF.\n    - Config: amf_ip_address (cu_gnb.conf) (cu_gnb.conf)\n      Description: Must match deployment context value to ensure the gNB can reach the AMF.\n---\n targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf   |  4 +-\n .../GENERIC-NR-5GC/CONF/cu_gnb.conf.backup         | 78 ++++++++++++++++++++++\n 2 files changed, 80 insertions(+), 2 deletions(-)\n\ndiff --git a/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf b/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf\nindex ee0842a116..3921d18b26 100644\n--- a/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf\n+++ b/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf\n@@ -35,12 +35,12 @@ gNBs =\n \n \n     ////////// AMF parameters:\n-    amf_ip_address = ({ ipv4 = \"881.168.69.191\"; });\n+amf_ip_address = ({ ipv4 = \"192.168.70.132\"; });\n \n     NETWORK_INTERFACES :\n     {\n \n-        GNB_IPV4_ADDRESS_FOR_NG_AMF              = \"192.168.18.207\";\n+GNB_IPV4_ADDRESS_FOR_NG_AMF = \"10.138.77.131\";\n         GNB_IPV4_ADDRESS_FOR_NGU                 = \"192.168.18.207\";\n         GNB_PORT_FOR_S1U                         = 2152; # Spec 2152\n     };\ndiff --git a/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf.backup b/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf.backup\nnew file mode 100644\nindex 0000000000..7fe13476a2\n--- /dev/null\n+++ b/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf.backup\n@@ -0,0 +1,78 @@\n+Active_gNBs = ( \"gNB-Eurecom-CU\");\n+# Asn1_verbosity, choice in: none, info, annoying\n+Asn1_verbosity = \"none\";\n+\n+gNBs =\n+(\n+ {\n+    ////////// Identification parameters:\n+    gNB_ID = 0xe00;\n+\n+#     cell_type =  \"CELL_MACRO_GNB\";\n+\n+    gNB_name  =  \"gNB-Eurecom-CU\";\n+\n+    // Tracking area code, 0x0000 and 0xfffe are reserved values\n+    tracking_area_code  =  1;\n+    plmn_list = ({ mcc = 208; mnc = 99; mnc_length = 2; snssaiList = ({ sst = 1 }) });\n+\n+    nr_cellid = 12345678L;\n+\n+    tr_s_preference = \"f1\";\n+\n+    local_s_address = \"127.0.0.4\";\n+    remote_s_address = \"127.0.0.3\";\n+    local_s_portd   = 2152;\n+    remote_s_portd  = 2152;\n+\n+    # ------- SCTP definitions\n+    SCTP :\n+    {\n+        # Number of streams to use in input/output\n+        SCTP_INSTREAMS  = 2;\n+        SCTP_OUTSTREAMS = 2;\n+    };\n+\n+\n+    ////////// AMF parameters:\n+    amf_ip_address = ({ ipv4 = \"881.168.69.191\"; });\n+\n+    NETWORK_INTERFACES :\n+    {\n+\n+GNB_IPV4_ADDRESS_FOR_NG_AMF = \"10.138.77.131\";\n+        GNB_IPV4_ADDRESS_FOR_NGU                 = \"192.168.18.207\";\n+        GNB_PORT_FOR_S1U                         = 2152; # Spec 2152\n+    };\n+  }\n+);\n+\n+security = {\n+  # preferred ciphering algorithms\n+  # the first one of the list that an UE supports in chosen\n+  # valid values: nea0, nea1, nea2, nea3\n+  ciphering_algorithms = ( \"nea0\" );\n+\n+  # preferred integrity algorithms\n+  # the first one of the list that an UE supports in chosen\n+  # valid values: nia0, nia1, nia2, nia3\n+  integrity_algorithms = ( \"nia2\", \"nia0\" );\n+\n+  # setting 'drb_ciphering' to \"no\" disables ciphering for DRBs, no matter\n+  # what 'ciphering_algorithms' configures; same thing for 'drb_integrity'\n+  drb_ciphering = \"yes\";\n+  drb_integrity = \"no\";\n+};\n+     log_config :\n+     {\n+       global_log_level                      =\"info\";\n+       hw_log_level                          =\"info\";\n+       phy_log_level                         =\"info\";\n+       mac_log_level                         =\"info\";\n+       rlc_log_level                         =\"debug\";\n+       pdcp_log_level                        =\"info\";\n+       rrc_log_level                         =\"info\";\n+       f1ap_log_level                         =\"debug\";\n+       ngap_log_level                         =\"debug\";\n+    };\n+\n",
+    "current_branch": "develop",
+    "files_changed_summary": "2 files changed, 80 insertions(+), 2 deletions(-)",
+    "selection_result": {
+      "status": "suggested",
+      "confidence": "medium-high",
+      "commit": {
+        "similarity": 0.5303033590316772,
+        "index": 30598,
+        "commit_hash": "e6a97149d5d742ca5c4dff9589507859639e8f82",
+        "commit_hash_short": "e6a97149d5",
+        "author_name": "Jayasvi Battu",
+        "author_email": "1884596@tcsgenailab.onmicrosoft.com",
+        "date": "Mon Nov 24 18:22:07 2025 +0530",
+        "date_iso": "Mon Nov 24 18:22:07 2025 +0530",
+        "subject": "Fix gNB configuration issue",
+        "keywords": [
+          "issue",
+          "gnb",
+          "context",
+          "configuration",
+          "error",
+          "config",
+          "amf"
+        ],
+        "is_rca_commit": true,
+        "files_changed": [
+          "targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+          "targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf.backup"
+        ],
+        "code_patches": [],
+        "config_patches": [
+          {
+            "parameter": "GNB_IPV4_ADDRESS_FOR_NG_AMF",
+            "file": "cu_gnb.conf"
+          },
+          {
+            "parameter": "amf_ip_address",
+            "file": "cu_gnb.conf"
+          }
+        ],
+        "code_patch_count": 0,
+        "config_patch_count": 2,
+        "score_breakdown": {
+          "base_similarity": 0.5303033590316772,
+          "rca_boost": 0.2,
+          "keyword_overlap": 0.1,
+          "recency": 0.05,
+          "keyword_matches": [
+            "amf",
+            "gnb"
+          ]
+        },
+        "boosted_score": 0.6681820154190063,
+        "author": "Jayasvi Battu <1884596@tcsgenailab.onmicrosoft.com>",
+        "committer": "Jayasvi Battu <1884596@tcsgenailab.onmicrosoft.com>",
+        "commit_date": "Mon Nov 24 18:22:07 2025 +0530",
+        "body": "Fix gNB configuration issue\n\nError Message: \"No AMF is associated to the gNB\"\n\nApplied 0 code patches and 2 config patches.\n\nSelected Patch Details:\n- Config: GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf) (cu_gnb.conf)\nDescription: Must match deployment context value to ensure the gNB can reach the AMF.\n- Config: amf_ip_address (cu_gnb.conf) (cu_gnb.conf)\nDescription: Must match deployment context value to ensure the gNB can reach the AMF."
+      },
+      "alternatives": [
+        {
+          "similarity": 0.5208060145378113,
+          "index": 13808,
+          "commit_hash": "45b2b61d1fb27f2ac277aa8e68aa702500172c91",
+          "commit_hash_short": "45b2b61d1f",
+          "author_name": "matzakos",
+          "author_email": "panagiotis.matzakos@eurecom.fr",
+          "date": "Fri Apr 9 18:01:51 2021 +0200",
+          "date_iso": "2021-04-09T18:01:51+02:00",
+          "subject": "Trigger gNB registration with AMF for monolithic mode",
+          "keywords": [
+            "amf",
+            "registration"
+          ],
+          "is_rca_commit": false,
+          "files_changed": [],
+          "score_breakdown": {
+            "base_similarity": 0.5208060145378113,
+            "rca_boost": 0,
+            "keyword_overlap": 0.05,
+            "recency": 0,
+            "keyword_matches": [
+              "amf"
+            ]
+          },
+          "boosted_score": 0.36248360872268676
+        },
+        {
+          "similarity": 0.4970003366470337,
+          "index": 1086,
+          "commit_hash": "afe73820d6977342432af9c74e10ee9883faffd6",
+          "commit_hash_short": "afe73820d6",
+          "author_name": "Guido Casati",
+          "author_email": "hello@guidocasati.com",
+          "date": "Mon Sep 23 15:34:28 2024 +0200",
+          "date_iso": "2024-09-23T15:34:28+02:00",
+          "subject": "Refactor and cleanup rrc_gNB_send_NGAP_NAS_FIRST_REQ",
+          "keywords": [
+            "amf"
+          ],
+          "is_rca_commit": false,
+          "files_changed": [],
+          "score_breakdown": {
+            "base_similarity": 0.4970003366470337,
+            "rca_boost": 0,
+            "keyword_overlap": 0.05,
+            "recency": 0,
+            "keyword_matches": [
+              "amf"
+            ]
+          },
+          "boosted_score": 0.3482002019882202
+        }
+      ],
+      "reasoning": "RCA fix with 67% confidence",
+      "should_apply": true,
+      "error_message": "No AMF is associated to the gNB"
+    },
+    "confidence": "medium-high",
+    "score": 0.6681820154190063,
+    "reasoning": "RCA fix with 67% confidence",
+    "full_commit": {
+      "similarity": 0.5303033590316772,
+      "index": 30598,
+      "commit_hash": "e6a97149d5d742ca5c4dff9589507859639e8f82",
+      "commit_hash_short": "e6a97149d5",
+      "author_name": "Jayasvi Battu",
+      "author_email": "1884596@tcsgenailab.onmicrosoft.com",
+      "date": "Mon Nov 24 18:22:07 2025 +0530",
+      "date_iso": "Mon Nov 24 18:22:07 2025 +0530",
+      "subject": "Fix gNB configuration issue",
+      "keywords": [
+        "issue",
+        "gnb",
+        "context",
+        "configuration",
+        "error",
+        "config",
+        "amf"
+      ],
+      "is_rca_commit": true,
+      "files_changed": [
+        "targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+        "targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf.backup"
+      ],
+      "code_patches": [],
+      "config_patches": [
+        {
+          "parameter": "GNB_IPV4_ADDRESS_FOR_NG_AMF",
+          "file": "cu_gnb.conf"
+        },
+        {
+          "parameter": "amf_ip_address",
+          "file": "cu_gnb.conf"
+        }
+      ],
+      "code_patch_count": 0,
+      "config_patch_count": 2,
+      "score_breakdown": {
+        "base_similarity": 0.5303033590316772,
+        "rca_boost": 0.2,
+        "keyword_overlap": 0.1,
+        "recency": 0.05,
+        "keyword_matches": [
+          "amf",
+          "gnb"
+        ]
+      },
+      "boosted_score": 0.6681820154190063,
+      "author": "Jayasvi Battu <1884596@tcsgenailab.onmicrosoft.com>",
+      "committer": "Jayasvi Battu <1884596@tcsgenailab.onmicrosoft.com>",
+      "commit_date": "Mon Nov 24 18:22:07 2025 +0530",
+      "body": "Fix gNB configuration issue\n\nError Message: \"No AMF is associated to the gNB\"\n\nApplied 0 code patches and 2 config patches.\n\nSelected Patch Details:\n- Config: GNB_IPV4_ADDRESS_FOR_NG_AMF (cu_gnb.conf) (cu_gnb.conf)\nDescription: Must match deployment context value to ensure the gNB can reach the AMF.\n- Config: amf_ip_address (cu_gnb.conf) (cu_gnb.conf)\nDescription: Must match deployment context value to ensure the gNB can reach the AMF."
+    }
+  }
+}

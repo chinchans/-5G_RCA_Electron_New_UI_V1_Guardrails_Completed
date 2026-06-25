@@ -1,0 +1,463 @@
+{
+  "timestamp": "2025-10-15T16:24:02.618458",
+  "log_file": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\resources\\rca_logs\\79898f40-c59f-4d44-ad41-f5eb00b220c3_cu_ngap_failure.log",
+  "error_analysis": {
+    "identified_errors": {
+      "amf_association_failure": [
+        {
+          "line_number": 226,
+          "line": "\u001b[0m\u001b[93m[NGAP]   No AMF is associated to the gNB",
+          "context": [
+            "\u001b[0m[NR_RRC]   Received message F1AP_UL_RRC_MESSAGE",
+            "\u001b[0m\u001b[32m[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 9410] [RAPROC] Logical Channel UL-DCCH, processing NR_RRCSetupComplete from UE (SRB1 Active)",
+            "\u001b[0m[NGAP]   registration_request=1",
+            "\u001b[0m[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 9410] UE State = NR_RRC_CONNECTED",
+            "\u001b[0m[NR_RRC]   rrcsetup_complete=1",
+            "\u001b[0m\u001b[93m[NGAP]   No AMF is associated to the gNB",
+            "\u001b[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0",
+            "\u001b[0m[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_InitialULRRCMessageTransfer",
+            "\u001b[0m[F1AP]   Calling handler with instance 0",
+            "\u001b[0m[F1AP]   Adding a new UE with RNTI 60af and cu/du ue_f1ap_id 24751",
+            "\u001b[0m[NR_RRC]   Received message F1AP_INITIAL_UL_RRC_MESSAGE"
+          ],
+          "pattern": "No AMF is associated to the gNB",
+          "severity": "critical",
+          "layer": "NGAP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.9
+        }
+      ]
+    },
+    "error_counts": {
+      "amf_association_failure": 1
+    },
+    "error_timestamps": {
+      "amf_association_failure": []
+    },
+    "layer_counts": {
+      "NGAP": 1
+    },
+    "severity_counts": {
+      "critical": 1,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "meta": {
+      "file": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\resources\\rca_logs\\79898f40-c59f-4d44-ad41-f5eb00b220c3_cu_ngap_failure.log",
+      "lines_analyzed": 292,
+      "protocol_filter": null,
+      "timestamp": "2025-10-15T16:23:27.110681"
+    }
+  },
+  "function_analysis": {
+    "affected_functions": [
+      {
+        "name": "ngap_gNB_handle_nas_first_req",
+        "file": "openairinterface5g/openair3/NGAP/ngap_gNB_nas_procedures.c",
+        "relevance": "direct_log",
+        "score": 100,
+        "in_degree": 1,
+        "out_degree": 22,
+        "centrality": 23
+      },
+      {
+        "name": "ngap_gNB_register_amf",
+        "file": "openairinterface5g/openair3/NGAP/ngap_gNB.c",
+        "relevance": "keyword_match",
+        "score": 35,
+        "in_degree": 0,
+        "out_degree": 9,
+        "centrality": 9
+      },
+      {
+        "name": "ngap_gNB_remove_amf_desc",
+        "file": "openairinterface5g/openair3/NGAP/ngap_gNB_management_procedures.c",
+        "relevance": "keyword_match",
+        "score": 35,
+        "in_degree": 0,
+        "out_degree": 6,
+        "centrality": 6
+      },
+      {
+        "name": "ngap_gNB_handle_sctp_association_resp",
+        "file": "openairinterface5g/openair3/NGAP/ngap_gNB.c",
+        "relevance": "keyword_match",
+        "score": 30,
+        "in_degree": 1,
+        "out_degree": 5,
+        "centrality": 6
+      },
+      {
+        "name": "ngap_gNB_handle_ng_setup_failure",
+        "file": "openairinterface5g/openair3/NGAP/ngap_gNB_handlers.c",
+        "relevance": "keyword_match",
+        "score": 30,
+        "in_degree": 0,
+        "out_degree": 4,
+        "centrality": 4
+      },
+      {
+        "name": "ngap_gNB_itti_send_sctp_close_association",
+        "file": "openairinterface5g/openair3/NGAP/ngap_gNB_itti_messaging.c",
+        "relevance": "keyword_match",
+        "score": 30,
+        "in_degree": 0,
+        "out_degree": 2,
+        "centrality": 2
+      },
+      {
+        "name": "ngap_gNB_get_AMF",
+        "file": "openairinterface5g/openair3/NGAP/ngap_gNB_management_procedures.c",
+        "relevance": "keyword_match",
+        "score": 30,
+        "in_degree": 0,
+        "out_degree": 2,
+        "centrality": 2
+      },
+      {
+        "name": "ngap_gNB_get_AMF_from_instance",
+        "file": "openairinterface5g/openair3/NGAP/ngap_gNB_management_procedures.c",
+        "relevance": "keyword_match",
+        "score": 30,
+        "in_degree": 0,
+        "out_degree": 2,
+        "centrality": 2
+      },
+      {
+        "name": "ngap_gNB_nnsf_select_amf_by_guami",
+        "file": "Unknown",
+        "relevance": "keyword_match",
+        "score": 30,
+        "in_degree": 1,
+        "out_degree": 0,
+        "centrality": 1
+      },
+      {
+        "name": "ngap_gNB_nnsf_select_amf_by_amf_setid",
+        "file": "Unknown",
+        "relevance": "keyword_match",
+        "score": 30,
+        "in_degree": 1,
+        "out_degree": 0,
+        "centrality": 1
+      },
+      {
+        "name": "ngap_gNB_nnsf_select_amf_by_plmn_id",
+        "file": "Unknown",
+        "relevance": "keyword_match",
+        "score": 30,
+        "in_degree": 1,
+        "out_degree": 0,
+        "centrality": 1
+      },
+      {
+        "name": "ngap_gNB_nnsf_select_amf",
+        "file": "Unknown",
+        "relevance": "keyword_match",
+        "score": 30,
+        "in_degree": 1,
+        "out_degree": 0,
+        "centrality": 1
+      },
+      {
+        "name": "rrc_gNB_send_NGAP_NAS_FIRST_REQ",
+        "file": "openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c",
+        "relevance": "keyword_match",
+        "score": 25,
+        "in_degree": 1,
+        "out_degree": 9,
+        "centrality": 10
+      },
+      {
+        "name": "rrc_gNB_send_NGAP_UE_CAPABILITIES_IND",
+        "file": "openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c",
+        "relevance": "keyword_match",
+        "score": 25,
+        "in_degree": 1,
+        "out_degree": 10,
+        "centrality": 11
+      },
+      {
+        "name": "rrc_gNB_send_NGAP_PDUSESSION_RELEASE_RESPONSE",
+        "file": "openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c",
+        "relevance": "keyword_match",
+        "score": 25,
+        "in_degree": 2,
+        "out_degree": 6,
+        "centrality": 8
+      },
+      {
+        "name": "rrc_gNB_send_NGAP_PDUSESSION_MODIFY_RESP",
+        "file": "openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c",
+        "relevance": "keyword_match",
+        "score": 25,
+        "in_degree": 1,
+        "out_degree": 10,
+        "centrality": 11
+      },
+      {
+        "name": "rrc_gNB_process_NGAP_DOWNLINK_NAS",
+        "file": "openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c",
+        "relevance": "keyword_match",
+        "score": 25,
+        "in_degree": 1,
+        "out_degree": 8,
+        "centrality": 9
+      },
+      {
+        "name": "rrc_gNB_process_NGAP_PDUSESSION_SETUP_REQ",
+        "file": "openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c",
+        "relevance": "keyword_match",
+        "score": 25,
+        "in_degree": 1,
+        "out_degree": 9,
+        "centrality": 10
+      },
+      {
+        "name": "rrc_gNB_process_NGAP_PDUSESSION_MODIFY_REQ",
+        "file": "openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c",
+        "relevance": "keyword_match",
+        "score": 25,
+        "in_degree": 1,
+        "out_degree": 10,
+        "centrality": 11
+      },
+      {
+        "name": "rrc_gNB_process_NGAP_PDUSESSION_RELEASE_COMMAND",
+        "file": "openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c",
+        "relevance": "keyword_match",
+        "score": 25,
+        "in_degree": 1,
+        "out_degree": 9,
+        "centrality": 10
+      }
+    ],
+    "critical_functions": [
+      {
+        "name": "AssertFatal",
+        "file": "Unknown",
+        "relevance": "connectivity",
+        "score": 5,
+        "in_degree": 1278,
+        "out_degree": 0,
+        "centrality": 1278
+      },
+      {
+        "name": "printf",
+        "file": "Unknown",
+        "relevance": "connectivity",
+        "score": 5,
+        "in_degree": 1068,
+        "out_degree": 0,
+        "centrality": 1068
+      },
+      {
+        "name": "LOG_D",
+        "file": "Unknown",
+        "relevance": "connectivity",
+        "score": 5,
+        "in_degree": 925,
+        "out_degree": 0,
+        "centrality": 925
+      },
+      {
+        "name": "return",
+        "file": "Unknown",
+        "relevance": "connectivity",
+        "score": 5,
+        "in_degree": 895,
+        "out_degree": 0,
+        "centrality": 895
+      },
+      {
+        "name": "memset",
+        "file": "Unknown",
+        "relevance": "connectivity",
+        "score": 5,
+        "in_degree": 868,
+        "out_degree": 0,
+        "centrality": 868
+      }
+    ],
+    "git_history": {}
+  },
+  "impact_analysis": {
+    "error_impacts": {
+      "amf_association_failure": {
+        "error_type": "amf_association_failure",
+        "primary_layer": "NGAP",
+        "affected_layers": [
+          "NGAP",
+          "RRC",
+          "PDCP",
+          "MAC",
+          "PHY",
+          "RLC"
+        ],
+        "severity": "critical",
+        "impact_description": "UE connection establishment completely blocked",
+        "impact_scores": {
+          "user_experience": [
+            {
+              "area": "connection_establishment",
+              "level": "Medium",
+              "score": 0.5
+            },
+            {
+              "area": "data_integrity",
+              "level": "Medium",
+              "score": 0.5
+            }
+          ],
+          "network_performance": [
+            {
+              "area": "resource_utilization",
+              "level": "Medium",
+              "score": 0.5
+            },
+            {
+              "area": "capacity",
+              "level": "Medium",
+              "score": 0.5
+            }
+          ],
+          "operations": [
+            {
+              "area": "debug_complexity",
+              "level": "Medium",
+              "score": 0.5
+            },
+            {
+              "area": "deployment_complexity",
+              "level": "Medium",
+              "score": 0.5
+            }
+          ]
+        }
+      }
+    },
+    "combined_impact": {},
+    "cascade_effects": {
+      "amf_association_failure": {
+        "error_type": "amf_association_failure",
+        "primary_layer": "NGAP",
+        "severity": "critical",
+        "cascade": [
+          {
+            "layer": "NGAP",
+            "impact": "UE connection establishment completely blocked",
+            "stage": 1
+          },
+          {
+            "layer": "RRC",
+            "impact": "May disrupt control plane signaling",
+            "stage": 2
+          },
+          {
+            "layer": "PDCP",
+            "impact": "May cause security context issues and PDCP reconfiguration failures",
+            "stage": 3
+          },
+          {
+            "layer": "MAC",
+            "impact": "May affect resource allocation and scheduling",
+            "stage": 3
+          },
+          {
+            "layer": "PHY",
+            "impact": "May cause misconfiguration of physical layer parameters",
+            "stage": 3
+          }
+        ]
+      }
+    },
+    "critical_impacts": []
+  },
+  "kb_analysis": {
+    "issue_matches": {},
+    "function_insights": {},
+    "protocol_references": {
+      "NGAP": {
+        "spec_id": "38.413",
+        "title": "NG-RAN; NG Application Protocol (NGAP)",
+        "url": "https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=3224",
+        "sections": {
+          "8.2.1": "PDU Session Resource Setup procedure",
+          "8.3.1": "Initial Context Setup procedure",
+          "8.3.2": "UE Context Release Request",
+          "8.8": "Transport of NAS Messages",
+          "9.2": "Error Indication"
+        }
+      }
+    },
+    "fix_recommendations": [
+      "Recheck and correct AMF IP, port, and gNB configuration files: openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+      "Ensure PLMN, TAI, and slices in gNB match those in AMF",
+      "Add a static route to the AMF machine if it is running on a different network or interface: ip route add <AMF_IP> via <gNB_IP> dev <interface>",
+      "Add detailed logging around error location",
+      "Check if the AMF is reachable from the gNB",
+      "Validate network configuration and ensure AMF parameters are correctly set in configuration files like AMF IP, port"
+    ],
+    "comprehensive_rca": {
+      "error_type": "amf_association_failure",
+      "summary": "Root Cause Analysis for amf_association_failure in NGAP layer (function: ngap_gNB_handle_nas_first_req)\n\nSpecification Context:\nThis functionality is governed by 3GPP 38.413 - NG-RAN; NG Application Protocol (NGAP). \nRecommended Fixes:\n- Recheck and correct AMF IP, port, and gNB configuration files: openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf\n- Validate network configuration and ensure AMF parameters are correctly set in configuration files like AMF IP, port\n- Check if the AMF is reachable from the gNB\n- Ensure PLMN, TAI, and slices in gNB match those in AMF\n- Add a static route to the AMF machine if it is running on a different network or interface: ip route add <AMF_IP> via <gNB_IP> dev <interface>\n- Add detailed logging around error location\n\nImpact Assessment:\n- User Experience: medium impact\n- System Performance: medium impact\n- System Stability: medium impact\n- Cascade Effects: This issue may affect the following layers:\n  * F1AP: Issues in NGAP can propagate to F1AP layer, affecting its functionality\n",
+      "historical_issues": [],
+      "fix_recommendations": [
+        "Recheck and correct AMF IP, port, and gNB configuration files: openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+        "Validate network configuration and ensure AMF parameters are correctly set in configuration files like AMF IP, port",
+        "Check if the AMF is reachable from the gNB",
+        "Ensure PLMN, TAI, and slices in gNB match those in AMF",
+        "Add a static route to the AMF machine if it is running on a different network or interface: ip route add <AMF_IP> via <gNB_IP> dev <interface>",
+        "Add detailed logging around error location"
+      ],
+      "impact_assessment": {
+        "user_experience": "medium",
+        "system_performance": "medium",
+        "stability": "medium",
+        "cascade_effects": [
+          {
+            "layer": "F1AP",
+            "impact": "affected",
+            "description": "Issues in NGAP can propagate to F1AP layer, affecting its functionality"
+          }
+        ]
+      }
+    }
+  },
+  "ai_analysis": {
+    "root_cause": "amf_association_failure detected in NGAP layer with critical severity. This indicates an issue in the NGAP layer functionality, specifically in the association between the gNB and the AMF. In this case, no AMF is associated to the gNB. Common causes include incorrect NGAP message handling, missing or misconfigured AMF parameters, missing routing information or protocol mismatches.",
+    "suggested_fixes": [
+      "1. Recheck and correct AMF IP, port, and gNB configuration files: openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+      "2. Validate network configuration and ensure AMF parameters are correctly set in configuration files like AMF IP, port, ",
+      "3. Check if the AMF is reachable from the gNB",
+      "4. Ensure PLMN, TAI, and slices in gNB match those in AMF.",
+      "5. Add a static route to the AMF machine if it is running on a different network or interface: ip route add <AMF_IP> via <gNB_IP> dev <interface>"
+    ],
+    "specifications": [
+      "3GPP TS 38.413 - NG-RAN; NG Application Protocol (NGAP)",
+      "3GPP TS 38.413 Section 8 - NGAP procedures",
+      "3GPP TS 38.401 - NG-RAN architecture description"
+    ],
+    "function_analysis": [
+      "Check ngap_gNB_handle_nas_first_req() function implementation",
+      "Review error handling and logging in NGAP association setup",
+      "Verify AMF parameters and network configuration",
+      "Check for protocol mismatches or unsupported NGAP messages",
+      "Focus on ngap_gNB_handle_nas_first_req function in openairinterface5g/openair3/NGAP/ngap_gNB_nas_procedures.c"
+    ]
+  },
+  "meta": {
+    "offline_mode": true,
+    "oai_repo_dir": "openairinterface5g",
+    "components_available": {
+      "error_analyzer": true,
+      "impact_analyzer": true,
+      "function_graph": true,
+      "kb_connector": true,
+      "clang_analyzer": true,
+      "openai_client": false
+    }
+  }
+}

@@ -1,0 +1,924 @@
+[ENB_APP]   nfapi running mode: MONOLITHIC
+[0m[ITTI]   Starting itti queue: TASK_UNKNOWN as task 0
+[0m[ITTI]   Starting itti queue: TASK_TIMER as task 1
+[0m[ITTI]   Starting itti queue: TASK_L2L1 as task 2
+[0m[ITTI]   Starting itti queue: TASK_BM as task 3
+[0m[ITTI]   Starting itti queue: TASK_PHY_ENB as task 4
+[0m[ITTI]   Starting itti queue: TASK_MAC_ENB as task 5
+[0m[ITTI]   Starting itti queue: TASK_MAC_GNB as task 6
+[0m[ITTI]   Starting itti queue: TASK_RLC_ENB as task 7
+[0m[ITTI]   Starting itti queue: TASK_RRC_ENB_NB_IoT as task 8
+[0m[ITTI]   Starting itti queue: TASK_PDCP_ENB as task 9
+[0m[ITTI]   Starting itti queue: TASK_PDCP_GNB as task 10
+[0m[ITTI]   Starting itti queue: TASK_DATA_FORWARDING as task 11
+[0m[ITTI]   Starting itti queue: TASK_END_MARKER as task 12
+[0m[ITTI]   Starting itti queue: TASK_RRC_ENB as task 13
+[0m[ITTI]   Starting itti queue: TASK_RRC_GNB as task 14
+[0m[ITTI]   Starting itti queue: TASK_RAL_ENB as task 15
+[0m[ITTI]   Starting itti queue: TASK_S1AP as task 16
+[0m[ITTI]   Starting itti queue: TASK_NGAP as task 17
+[0m[ITTI]   Starting itti queue: TASK_X2AP as task 18
+[0m[ITTI]   Starting itti queue: TASK_M2AP_ENB as task 19
+[0m[ITTI]   Starting itti queue: TASK_M2AP_MCE as task 20
+[0m[ITTI]   Starting itti queue: TASK_M3AP as task 21
+[0m[ITTI]   Starting itti queue: TASK_M3AP_MME as task 22
+[0m[ITTI]   Starting itti queue: TASK_M3AP_MCE as task 23
+[0m[ITTI]   Starting itti queue: TASK_SCTP as task 24
+[0m[ITTI]   Starting itti queue: TASK_ENB_APP as task 25
+[0m[ITTI]   Starting itti queue: TASK_GNB_APP as task 26
+[0m[ITTI]   Starting itti queue: TASK_MCE_APP as task 27
+[0m[ITTI]   Starting itti queue: TASK_MME_APP as task 28
+[0m[ITTI]   Starting itti queue: TASK_FLEXRAN_AGENT as task 29
+[0m[ITTI]   Starting itti queue: TASK_PHY_UE as task 30
+[0m[ITTI]   Starting itti queue: TASK_MAC_UE as task 31
+[0m[ITTI]   Starting itti queue: TASK_RLC_UE as task 32
+[0m[ITTI]   Starting itti queue: TASK_PDCP_UE as task 33
+[0m[ITTI]   Starting itti queue: TASK_RRC_UE as task 34
+[0m[ITTI]   Starting itti queue: TASK_RRC_NRUE as task 35
+[0m[ITTI]   Starting itti queue: TASK_NAS_UE as task 36
+[0m[ITTI]   Starting itti queue: TASK_RAL_UE as task 37
+[0m[ITTI]   Starting itti queue: TASK_GTPV1_U as task 38
+[0m[ITTI]   Starting itti queue: TASK_CU_F1 as task 39
+[0m[ITTI]   Starting itti queue: TASK_DU_F1 as task 40
+[0m[ITTI]   Starting itti queue: TASK_CUCP_E1 as task 41
+[0m[ITTI]   Starting itti queue: TASK_CUUP_E1 as task 42
+[0m[ITTI]   Starting itti queue: TASK_RRC_UE_SIM as task 43
+[0m[ITTI]   Starting itti queue: TASK_RRC_GNB_SIM as task 44
+[0m[ITTI]   Starting itti queue: TASK_RRC_NSA_UE as task 45
+[0m[ITTI]   Starting itti queue: TASK_RRC_NSA_NRUE as task 46
+[0m[ITTI]   Starting itti queue: TASK_NAS_NRUE as task 47
+[0m[OPT]   OPT disabled
+[0m[HW]   Version: Branch: master Abrev. Hash: ae3d0b7 Date: Tue Nov 1 17:03:55 2022 +0530
+[0m[NR_MAC]   [UE0] Applying default macMainConfig
+[0m[MAC]   Running without CellGroupConfig
+[0m[PDCP]   pdcp init,usegtp usenetlink
+[0m[PDCP]   TUN: Opened socket oaitun_ue1 with fd nas_sock_fd[0]=101
+[0m[PDCP]   UE pdcp will use tun interface
+[0m[PHY]   Set UE mode 6, UE_fo_compensation 0, UE_scan_carrier 0, UE_no_timing_correction 0 
+, chest-freq 0
+[0m[PHY]   Set UE nb_rx_antenna 1, nb_tx_antenna 1, threequarter_fs 0, ssb_start_subcarrier 516
+[0m[PHY]   SA init parameters. DL freq 3619200000 UL offset 0 SSB numerology 1 N_RB_DL 106
+[0m[NR_MAC]   NR band duplex spacing is 0 KHz (nr_bandtable[23].band = 48)
+[0m[NR_MAC]   NR band 48, duplex mode TDD, duplex spacing = 0 KHz
+[0m[93m[PHY]   Init: N_RB_DL 106, first_carrier_offset 1412, nb_prefix_samples 144,nb_prefix_samples0 176, ofdm_symbol_size 2048
+[0m[93m[PHY]   samples_per_subframe 61440/per second 61440000, wCP 57344
+[0m[PHY]   Initializing UE vars for gNB TXant 1, UE RXant 1
+[0m[1;31m[PHY]   prs_config configuration NOT found..!! Skipped configuring UE for the PRS reception
+[0m[PHY]   Doing symbol rotation calculation for gNB TX/RX, f0 3619200000.000000 Hz, Nsymb 28
+[0m[PHY]   Symbol rotation 0/28 => tl 0.000000 (-32767,-1) (0.500000)
+[0m[PHY]   Symbol rotation 1/28 => tl 0.000036 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 2/28 => tl 0.000072 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 3/28 => tl 0.000108 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 4/28 => tl 0.000143 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 5/28 => tl 0.000179 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 6/28 => tl 0.000215 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 7/28 => tl 0.000250 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 8/28 => tl 0.000286 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 9/28 => tl 0.000322 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 10/28 => tl 0.000357 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 11/28 => tl 0.000393 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 12/28 => tl 0.000429 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 13/28 => tl 0.000464 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 14/28 => tl 0.000500 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 15/28 => tl 0.000536 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 16/28 => tl 0.000572 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 17/28 => tl 0.000608 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 18/28 => tl 0.000643 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 19/28 => tl 0.000679 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 20/28 => tl 0.000715 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 21/28 => tl 0.000750 (32767,0) (0.000000)
+[0m[PHY]   Symbol rotation 22/28 => tl 0.000786 (-32767,-1) (0.500000)
+[0m[PHY]   Symbol rotation 23/28 => tl 0.000822 (32767,0) (0.000000)
+[0m[PHY]   Symbol rotation 24/28 => tl 0.000857 (-32767,-1) (0.500000)
+[0m[PHY]   Symbol rotation 25/28 => tl 0.000893 (32767,0) (1.000000)
+[0m[PHY]   Symbol rotation 26/28 => tl 0.000929 (-32767,-1) (0.500000)
+[0m[PHY]   Symbol rotation 27/28 => tl 0.000964 (32767,0) (1.000000)
+[0m[PHY]   Doing symbol rotation calculation for gNB TX/RX, f0 3619200000.000000 Hz, Nsymb 28
+[0m[PHY]   Symbol rotation 0/28 => tl 0.000000 (-32767,-1) (0.500000)
+[0m[PHY]   Symbol rotation 1/28 => tl 0.000036 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 2/28 => tl 0.000072 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 3/28 => tl 0.000108 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 4/28 => tl 0.000143 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 5/28 => tl 0.000179 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 6/28 => tl 0.000215 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 7/28 => tl 0.000250 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 8/28 => tl 0.000286 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 9/28 => tl 0.000322 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 10/28 => tl 0.000357 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 11/28 => tl 0.000393 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 12/28 => tl 0.000429 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 13/28 => tl 0.000464 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 14/28 => tl 0.000500 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 15/28 => tl 0.000536 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 16/28 => tl 0.000572 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 17/28 => tl 0.000608 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 18/28 => tl 0.000643 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 19/28 => tl 0.000679 (32767,-1) (0.000000)
+[0m[PHY]   Symbol rotation 20/28 => tl 0.000715 (-32767,0) (0.500000)
+[0m[PHY]   Symbol rotation 21/28 => tl 0.000750 (32767,0) (0.000000)
+[0m[PHY]   Symbol rotation 22/28 => tl 0.000786 (-32767,-1) (0.500000)
+[0m[PHY]   Symbol rotation 23/28 => tl 0.000822 (32767,0) (0.000000)
+[0m[PHY]   Symbol rotation 24/28 => tl 0.000857 (-32767,-1) (0.500000)
+[0m[PHY]   Symbol rotation 25/28 => tl 0.000893 (32767,0) (1.000000)
+[0m[PHY]   Symbol rotation 26/28 => tl 0.000929 (-32767,-1) (0.500000)
+[0m[PHY]   Symbol rotation 27/28 => tl 0.000964 (32767,0) (1.000000)
+[0m[PHY]   Timeshift symbol rotation 0 => (32767,0) 0.000000
+[0m[PHY]   Timeshift symbol rotation 1 => (32717,1809) -0.055223
+[0m[PHY]   Timeshift symbol rotation 2 => (32567,3612) -0.110447
+[0m[PHY]   Timeshift symbol rotation 3 => (32318,5404) -0.165670
+[0m[PHY]   Timeshift symbol rotation 4 => (31971,7179) -0.220893
+[0m[PHY]   Timeshift symbol rotation 5 => (31526,8933) -0.276117
+[0m[PHY]   Timeshift symbol rotation 6 => (30985,10659) -0.331340
+[0m[PHY]   Timeshift symbol rotation 7 => (30349,12353) -0.386563
+[0m[PHY]   Timeshift symbol rotation 8 => (29621,14010) -0.441786
+[0m[PHY]   Timeshift symbol rotation 9 => (28803,15623) -0.497010
+[0m[PHY]   UE 0 Setting N_TA_offset to 800 samples (factor 2.000000, UL Freq 3619200000, N_RB 106, mu 1)
+[0m[PHY]   HW: Configuring card 0, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   HW: Configuring card 1, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   HW: Configuring card 2, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   HW: Configuring card 3, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   HW: Configuring card 4, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   HW: Configuring card 5, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   HW: Configuring card 6, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   HW: Configuring card 7, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[HW]   # /dev/cpu_dma_latency set to 2 us
+[0m[PHY]   Intializing UE Threads for instance 0 (0x55845a5cfe70,0x7fbf312ab010)...
+[0m[NR_RRC]   create TASK_RRC_NRUE 
+[0m[93m[HW]   rfsim: sample_rate 61440000.000000
+[0m[HW]   rfsimulator: running as client: will connect to a rfsimulator server side
+[0m[HW]   [RRU] has loaded RFSIMULATOR device.
+[0m[HW]   rfsimulator: trying to connect to 10.138.77.162:4043
+[0m[HW]   rfsimulator: connection established
+[0m[ITTI]   Created Posix thread TASK_RRC_NRUE
+[0m[ITTI]   Created Posix thread TASK_NAS_NRUE
+[0m[93m[HW]   UE got first timestamp: starting at 44359679
+[0m[93m[HW]   UEsock: 104 gap of: 1 in reception
+[0m[PHY]   [SCHED][UE] Check absolute frequency DL 3619200000.000000, UL 3619200000.000000 (RF card 0, oai_exit 0, channel 0, rx_num_channels 1)
+[0m[93m[PHY]   Starting sync detection
+[0m[PHY]   [UE thread Synch] Running Initial Synch (mode 6)
+[0m[PHY]   [UE] nr_synchro_time: Sync source = 0, Peak found at pos 0, val = 0 (0 dB) avg 0 dB, ffo 0.000000
+[0m[PHY]   [UE0] Initial sync : Estimated PSS position 0, Nid2 0
+[0m[PHY]   sync_pos 0 ssb_offset 614256 
+[0m[PHY]   Calling sss detection (normal CP)
+[0m[PHY]   TDD Normal prefix: CellId 0 metric 0, phase 0, pbch -1
+[0m[PHY]   [UE] nr_synchro_time: Sync source = 0, Peak found at pos 496080, val = 8511538725 (96 dB) avg 61 dB, ffo 0.000000
+[0m[PHY]   [UE0] Initial sync : Estimated PSS position 496080, Nid2 0
+[0m[PHY]   sync_pos 496080 ssb_offset 495936 
+[0m[PHY]   Calling sss detection (normal CP)
+[0m[NR_PHY]   ffo_pss 0.000000 (0 Hz), ffo_sss 0.000507 (15 Hz),  ffo_pss+ffo_sss 0.000507 (15 Hz)
+[0m[PHY]   [UE0] Initial sync: starting PBCH detection (rx_offset 0)
+[0m[32m[NR_RRC]   Configuring MAC for first MIB reception
+[0m[PHY]   [UE0] Initial sync: pbch decoded sucessfully
+[0m[PHY]   TDD Normal prefix: CellId 0 metric 53026, phase 7, pbch 0
+[0m[PHY]   [UE0] In synch, rx_offset 491520 samples
+[0m[PHY]   HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   Got synch: hw_slot_offset 32, carrier off 0 Hz, rxgain 0.000000 (DL 3619200000.000000 Hz, UL 3619200000.000000 Hz)
+[0m[32m[NR_RRC]   SIB1 decoded
+[0m[NR_MAC]   NR band duplex spacing is 0 KHz (nr_bandtable[37].band = 78)
+[0m[NR_MAC]   NR band 78, duplex mode TDD, duplex spacing = 0 KHz
+[0m[NR_MAC]   TDD has been properly configured
+[0m[NR_MAC]   Initializing ul_config_request. num_slots_ul = 3
+[0m[PHY]   Resynchronizing RX by 491520 samples (mode = 6)
+[0m[93m[NR_MAC]   Slot 5 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 6 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 10 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 11 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 12 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 13 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 14 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 15 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 16 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 0 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 1 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 2 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 3 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 4 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 5 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 6 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 10 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 11 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 12 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 13 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 14 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 15 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0m[93m[NR_MAC]   Slot 16 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   mac->ul_config is null!
+[0mCMDLINE: "./nr-uesoftmodem" "-r" "106" "--numerology" "1" "--band" "78" "-C" "3619200000" "--rfsim" "--sa" "-O" "/v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf" "--nokrnmod" "1" 
+[CONFIG] get parameters from libconfig /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf , debug flags: 0x00000000
+[LIBCONFIG] Path for include directive set to: /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS
+[CONFIG] function config_libconfig_init returned 0
+[CONFIG] config module libconfig loaded
+[LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)
+[LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)
+[LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)
+[LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)
+[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)
+[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)
+log init done
+[LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)
+[LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)
+[LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)
+nokrnmod bit enabled 
+[LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+CPU Freq is 2.419238 
+[LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)
+[LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)
+[LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)
+shlib_path libldpc.so
+[LOADER] library libldpc.so successfully loaded
+[LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)
+[LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)
+DL frequency 3619200000: band 48, UL frequency 3619200000
+[LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)
+shlib_path libdfts.so
+[LOADER] library libdfts.so successfully loaded
+[LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf 
+[LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)
+[LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)
+[LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)
+shlib_path librfsimulator.so
+UE threads created by 2394
+TYPE <CTRL-C> TO TERMINATE
+[LOADER] library librfsimulator.so successfully loaded
+[LIBCONFIG] rfsimulator: 8/8 parameters successfully set, (7 to default value)
+Initializing random number generator, seed 2cf9696
+PSS execution duration 277117 microseconds 
+PSS execution duration 275230 microseconds 
+Nid2 0 Nid1 0 tot_metric 53026, phase_max 7 
+In UE,Trace ID=b5c36432f8264998bd166f0db8d5806a
+In UE,Parent Span ID=d2ce5cb2d550e172
+<UL-CCCH-Message>
+    <message>
+        <c1>
+            <rrcSetupRequest>
+                <rrcSetupRequest>
+                    <ue-Identity>
+                        <randomValue>
+                            100110111110000111010001000010010010100
+                        </randomValue>
+                    </ue-Identity>
+                    <establishmentCause><mo-Signalling/></establishmentCause>
+                    <spare>
+                        0
+                    </spare>
+                </rrcSetupRequest>
+            </rrcSetupRequest>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            62 35 63 33 36 34 33 32 66 38 32 36 34 39 39 38 
+            62 64 31 36 36 66 30 64 62 38 64 35 38 30 36 61
+        </traceParent>
+        <spanParent>64 32 63 65 35 63 62 32 64 35 35 30 65 31 37 32</spanParent>
+    </traceInfo>
+</UL-CCCH-Message>
+[NR_RRC]   [UE 0] : Logical Channel UL-CCCH (SRB0), Generating RRCSetupRequest (bytes 56, gNB 0)
+[0mIn UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,Parent Span ID=8ef8098f8ebcf2d4
+<UL-CCCH-Message>
+    <message>
+        <c1>
+            <rrcSetupRequest>
+                <rrcSetupRequest>
+                    <ue-Identity>
+                        <randomValue>
+                            000010100110111110010001011100000100100
+                        </randomValue>
+                    </ue-Identity>
+                    <establishmentCause><mo-Signalling/></establishmentCause>
+                    <spare>
+                        0
+                    </spare>
+                </rrcSetupRequest>
+            </rrcSetupRequest>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            61 34 63 37 32 32 39 36 37 30 34 30 62 61 32 63 
+            39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66
+        </traceParent>
+        <spanParent>38 65 66 38 30 39 38 66 38 65 62 63 66 32 64 34</spanParent>
+    </traceInfo>
+</UL-CCCH-Message>
+[NR_RRC]   [UE 0] : Logical Channel UL-CCCH (SRB0), Generating RRCSetupRequest (bytes 56, gNB 0)
+[0m[NR_RRC]   nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   In nr_ue_get_rach: [UE 0][218.16]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   In nr_ue_get_rach: [UE 0][218.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   In nr_ue_get_rach: [UE 0][218.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   In nr_ue_get_rach: [UE 0][218.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   In nr_ue_get_rach: [UE 0][219.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   In nr_ue_get_rach: [UE 0][219.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   In nr_ue_get_rach: [UE 0][219.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   In nr_ue_get_rach: [UE 0][219.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   In nr_ue_get_rach: [UE 0][219.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   In nr_ue_get_rach: [UE 0][219.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   Initialization of 4-step contention-based random access procedure
+[0m[PHY]   PRACH [UE 0] in frame.slot 219.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 11, first_nonzero_root_idx 0
+[0m[NR_MAC]   [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [UE 0][RAPROC][220.7] Found RAR with the intended RAPID 45
+[0m[93m[MAC]   received TA command 31
+[0m[32m[NR_MAC]   [RAPROC][220.17] RA-Msg3 transmitted
+[0m[MAC]   In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 220.17 and expiring in 226.5
+[0m[MAC]   [UE 0][RAPROC] Frame 224 : received contention resolution identity: 0x10a6f9170486 Terminating RA procedure
+[0m[32m[MAC]   [UE 0][224.12][RAPROC] RA procedure succeeded. CB-RA: Contention Resolution is successful.
+[0m<DL-CCCH-Message>
+    <message>
+        <c1>
+            <rrcSetup>
+                <rrc-TransactionIdentifier>1</rrc-TransactionIdentifier>
+                <criticalExtensions>
+                    <rrcSetup>
+                        <radioBearerConfig>
+                            <srb-ToAddModList>
+                                <SRB-ToAddMod>
+                                    <srb-Identity>1</srb-Identity>
+                                </SRB-ToAddMod>
+                            </srb-ToAddModList>
+                        </radioBearerConfig>
+                        <masterCellGroup>
+                            5C 00 B0 01 11 7A EC 70 10 61 F0 00 7C 02 04 68 
+                            3C 08 01 05 10 48 26 06 54 02 07 FF FC 00 00 00 
+                            04 00 00 DC 21 08 00 02 20 59 40 00 12 08 00 00 
+                            81 A6 81 AA 92 6A 00 00 80 10 10 00 20 03 40 40 
+                            04 ED 92 C6 03 B8 0E CF 13 57 9A 00 00 05 34 20 
+                            04 00 04 B0 38 41 05 93 83 04 38 00 71 28 1C 00 
+                            00 20 5E F4 01 00 02 00 00 06 40 01 41 00 CA 81 
+                            80 62 20 0A 80 00 00 00 00 A1 00 40 00 0A 28 48 
+                            94 00 B1 80
+                        </masterCellGroup>
+                    </rrcSetup>
+                </criticalExtensions>
+            </rrcSetup>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            61 34 63 37 32 32 39 36 37 30 34 30 62 61 32 63 
+            39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66
+        </traceParent>
+        <spanParent>34 30 38 37 38 31 35 33 65 32 30 61 36 35 61 31</spanParent>
+    </traceInfo>
+</DL-CCCH-Message>
+Received RRCSetup traceid=a4c722967040ba2c9dd756e799d80e6f
+Received RRCSetup spanid=40878153e20a65a1
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=c7c6f02f8caf1e46
+[NR_RRC]   [UE0][RAPROC] Frame 224 : Logical Channel DL-CCCH (SRB0), Received NR_RRCSetup RNTI 8baf
+[0m[RRC]   Received mac_CellGroupConfig from gNB
+[0m[MAC]   Applying CellGroupConfig from gNodeB
+[0m[RLC]   /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair2/LAYER2/nr_rlc/nr_rlc_oai_api.c:770:add_rlc_srb: added srb 1 to UE with RNTI 0x8baf
+[0m[NR_RRC]   [UE 0], CONFIG_SRB1 1 corresponding to gNB_index 0
+[0m[NR_RRC]   [FRAME 00224][RRC_UE][MOD 00][][--- MAC_CONFIG_REQ  (SRB1 gNB 0) --->][MAC_UE][MOD 00][]
+[0m[NR_RRC]   [UE 0] State = NR_RRC_CONNECTED (gNB 0)
+[0m[SIM]   UICC simulation: IMSI=208950000000031, Ki=0C0A34601D4F07677303652C0462535B, OPc=63bfa50ee6523365ff14c1f45f88737d, DNN=oai_cn, SST=0x01, SD=0x00000c
+[0mUE RRCSetup traceid=a4c722967040ba2c9dd756e799d80e6f
+UE RRCSetup  spanid=c7c6f02f8caf1e46
+[LIBCONFIG] uicc0: 9/9 parameters successfully set, (1 to default value)
+Received RRCSetupComplete traceid=a4c722967040ba2c9dd756e799d80e6f
+Received RRCSetupComplete spanid=c7c6f02f8caf1e46
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=576dc922ee3a94b7
+UE RRCSetupComplete traceid=a4c722967040ba2c9dd756e799d80e6f
+UE RRCSetupComplete spanid=576dc922ee3a94b7
+<UL-DCCH-Message>
+    <message>
+        <c1>
+            <rrcSetupComplete>
+                <rrc-TransactionIdentifier>1</rrc-TransactionIdentifier>
+                <criticalExtensions>
+                    <rrcSetupComplete>
+                        <selectedPLMN-Identity>1</selectedPLMN-Identity>
+                        <dedicatedNAS-Message>
+                            7E 00 41 19 00 0D 01 02 F8 59 00 00 00 00 00 00 
+                            00 00 13 10 01 07 2E 08 80 20 00 00 00 00 00 00
+                        </dedicatedNAS-Message>
+                        <ng-5G-S-TMSI-Value>
+                            <ng-5G-S-TMSI>
+                                000100100011010001010110011110001001101010111100
+                            </ng-5G-S-TMSI>
+                        </ng-5G-S-TMSI-Value>
+                    </rrcSetupComplete>
+                </criticalExtensions>
+            </rrcSetupComplete>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            61 34 63 37 32 32 39 36 37 30 34 30 62 61 32 63 
+            39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66
+        </traceParent>
+        <spanParent>35 37 36 64 63 39 32 32 65 65 33 61 39 34 62 37</spanParent>
+    </traceInfo>
+</UL-DCCH-Message>
+[NR_RRC]   [UE 0][RAPROC] Frame 224 : Logical Channel UL-DCCH (SRB1), Generating RRCSetupComplete (bytes92, gNB 0)
+[0mDLInfoTransfer (len=95):
+0000: 2c 85 4f c0 0a c0 80 40 00 04 27 4e 76 a4 59 cf 
+0010: a8 b2 13 f7 40 87 57 da ef ef c4 02 09 40 3b 61 
+0020: 18 cd 90 00 08 17 ff cf e9 18 95 bb 04 0c 26 8c 
+0030: 66 e6 46 47 26 c6 e6 06 86 0c 4c 26 4c 67 2c 8c 
+0040: 86 e6 a6 cc a6 e7 27 2c 87 06 0c a6 cc c2 06 86 
+0050: 2c 66 e7 2c 87 26 6c 2c 8c 26 cc c7 06 ec 80 
+<DL-DCCH-Message>
+    <message>
+        <c1>
+            <dlInformationTransfer>
+                <rrc-TransactionIdentifier>2</rrc-TransactionIdentifier>
+                <criticalExtensions>
+                    <dlInformationTransfer>
+                        <dedicatedNAS-Message>
+                            7E 00 56 04 02 00 00 21 3A 73 B5 22 CE 7D 45 90 
+                            9F BA 04 3A BE D7 7F 7E 20 10 4A 01 DB 08 C6 6C 
+                            80 00 40 BF FE 7F 48 C4 AD D8
+                        </dedicatedNAS-Message>
+                    </dlInformationTransfer>
+                </criticalExtensions>
+            </dlInformationTransfer>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            61 34 63 37 32 32 39 36 37 30 34 30 62 61 32 63 
+            39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66
+        </traceParent>
+        <spanParent>34 31 63 37 39 64 39 33 61 64 61 36 66 38 37 64</spanParent>
+    </traceInfo>
+</DL-DCCH-Message>
+Received dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+Received dlInformationTransfer spanid=41c79d93ada6f87d
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=09ee9bbd3ee58d1b
+[NAS]   [UE 0] Received NAS_DOWNLINK_DATA_IND: UEid 0, length 42 , buffer 0x7fbf1401c2e0
+[0m[NAS]    nr_nas_msg_sim.c:269  derive_kgnb  with count= 0
+[0m[NAS]   Send NAS_UPLINK_DATA_REQ message
+[0m[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0
+[0mUE dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+UE dlInformationTransfer  spanid=09ee9bbd3ee58d1b
+Received pdu session estb reject traceid=a4c722967040ba2c9dd756e799d80e6f09ee9bbd3ee58d1b
+kgnb : e9 92 09 e1 37 10 e5 52 44 17 3a 8c e3 6d f6 cf c9 1d f5 8e 8c 41 e8 03 09 7d da f3 73 88 00 c9 
+kausf:8a 2b 7e dd a5 fe 6 36 93 15 3f d1 b8 34 92 5b a0 f9 e9 23 b1 6b b8 b 52 68 fb 46 99 e7 f0 fa 
+kseaf:bf 8b 82 43 d7 9d 3 25 d2 3b d4 af ab d7 f9 72 20 b4 10 33 50 2c 33 44 4c cf fc b9 71 e5 85 1 
+kamf:dd 31 25 2b 3c 46 71 f9 e2 8b 70 cd 6 52 a6 d3 3 dd 2b fa 53 d2 3d 38 d8 ff 1b de 1 9e b2 23 
+knas_int:
+53 bd 70 2f c 39 43 dd c0 95 dd d6 c2 f4 bd 76 
+Received ULInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+Received ULInformationTransfer spanid=09ee9bbd3ee58d1b
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=1bccb1e2582e0cdd
+[PHY]   [UE0] Sending synch status to higher layers
+[0mUE ULInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+UE ULInformationTransfer spanid=1bccb1e2582e0cdd
+DLInfoTransfer (len=74):
+0000: 28 82 af c0 61 04 92 60 a0 0f c0 0b a0 40 80 90 
+0010: 04 00 00 1c 26 c0 20 44 0c 26 8c 66 e6 46 47 26 
+0020: c6 e6 06 86 0c 4c 26 4c 67 2c 8c 86 e6 a6 cc a6 
+0030: e7 27 2c 87 06 0c a6 cc c2 0c 46 c6 c6 e7 07 26 
+0040: 46 6c a7 2c 8c 86 e7 2c c6 a0 
+<DL-DCCH-Message>
+    <message>
+        <c1>
+            <dlInformationTransfer>
+                <rrc-TransactionIdentifier>0</rrc-TransactionIdentifier>
+                <criticalExtensions>
+                    <dlInformationTransfer>
+                        <dedicatedNAS-Message>
+                            7E 03 08 24 93 05 00 7E 00 5D 02 04 04 80 20 00 
+                            00 E1 36 01 02
+                        </dedicatedNAS-Message>
+                    </dlInformationTransfer>
+                </criticalExtensions>
+            </dlInformationTransfer>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            61 34 63 37 32 32 39 36 37 30 34 30 62 61 32 63 
+            39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66
+        </traceParent>
+        <spanParent>62 36 36 37 38 39 32 33 65 39 64 64 37 39 66 35</spanParent>
+    </traceInfo>
+</DL-DCCH-Message>
+Received dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+Received dlInformationTransfer spanid=b6678923e9dd79f5
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=c3f52f8497155fe0
+[NAS]   [UE 0] Received NAS_DOWNLINK_DATA_IND: UEid 0, length 21 , buffer 0x7fbf140046d0
+[0m[NAS]   Send NAS_UPLINK_DATA_REQ message
+[0m[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0
+[0mUE dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+UE dlInformationTransfer  spanid=c3f52f8497155fe0
+Received pdu session estb reject traceid=a4c722967040ba2c9dd756e799d80e6fc3f52f8497155fe0
+Byte length: 52, Zero bits: 0
+m: 0000000008000000007e005e77000215117100207e004119000d0102f8590000000000000000131001072e088020000000000000
+Key:53bd702f0c3943ddc095ddd6c2f4bd76
+Message:007e005e77000215117100207e004119000d0102f8590000000000000000131001072e088020000000000000
+out: 71c2a714f728b5d3abd0dff9f70ad34d
+mac 71 c2 a7 14 
+Received ULInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+Received ULInformationTransfer spanid=c3f52f8497155fe0
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=3e7c81a2e6a0a396
+UE ULInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+UE ULInformationTransfer spanid=3e7c81a2e6a0a396
+DLInfoTransfer (len=53):
+0000: 22 08 11 03 09 a3 19 b9 91 91 c9 b1 b9 81 a1 83 
+0010: 13 09 93 19 cb 23 21 b9 a9 b3 29 b9 c9 cb 21 c1 
+0020: 83 29 b3 30 81 b1 b1 99 8b 23 13 33 31 91 81 83 
+0030: 21 91 93 13 18 
+<DL-DCCH-Message>
+    <message>
+        <c1>
+            <securityModeCommand>
+                <rrc-TransactionIdentifier>1</rrc-TransactionIdentifier>
+                <criticalExtensions>
+                    <securityModeCommand>
+                        <securityConfigSMC>
+                            <securityAlgorithmConfig>
+                                <cipheringAlgorithm><nea0/></cipheringAlgorithm>
+                                <integrityProtAlgorithm><nia2/></integrityProtAlgorithm>
+                            </securityAlgorithmConfig>
+                        </securityConfigSMC>
+                    </securityModeCommand>
+                </criticalExtensions>
+            </securityModeCommand>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            61 34 63 37 32 32 39 36 37 30 34 30 62 61 32 63 
+            39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66
+        </traceParent>
+        <spanParent>36 36 33 31 64 62 66 66 32 30 30 64 32 32 62 63</spanParent>
+    </traceInfo>
+</DL-DCCH-Message>
+Received SecuirtyModeCommand traceid=a4c722967040ba2c9dd756e799d80e6f
+Received SecuirtyModeCommand spanid=6631dbff200d22bc
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=870d7f1327b98a8a
+[NR_RRC]   [UE 0] Received securityModeCommand (gNB 0)
+[0m[NR_RRC]   [UE 0] SFN/SF 0/0: Receiving from SRB1 (DL-DCCH), Processing securityModeCommand (eNB 0)
+[0mUE SecuirtyModeCommand traceid=a4c722967040ba2c9dd756e799d80e6f
+UE SecuirtyModeCommand  spanid=870d7f1327b98a8a
+Received securityModeComplete traceid=a4c722967040ba2c9dd756e799d80e6f
+Received securityModeComplete spanid=870d7f1327b98a8a
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=ef7b2e9457579887
+[NR_RRC]   [UE 0] Security algorithm is set to nea0
+[0m[NR_RRC]   [UE 0] Integrity protection algorithm is set to nia2
+[0m[NR_RRC]   rrc_ue_process_securityModeCommand, security mode complete case 
+[0m[NR_RRC]   driving kRRCenc, kRRCint and kUPenc from KgNB=e99209e13710e55244173a8ce36df6cfc91df58e8c41e803097ddaf3738800c9
+[0m[NR_RRC]   [UE 0] SFN/SF 0/0: Receiving from SRB1 (DL-DCCH), encoding securityModeComplete (gNB 0), rrc_TransactionIdentifier: 1
+[0mUE securityModeComplete traceid=a4c722967040ba2c9dd756e799d80e6f
+UE securityModeComplete spanid=ef7b2e9457579887
+<UL-DCCH-Message>
+    <message>
+        <c1>
+            <securityModeComplete>
+                <rrc-TransactionIdentifier>1</rrc-TransactionIdentifier>
+                <criticalExtensions>
+                    <securityModeComplete>
+                    </securityModeComplete>
+                </criticalExtensions>
+            </securityModeComplete>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            61 34 63 37 32 32 39 36 37 30 34 30 62 61 32 63 
+            39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66
+        </traceParent>
+        <spanParent>65 66 37 62 32 65 39 34 35 37 35 37 39 38 38 37</spanParent>
+    </traceInfo>
+</UL-DCCH-Message>
+[1;31m[PDCP]   discard NR PDU, integrity failed
+[0m[MAC]   securityModeComplete payload: 2a 08 18 4d 18 cd cc 8c 8e 4d 8d cc 0d 0c 18 98 [0m
+DLInfoTransfer (len=58):
+0000: 34 02 01 20 01 01 34 08 18 4d 18 cd cc 8c 8e 4d 
+0010: 8d cc 0d 0c 18 98 4c 98 ce 59 19 0d cd 4d 99 4d 
+0020: ce 4e 59 0e 0c 19 4d 99 84 0d d9 8c 58 4e 0c 4c 
+0030: 8e 0c cc cd cd 8e 4e 4d 59 40 
+<DL-DCCH-Message>
+    <message>
+        <c1>
+            <ueCapabilityEnquiry>
+                <rrc-TransactionIdentifier>2</rrc-TransactionIdentifier>
+                <criticalExtensions>
+                    <ueCapabilityEnquiry>
+                        <ue-CapabilityRAT-RequestList>
+                            <UE-CapabilityRAT-Request>
+                                <rat-Type><nr/></rat-Type>
+                                <capabilityRequestFilter>80 04 04 D0</capabilityRequestFilter>
+                            </UE-CapabilityRAT-Request>
+                        </ue-CapabilityRAT-RequestList>
+                    </ueCapabilityEnquiry>
+                </criticalExtensions>
+            </ueCapabilityEnquiry>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            61 34 63 37 32 32 39 36 37 30 34 30 62 61 32 63 
+            39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66
+        </traceParent>
+        <spanParent>37 66 31 61 38 31 32 38 33 33 37 36 39 39 35 65</spanParent>
+    </traceInfo>
+</DL-DCCH-Message>
+[NR_RRC]   [UE 0] Received Capability Enquiry (gNB 0)
+[0mReceived ueCapabilityEnquiry traceid=a4c722967040ba2c9dd756e799d80e6f
+Received ueCapabilityEnquiry spanid=7f1a81283376995e
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=20fe6c8a38569478
+UE ueCapabilityEnquiry traceid=a4c722967040ba2c9dd756e799d80e6f
+UE ueCapabilityEnquiry  spanid=20fe6c8a38569478
+Received UECapabilityInfo traceid=a4c722967040ba2c9dd756e799d80e6f
+Received UECapabilityInfo spanid=20fe6c8a38569478
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=2192c6f7842a4a65
+[NR_RRC]   [UE 0] Frame 0: Receiving from SRB1 (DL-DCCH), Processing UECapabilityEnquiry (gNB 0)
+[0mUE UECapabilityInfo traceid=a4c722967040ba2c9dd756e799d80e6f
+UE UECapabilityInfo spanid=2192c6f7842a4a65
+<UE-NR-Capability>
+    <accessStratumRelease><rel15/></accessStratumRelease>
+    <pdcp-Parameters>
+        <supportedROHC-Profiles>
+            <profile0x0000><false/></profile0x0000>
+            <profile0x0001><false/></profile0x0001>
+            <profile0x0002><false/></profile0x0002>
+            <profile0x0003><false/></profile0x0003>
+            <profile0x0004><false/></profile0x0004>
+            <profile0x0006><false/></profile0x0006>
+            <profile0x0101><false/></profile0x0101>
+            <profile0x0102><false/></profile0x0102>
+            <profile0x0103><false/></profile0x0103>
+            <profile0x0104><false/></profile0x0104>
+        </supportedROHC-Profiles>
+        <maxNumberROHC-ContextSessions><cs2/></maxNumberROHC-ContextSessions>
+    </pdcp-Parameters>
+    <phy-Parameters>
+    </phy-Parameters>
+    <rf-Parameters>
+        <supportedBandListNR>
+            <BandNR>
+                <bandNR>1</bandNR>
+            </BandNR>
+        </supportedBandListNR>
+    </rf-Parameters>
+</UE-NR-Capability>
+[PHY]   [RRC]UE NR Capability encoded, 10 bytes (86 bits)
+[0m[NR_RRC]   UECapabilityInformation Encoded 506 bits (64 bytes)
+[0m[1;31m[PDCP]   discard NR PDU, integrity failed
+[0mDLInfoTransfer (len=270):
+0000: 00 0d 04 04 72 e0 15 80 08 8b d7 63 80 83 0f 80 
+0010: 05 80 08 8b d7 63 80 83 0f 80 03 e0 10 23 41 e0 
+0020: 40 08 28 82 41 30 32 a0 10 3f ff e0 00 00 00 20 
+0030: 00 06 e1 08 40 00 11 02 ca 00 00 90 40 00 04 0d 
+0040: 34 0d 54 93 50 00 04 00 80 80 01 00 1a 02 00 27 
+0050: 6c 96 30 1d c0 76 78 9a bc d0 00 00 29 a1 00 20 
+0060: 00 25 81 c2 08 2c 9c 18 21 c0 03 89 40 e0 00 01 
+0070: 02 f7 a0 08 00 10 00 00 32 00 0a 08 06 54 0c 03 
+0080: 11 00 54 00 00 00 00 05 08 02 00 00 51 42 44 a0 
+0090: 05 8c 00 11 df 80 9f 3d 40 81 c0 5f 80 10 80 40 
+00a0: 5d c0 02 fc 80 be 16 60 00 10 40 00 00 1f 95 01 
+00b0: c0 00 be 16 40 28 00 05 46 c2 37 80 00 1e c0 00 
+00c0: 00 00 02 00 40 00 03 00 00 00 00 02 20 80 00 20 
+00d0: 80 00 00 00 08 40 80 40 17 80 6d 88 18 4d 18 cd 
+00e0: cc 8c 8e 4d 8d cc 0d 0c 18 98 4c 98 ce 59 19 0d 
+00f0: cd 4d 99 4d ce 4e 59 0e 0c 19 4d 99 84 0d 58 59 
+0100: 8c 0e 4e 0d 8d cc 4e 4c 4d cd 4e 0c 59 80 
+<DL-DCCH-Message>
+    <message>
+        <c1>
+            <rrcReconfiguration>
+                <rrc-TransactionIdentifier>0</rrc-TransactionIdentifier>
+                <criticalExtensions>
+                    <rrcReconfiguration>
+                        <nonCriticalExtension>
+                            <masterCellGroup>
+                                5C 02 B0 01 11 7A EC 70 10 61 F0 00 B0 01 11 7A 
+                                EC 70 10 61 F0 00 7C 02 04 68 3C 08 01 05 10 48 
+                                26 06 54 02 07 FF FC 00 00 00 04 00 00 DC 21 08 
+                                00 02 20 59 40 00 12 08 00 00 81 A6 81 AA 92 6A 
+                                00 00 80 10 10 00 20 03 40 40 04 ED 92 C6 03 B8 
+                                0E CF 13 57 9A 00 00 05 34 20 04 00 04 B0 38 41 
+                                05 93 83 04 38 00 71 28 1C 00 00 20 5E F4 01 00 
+                                02 00 00 06 40 01 41 00 CA 81 80 62 20 0A 80 00 
+                                00 00 00 A1 00 40 00 0A 28 48 94 00 B1 80
+                            </masterCellGroup>
+                            <dedicatedNAS-MessageList>
+                                <DedicatedNAS-Message>
+                                    7E 02 7C F5 02 07 01 7E 00 42 01 01 77 00 0B F2 
+                                    02 F8 59 80 00 41 00 00 00 7E 54 07 00 02 F8 59 
+                                    00 A0 00 15 1B 08 DE 00 00 7B 00 00 00 00 08 01 
+                                    00 00 0C 00 00 00 00 08 82 00 00 82 00 00 00 00 
+                                    21 02 01 00 5E 01 B6
+                                </DedicatedNAS-Message>
+                            </dedicatedNAS-MessageList>
+                        </nonCriticalExtension>
+                    </rrcReconfiguration>
+                </criticalExtensions>
+            </rrcReconfiguration>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            61 34 63 37 32 32 39 36 37 30 34 30 62 61 32 63 
+            39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66
+        </traceParent>
+        <spanParent>35 61 66 30 39 38 36 37 31 39 31 37 35 38 31 66</spanParent>
+    </traceInfo>
+</DL-DCCH-Message>
+Received RRCReconfiguration traceid=a4c722967040ba2c9dd756e799d80e6f
+Received RRCReconfgiuration spanid=5af098671917581f
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=2b68eaf06709fd07
+[NR_RRC]   [UE 0] Frame 0: Receiving from SRB1 (DL-DCCH), Processing RRCReconfiguration (gNB 0)
+[0m[RRC]   Received mac_CellGroupConfig from gNB
+[0m[1;31m[RRC]   UE RRC instance already contains mac CellGroupConfig which will be overwritten
+[0m[MAC]   Applying CellGroupConfig from gNodeB
+[0m[NAS]   [UE 0] Received NAS_CONN_ESTABLI_CNF: errCode 1, length 71
+[0m[NAS]   [UE] Received REGISTRATION ACCEPT message
+[0mUE RRCReconfiguration traceid=a4c722967040ba2c9dd756e799d80e6f
+UE RRCReconfiguration  spanid=2b68eaf06709fd07
+Received RRCReconfigurationComplete traceid=a4c722967040ba2c9dd756e799d80e6f
+Received RRCReconfigurationComplete spanid=2b68eaf06709fd07
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=4593520a7c6b2d70
+UE RRCReconfigurationComplete traceid=a4c722967040ba2c9dd756e799d80e6f
+UE RRCReconfigurationComplete spanid=4593520a7c6b2d70
+UE RRCReconfigurationComplete traceid=a4c722967040ba2c9dd756e799d80e6f
+UE RRCReconfigurationComplete spanid=4593520a7c6b2d70
+<UL-DCCH-Message>
+    <message>
+        <c1>
+            <rrcReconfigurationComplete>
+                <rrc-TransactionIdentifier>0</rrc-TransactionIdentifier>
+                <criticalExtensions>
+                    <rrcReconfigurationComplete>
+                    </rrcReconfigurationComplete>
+                </criticalExtensions>
+            </rrcReconfigurationComplete>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            61 34 63 37 32 32 39 36 37 30 34 30 62 61 32 63 
+            39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66
+        </traceParent>
+        <spanParent>34 35 39 33 35 32 30 61 37 63 36 62 32 64 37 30</spanParent>
+    </traceInfo>
+</UL-DCCH-Message>
+[NR_RRC]   rrcReconfigurationComplete Encoded 410 bits (52 bytes)
+[0m[NR_RRC]   [FRAME 00000][ UE][MOD 00][RNTI 8baf] Logical Channel UL-DCCH (SRB1), Generating RRCReconfigurationComplete (bytes 52, gNB_index 0)
+[0m[NR_PHY]   ============================================
+[0m[NR_PHY]   Harq round stats for Downlink: 17/0/0/0
+[0m[NR_PHY]   ============================================
+[0m[NR_PHY]   ============================================
+[0m[NR_PHY]   Harq round stats for Downlink: 23/0/0/0
+[0m[NR_PHY]   ============================================
+[0m[NR_PHY]   ============================================
+[0m[NR_PHY]   Harq round stats for Downlink: 30/0/0/0
+[0m[NR_PHY]   ============================================
+[0m[NR_PHY]   ============================================
+[0m[NR_PHY]   Harq round stats for Downlink: 36/0/0/0
+[0m[NR_PHY]   ============================================
+[0m[NR_PHY]   ============================================
+[0m[NR_PHY]   Harq round stats for Downlink: 43/0/0/0
+[0m[NR_PHY]   ============================================
+[0m[NR_PHY]   ============================================
+[0m[NR_PHY]   Harq round stats for Downlink: 49/0/0/0
+[0m[NR_PHY]   ============================================
+[0m[NAS]   Send NAS_UPLINK_DATA_REQ message(RegistrationComplete)
+[0m[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0
+[0mByte length: 12, Zero bits: 0
+m: 0000000108000000017e0043
+Key:53bd702f0c3943ddc095ddd6c2f4bd76
+Message:017e0043
+out: 9aedff837f087e84ecdd1d41b5313d06
+mac 9a ed ff 83 
+Received ULInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+Received ULInformationTransfer spanid=2b68eaf06709fd07
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=51f5c814e13d3814
+[NAS]   Send NAS_UPLINK_DATA_REQ message(PduSessionEstablishRequest)
+[0m[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0
+[0mUE ULInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+UE ULInformationTransfer spanid=51f5c814e13d3814
+Byte length: 40, Zero bits: 0
+m: 0000000008000000007e00670100072e0a01c1ffff91120a8122040100000c2507076f61695f636e
+Key:53bd702f0c3943ddc095ddd6c2f4bd76
+Message:007e00670100072e0a01c1ffff91120a8122040100000c2507076f61695f636e
+out: 12a70e2bbef58f3d4fe1568a42d7cec8
+mac 12 a7 e 2b 
+Received ULInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+Received ULInformationTransfer spanid=2b68eaf06709fd07
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=ca0f31ca5d940fde
+[NR_PHY]   ============================================
+[0m[NR_PHY]   Harq round stats for Downlink: 57/0/0/0
+[0m[NR_PHY]   ============================================
+[0m[1;31m[PDCP]   discard NR PDU, integrity failed
+[0mUE ULInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+UE ULInformationTransfer spanid=ca0f31ca5d940fde
+DLInfoTransfer (len=74):
+0000: 2a 82 af c0 59 88 62 f3 00 4f c0 0d 00 20 00 c5 
+0010: c1 40 38 63 7e 22 41 44 0c 26 8c 66 e6 46 47 26 
+0020: c6 e6 06 86 0c 4c 26 4c 67 2c 8c 86 e6 a6 cc a6 
+0030: e7 27 2c 87 06 0c a6 cc c2 06 ec 86 86 ec 86 a6 
+0040: 06 6c a6 86 8c 26 06 ec 86 a0 
+<DL-DCCH-Message>
+    <message>
+        <c1>
+            <dlInformationTransfer>
+                <rrc-TransactionIdentifier>1</rrc-TransactionIdentifier>
+                <criticalExtensions>
+                    <dlInformationTransfer>
+                        <dedicatedNAS-Message>
+                            7E 02 CC 43 17 98 02 7E 00 68 01 00 06 2E 0A 01 
+                            C3 1B F1 12 0A
+                        </dedicatedNAS-Message>
+                    </dlInformationTransfer>
+                </criticalExtensions>
+            </dlInformationTransfer>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            61 34 63 37 32 32 39 36 37 30 34 30 62 61 32 63 
+            39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66
+        </traceParent>
+        <spanParent>37 64 34 37 64 35 30 33 65 34 34 61 30 37 64 35</spanParent>
+    </traceInfo>
+</DL-DCCH-Message>
+Received dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+Received dlInformationTransfer spanid=7d47d503e44a07d5
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=4cf41c9458b04cd9
+[NAS]   [UE 0] Received NAS_DOWNLINK_DATA_IND: UEid 0, length 21 , buffer 0x7fbf1401ed00
+[0m[93m[NR_RRC]   unknow message type 195
+[0m[NAS]   Received PDU Session Establishment Reject 
+ [0mUE dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f
+UE dlInformationTransfer  spanid=4cf41c9458b04cd9
+Received pdu session estb reject traceid=a4c722967040ba2c9dd756e799d80e6f4cf41c9458b04cd9
+Received pdu session estb reject traceid=a4c722967040ba2c9dd756e799d80e6f4cf41c9458b04cd9
+Received pdu session estb reject spanid=4cf41c9458b04cd9
+In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f
+In UE,child Span ID=8cc76d6fb1bb6428
+[93m[HW]   Lost socket 
+[0m

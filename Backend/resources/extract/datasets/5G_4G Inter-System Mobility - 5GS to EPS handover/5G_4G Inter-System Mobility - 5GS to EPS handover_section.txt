@@ -1,0 +1,36 @@
+5G/4G Inter-System Mobility - 5GS to EPS handover
+Test description and applicability
+The purpose of this test is to validate inter system handovers between 5G and LTE systems as defined in 3GPP TS 38.300 [47]. In this test scenario, inter system handover from 5G Standalone (i.e. connected with 5GC) to LTE Standalone (i.e. connected with EPC) is validated.  The test validates the O-CU, O-DU, and O-RU functionality in handling Inter RAT mobility from 5G to LTE.  This scenario covers handover of UE from 5G to LTE when UE is registered in 5G and moves from 5G coverage area to LTE coverage area. This scenario is applicable for LTE and 5G SA.
+The test focuses on the procedure of ‘5GS to EPS handover using N26 interface’ as defined in 3GPP TS 23.502 [41] Clause 4.11.1.2.1.
+Test setup and configuration
+The test setup shall include 5G End to End system (gNB and 5G Core) and LTE E2E	 system (O-eNB and EPC). 5G and 4G core shall be interconnected for Inter System mobility (N26 interface between the MME and AMF) and shall supports a combined anchor point for 4G and 5G, i.e. SMF+PGW-C and UPF+PGW-U. The eNB connects to a 4G-5G interconnected core over the 4G interfaces, i.e. S1 to provide 4G LTE service to make E2E LTE system and the O-CU-CP/O-CU-UP, O-DU and O-RUconnect to a 4G-5G interconnected core over the 5G interfaces, i.e. N2 and N3 to make E2E 5G SA system. The DUT (gNB and O-eNB) and the components shall comply to the O-RAN specifications. This test needs a real or emulated UE. The test setup (UE, gNB, O-eNB, 5G and 4G Core) should include tools which have the ability to collect traces on the elements and/or packet captures of communication between the elements. Optionally, if some of the network elements are located remotely either in a cloud or on the internet, the additional latency should be calculated and accounted for. The O-eNB, gNB and their components (O-RU, O-DU and O-CU-CP/O-CU-UP) should have the right configuration and software load.
+Test configuration: The test configuration is not specified. The utilized test configuration (parameters) shall be recorded in the test report. 
+Laboratory setup: The radio conditions of UE can be modified by a variable attenuator/fading generator inserted between the antenna connectors (if available) of the O-RU and the UE, or appropriately emulated using a UE emulator. The radio conditions of the UE are initially set to excellent using RSRP as the metric. The minimum coupling loss (see Clause 4.6) should not be exceeded. The UE should be placed inside and RF shielded box or RF shielded room if the UE is not connected via cable. The UE handover between the cells can be achieved by changing the radio signal strength of the source (gNB) and target cells (O-eNB) using variable attenuators. 
+
+Field setup: The drive route with source and target cells should be defined. The UE is placed in the centre of cell close to the radiated eNB/gNB antenna(s), where excellent radio conditions (using RSRP as the metric as defined in Clause 4.6) should be observed. The minimum coupling loss (see 4.5) should not be exceeded. The change in radio conditions is achieved by moving the UE along the drive route from source (gNB) and target cells (O-eNB).
+Test procedure
+Below are the 5G to LTE Inter System handover steps 
+The test setup is configured according to the test configuration. The test configuration shall be recorded in the test report. The serving cell under test is activated and unloaded. All other cells are powered off.
+5G and LTE cells are configured as neighbours to each other, so that the UE can trigger measurement events for Inter System handover.  
+The test UE is under source cell (gNB) coverage.
+Power on the UE and UE shall successfully register to source 5G cell.
+The full-buffer UDP bi-directional data transmission (see 4.4) from the application server is initiated.
+The UE shall move from source (gNB) and target cells (O-eNB) to perform handover.
+Test requirements (expected results)
+The Inter System handover call flow shall be verified between 5G and LTE systems. Following functionalities shall also be validated:
+PDU Session is established when full-buffer bi-directional data transmission is initiated with 5G source cell
+Handover is successful. 
+In addition to the common minimum set of configuration parameters defined (see Clause 4.3), the following metrics and counters shall be recorded and reported for the performance assessment.
+eNB/gNB/Application server side:
+Transmit downlink throughput measured at application server in time (average per second) 
+Received uplink throughput measured at application server in time (average per second) 
+Uplink packet loss percentage during handover.
+Uplink BLER, MCS, MIMO rank (RI) on PUSCH in time (average per second) 
+UE side:
+Radio parameters such as RSRP, RSRQ, SINR on PDSCH in time (average per second)
+Downlink BLER, MCS, MIMO rank (RI) on PDSCH in time (average per second).
+Received Downlink throughput (L1 and L3 PDCP layers) in time (average per second).
+Downlink packet loss percentage during handover
+Uplink throughput (L1 and L3 PDCP layers) in time (average per second)
+Channel utilization, i.e. Number allocated/occupied downlink and uplink RBs in time (per TTI/average per second) and Number of allocated/occupied slots in time.
+KPIs related to Handover failure, Call drop, Handover latency, Handover interruption time.

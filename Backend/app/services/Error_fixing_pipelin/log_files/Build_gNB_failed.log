@@ -1,0 +1,78 @@
+Will compile gNB
+OPENAIR_DIR    = /home/tcs/Phani/gNB-CU
+Running "cmake ../../.."
+-- Ccache not found. Consider installing it for faster compilation. Command: sudo apt/dnf install ccache
+-- Check if /opt/asn1c/bin/asn1c supports -gen-APER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-UPER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-JER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-BER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-OER
+-- CMAKE_BUILD_TYPE is RelWithDebInfo
+-- CPU architecture is x86_64
+-- AVX512 intrinsics are ON
+-- AVX2 intrinsics are ON
+-- LTTNG support disabled
+-- Checking for module 'cblas'
+--   No package 'cblas' found
+-- No Doxygen documentation requested
+-- No Support for Aerial
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/tcs/Phani/gNB-CU/cmake_targets/ran_build/build
+cd /home/tcs/Phani/gNB-CU/cmake_targets/ran_build/build
+Running "cmake --build .  --target  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim -- -j8"
+Log file for compilation is being written to: /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt
+Consolidate compiler generated dependencies of target e1_if
+[ 53%] Built target e1_if
+Consolidate compiler generated dependencies of target asn1_nr_rrc
+[ 77%] Built target asn1_lte_rrc
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘read_slice_info’:
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:9: error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’
+  386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: ‘F1AP_ProtocolExtensionContainer_10696P34_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P34_t’?
+  386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;
+      |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                          F1AP_ProtocolExtensionContainer_19016P34_t
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: note: each undeclared identifier is reported only once for each function it appears in
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before ‘)’ token
+  386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;
+      |                                                                                                      ^
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member ‘list’ in something not a structure or union
+  387 |   if (p->list.count == 0)
+      |        ^~
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:49: error: request for member ‘list’ in something not a structure or union
+  390 |   const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];
+      |                                                 ^~
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘decode_f1ap_setup_request’:
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of ‘F1AP_RRC_Version_ExtIEs_t *’ {aka ‘struct F1AP_RRC_Version_ExtIEs *’} from incompatible pointer type ‘struct F1AP_LocationUncertainty_ExtIEs *’ [-Wincompatible-pointer-types]
+  872 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];
+      |                                                 ^~~
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘decode_f1ap_setup_response’:
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115:11: error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?
+ 1115 |           F1AP_ProtocolExtensionContainer_10696P228_t *ext =
+      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |           F1AP_ProtocolExtensionContainer_19016P228_t
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: ‘F1AP_ProtocolExtensionContainer_10696P228_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?
+ 1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                F1AP_ProtocolExtensionContainer_19016P228_t
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before ‘)’ token
+ 1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;
+      |                                                             ^
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member ‘list’ in something not a structure or union
+ 1117 |           if (ext->list.count > 0) {
+      |                  ^~
+/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member ‘list’ in something not a structure or union
+ 1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];
+      |                                                    ^~
+gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2
+gmake[2]: *** Waiting for unfinished jobs....
+[100%] Built target asn1_nr_rrc
+gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2
+gmake: *** [Makefile:891: nr-softmodem] Error 2
+WARNING: 1 warnings. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt
+ERROR: 10 error. See /home/tcs/Phani/gNB-CU/cmake_targets/log/all.txt
+compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed
+build have failed

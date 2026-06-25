@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5G RAN Testing Framework</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+            margin-bottom: 0;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3a 30%, #0e1a2e 70%, #0a0a1a 100%);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            position: sticky;
+            top: 81px;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3a 30%, #0e1a2e 70%, #0a0a1a 100%);
+            z-index: 999;
+            padding: 15px 0;
+            backdrop-filter: blur(10px);
+            margin-top: -1px;
+        }
+
+        .nav-item {
+            padding: 10px 0;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item.active {
+            color: #00ffff;
+            border-bottom-color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .nav-item:hover {
+            color: #00ffff;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            min-height: 400px;
+            padding: 20px 0;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Main Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* Sample Content Styles */
+        .sample-content {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(0, 100, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Prompt Templates Styles */
+        .prompt-templates-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            min-width: 250px;
+            margin: 0 auto;
+        }
+
+        .dropdown-btn {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 102, 255, 0.1));
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: #00ffff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 102, 255, 0.2));
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .dropdown-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            z-index: 999999;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.3);
+            overflow: hidden;
+        }
+
+        .dropdown.active .dropdown-content {
+            display: block !important;
+            animation: dropdownFadeIn 0.3s ease;
+        }
+
+        .dropdown-content.show {
+            display: block !important;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-item {
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+            font-weight: 500;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+            border-radius: 0 0 6px 6px;
+        }
+
+        .dropdown-item:first-child {
+            border-radius: 6px 6px 0 0;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+
+        .template-categories {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .template-categories.active {
+            display: block;
+        }
+
+        .template-categories h3 {
+            color: #00ffff;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .template-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 102, 255, 0.1));
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .template-card:hover {
+            transform: translateY(-3px);
+            border-color: #00ffff;
+            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.2);
+        }
+
+        .template-card h4 {
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .template-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .template-select-btn {
+            background: linear-gradient(135deg, #00ffff, #0066ff);
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .template-select-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+        }
+
+        .template-content-area {
+            display: none;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(0, 100, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 255, 255, 0.2);
+        }
+
+        .template-content-area.active {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .template-content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .template-content-header h2 {
+            color: #00ffff;
+            font-size: 28px;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-btn.modify {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 102, 255, 0.2));
+            color: #00ffff;
+            border: 2px solid #00ffff;
+        }
+
+        .action-btn.save {
+            background: linear-gradient(135deg, #00ffff, #0066ff);
+            color: #ffffff;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .template-content-body {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.08), rgba(0, 102, 255, 0.08));
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            min-height: 250px;
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 400px;
+            backdrop-filter: blur(5px);
+            text-align: left;
+        }
+
+        .sample-content h2 {
+            color: #00ffff;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .sample-content p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-item {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: left;
+        }
+
+        .feature-item h3 {
+            color: #ffffff;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 100, 255, 0.1) 100%);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #00ffff;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #00ffff, #0066ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.6); }
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 25px;
+        }
+
+        .launch-btn {
+            background: linear-gradient(135deg, #00ffff, #0066ff);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 30px;
+            color: #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .launch-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+        }
+
+        /* Home Section Buttons */
+        .home-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .home-btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 200px;
+        }
+
+        .home-btn.primary {
+            background: linear-gradient(135deg, #00ffff, #0066ff);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+        }
+
+        .home-btn.secondary {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 102, 255, 0.2));
+            color: #00ffff;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .home-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .home-btn.primary:hover {
+            box-shadow: 0 8px 30px rgba(0, 255, 255, 0.6);
+        }
+
+        .home-btn.secondary:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 102, 255, 0.3));
+            box-shadow: 0 8px 30px rgba(0, 255, 255, 0.4);
+        }
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .nav {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .home-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .home-btn {
+                min-width: 250px;
+            }
+            
+            .template-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .template-content-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="particles">
+        <div class="particle" style="top: 10%; left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="top: 20%; left: 80%; animation-delay: 1s;"></div>
+        <div class="particle" style="top: 60%; left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="top: 80%; left: 70%; animation-delay: 3s;"></div>
+        <div class="particle" style="top: 30%; left: 50%; animation-delay: 4s;"></div>
+        <div class="particle" style="top: 70%; left: 90%; animation-delay: 5s;"></div>
+        <div class="particle" style="top: 40%; left: 5%; animation-delay: 1.5s;"></div>
+        <div class="particle" style="top: 90%; left: 40%; animation-delay: 2.5s;"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">5G RAN Testing Framework</div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav">
+            <div class="nav-item active" data-section="home">Home</div>
+            <div class="nav-item" data-section="tasks">Tasks</div>
+            <div class="nav-item" data-section="prompt-templates">Prompt Templates</div>
+            <div class="nav-item" data-section="user-history">User History</div>
+            <div class="nav-item" data-section="response-evaluation">Response Evaluation</div>
+        </div>
+
+        <!-- Content Sections -->
+        
+        <!-- Home Section -->
+        <div id="home" class="content-section active">
+            <div class="sample-content">
+                <h2>Gen AI Based 5G RAN Test Automation Framework</h2>
+                <p>Streamline testing lifecycle with AI Driven Approach for End to End 5G Radio Access Network testing. Click below to start exploring the frameworks features.</p>
+                
+                <div class="home-buttons">
+                    <button class="home-btn primary">Dataset Generator</button>
+                    <button class="home-btn secondary">Explore Framework</button>
+                    </div>
+            </div>
+        </div>
+
+        <!-- Tasks Section -->
+        <div id="tasks" class="content-section">
+            <div class="grid">
+                <!-- Dataset Generator -->
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title">Dataset Generator</div>
+                    <div class="card-subtitle">Process 5G Specifications</div>
+                    <button class="launch-btn">Launch</button>
+                </div>
+
+                <!-- Test Script Generator -->
+                <div class="card">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">Test Script Generator</div>
+                    <div class="card-subtitle">Generate Test Scripts</div>
+                    <button class="launch-btn">Launch</button>
+                </div>
+
+                <!-- Test Deployment -->
+                <div class="card">
+                    <div class="card-icon">📡</div>
+                    <div class="card-title">Test Deployment</div>
+                    <div class="card-subtitle">Deploy Test Environment</div>
+                    <button class="launch-btn">Launch</button>
+                </div>
+
+                <!-- Bug Discovery (Campaigns) -->
+                <div class="card">
+                    <div class="card-icon">🔍</div>
+                    <div class="card-title">Test Execution</div>
+                    <div class="card-subtitle">Run Test Scenarios</div>
+                    <button class="launch-btn">Launch</button>
+                </div>
+
+                <!-- Bug Discovery (Test Logs) -->
+                <div class="card">
+                    <div class="card-icon">🐛</div>
+                    <div class="card-title">Bug Discovery</div>
+                    <div class="card-subtitle">Analyze Test Results</div>
+                    <button class="launch-btn">Launch</button>
+                </div>
+
+                <!-- Code Assistant -->
+                <div class="card">
+                    <div class="card-icon">🤖</div>
+                    <div class="card-title">Code Assistant</div>
+                    <div class="card-subtitle">Review and Optimize</div>
+                    <button class="launch-btn">Launch</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prompt Templates Section -->
+        <div id="prompt-templates" class="content-section">
+            <div class="prompt-templates-container">
+                <!-- Role Selector in Glass Box -->
+            <div class="sample-content">
+                    <h2>Select Role</h2>
+                    <div class="dropdown" id="roleDropdown">
+                        <button class="dropdown-btn" id="roleBtn" type="button">
+                            <span>Select Role</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-content" id="dropdownContent">
+                            <div class="dropdown-item" data-role="tester">Tester</div>
+                            <div class="dropdown-item" data-role="developer">Developer</div>
+                            <div class="dropdown-item" data-role="analyst">Analyst</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template Categories for Tester -->
+                <div class="template-categories" id="tester-templates">
+                    <div class="sample-content">
+                        <h2>Template Categories</h2>
+                        <div class="template-grid">
+                            <div class="template-card" data-template="test-script">
+                                <h4>Test Script</h4>
+                                <p>Create automated test scripts</p>
+                                <button class="template-select-btn">Select Template</button>
+                    </div>
+                            <div class="template-card" data-template="testing-strategy">
+                                <h4>Testing Strategy</h4>
+                                <p>Design comprehensive test plans</p>
+                                <button class="template-select-btn">Select Template</button>
+                    </div>
+                            <div class="template-card" data-template="bug-analysis">
+                                <h4>Bug Analysis</h4>
+                                <p>Analyze and fix issues</p>
+                                <button class="template-select-btn">Select Template</button>
+                    </div>
+                            <div class="template-card" data-template="code-review">
+                                <h4>Code Review</h4>
+                                <p>Review test code quality</p>
+                                <button class="template-select-btn">Select Template</button>
+                    </div>
+                            <div class="template-card" data-template="performance-test">
+                                <h4>Performance Test</h4>
+                                <p>Design performance test cases</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                            <div class="template-card" data-template="api-design">
+                                <h4>API Design</h4>
+                                <p>Design Test APIs</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template Categories for Developer -->
+                <div class="template-categories" id="developer-templates">
+                    <div class="sample-content">
+                        <h2>Template Categories</h2>
+                        <div class="template-grid">
+                            <div class="template-card" data-template="code-generation">
+                                <h4>Code Generation</h4>
+                                <p>Generate 5G network code</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                            <div class="template-card" data-template="architecture-design">
+                                <h4>Architecture Design</h4>
+                                <p>Design system architecture</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                            <div class="template-card" data-template="database-schema">
+                                <h4>Database Schema</h4>
+                                <p>Design database structures</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                            <div class="template-card" data-template="deployment-config">
+                                <h4>Deployment Config</h4>
+                                <p>Configure deployment settings</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                            <div class="template-card" data-template="monitoring-setup">
+                                <h4>Monitoring Setup</h4>
+                                <p>Setup system monitoring</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                            <div class="template-card" data-template="security-implementation">
+                                <h4>Security Implementation</h4>
+                                <p>Implement security measures</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template Categories for Analyst -->
+                <div class="template-categories" id="analyst-templates">
+                    <div class="sample-content">
+                        <h2>Template Categories</h2>
+                        <div class="template-grid">
+                            <div class="template-card" data-template="data-analysis">
+                                <h4>Data Analysis</h4>
+                                <p>Analyze network data</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                            <div class="template-card" data-template="performance-metrics">
+                                <h4>Performance Metrics</h4>
+                                <p>Define key performance indicators</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                            <div class="template-card" data-template="trend-analysis">
+                                <h4>Trend Analysis</h4>
+                                <p>Analyze network trends</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                            <div class="template-card" data-template="reporting-dashboard">
+                                <h4>Reporting Dashboard</h4>
+                                <p>Create analytics dashboards</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                            <div class="template-card" data-template="predictive-modeling">
+                                <h4>Predictive Modeling</h4>
+                                <p>Build predictive models</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                            <div class="template-card" data-template="risk-assessment">
+                                <h4>Risk Assessment</h4>
+                                <p>Assess network risks</p>
+                                <button class="template-select-btn">Select Template</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template Content Area -->
+                <div class="sample-content" id="templateContent" style="display: none;">
+                    <div class="template-content-header">
+                        <h2 id="templateTitle">Template Content</h2>
+                        <div class="template-actions">
+                            <button class="action-btn modify">Modify</button>
+                            <button class="action-btn save">Save</button>
+                        </div>
+                    </div>
+                    <div class="template-content-body" id="templateBody">
+                        Select a template from above to view its content here...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User History Section -->
+        <div id="user-history" class="content-section">
+            <div class="sample-content">
+                <h2>User History</h2>
+                <p>Track and review your testing activities, configurations, and results over time.</p>
+                <p>Comprehensive history tracking helps you maintain continuity and learn from previous testing sessions.</p>
+                
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h3>📋 Activity Log</h3>
+                        <p>Detailed logs of all testing activities, configurations, and system interactions.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>🔄 Session Recovery</h3>
+                        <p>Restore previous testing sessions and continue from where you left off.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>📈 Progress Tracking</h3>
+                        <p>Monitor your testing progress and identify patterns in your workflow.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>🎯 Favorite Actions</h3>
+                        <p>Quick access to frequently used configurations and testing procedures.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Response Evaluation Section -->
+        <div id="response-evaluation" class="content-section">
+            <div class="sample-content">
+                <h2>Response Evaluation</h2>
+                <p>Evaluate and analyze system responses, test results, and AI-generated recommendations.</p>
+                <p>Advanced evaluation tools help you assess the quality and accuracy of testing outcomes.</p>
+                
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h3>🎯 Accuracy Metrics</h3>
+                        <p>Comprehensive accuracy analysis of test results and AI predictions.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>📊 Performance Analysis</h3>
+                        <p>Detailed performance evaluation with statistical analysis and trending.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>🔍 Quality Assessment</h3>
+                        <p>Automated quality checks and validation of testing procedures and results.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>📝 Feedback System</h3>
+                        <p>Integrated feedback mechanism for continuous improvement of testing processes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactivity
+        console.log('JavaScript file loaded!');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - JavaScript is running!');
+            // Navigation switching
+            const navItems = document.querySelectorAll('.nav-item');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all nav items and content sections
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    contentSections.forEach(section => section.classList.remove('active'));
+                    
+                    // Add active class to clicked nav item
+                    this.classList.add('active');
+                    
+                    // Show corresponding content section
+                    const sectionId = this.getAttribute('data-section');
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+
+            // Launch button animations
+            const launchBtns = document.querySelectorAll('.launch-btn');
+            launchBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1.05)';
+                    }, 100);
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            });
+
+            // Home button functionality
+            const homeButtons = document.querySelectorAll('.home-btn');
+            homeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Add click animation
+                    this.style.transform = 'translateY(-3px) scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(-3px)';
+                    }, 150);
+                    
+                    // Handle button actions
+                    if (this.textContent.includes('Dataset Generator')) {
+                        // Switch to Tasks section
+                        navItems.forEach(nav => nav.classList.remove('active'));
+                        contentSections.forEach(section => section.classList.remove('active'));
+                        
+                        document.querySelector('[data-section="tasks"]').classList.add('active');
+                        document.getElementById('tasks').classList.add('active');
+                    } else if (this.textContent.includes('Explore Framework')) {
+                        // You can add functionality here for exploring the framework
+                        alert('Explore Framework functionality can be added here!');
+                    }
+                });
+            });
+
+            // Update time
+            function updateTime() {
+                const now = new Date();
+                const time = now.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+                document.querySelector('.time').textContent = time;
+            }
+            
+            updateTime();
+            setInterval(updateTime, 60000);
+
+            // Add more particles dynamically
+            const particlesContainer = document.querySelector('.particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                particlesContainer.appendChild(particle);
+            }
+
+            // Prompt Templates functionality
+            const roleDropdown = document.getElementById('roleDropdown');
+            const roleBtn = document.getElementById('roleBtn');
+            const roleDropdownItems = document.querySelectorAll('.dropdown-item');
+            const templateCategories = document.querySelectorAll('.template-categories');
+            const templateContent = document.getElementById('templateContent');
+            const templateBody = document.getElementById('templateBody');
+            const templateCards = document.querySelectorAll('.template-card');
+
+            console.log('Dropdown elements found:', {
+                roleDropdown: !!roleDropdown,
+                roleBtn: !!roleBtn,
+                dropdownItems: roleDropdownItems.length,
+                templateContent: !!templateContent,
+                templateBody: !!templateBody,
+                templateCards: templateCards.length
+            });
+
+            // Template content data
+            const templateData = {
+                'test-script': {
+                    title: 'Test Script Template',
+                    content: `// 5G RAN Test Script Template
+// Purpose: Create automated test scripts for 5G network testing
+
+// Test Configuration
+const testConfig = {
+    networkType: '5G RAN',
+    testEnvironment: 'production',
+    testSuite: 'automated',
+    timeout: 30000
+};
+
+// Test Cases
+describe('5G RAN Network Tests', () => {
+    test('Connection Establishment', async () => {
+        // Test connection establishment
+        const connection = await establish5GConnection();
+        expect(connection.status).toBe('connected');
+    });
+    
+    test('Data Throughput', async () => {
+        // Test data throughput performance
+        const throughput = await measureThroughput();
+        expect(throughput).toBeGreaterThan(100); // Mbps
+    });
+});`
+                },
+                'testing-strategy': {
+                    title: 'Testing Strategy Template',
+                    content: `# 5G RAN Testing Strategy
+
+## Objective
+Design comprehensive test plans for 5G Radio Access Network validation
+
+## Test Scope
+- Functional Testing
+- Performance Testing  
+- Load Testing
+- Security Testing
+- Interoperability Testing
+
+## Test Approach
+1. **Unit Testing**: Individual component validation
+2. **Integration Testing**: End-to-end workflow testing
+3. **System Testing**: Complete system validation
+4. **Acceptance Testing**: Business requirement validation
+
+## Test Environment
+- Hardware: 5G base stations, UE simulators
+- Software: Network management systems
+- Tools: Test automation frameworks
+
+## Success Criteria
+- 99.9% network availability
+- <10ms latency
+- >1Gbps throughput
+- Zero critical defects`
+                },
+                'bug-analysis': {
+                    title: 'Bug Analysis Template',
+                    content: `# Bug Analysis Report
+
+## Bug Information
+- **Bug ID**: [AUTO-GENERATED]
+- **Severity**: [Critical/High/Medium/Low]
+- **Priority**: [P1/P2/P3/P4]
+- **Component**: 5G RAN
+- **Environment**: [Test/Staging/Production]
+
+## Description
+[Detailed description of the issue]
+
+## Steps to Reproduce
+1. Step 1
+2. Step 2
+3. Step 3
+
+## Expected Result
+[What should happen]
+
+## Actual Result
+[What actually happened]
+
+## Root Cause Analysis
+- **Primary Cause**: [Technical analysis]
+- **Contributing Factors**: [Additional factors]
+- **Impact Assessment**: [Business impact]
+
+## Resolution
+- **Fix Applied**: [Description of fix]
+- **Verification**: [How fix was verified]
+- **Prevention**: [How to prevent recurrence]`
+                },
+                'code-review': {
+                    title: 'Code Review Template',
+                    content: `# Code Review Checklist
+
+## General
+- [ ] Code follows coding standards
+- [ ] Code is readable and well-documented
+- [ ] No hardcoded values
+- [ ] Error handling implemented
+- [ ] Logging added where appropriate
+
+## 5G RAN Specific
+- [ ] Network protocols correctly implemented
+- [ ] Signal processing algorithms optimized
+- [ ] Resource allocation efficient
+- [ ] Interference mitigation handled
+- [ ] Handover procedures tested
+
+## Performance
+- [ ] Code is optimized for performance
+- [ ] Memory usage is efficient
+- [ ] No memory leaks
+- [ ] Proper resource cleanup
+- [ ] Scalability considerations
+
+## Testing
+- [ ] Unit tests written and passing
+- [ ] Integration tests included
+- [ ] Edge cases covered
+- [ ] Mock objects used appropriately
+- [ ] Test coverage > 80%
+
+## Security
+- [ ] Input validation implemented
+- [ ] Authentication/authorization checked
+- [ ] Sensitive data protected
+- [ ] No security vulnerabilities`
+                },
+                'performance-test': {
+                    title: 'Performance Test Template',
+                    content: `# 5G RAN Performance Test Plan
+
+## Test Objectives
+- Validate network throughput under various load conditions
+- Measure latency and jitter
+- Assess resource utilization
+- Evaluate scalability limits
+
+## Performance Metrics
+- **Throughput**: Target >1Gbps
+- **Latency**: Target <10ms
+- **Jitter**: Target <2ms
+- **Packet Loss**: Target <0.1%
+- **CPU Usage**: Target <80%
+- **Memory Usage**: Target <70%
+
+## Test Scenarios
+1. **Baseline Test**: Normal load conditions
+2. **Stress Test**: Maximum expected load
+3. **Spike Test**: Sudden load increases
+4. **Volume Test**: Large data transfers
+5. **Endurance Test**: Extended duration
+
+## Load Profile
+- **Users**: 1K to 10K concurrent
+- **Data Rate**: 10Mbps to 1Gbps per user
+- **Duration**: 1 hour to 24 hours
+- **Ramp-up**: Gradual increase over 10 minutes
+
+## Success Criteria
+- All performance metrics within targets
+- No system crashes or failures
+- Graceful degradation under overload
+- Recovery time < 30 seconds`
+                },
+                'api-design': {
+                    title: 'API Design Template',
+                    content: `# 5G RAN Test API Design
+
+## API Overview
+RESTful API for 5G RAN network testing and monitoring
+
+## Base URL
+https://api.5gran-test.com/v1
+
+## Authentication
+Bearer token authentication required for all endpoints
+
+## Endpoints
+
+### Network Management
+\`\`\`
+GET /networks
+POST /networks
+GET /networks/{id}
+PUT /networks/{id}
+DELETE /networks/{id}
+\`\`\`
+
+### Test Execution
+\`\`\`
+POST /tests/execute
+GET /tests/{testId}/status
+GET /tests/{testId}/results
+DELETE /tests/{testId}
+\`\`\`
+
+### Monitoring
+\`\`\`
+GET /metrics/throughput
+GET /metrics/latency
+GET /metrics/errors
+GET /health
+\`\`\`
+
+## Request/Response Format
+\`\`\`json
+{
+  "timestamp": "2024-01-01T00:00:00Z",
+  "status": "success",
+  "data": {},
+  "errors": []
+}
+\`\`\`
+
+## Error Codes
+- 400: Bad Request
+- 401: Unauthorized
+- 404: Not Found
+- 500: Internal Server Error`
+                },
+                // Developer Templates
+                'code-generation': {
+                    title: 'Code Generation Template',
+                    content: `# 5G RAN Code Generation Template
+
+## Overview
+Generate production-ready code for 5G Radio Access Network components
+
+## Code Structure
+\`\`\`javascript
+// 5G RAN Base Station Controller
+class RAN_BaseStationController {
+    constructor(config) {
+        this.config = config;
+        this.connections = new Map();
+        this.metrics = new NetworkMetrics();
+    }
+    
+    // Initialize base station
+    async initialize() {
+        try {
+            await this.setupRadioInterface();
+            await this.establishBackhaulConnection();
+            await this.registerWithCore();
+            console.log('Base station initialized successfully');
+        } catch (error) {
+            console.error('Initialization failed:', error);
+            throw error;
+        }
+    }
+    
+    // Handle UE connection
+    async handleUEConnection(ueId, connectionRequest) {
+        const connection = {
+            id: ueId,
+            timestamp: Date.now(),
+            status: 'connected',
+            qos: connectionRequest.qos
+        };
+        
+        this.connections.set(ueId, connection);
+        await this.allocateResources(ueId, connectionRequest);
+        return connection;
+    }
+    
+    // Resource allocation
+    async allocateResources(ueId, request) {
+        const resources = {
+            bandwidth: request.bandwidth || '100MHz',
+            power: request.power || '23dBm',
+            beamforming: request.beamforming || true
+        };
+        
+        // Implement resource allocation logic
+        return resources;
+    }
+}
+\`\`\``
+                },
+                'architecture-design': {
+                    title: 'Architecture Design Template',
+                    content: `# 5G RAN System Architecture Design
+
+## System Overview
+Comprehensive architecture for 5G Radio Access Network
+
+## Architecture Components
+
+### 1. Radio Unit (RU)
+- **Function**: RF signal processing
+- **Location**: Near antenna
+- **Interfaces**: Fronthaul to DU
+
+### 2. Distributed Unit (DU)
+- **Function**: Real-time L1/L2 processing
+- **Location**: Edge locations
+- **Interfaces**: Fronthaul to RU, Midhaul to CU
+
+### 3. Centralized Unit (CU)
+- **Function**: L3 processing, RRC, PDCP
+- **Location**: Regional data centers
+- **Interfaces**: Midhaul to DU, Backhaul to Core
+
+## Network Topology
+\`\`\`
+[Core Network] ← Backhaul → [CU] ← Midhaul → [DU] ← Fronthaul → [RU] ← RF → [UE]
+\`\`\`
+
+## Interface Specifications
+- **Fronthaul**: eCPRI/CPRI over fiber
+- **Midhaul**: F1 interface (3GPP standard)
+- **Backhaul**: N2/N3 interfaces to 5G Core
+
+## Scalability Considerations
+- Horizontal scaling of CU/DU functions
+- Load balancing across multiple instances
+- Auto-scaling based on traffic patterns
+
+## Security Architecture
+- End-to-end encryption
+- Network slicing isolation
+- Zero-trust security model`
+                },
+                'database-schema': {
+                    title: 'Database Schema Template',
+                    content: `# 5G RAN Database Schema Design
+
+## Database Structure for 5G Network Management
+
+### Base Stations Table
+\`\`\`sql
+CREATE TABLE base_stations (
+    id UUID PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    location POINT NOT NULL,
+    frequency_bands JSON,
+    max_capacity INTEGER,
+    status ENUM('active', 'inactive', 'maintenance'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+\`\`\`
+
+### User Equipment (UE) Table
+\`\`\`sql
+CREATE TABLE user_equipment (
+    imei VARCHAR(15) PRIMARY KEY,
+    imsi VARCHAR(15) UNIQUE,
+    current_base_station UUID,
+    connection_status ENUM('connected', 'idle', 'disconnected'),
+    signal_strength INTEGER,
+    data_usage_mb BIGINT DEFAULT 0,
+    last_seen TIMESTAMP,
+    FOREIGN KEY (current_base_station) REFERENCES base_stations(id)
+);
+\`\`\`
+
+### Network Performance Metrics
+\`\`\`sql
+CREATE TABLE performance_metrics (
+    id UUID PRIMARY KEY,
+    base_station_id UUID,
+    timestamp TIMESTAMP,
+    throughput_mbps DECIMAL(10,2),
+    latency_ms DECIMAL(8,3),
+    packet_loss_percent DECIMAL(5,2),
+    connected_users INTEGER,
+    cpu_usage_percent DECIMAL(5,2),
+    memory_usage_percent DECIMAL(5,2),
+    FOREIGN KEY (base_station_id) REFERENCES base_stations(id)
+);
+\`\`\`
+
+### Network Slices
+\`\`\`sql
+CREATE TABLE network_slices (
+    id UUID PRIMARY KEY,
+    name VARCHAR(100),
+    type ENUM('eMBB', 'URLLC', 'mMTC'),
+    bandwidth_allocation INTEGER,
+    latency_requirement INTEGER,
+    reliability_requirement DECIMAL(4,3),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+\`\`\``
+                },
+                // Analyst Templates  
+                'data-analysis': {
+                    title: 'Data Analysis Template',
+                    content: `# 5G RAN Data Analysis Template
+
+## Data Analysis Framework for 5G Networks
+
+### Key Performance Indicators (KPIs)
+1. **Throughput Analysis**
+   - Average throughput per cell
+   - Peak throughput measurements
+   - Throughput distribution analysis
+
+2. **Latency Analysis**
+   - End-to-end latency measurements
+   - Latency percentiles (95th, 99th)
+   - Latency trend analysis
+
+3. **Coverage Analysis**
+   - Signal strength mapping
+   - Coverage hole identification
+   - Interference analysis
+
+### Python Analysis Script
+\`\`\`python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+class RAN_DataAnalyzer:
+    def __init__(self, data_source):
+        self.data = pd.read_csv(data_source)
+        
+    def analyze_throughput(self):
+        # Calculate throughput statistics
+        stats = {
+            'mean': self.data['throughput_mbps'].mean(),
+            'median': self.data['throughput_mbps'].median(),
+            'std': self.data['throughput_mbps'].std(),
+            'min': self.data['throughput_mbps'].min(),
+            'max': self.data['throughput_mbps'].max()
+        }
+        
+        # Create visualization
+        plt.figure(figsize=(12, 6))
+        plt.hist(self.data['throughput_mbps'], bins=50, alpha=0.7)
+        plt.title('Throughput Distribution')
+        plt.xlabel('Throughput (Mbps)')
+        plt.ylabel('Frequency')
+        plt.show()
+        
+        return stats
+    
+    def analyze_latency_trends(self):
+        # Time series analysis of latency
+        self.data['timestamp'] = pd.to_datetime(self.data['timestamp'])
+        daily_latency = self.data.groupby(self.data['timestamp'].dt.date)['latency_ms'].mean()
+        
+        # Trend analysis
+        x = np.arange(len(daily_latency))
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x, daily_latency.values)
+        
+        return {
+            'trend_slope': slope,
+            'correlation': r_value,
+            'p_value': p_value
+        }
+\`\`\``
+                },
+                'performance-metrics': {
+                    title: 'Performance Metrics Template',
+                    content: `# 5G RAN Performance Metrics Framework
+
+## Key Performance Indicators (KPIs)
+
+### Radio Performance Metrics
+- **RSRP (Reference Signal Received Power)**: Signal strength indicator
+- **RSRQ (Reference Signal Received Quality)**: Signal quality indicator  
+- **SINR (Signal-to-Interference-plus-Noise Ratio)**: Signal quality metric
+- **CQI (Channel Quality Indicator)**: Channel condition feedback
+
+### Network Performance Metrics
+- **Throughput**: Data transfer rate (Mbps/Gbps)
+- **Latency**: Round-trip time (milliseconds)
+- **Jitter**: Latency variation
+- **Packet Loss Rate**: Percentage of lost packets
+
+### Capacity Metrics
+- **Spectral Efficiency**: Bits per Hz per cell
+- **User Throughput**: Per-user data rate
+- **Cell Edge Throughput**: Performance at cell boundaries
+- **Peak Throughput**: Maximum achievable data rate
+
+### Availability Metrics
+- **Uptime**: Network availability percentage
+- **MTBF (Mean Time Between Failures)**: Reliability metric
+- **MTTR (Mean Time To Repair)**: Recovery time metric
+- **Service Availability**: End-user service uptime
+
+## Measurement Framework
+\`\`\`json
+{
+  "metrics_collection": {
+    "interval": "1_minute",
+    "aggregation_periods": ["5min", "1hour", "1day"],
+    "kpis": [
+      {
+        "name": "average_throughput",
+        "unit": "Mbps",
+        "threshold": {
+          "warning": 100,
+          "critical": 50
+        }
+      },
+      {
+        "name": "latency_p95",
+        "unit": "ms", 
+        "threshold": {
+          "warning": 20,
+          "critical": 50
+        }
+      }
+    ]
+  }
+}
+\`\`\``
+                },
+                'deployment-config': {
+                    title: 'Deployment Configuration Template',
+                    content: `# 5G RAN Deployment Configuration
+
+## Kubernetes Deployment Configuration
+
+### Base Station Controller Deployment
+\`\`\`yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ran-base-station-controller
+  namespace: 5g-ran
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bs-controller
+  template:
+    metadata:
+      labels:
+        app: bs-controller
+    spec:
+      containers:
+      - name: bs-controller
+        image: 5gran/bs-controller:v1.2.0
+        ports:
+        - containerPort: 8080
+        - containerPort: 9090
+        env:
+        - name: FREQUENCY_BAND
+          value: "n78"
+        - name: MAX_UE_CONNECTIONS
+          value: "1000"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bs-controller-service
+spec:
+  selector:
+    app: bs-controller
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: LoadBalancer
+\`\`\`
+
+### Configuration Map
+\`\`\`yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ran-config
+data:
+  network.conf: |
+    [network]
+    plmn_id = 00101
+    tac = 0x0001
+    
+    [radio]
+    frequency = 3500000000
+    bandwidth = 100000000
+    tx_power = 23
+    
+    [security]
+    encryption_enabled = true
+    auth_algorithm = "AES256"
+\`\`\``
+                }
+            };
+
+            // Dropdown functionality with debugging
+            console.log('Setting up dropdown functionality...');
+            
+            if (roleBtn && roleDropdown) {
+                console.log('Dropdown elements found, adding event listeners');
+                
+                const dropdownContent = roleDropdown.querySelector('.dropdown-content');
+                console.log('Dropdown content found:', !!dropdownContent);
+                
+                roleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Dropdown button clicked');
+                    
+                    const isActive = roleDropdown.classList.contains('active');
+                    console.log('Dropdown was active:', isActive);
+                    
+                    // Close all other dropdowns first
+                    document.querySelectorAll('.dropdown').forEach(dd => {
+                        if (dd !== roleDropdown) {
+                            dd.classList.remove('active');
+                        }
+                    });
+                    
+                    if (isActive) {
+                        roleDropdown.classList.remove('active');
+                        if (dropdownContent) {
+                            dropdownContent.classList.remove('show');
+                        }
+                        console.log('Dropdown closed');
+                    } else {
+                        roleDropdown.classList.add('active');
+                        if (dropdownContent) {
+                            dropdownContent.classList.add('show');
+                        }
+                        console.log('Dropdown opened');
+                    }
+                    
+                    // Force a reflow to ensure styles are applied
+                    if (dropdownContent) {
+                        dropdownContent.offsetHeight;
+                    }
+                });
+                
+            } else {
+                console.error('Dropdown elements not found:', { 
+                    roleBtn: !!roleBtn, 
+                    roleDropdown: !!roleDropdown 
+                });
+            }
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (roleDropdown && !roleDropdown.contains(e.target)) {
+                    roleDropdown.classList.remove('active');
+                    const dropdownContent = roleDropdown.querySelector('.dropdown-content');
+                    if (dropdownContent) {
+                        dropdownContent.classList.remove('show');
+                    }
+                }
+            });
+
+            // Role selection
+            roleDropdownItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const role = item.getAttribute('data-role');
+                    const roleText = item.textContent;
+                    
+                    console.log('Role selected:', role, roleText);
+                    
+                    // Update dropdown button text
+                    if (roleBtn && roleBtn.querySelector('span')) {
+                        roleBtn.querySelector('span').textContent = roleText;
+                    }
+                    
+                    if (roleDropdown) {
+                        roleDropdown.classList.remove('active');
+                    }
+                    
+                    // Hide all template categories
+                    templateCategories.forEach(cat => cat.classList.remove('active'));
+                    
+                    // Show selected role templates
+                    const selectedTemplates = document.getElementById(`${role}-templates`);
+                    if (selectedTemplates) {
+                        selectedTemplates.classList.add('active');
+                        console.log('Showing templates for:', role);
+                    } else {
+                        console.error('Templates not found for role:', role);
+                    }
+                    
+                    // Hide template content area
+                    if (templateContent) {
+                        templateContent.classList.remove('active');
+                    }
+                });
+            });
+
+            // Template card selection
+            templateCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const templateType = card.getAttribute('data-template');
+                    console.log('Template card clicked:', templateType);
+                    
+                    if (templateType && templateData[templateType]) {
+                        const template = templateData[templateType];
+                        
+                         // Update template content
+                         const headerTitle = document.getElementById('templateTitle');
+                         if (headerTitle) {
+                             headerTitle.textContent = template.title;
+                         }
+                        
+                        if (templateBody) {
+                            templateBody.textContent = template.content;
+                        }
+                        
+                         // Show template content area
+                         if (templateContent) {
+                             templateContent.style.display = 'block';
+                             templateContent.style.visibility = 'visible';
+                             templateContent.style.opacity = '1';
+                             console.log('Template content area shown');
+                             console.log('Content area display:', templateContent.style.display);
+                             
+                             // Scroll to template content
+                             setTimeout(() => {
+                                 templateContent.scrollIntoView({ behavior: 'smooth' });
+                             }, 100);
+                         } else {
+                             console.error('Template content element not found!');
+                         }
+                    } else {
+                        console.error('Template data not found for:', templateType);
+                    }
+                });
+            });
+
+            // Template action buttons
+            const modifyBtn = document.querySelector('.action-btn.modify');
+            const saveBtn = document.querySelector('.action-btn.save');
+            
+            if (modifyBtn) {
+                modifyBtn.addEventListener('click', () => {
+                    alert('Modify functionality - This will allow editing the template content');
+                });
+            }
+            
+            if (saveBtn) {
+                saveBtn.addEventListener('click', () => {
+                    alert('Save functionality - This will save the template changes');
+                });
+            }
+
+            // Fallback dropdown implementation
+            setTimeout(() => {
+                const fallbackBtn = document.getElementById('roleBtn');
+                const fallbackDropdown = document.getElementById('roleDropdown');
+                const fallbackContent = document.getElementById('dropdownContent');
+                
+                console.log('Fallback check:', {
+                    btn: !!fallbackBtn,
+                    dropdown: !!fallbackDropdown,
+                    content: !!fallbackContent
+                });
+                
+                if (fallbackBtn && fallbackContent) {
+                    fallbackBtn.onclick = function(e) {
+                        e.stopPropagation();
+                        console.log('Fallback button clicked');
+                        
+                        if (fallbackContent.style.display === 'block') {
+                            fallbackContent.style.display = 'none';
+                            console.log('Fallback dropdown closed');
+                        } else {
+                            fallbackContent.style.display = 'block';
+                            console.log('Fallback dropdown opened');
+                        }
+                    };
+                    
+                    // Add click listeners to dropdown items
+                    const fallbackItems = fallbackContent.querySelectorAll('.dropdown-item');
+                    fallbackItems.forEach(item => {
+                        item.onclick = function(e) {
+                            e.stopPropagation();
+                            const role = this.getAttribute('data-role');
+                            const roleText = this.textContent;
+                            
+                            console.log('Fallback role selected:', role);
+                            
+                            // Update button text
+                            const btnSpan = fallbackBtn.querySelector('span');
+                            if (btnSpan) {
+                                btnSpan.textContent = roleText;
+                            }
+                            
+                            // Close dropdown
+                            fallbackContent.style.display = 'none';
+                            
+                            // Show templates
+                            document.querySelectorAll('.template-categories').forEach(cat => {
+                                cat.classList.remove('active');
+                            });
+                            
+                            const templates = document.getElementById(`${role}-templates`);
+                            if (templates) {
+                                templates.classList.add('active');
+                            }
+                        };
+                    });
+                }
+            }, 1000);
+        });
+
+        // Simple direct test - should work immediately
+        console.log('Direct test starting...');
+        
+        // Test after page loads
+        window.addEventListener('load', function() {
+            console.log('Window loaded - running direct test');
+            
+            setTimeout(function() {
+                const testBtn = document.getElementById('roleBtn');
+                const testContent = document.getElementById('dropdownContent');
+                
+                console.log('Direct test elements:', {
+                    button: !!testBtn,
+                    content: !!testContent
+                });
+                
+                if (testBtn && testContent) {
+                    console.log('Adding direct onclick handler');
+                    testBtn.onclick = function() {
+                        console.log('DIRECT CLICK DETECTED!');
+                        if (testContent.style.display === 'block') {
+                            testContent.style.display = 'none';
+                            console.log('Direct: Dropdown closed');
+                        } else {
+                            testContent.style.display = 'block';
+                            testContent.style.position = 'absolute';
+                            testContent.style.top = '100%';
+                            testContent.style.left = '0';
+                            testContent.style.width = '100%';
+                            testContent.style.zIndex = '999999';
+                            testContent.style.background = 'rgba(0, 0, 0, 0.95)';
+                            testContent.style.border = '2px solid #00ffff';
+                            testContent.style.borderRadius = '8px';
+                            console.log('Direct: Dropdown opened with inline styles');
+                        }
+                    };
+                    
+                    // Add click handlers to dropdown options
+                    const dropdownItems = testContent.querySelectorAll('.dropdown-item');
+                    console.log('Found dropdown items:', dropdownItems.length);
+                    
+                    dropdownItems.forEach(function(item, index) {
+                        console.log('Adding click handler to item', index, ':', item.textContent);
+                        
+                        item.onclick = function(e) {
+                            e.stopPropagation();
+                            const role = this.getAttribute('data-role');
+                            const roleText = this.textContent;
+                            
+                            console.log('Dropdown item clicked:', roleText, 'role:', role);
+                            
+                            // Update button text
+                            const buttonSpan = testBtn.querySelector('span');
+                            if (buttonSpan) {
+                                buttonSpan.textContent = roleText;
+                                console.log('Button text updated to:', roleText);
+                            }
+                            
+                            // Close dropdown
+                            testContent.style.display = 'none';
+                            console.log('Dropdown closed after selection');
+                            
+                            // Show template categories
+                            const allTemplates = document.querySelectorAll('.template-categories');
+                            allTemplates.forEach(function(template) {
+                                template.classList.remove('active');
+                            });
+                            
+                            const selectedTemplates = document.getElementById(role + '-templates');
+                            if (selectedTemplates) {
+                                selectedTemplates.classList.add('active');
+                                console.log('Showing templates for role:', role);
+                                
+                                // Add click handlers to template cards for this role
+                                const templateCards = selectedTemplates.querySelectorAll('.template-card');
+                                templateCards.forEach(function(card) {
+                                    card.onclick = function() {
+                                        const templateType = this.getAttribute('data-template');
+                                        console.log('Template card clicked:', templateType);
+                                        
+                                        if (templateType && templateData[templateType]) {
+                                            const template = templateData[templateType];
+                                            
+                                             // Update template content - simplified approach
+                                             const titleElement = document.getElementById('templateTitle');
+                                             const contentBody = document.getElementById('templateBody');
+                                             const contentArea = document.getElementById('templateContent');
+                                             
+                                             console.log('Updating template content:', template.title);
+                                             
+                                             if (titleElement) {
+                                                 titleElement.textContent = template.title;
+                                                 console.log('Title updated');
+                                             }
+                                            
+                                            if (contentBody) {
+                                                contentBody.textContent = template.content;
+                                                console.log('Content updated');
+                                            }
+                                            
+                                            if (contentArea) {
+                                                contentArea.style.display = 'block';
+                                                console.log('Template content area shown');
+                                                
+                                                // Scroll to template content
+                                                setTimeout(() => {
+                                                    contentArea.scrollIntoView({ behavior: 'smooth' });
+                                                }, 100);
+                                            } else {
+                                                console.error('Content area not found!');
+                                            }
+                                        }
+                                    };
+                                });
+                            } else {
+                                console.error('Templates not found for role:', role);
+                            }
+                        };
+                        
+                        // Add hover effect
+                        item.onmouseover = function() {
+                            this.style.backgroundColor = 'rgba(0, 255, 255, 0.2)';
+                            this.style.color = '#00ffff';
+                        };
+                        
+                        item.onmouseout = function() {
+                            this.style.backgroundColor = 'transparent';
+                            this.style.color = 'rgba(255, 255, 255, 0.9)';
+                        };
+                    });
+                    
+                } else {
+                    console.error('Direct test failed - elements not found');
+                }
+            }, 2000);
+        });
+
+         // Force show template content for debugging
+         setTimeout(() => {
+             console.log('Running template content debug test...');
+             const templateArea = document.getElementById('templateContent');
+             if (templateArea) {
+                 console.log('Template area found, current display:', templateArea.style.display);
+                 console.log('Template area classes:', templateArea.className);
+                 
+                 // Force visibility for testing
+                 window.showTemplateContent = function() {
+                     templateArea.style.display = 'block';
+                     templateArea.style.visibility = 'visible';
+                     templateArea.style.opacity = '1';
+                     const titleEl = document.getElementById('templateTitle');
+                     const bodyEl = document.getElementById('templateBody');
+                     if (titleEl) titleEl.textContent = 'Test Template';
+                     if (bodyEl) bodyEl.textContent = 'This is a test template content to verify display is working.';
+                     console.log('Template content forced to show with test content');
+                 };
+                 
+                 console.log('Use showTemplateContent() in console to test');
+                 
+                 // Auto-show for testing - remove this later
+                 setTimeout(() => {
+                     console.log('Auto-showing template content for testing...');
+                     templateArea.style.display = 'block';
+                     const titleEl = document.getElementById('templateTitle');
+                     const bodyEl = document.getElementById('templateBody');
+                     if (titleEl) titleEl.textContent = 'Template Content';
+                    
+                 }, 2000);
+                 
+             } else {
+                 console.error('Template content area not found in DOM!');
+             }
+         }, 3000);
+    </script>
+</body>
+</html>

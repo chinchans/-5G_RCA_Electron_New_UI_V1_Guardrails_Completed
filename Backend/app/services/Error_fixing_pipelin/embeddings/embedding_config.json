@@ -1,0 +1,8 @@
+{
+  "model_name": "all-mpnet-base-v2",
+  "embedding_dimension": 768,
+  "total_commits": 30598,
+  "generated_at": "2025-10-03T06:25:37.476760",
+  "device": "cuda",
+  "batch_size": 64
+}

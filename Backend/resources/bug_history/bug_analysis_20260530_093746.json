@@ -1,0 +1,56 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"Segmentation fault in rrc_handle_RRCSetupRequest at /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065  \nCode line: UE->establishment_cause = rrcSetupRequest->establishmentCause;",
+  "log_file": "cu_rrc_segmentation_error.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/cu_rrc_segmentation_error.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-05-30T09:37:46.606649",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"Segmentation fault in rrc_handle_RRCSetupRequest at /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c:1065  \nCode line: UE->establishment_cause = rrcSetupRequest->establishmentCause;",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/cu_rrc_segmentation_error.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "grep -n \"establishmentCause\" /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c",
+            "hint": "Verify the code handling of establishmentCause in the RRC setup request to identify potential null pointer or improper assignment causing segmentation fault"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test network connectivity to the AMF to ensure signaling messages can be exchanged properly"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "grep -n \"establishmentCause\" /home/tcs/jayasvi/gNB/openairinterface5g/openair2/RRC/NR/rrc_gNB.c",
+            "explanation": "Verify the code handling of establishmentCause in the RRC setup request to identify potential null pointer or improper assignment causing segmentation fault"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test network connectivity to the AMF to ensure signaling messages can be exchanged properly"
+          }
+        ],
+        "command_count": 2
+      },
+      "command_count": 2
+    },
+    "timestamp": "2026-05-30T09:37:39.170572"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260530_093746.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

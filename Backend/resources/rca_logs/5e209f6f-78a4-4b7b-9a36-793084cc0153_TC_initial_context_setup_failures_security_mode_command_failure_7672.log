@@ -1,0 +1,591 @@
+frame = 300, slot = 0 : Function: MME_handle_MBMS_SESSION_UPDATE_RESPONSE processing
+frame = 300, slot = 1 : [NAS] NR cell: PCI=122, DL-ARFCN=436282
+frame = 300, slot = 7 : [NR_PHY] Processing RRC connection for gNB_UE_NGAP_ID: 704
+frame = 300, slot = 5 : Function: do_NR_UECapabilityEnquiry processing
+frame = 300, slot = 3 : [NGAP] PHY: Allocated 16 resource blocks for downlink
+frame = 300, slot = 1 : [NR_PHY] Processing RRC connection for gNB_UE_NGAP_ID: 9445
+frame = 300, slot = 8 : Function: init_nr_ue_vars processing
+frame = 301, slot = 5 : [NR_RRC] Successfully established SCTP association for gNB_id=410
+frame = 301, slot = 1 : [NR_RRC] Successfully established SCTP association for gNB_id=577
+frame = 301, slot = 1 : Function: phy_harq_indication processing
+frame = 301, slot = 2 : [NGAP] Configuration applied: subcarrier spacing=15, tx_gain=15
+frame = 301, slot = 9 : [gNB_MAC] Sending NGAP message to AMF, stream=16
+frame = 302, slot = 3 : Function: create_p5_ipv6_listen_socket processing
+frame = 302, slot = 7 : [NAS] Successfully established SCTP association for gNB_id=514
+frame = 302, slot = 0 : [NR_MAC] Sending NGAP message to AMF, stream=7
+frame = 302, slot = 8 : Function: udp_write_thread processing
+frame = 303, slot = 9 : [NR_MAC] gNB function initialized with 34 PRBs, id=871
+frame = 303, slot = 0 : [NR_RLC] Configuration applied: subcarrier spacing=15, tx_gain=22
+frame = 303, slot = 1 : Function: fill_ulsch processing
+frame = 303, slot = 5 : [SCTP] gNB function initialized with 53 PRBs, id=485
+frame = 304, slot = 5 : [NR_PHY] Sending NGAP message to AMF, stream=3
+frame = 304, slot = 9 : Function: eq_gprs_timer processing
+frame = 304, slot = 6 : [NR_MAC] RRC: Number of active bearers: 1
+frame = 304, slot = 3 : [X2AP] Starting scheduler with 8 threads
+frame = 304, slot = 1 : Function: init_pucch2_luts processing
+frame = 304, slot = 8 : [F1AP] Processing RRC connection for gNB_UE_NGAP_ID: 6391
+frame = 304, slot = 1 : [NR_PHY] RRC: Number of active bearers: 7
+frame = 305, slot = 5 : Function: decode_p_tmsi_signature processing
+frame = 305, slot = 9 : [S1AP] gNB function initialized with 37 PRBs, id=848
+frame = 305, slot = 8 : [NR_MAC] Configuration applied: subcarrier spacing=15, tx_gain=12
+frame = 306, slot = 6 : Function: put_bit processing
+frame = 306, slot = 7 : [NR_RLC] gNB function initialized with 24 PRBs, id=55
+frame = 306, slot = 0 : [NR_PHY] Sending NGAP message to AMF, stream=13
+frame = 307, slot = 3 : Function: rrc_data_req_ue processing
+frame = 307, slot = 0 : [NGAP] Successfully established SCTP association for gNB_id=475
+frame = 308, slot = 6 : [NR_PHY] Starting scheduler with 6 threads
+frame = 308, slot = 3 : Function: ticked_ttilog_set_tick_filter processing
+frame = 308, slot = 6 : [NR_RLC] Received F1AP message from DU: type=UEContextSetupResponse
+frame = 309, slot = 2 : [NR_MAC] gNB function initialized with 38 PRBs, id=467
+frame = 309, slot = 4 : Function: num_act_rb processing
+frame = 309, slot = 5 : [NR_MAC] Sending NGAP message to AMF, stream=15
+frame = 309, slot = 2 : [F1AP] Processing RRC connection for gNB_UE_NGAP_ID: 8395
+frame = 309, slot = 5 : Function: compute_ext processing
+frame = 309, slot = 7 : [NR_PDCP] NR cell: PCI=673, DL-ARFCN=426695
+frame = 309, slot = 4 : [RRC] NR cell: PCI=279, DL-ARFCN=421311
+frame = 309, slot = 4 : Function: recv_ip4_tcp processing
+frame = 309, slot = 0 : [gNB_MAC] Starting scheduler with 8 threads
+frame = 309, slot = 8 : [gNB_MAC] Successfully established SCTP association for gNB_id=285
+frame = 309, slot = 8 : Function: do_NR_DLInformationTransfer processing
+frame = 309, slot = 9 : [SCTP] Processing RRC connection for gNB_UE_NGAP_ID: 2067
+frame = 309, slot = 1 : [X2AP] gNB function initialized with 32 PRBs, id=775
+frame = 310, slot = 6 : Function: make_filename processing
+frame = 310, slot = 6 : [RRC] PHY: Allocated 42 resource blocks for downlink
+frame = 310, slot = 6 : [SCTP] Configuration applied: subcarrier spacing=30, tx_gain=22
+frame = 310, slot = 5 : Function: set processing
+frame = 310, slot = 0 : [NAS] Sending NGAP message to AMF, stream=10
+frame = 311, slot = 0 : [NGAP] NR cell: PCI=19, DL-ARFCN=484860
+frame = 311, slot = 4 : Function: pdcp_remove_UE processing
+frame = 311, slot = 4 : [F1AP] Sending NGAP message to AMF, stream=7
+frame = 311, slot = 9 : [NR_RRC] PHY: Allocated 58 resource blocks for downlink
+frame = 311, slot = 9 : Function: generate_pbch processing
+frame = 311, slot = 4 : [NR_RRC] Successfully established SCTP association for gNB_id=713
+frame = 311, slot = 0 : [F1AP] Received F1AP message from DU: type=F1SetupRequest
+frame = 311, slot = 5 : Function: init_eNB_afterRU processing
+frame = 311, slot = 3 : [NR_PDCP] NR cell: PCI=676, DL-ARFCN=444084
+frame = 311, slot = 9 : [X2AP] Received F1AP message from DU: type=UEContextSetupResponse
+frame = 311, slot = 9 : Function: get_new_cuup_for_ue processing
+frame = 311, slot = 0 : [X2AP] Received F1AP message from DU: type=UEContextSetupResponse
+frame = 311, slot = 2 : [GNB_APP] PDCP instance created for gNB radio bearer id=5
+frame = 311, slot = 4 : Function: pack_utran_system_information_request_value processing
+frame = 311, slot = 9 : [NAS] RRC: Number of active bearers: 3
+frame = 311, slot = 5 : [NR_PDCP] Successfully established SCTP association for gNB_id=668
+frame = 311, slot = 1 : Function: main processing
+frame = 311, slot = 6 : [NR_MAC] PDCP instance created for gNB radio bearer id=27
+frame = 311, slot = 3 : [NGAP] Successfully established SCTP association for gNB_id=225
+frame = 311, slot = 2 : Function: wait_free_rx_tti processing
+frame = 311, slot = 5 : [F1AP] RRC: Number of active bearers: 6
+frame = 311, slot = 3 : [S1AP] Starting scheduler with 3 threads
+frame = 311, slot = 9 : Function: pack_ipv6_address_value processing
+frame = 311, slot = 6 : [S1AP] PDCP instance created for gNB radio bearer id=13
+frame = 311, slot = 7 : [GNB_APP] Configuration applied: subcarrier spacing=15, tx_gain=25
+frame = 311, slot = 7 : Function: nr_process_decode_segment processing
+frame = 312, slot = 7 : [NAS] PDCP instance created for gNB radio bearer id=1
+frame = 312, slot = 2 : [S1AP] NR cell: PCI=775, DL-ARFCN=433457
+frame = 312, slot = 0 : Function: pack_pnf_phy_rel11_info processing
+frame = 312, slot = 3 : [S1AP] PHY: Allocated 72 resource blocks for downlink
+frame = 312, slot = 4 : [NR_PDCP] Configuration applied: subcarrier spacing=60, tx_gain=17
+frame = 312, slot = 7 : Function: pack_nb_harq_indication processing
+frame = 312, slot = 8 : [NR_MAC] Configuration applied: subcarrier spacing=60, tx_gain=12
+frame = 312, slot = 8 : [NR_RRC] PDCP instance created for gNB radio bearer id=2
+frame = 312, slot = 3 : Function: pack_ul_tti_request_srs_parameters_v4 processing
+frame = 312, slot = 1 : [NGAP] PHY: Allocated 21 resource blocks for downlink
+frame = 312, slot = 8 : [NR_RRC] NR cell: PCI=893, DL-ARFCN=411028
+frame = 312, slot = 3 : Function: dft108 processing
+frame = 312, slot = 2 : [SCTP] PHY: Allocated 37 resource blocks for downlink
+frame = 312, slot = 7 : [NAS] Received F1AP message from DU: type=UEContextModificationRequest
+frame = 312, slot = 0 : [NAS] Sending NGAP message to AMF, stream=3
+frame = 312, slot = 3 : [NGAP] NR cell: PCI=950, DL-ARFCN=417629
+frame = 312, slot = 4 : Function: nr_rrc_mac_config_req_mib processing
+frame = 312, slot = 8 : [gNB_MAC] Sending NGAP message to AMF, stream=10
+frame = 312, slot = 5 : [NR_PDCP] Configuration applied: subcarrier spacing=30, tx_gain=23
+frame = 312, slot = 9 : [RRC] PHY: Allocated 8 resource blocks for downlink
+frame = 312, slot = 4 : [NGAP] PDCP instance created for gNB radio bearer id=24
+frame = 312, slot = 7 : [NR_MAC] Sending NGAP message to AMF, stream=2
+frame = 313, slot = 7 : [NR_PDCP] PDCP instance created for gNB radio bearer id=13
+frame = 313, slot = 2 : [NAS] PHY: Allocated 20 resource blocks for downlink
+frame = 313, slot = 3 : [NGAP] Received F1AP message from DU: type=F1SetupRequest
+frame = 313, slot = 4 : Function: rrc_gNB_process_f1_du_configuration_update processing
+frame = 314, slot = 5 : [NGAP] Configuration applied: subcarrier spacing=60, tx_gain=16
+frame = 314, slot = 9 : [X2AP] Configuration applied: subcarrier spacing=60, tx_gain=25
+frame = 314, slot = 4 : [NR_PHY] Received F1AP message from DU: type=UEContextSetupResponse
+frame = 314, slot = 7 : [NAS] gNB function initialized with 35 PRBs, id=747
+frame = 314, slot = 5 : [gNB_MAC] PDCP instance created for gNB radio bearer id=28
+frame = 314, slot = 7 : [NAS] PDCP instance created for gNB radio bearer id=25
+frame = 314, slot = 2 : [RRC] Processing RRC connection for gNB_UE_NGAP_ID: 67
+frame = 314, slot = 4 : [NR_PHY] RRC: Number of active bearers: 2
+frame = 314, slot = 8 : Function: stop_RU processing
+frame = 314, slot = 9 : [PHY] Stopping RU 746 processing threads\n
+frame = 314, slot = 6 : [GNB_APP] Configuration applied: subcarrier spacing=15, tx_gain=14
+frame = 314, slot = 3 : [X2AP] NR cell: PCI=523, DL-ARFCN=468620
+frame = 314, slot = 1 : [NR_RLC] gNB function initialized with 35 PRBs, id=836
+frame = 315, slot = 6 : [gNB_MAC] Starting scheduler with 7 threads
+frame = 315, slot = 0 : Function: ngap_gNB_pdusession_modify_resp processing
+frame = 315, slot = 4 : [X2AP] gNB function initialized with 25 PRBs, id=949
+frame = 315, slot = 1 : [gNB_MAC] Sending NGAP message to AMF, stream=3
+frame = 316, slot = 8 : [NR_RRC] Sending NGAP message to AMF, stream=12
+frame = 317, slot = 9 : [NR_PDCP] Sending NGAP message to AMF, stream=12
+frame = 317, slot = 6 : [NR_PHY] Processing RRC connection for gNB_UE_NGAP_ID: 5310
+frame = 317, slot = 7 : [NR_PDCP] RRC: Number of active bearers: 4
+frame = 317, slot = 7 : [NAS] Starting scheduler with 2 threads
+frame = 317, slot = 0 : [NR_RRC] PDCP instance created for gNB radio bearer id=1
+frame = 318, slot = 3 : [NAS] Configuration applied: subcarrier spacing=60, tx_gain=12
+frame = 319, slot = 0 : [NGAP] Configuration applied: subcarrier spacing=30, tx_gain=21
+frame = 319, slot = 8 : [GNB_APP] Configuration applied: subcarrier spacing=30, tx_gain=14
+frame = 319, slot = 5 : [NR_RLC] Sending NGAP message to AMF, stream=8
+frame = 319, slot = 4 : Function: MCE_send_MBMS_SERVICE_COUNTING_REQUEST processing
+frame = 319, slot = 5 : [SCTP] Received F1AP message from DU: type=UEContextModificationRequest
+frame = 319, slot = 9 : [NR_PDCP] Processing RRC connection for gNB_UE_NGAP_ID: 7004
+frame = 320, slot = 4 : [NR_RRC] Starting scheduler with 6 threads
+frame = 320, slot = 4 : [NR_RRC] Successfully established SCTP association for gNB_id=147
+frame = 320, slot = 2 : [NR_RRC] Received F1AP message from DU: type=F1SetupRequest
+frame = 320, slot = 4 : [gNB_MAC] NR cell: PCI=400, DL-ARFCN=423701
+frame = 320, slot = 1 : [NR_PDCP] Sending NGAP message to AMF, stream=12
+frame = 321, slot = 9 : [NR_RRC] Sending NGAP message to AMF, stream=13
+frame = 321, slot = 7 : [RRC] Successfully established SCTP association for gNB_id=404
+frame = 321, slot = 7 : [NR_PHY] RRC: Number of active bearers: 5
+frame = 321, slot = 8 : [SCTP] RRC: Number of active bearers: 8
+frame = 321, slot = 9 : [NGAP] Received F1AP message from DU: type=F1SetupRequest
+frame = 322, slot = 1 : [GNB_APP] gNB function initialized with 29 PRBs, id=31
+frame = 322, slot = 4 : [gNB_MAC] Received F1AP message from DU: type=UEContextModificationRequest
+frame = 322, slot = 6 : [NR_RLC] PHY: Allocated 33 resource blocks for downlink
+frame = 322, slot = 9 : [X2AP] Received F1AP message from DU: type=F1SetupRequest
+frame = 322, slot = 3 : [RRC] Successfully established SCTP association for gNB_id=828
+frame = 322, slot = 4 : [NR_PDCP] Successfully established SCTP association for gNB_id=557
+frame = 323, slot = 1 : [NR_MAC] PHY: Allocated 59 resource blocks for downlink
+frame = 323, slot = 0 : [NR_RLC] gNB function initialized with 38 PRBs, id=262
+frame = 323, slot = 6 : Function: vnf_handle_nr_crc_indication processing
+frame = 323, slot = 7 : [RRC] gNB function initialized with 38 PRBs, id=517
+frame = 323, slot = 2 : [NR_MAC] Successfully established SCTP association for gNB_id=378
+frame = 324, slot = 8 : [NR_PHY] Processing RRC connection for gNB_UE_NGAP_ID: 8823
+frame = 325, slot = 4 : [NR_PDCP] PDCP instance created for gNB radio bearer id=29
+frame = 325, slot = 4 : Function: setup_pucchconfig processing
+frame = 325, slot = 0 : [F1AP] Received F1AP message from DU: type=F1SetupRequest
+frame = 326, slot = 9 : [RRC] Starting scheduler with 6 threads
+frame = 326, slot = 3 : [X2AP] NR cell: PCI=924, DL-ARFCN=463527
+frame = 326, slot = 6 : [NR_PHY] NR cell: PCI=370, DL-ARFCN=425254
+frame = 327, slot = 8 : [NGAP] PDCP instance created for gNB radio bearer id=5
+frame = 327, slot = 2 : [gNB_MAC] RRC: Number of active bearers: 5
+frame = 327, slot = 3 : [X2AP] NR cell: PCI=302, DL-ARFCN=488094
+frame = 327, slot = 2 : [NR_MAC] Successfully established SCTP association for gNB_id=504
+frame = 327, slot = 3 : [gNB_MAC] Starting scheduler with 7 threads
+frame = 327, slot = 1 : [RRC] RRC: Number of active bearers: 3
+frame = 327, slot = 6 : [F1AP] PDCP instance created for gNB radio bearer id=22
+frame = 327, slot = 0 : [X2AP] RRC: Number of active bearers: 4
+frame = 327, slot = 2 : [NAS] Configuration applied: subcarrier spacing=15, tx_gain=20
+frame = 327, slot = 0 : [F1AP] Processing RRC connection for gNB_UE_NGAP_ID: 1842
+frame = 327, slot = 9 : [NR_RRC] Sending NGAP message to AMF, stream=9
+frame = 327, slot = 3 : [F1AP] PDCP instance created for gNB radio bearer id=2
+frame = 327, slot = 7 : Function: nfapi_test_srs_indication processing
+frame = 328, slot = 2 : [F1AP] gNB function initialized with 16 PRBs, id=587
+frame = 328, slot = 2 : [X2AP] Starting scheduler with 7 threads
+frame = 328, slot = 6 : [gNB_MAC] gNB function initialized with 54 PRBs, id=1
+frame = 328, slot = 3 : [gNB_MAC] Received F1AP message from DU: type=F1SetupRequest
+frame = 328, slot = 4 : [NR_RLC] Starting scheduler with 3 threads
+frame = 328, slot = 6 : [NR_RLC] Sending NGAP message to AMF, stream=9
+frame = 328, slot = 1 : [NR_PDCP] PHY: Allocated 65 resource blocks for downlink
+frame = 328, slot = 7 : [F1AP] Configuration applied: subcarrier spacing=30, tx_gain=19
+frame = 328, slot = 1 : [NR_RRC] Processing RRC connection for gNB_UE_NGAP_ID: 1299
+frame = 328, slot = 0 : [NR_PDCP] Successfully established SCTP association for gNB_id=970
+frame = 328, slot = 4 : [NR_RRC] Configuration applied: subcarrier spacing=15, tx_gain=16
+frame = 328, slot = 4 : [NR_RRC] Configuration applied: subcarrier spacing=30, tx_gain=15
+frame = 328, slot = 3 : [RRC] Starting scheduler with 4 threads
+frame = 328, slot = 8 : [NAS] Successfully established SCTP association for gNB_id=250
+frame = 328, slot = 1 : [GNB_APP] Received F1AP message from DU: type=UEContextSetupResponse
+frame = 329, slot = 4 : [NR_PHY] Received F1AP message from DU: type=UEContextSetupResponse
+frame = 329, slot = 7 : [F1AP] Successfully established SCTP association for gNB_id=702
+frame = 329, slot = 9 : [NR_PHY] Processing RRC connection for gNB_UE_NGAP_ID: 2150
+frame = 329, slot = 8 : [RRC] Sending NGAP message to AMF, stream=9
+frame = 329, slot = 1 : [SCTP] Configuration applied: subcarrier spacing=60, tx_gain=25
+frame = 329, slot = 8 : Function: pack_nr_srs_normalized_channel_iq_matrix processing
+frame = 329, slot = 8 : [NR_MAC] NR cell: PCI=709, DL-ARFCN=413332
+frame = 329, slot = 6 : [NAS] NR cell: PCI=205, DL-ARFCN=456199
+frame = 329, slot = 6 : [RRC] Processing RRC connection for gNB_UE_NGAP_ID: 7595
+frame = 329, slot = 8 : [S1AP] Processing RRC connection for gNB_UE_NGAP_ID: 3422
+frame = 329, slot = 3 : Function: set_pucch_power_config processing
+frame = 329, slot = 7 : [NAS] PDCP instance created for gNB radio bearer id=20
+frame = 329, slot = 6 : [X2AP] PDCP instance created for gNB radio bearer id=27
+frame = 329, slot = 3 : [NGAP] PHY: Allocated 40 resource blocks for downlink
+frame = 329, slot = 3 : [RRC] RRC: Number of active bearers: 1
+frame = 329, slot = 7 : [NGAP] PDCP instance created for gNB radio bearer id=4
+frame = 330, slot = 1 : [RRC] Processing RRC connection for gNB_UE_NGAP_ID: 202
+frame = 330, slot = 6 : [F1AP] PHY: Allocated 43 resource blocks for downlink
+frame = 331, slot = 3 : [SCTP] Processing RRC connection for gNB_UE_NGAP_ID: 3929
+frame = 331, slot = 3 : [S1AP] Configuration applied: subcarrier spacing=30, tx_gain=21
+frame = 331, slot = 2 : [NR_PHY] Processing RRC connection for gNB_UE_NGAP_ID: 9533
+frame = 331, slot = 1 : [NGAP] Starting scheduler with 5 threads
+frame = 331, slot = 9 : [X2AP] PDCP instance created for gNB radio bearer id=22
+frame = 331, slot = 7 : [NGAP] Starting scheduler with 3 threads
+frame = 331, slot = 7 : [SCTP] Configuration applied: subcarrier spacing=15, tx_gain=21
+frame = 331, slot = 9 : [NR_PHY] PDCP instance created for gNB radio bearer id=14
+frame = 331, slot = 1 : [NR_PDCP] NR cell: PCI=498, DL-ARFCN=487299
+frame = 331, slot = 7 : Function: authenticationParameter processing
+frame = 332, slot = 1 : [NR_PDCP] PHY: Allocated 33 resource blocks for downlink
+frame = 333, slot = 6 : [S1AP] Sending NGAP message to AMF, stream=3
+frame = 333, slot = 6 : [NAS] Successfully established SCTP association for gNB_id=897
+frame = 334, slot = 0 : [RRC] Starting scheduler with 3 threads
+frame = 334, slot = 6 : Function: eq_uci_indication_sr_pdu_2_3_4 processing
+frame = 334, slot = 3 : [NGAP] Processing RRC connection for gNB_UE_NGAP_ID: 8208
+frame = 334, slot = 9 : [NR_PHY] Sending NGAP message to AMF, stream=12
+frame = 334, slot = 9 : [S1AP] PDCP instance created for gNB radio bearer id=29
+frame = 335, slot = 2 : [F1AP] Processing RRC connection for gNB_UE_NGAP_ID: 1873
+frame = 336, slot = 9 : [gNB_MAC] Sending NGAP message to AMF, stream=5
+frame = 337, slot = 0 : [F1AP] Starting scheduler with 7 threads
+frame = 338, slot = 7 : [NR_PHY] Sending NGAP message to AMF, stream=11
+frame = 338, slot = 6 : [RRC] Configuration applied: subcarrier spacing=15, tx_gain=18
+frame = 339, slot = 2 : Function: aerial_phy_nr_crc_indication processing
+frame = 340, slot = 3 : [NGAP] NR cell: PCI=291, DL-ARFCN=497176
+frame = 340, slot = 8 : [F1AP] Received F1AP message from DU: type=UEContextSetupResponse
+frame = 340, slot = 5 : [NR_RRC] gNB function initialized with 41 PRBs, id=174
+frame = 340, slot = 3 : [NR_MAC] Received F1AP message from DU: type=F1SetupRequest
+frame = 340, slot = 2 : Function: ngap_gNB_get_AMF processing
+frame = 340, slot = 8 : [NR_PDCP] Processing RRC connection for gNB_UE_NGAP_ID: 6013
+frame = 340, slot = 3 : [NR_PDCP] RRC: Number of active bearers: 3
+frame = 340, slot = 9 : [NR_RRC] Successfully established SCTP association for gNB_id=529
+frame = 340, slot = 5 : [NR_RRC] RRC: Number of active bearers: 1
+frame = 341, slot = 3 : [NR_PHY] Received F1AP message from DU: type=UEContextSetupResponse
+frame = 341, slot = 6 : [NGAP] Successfully established SCTP association for gNB_id=789
+frame = 341, slot = 9 : [NR_PDCP] NR cell: PCI=211, DL-ARFCN=436744
+frame = 341, slot = 6 : [gNB_MAC] Sending NGAP message to AMF, stream=8
+frame = 341, slot = 2 : Function: check_Msg4_retransmission processing
+frame = 341, slot = 3 : [MAC] check_Msg4_retransmission() before fill_nfapi_dlsch_config() with pdu_index = -1 \n
+frame = 341, slot = 1 : [SCTP] Received F1AP message from DU: type=UEContextModificationRequest
+frame = 342, slot = 5 : [NR_MAC] Successfully established SCTP association for gNB_id=982
+frame = 342, slot = 7 : [NGAP] gNB function initialized with 34 PRBs, id=928
+frame = 342, slot = 9 : [NR_PHY] gNB function initialized with 64 PRBs, id=324
+frame = 342, slot = 3 : Function: init_context_synchro_nr processing
+frame = 343, slot = 4 : [X2AP] PDCP instance created for gNB radio bearer id=24
+frame = 344, slot = 6 : [GNB_APP] Starting scheduler with 3 threads
+frame = 344, slot = 0 : [NAS] RRC: Number of active bearers: 5
+frame = 344, slot = 9 : [gNB_MAC] Starting scheduler with 5 threads
+frame = 344, slot = 1 : Function: rrc_gNB_process_dc_overall_timeout processing
+frame = 344, slot = 3 : [SCTP] PDCP instance created for gNB radio bearer id=21
+frame = 344, slot = 9 : [NR_PDCP] Configuration applied: subcarrier spacing=60, tx_gain=13
+frame = 344, slot = 3 : [RRC] PDCP instance created for gNB radio bearer id=5
+frame = 344, slot = 5 : [F1AP] PHY: Allocated 7 resource blocks for downlink
+frame = 344, slot = 0 : Function: pareto_dist processing
+frame = 344, slot = 1 : [OTG] Pareto :: scale=%.2f or shape%.2f <0 , adjust new values: sale=3, shape=4 \n
+frame = 345, slot = 1 : [NR_MAC] Configuration applied: subcarrier spacing=15, tx_gain=21
+frame = 345, slot = 7 : [SCTP] Received F1AP message from DU: type=F1SetupRequest
+frame = 345, slot = 4 : [NR_PDCP] gNB function initialized with 3 PRBs, id=780
+frame = 346, slot = 8 : [NR_RRC] Starting scheduler with 6 threads
+frame = 346, slot = 9 : Function: wait_eNBs processing
+frame = 346, slot = 2 : [NR_MAC] NR cell: PCI=219, DL-ARFCN=486711
+frame = 346, slot = 7 : [NAS] PHY: Allocated 39 resource blocks for downlink
+frame = 346, slot = 5 : [S1AP] NR cell: PCI=852, DL-ARFCN=495056
+frame = 359, slot = 6 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 360, slot = 6 : [NR_RRC] RRC: Number of active bearers: 1
+frame = 361, slot = 6 : [NR_RRC] RRC: Number of active bearers: 1
+frame = 362, slot = 2 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 362, slot = 6 : [NR_RRC] NR cell: PCI=519, DL-ARFCN=450158
+frame = 362, slot = 7 : [NR_RRC] PDCP instance created for gNB radio bearer id=18
+frame = 362, slot = 4 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 362, slot = 6 : [NR_RRC] Configuration applied: subcarrier spacing=30, tx_gain=24
+frame = 362, slot = 1 : [NR_RRC] Sending NGAP message to AMF, stream=13
+frame = 362, slot = 7 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 362, slot = 7 : [NR_RRC] PDCP instance created for gNB radio bearer id=26
+frame = 362, slot = 0 : [NR_RRC] gNB function initialized with 46 PRBs, id=720
+frame = 362, slot = 3 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 362, slot = 8 : [NR_RRC] Processing RRC connection for gNB_UE_NGAP_ID: 6078
+frame = 362, slot = 3 : [NR_RRC] PHY: Allocated 55 resource blocks for downlink
+frame = 362, slot = 2 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 362, slot = 2 : [NR_RRC] Configuration applied: subcarrier spacing=60, tx_gain=19
+frame = 362, slot = 2 : [NR_RRC] Configuration applied: subcarrier spacing=60, tx_gain=10
+frame = 362, slot = 0 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 362, slot = 6 : [NR_RRC] PHY: Allocated 65 resource blocks for downlink
+frame = 362, slot = 8 : [NR_RRC] Configuration applied: subcarrier spacing=60, tx_gain=22
+frame = 362, slot = 7 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 362, slot = 1 : [NR_RRC] Starting scheduler with 2 threads
+frame = 362, slot = 6 : [NR_RRC] NR cell: PCI=657, DL-ARFCN=484214
+frame = 362, slot = 5 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 362, slot = 8 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 362, slot = 9 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 912)\n
+frame = 362, slot = 0 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 362, slot = 2 : Function: cu_get_f1_ue_data processing
+frame = 362, slot = 5 : Function: get_hashtable_data processing
+frame = 363, slot = 5 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 364, slot = 5 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 364, slot = 6 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 467)\n
+frame = 364, slot = 7 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 364, slot = 9 : Function: cu_get_f1_ue_data processing
+frame = 364, slot = 2 : Function: get_hashtable_data processing
+frame = 365, slot = 2 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 366, slot = 6 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 366, slot = 7 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 422)\n
+frame = 366, slot = 8 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 366, slot = 0 : Function: cu_get_f1_ue_data processing
+frame = 366, slot = 3 : Function: get_hashtable_data processing
+frame = 367, slot = 3 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 368, slot = 0 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 368, slot = 1 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 33)\n
+frame = 368, slot = 2 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 368, slot = 4 : Function: cu_get_f1_ue_data processing
+frame = 368, slot = 7 : Function: get_hashtable_data processing
+frame = 369, slot = 7 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 371, slot = 8 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 371, slot = 9 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 296)\n
+frame = 371, slot = 0 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 371, slot = 2 : Function: cu_get_f1_ue_data processing
+frame = 371, slot = 5 : Function: get_hashtable_data processing
+frame = 372, slot = 5 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 374, slot = 0 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 374, slot = 1 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 127)\n
+frame = 374, slot = 2 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 374, slot = 4 : Function: cu_get_f1_ue_data processing
+frame = 374, slot = 7 : Function: get_hashtable_data processing
+frame = 375, slot = 7 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 376, slot = 5 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 376, slot = 6 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 455)\n
+frame = 376, slot = 7 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 376, slot = 9 : Function: cu_get_f1_ue_data processing
+frame = 376, slot = 2 : Function: get_hashtable_data processing
+frame = 377, slot = 2 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 378, slot = 7 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 378, slot = 8 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 186)\n
+frame = 378, slot = 9 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 378, slot = 1 : Function: cu_get_f1_ue_data processing
+frame = 378, slot = 4 : Function: get_hashtable_data processing
+frame = 379, slot = 4 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 380, slot = 9 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 380, slot = 0 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 455)\n
+frame = 380, slot = 1 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 380, slot = 3 : Function: cu_get_f1_ue_data processing
+frame = 380, slot = 6 : Function: get_hashtable_data processing
+frame = 381, slot = 6 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 382, slot = 2 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 382, slot = 3 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 543)\n
+frame = 382, slot = 4 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 382, slot = 6 : Function: cu_get_f1_ue_data processing
+frame = 382, slot = 9 : Function: get_hashtable_data processing
+frame = 383, slot = 9 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 384, slot = 7 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 384, slot = 8 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 19)\n
+frame = 384, slot = 9 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 384, slot = 1 : Function: cu_get_f1_ue_data processing
+frame = 384, slot = 4 : Function: get_hashtable_data processing
+frame = 385, slot = 4 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 386, slot = 5 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 386, slot = 6 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 108)\n
+frame = 386, slot = 7 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 386, slot = 9 : Function: cu_get_f1_ue_data processing
+frame = 386, slot = 2 : Function: get_hashtable_data processing
+frame = 387, slot = 2 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 388, slot = 5 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 388, slot = 6 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 643)\n
+frame = 388, slot = 7 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 388, slot = 9 : Function: cu_get_f1_ue_data processing
+frame = 388, slot = 2 : Function: get_hashtable_data processing
+frame = 389, slot = 2 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 391, slot = 3 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 391, slot = 4 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 174)\n
+frame = 391, slot = 5 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 391, slot = 7 : Function: cu_get_f1_ue_data processing
+frame = 391, slot = 0 : Function: get_hashtable_data processing
+frame = 392, slot = 0 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 394, slot = 8 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 394, slot = 9 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 516)\n
+frame = 394, slot = 0 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 394, slot = 2 : Function: cu_get_f1_ue_data processing
+frame = 394, slot = 5 : Function: get_hashtable_data processing
+frame = 395, slot = 5 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 397, slot = 3 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 397, slot = 4 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 934)\n
+frame = 397, slot = 5 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 397, slot = 7 : Function: cu_get_f1_ue_data processing
+frame = 397, slot = 0 : Function: get_hashtable_data processing
+frame = 398, slot = 0 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 399, slot = 9 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 399, slot = 0 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 349)\n
+frame = 399, slot = 1 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 399, slot = 3 : Function: cu_get_f1_ue_data processing
+frame = 399, slot = 6 : Function: get_hashtable_data processing
+frame = 400, slot = 6 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 401, slot = 9 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 401, slot = 0 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 484)\n
+frame = 401, slot = 1 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 401, slot = 3 : Function: cu_get_f1_ue_data processing
+frame = 401, slot = 6 : Function: get_hashtable_data processing
+frame = 402, slot = 6 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 403, slot = 2 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 403, slot = 3 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 35)\n
+frame = 403, slot = 4 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 403, slot = 6 : Function: cu_get_f1_ue_data processing
+frame = 403, slot = 9 : Function: get_hashtable_data processing
+frame = 404, slot = 9 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 405, slot = 0 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 405, slot = 1 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 372)\n
+frame = 405, slot = 2 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 405, slot = 4 : Function: cu_get_f1_ue_data processing
+frame = 405, slot = 7 : Function: get_hashtable_data processing
+frame = 406, slot = 7 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 407, slot = 6 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 407, slot = 7 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 879)\n
+frame = 407, slot = 8 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 407, slot = 0 : Function: cu_get_f1_ue_data processing
+frame = 407, slot = 3 : Function: get_hashtable_data processing
+frame = 408, slot = 3 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 409, slot = 0 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 409, slot = 1 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 749)\n
+frame = 409, slot = 2 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 409, slot = 4 : Function: cu_get_f1_ue_data processing
+frame = 409, slot = 7 : Function: get_hashtable_data processing
+frame = 410, slot = 7 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 412, slot = 2 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 412, slot = 3 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 603)\n
+frame = 412, slot = 4 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 412, slot = 6 : Function: cu_get_f1_ue_data processing
+frame = 412, slot = 9 : Function: get_hashtable_data processing
+frame = 413, slot = 9 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 414, slot = 6 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 414, slot = 7 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 739)\n
+frame = 414, slot = 8 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 414, slot = 0 : Function: cu_get_f1_ue_data processing
+frame = 414, slot = 3 : Function: get_hashtable_data processing
+frame = 415, slot = 3 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 417, slot = 3 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 417, slot = 4 : [NR_RRC] gNB %u Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 223)\n
+frame = 417, slot = 5 : Function: nr_rrc_transfer_protected_rrc_message processing
+frame = 417, slot = 7 : Function: cu_get_f1_ue_data processing
+frame = 417, slot = 0 : Function: get_hashtable_data processing
+frame = 418, slot = 0 : Function: rrc_gNB_process_security_mode_complete processing
+frame = 419, slot = 2 : ERROR: Security Mode Command failed for UE with rnti 3a63
+frame = 419, slot = 3 : Function: rrc_gNB_generate_SecurityModeCommand returned error code -2
+frame = 420, slot = 8 : [NR_RRC] Initiating fallback procedure for rrc_gNB_generate_SecurityModeCommand
+frame = 420, slot = 0 : [NR_RRC] Attempting to recover from Initial context setup failed: Security Mode Command
+frame = 420, slot = 3 : [NR_RRC] Sending error notification to AMF
+frame = 420, slot = 7 : [NR_RRC] Error recovery complete with status=failed
+frame = 420, slot = 8 : [NR_RRC] Attempting to recover from Initial context setup failed: Security Mode Command
+frame = 420, slot = 5 : [NR_RRC] Error recovery complete with status=complete
+frame = 420, slot = 6 : [NR_RRC] Notifying upper layers about error in rrc_gNB_generate_SecurityModeCommand
+frame = 420, slot = 8 : [NR_RRC] Releasing resources allocated for failed operation
+frame = 421, slot = 1 : [NR_RRC] Releasing resources allocated for failed operation
+frame = 421, slot = 3 : [NR_RRC] Initiating fallback procedure for rrc_gNB_generate_SecurityModeCommand
+frame = 422, slot = 1 : [NR_RRC] Error recovery complete with status=partial
+frame = 422, slot = 5 : [NR_RRC] Notifying upper layers about error in rrc_gNB_generate_SecurityModeCommand
+frame = 423, slot = 4 : [NR_RRC] Sending error notification to AMF
+frame = 424, slot = 5 : [NR_RRC] Initiating fallback procedure for rrc_gNB_generate_SecurityModeCommand
+frame = 425, slot = 7 : [NR_RRC] Sending error notification to AMF
+frame = 425, slot = 6 : [NR_RRC] Initiating fallback procedure for rrc_gNB_generate_SecurityModeCommand
+frame = 426, slot = 4 : [NR_RRC] Sending error notification to AMF
+frame = 426, slot = 4 : [NR_RRC] Initiating fallback procedure for rrc_gNB_generate_SecurityModeCommand
+frame = 426, slot = 0 : [NR_RRC] Sending error notification to AMF
+frame = 426, slot = 2 : [NR_RRC] Error recovery complete with status=complete
+frame = 426, slot = 9 : [NR_RRC] Attempting to recover from Initial context setup failed: Security Mode Command
+frame = 426, slot = 1 : [NR_RRC] Error recovery complete with status=partial
+frame = 426, slot = 6 : [NR_RRC] Error recovery complete with status=partial
+frame = 426, slot = 0 : [NR_RRC] Initiating fallback procedure for rrc_gNB_generate_SecurityModeCommand
+frame = 426, slot = 5 : [NR_RRC] Error recovery complete with status=complete
+frame = 441, slot = 1 : Function: NR_IF_Module_init processing
+frame = 441, slot = 0 : [RRC] Processing RRC connection for gNB_UE_NGAP_ID: 4116
+frame = 441, slot = 8 : [NR_MAC] PHY: Allocated 13 resource blocks for downlink
+frame = 441, slot = 4 : [GNB_APP] PDCP instance created for gNB radio bearer id=2
+frame = 441, slot = 5 : [GNB_APP] Starting scheduler with 7 threads
+frame = 441, slot = 6 : Function: main processing
+frame = 441, slot = 5 : [RRC] NR cell: PCI=796, DL-ARFCN=402335
+frame = 441, slot = 4 : [X2AP] PHY: Allocated 37 resource blocks for downlink
+frame = 442, slot = 0 : [gNB_MAC] PHY: Allocated 67 resource blocks for downlink
+frame = 442, slot = 1 : [GNB_APP] RRC: Number of active bearers: 6
+frame = 443, slot = 7 : Function: unpack_rx_indication_body_value processing
+frame = 444, slot = 6 : [NR_RRC] Configuration applied: subcarrier spacing=15, tx_gain=18
+frame = 445, slot = 9 : [GNB_APP] Sending NGAP message to AMF, stream=12
+frame = 445, slot = 7 : [NR_RLC] Sending NGAP message to AMF, stream=6
+frame = 445, slot = 1 : [NR_RLC] gNB function initialized with 40 PRBs, id=419
+frame = 445, slot = 1 : Function: push16 processing
+frame = 445, slot = 4 : [NGAP] PDCP instance created for gNB radio bearer id=2
+frame = 445, slot = 0 : [GNB_APP] PHY: Allocated 15 resource blocks for downlink
+frame = 445, slot = 1 : [NR_RLC] gNB function initialized with 45 PRBs, id=499
+frame = 446, slot = 2 : [NR_PDCP] PDCP instance created for gNB radio bearer id=7
+frame = 447, slot = 9 : Function: allocate_nfapi_tx_request processing
+frame = 447, slot = 9 : [S1AP] Successfully established SCTP association for gNB_id=477
+frame = 447, slot = 6 : [gNB_MAC] Processing RRC connection for gNB_UE_NGAP_ID: 748
+frame = 448, slot = 7 : [F1AP] Sending NGAP message to AMF, stream=13
+frame = 448, slot = 7 : [NR_RRC] Received F1AP message from DU: type=F1SetupRequest
+frame = 449, slot = 8 : Function: pdcp_data_req processing
+frame = 449, slot = 7 : [NGAP] Successfully established SCTP association for gNB_id=619
+frame = 449, slot = 5 : [gNB_MAC] NR cell: PCI=915, DL-ARFCN=441796
+frame = 449, slot = 3 : [GNB_APP] Received F1AP message from DU: type=UEContextSetupResponse
+frame = 450, slot = 3 : [gNB_MAC] Starting scheduler with 8 threads
+frame = 450, slot = 1 : Function: check_bits_vs_coderate_limit processing
+frame = 450, slot = 5 : [NR_PDCP] RRC: Number of active bearers: 3
+frame = 450, slot = 3 : [SCTP] RRC: Number of active bearers: 6
+frame = 451, slot = 8 : [NR_MAC] Configuration applied: subcarrier spacing=30, tx_gain=13
+frame = 451, slot = 2 : [NR_RRC] RRC: Number of active bearers: 1
+frame = 451, slot = 3 : Function: rrc_remove_nsa_user processing
+frame = 451, slot = 2 : [NR_PHY] Successfully established SCTP association for gNB_id=992
+frame = 452, slot = 6 : [RRC] Processing RRC connection for gNB_UE_NGAP_ID: 8213
+frame = 452, slot = 7 : [F1AP] PDCP instance created for gNB radio bearer id=14
+frame = 452, slot = 0 : [X2AP] Received F1AP message from DU: type=UEContextModificationRequest
+frame = 452, slot = 6 : Function: dump_mce_tree_m2 processing
+frame = 453, slot = 8 : [S1AP] Processing RRC connection for gNB_UE_NGAP_ID: 1484
+frame = 453, slot = 1 : [NAS] RRC: Number of active bearers: 8
+frame = 454, slot = 8 : [NR_PDCP] Configuration applied: subcarrier spacing=30, tx_gain=10
+frame = 454, slot = 1 : [NAS] NR cell: PCI=409, DL-ARFCN=446472
+frame = 455, slot = 6 : Function: quantize4bit processing
+frame = 455, slot = 9 : [NR_RRC] Starting scheduler with 2 threads
+frame = 455, slot = 6 : [NAS] NR cell: PCI=160, DL-ARFCN=451609
+frame = 455, slot = 8 : [gNB_MAC] gNB function initialized with 17 PRBs, id=78
+frame = 455, slot = 4 : [NR_RLC] PDCP instance created for gNB radio bearer id=27
+frame = 456, slot = 3 : Function: set_tdd_config_nr_ue processing
+frame = 456, slot = 0 : [GNB_APP] PDCP instance created for gNB radio bearer id=15
+frame = 456, slot = 4 : [F1AP] Received F1AP message from DU: type=F1SetupRequest
+frame = 456, slot = 0 : [NR_RLC] Successfully established SCTP association for gNB_id=616
+frame = 456, slot = 7 : [NR_PDCP] PHY: Allocated 36 resource blocks for downlink
+frame = 456, slot = 2 : Function: rrc_CU_process_f1_lost_connection processing
+frame = 456, slot = 9 : [F1AP] Starting scheduler with 4 threads
+frame = 457, slot = 9 : [NR_PHY] PDCP instance created for gNB radio bearer id=1
+frame = 457, slot = 2 : [NR_RRC] RRC: Number of active bearers: 7
+frame = 457, slot = 9 : [S1AP] Successfully established SCTP association for gNB_id=171
+frame = 457, slot = 1 : Function: pack_ul_cqi_information_value processing
+frame = 457, slot = 9 : [NGAP] RRC: Number of active bearers: 6
+frame = 457, slot = 1 : [NR_MAC] Starting scheduler with 7 threads
+frame = 457, slot = 7 : [NR_RLC] RRC: Number of active bearers: 3
+frame = 457, slot = 3 : [S1AP] Received F1AP message from DU: type=UEContextSetupResponse
+frame = 457, slot = 0 : Function: background_system_process processing
+frame = 457, slot = 6 : [gNB_MAC] RRC: Number of active bearers: 7
+frame = 457, slot = 0 : [RRC] RRC: Number of active bearers: 5
+frame = 457, slot = 0 : [NR_PHY] gNB function initialized with 9 PRBs, id=515
+frame = 457, slot = 9 : [RRC] NR cell: PCI=917, DL-ARFCN=415852
+frame = 457, slot = 3 : Function: cp_f1ap_reset processing
+frame = 457, slot = 1 : [SCTP] PDCP instance created for gNB radio bearer id=26
+frame = 457, slot = 5 : [NGAP] Received F1AP message from DU: type=F1SetupRequest
+frame = 457, slot = 4 : [SCTP] gNB function initialized with 27 PRBs, id=991
+frame = 457, slot = 8 : [GNB_APP] PDCP instance created for gNB radio bearer id=23
+frame = 457, slot = 0 : [RRC] UE with RNTI 7672 in RRC_CONNECTED state
+frame = 457, slot = 0 : [NGAP] Received DownlinkNASTransport from AMF
+frame = 457, slot = 0 : Function: ngap_handle_downlink_nas_transport processing
+frame = 457, slot = 0 : [NGAP] Forwarding NAS PDU to RRC for UE 7672
+frame = 457, slot = 1 : [RRC] Encapsulating NAS PDU in DL Information Transfer
+frame = 457, slot = 1 : Function: rrc_gNB_encode_dcch processing
+frame = 457, slot = 1 : [RRC] Scheduling DL-DCCH message for UE 7672
+frame = 457, slot = 1 : [MAC] Scheduling PDSCH for UE 7672
+frame = 457, slot = 2 : [RRC] Successfully delivered NAS message to UE 7672
+frame = 457, slot = 2 : [RRC] Received UL Information Transfer from UE 7672
+frame = 457, slot = 2 : Function: rrc_gNB_decode_dcch processing
+frame = 457, slot = 2 : [RRC] Extracting NAS PDU from UL Information Transfer
+frame = 457, slot = 3 : [NGAP] Forwarding NAS PDU to AMF for UE 7672
+frame = 457, slot = 3 : Function: ngap_gNB_nas_uplink processing
+frame = 457, slot = 3 : [NGAP] Sent UplinkNASTransport to AMF
+frame = 457, slot = 4 : [NGAP] Received InitialContextSetupRequest from AMF
+frame = 457, slot = 4 : Function: ngap_gNB_handle_initial_context_setup_request processing
+frame = 457, slot = 4 : [NGAP] Processing security context for UE 7672
+frame = 457, slot = 4 : [NGAP] Security algorithm: 128-NEA2 (confidentiality), 128-NIA2 (integrity)
+frame = 457, slot = 5 : [RRC] Received Initial Context Setup Request from NGAP
+frame = 457, slot = 5 : Function: rrc_gNB_process_security processing
+frame = 457, slot = 5 : [SECURITY] Storing security keys for UE 7672
+frame = 457, slot = 5 : [SECURITY] Generating Security Mode Command for UE with rnti 7672
+frame = 457, slot = 6 : [SECURITY] Selected algorithms: 128-NEA2 (confidentiality), 128-NIA2 (integrity)
+frame = 457, slot = 6 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 457, slot = 6 : [RRC] Building SecurityModeCommand message
+frame = 457, slot = 7 : [ASN1] Encoding SecurityModeCommand message
+frame = 457, slot = 7 : [ASN1] ASN1 encoding started for SecurityModeCommand
+frame = 457, slot = 7 : ERROR: Security Mode Command encoding failed for UE with rnti 7672
+frame = 457, slot = 7 : [RRC] SecurityModeCommand encoding failed with cause ASN_ENCODING_ERR
+frame = 457, slot = 8 : [RRC] Security Mode Command failed for UE 7672
+frame = 457, slot = 8 : Function: rrc_gNB_send_NGAP_INITIAL_CONTEXT_SETUP_FAIL processing
+frame = 457, slot = 8 : [NGAP] Preparing Initial Context Setup Failure message
+frame = 457, slot = 8 : [NGAP] Cause: Radio Network Layer - Unspecified
+frame = 457, slot = 9 : [NGAP] Sending Initial Context Setup Failure to AMF
+frame = 457, slot = 9 : [RRC] Maintaining RRC connection but security setup failed
+frame = 457, slot = 9 : [RRC] UE 7672 continuing in unsecured mode
+frame = 458, slot = 0 : [NGAP] Waiting for further instructions from AMF for UE 7672
+frame = 458, slot = 0 : [eNB 0] ASN1: securityModeCommand encoding failed for UE 7672

@@ -1,0 +1,292 @@
+[HW]   # /dev/cpu_dma_latency set to 2 us
+[0m[ENB_APP]   nfapi running mode: MONOLITHIC
+[0m[GNB_APP]   Getting GNBSParams
+[0m[ITTI]   Starting itti queue: TASK_UNKNOWN as task 0
+[0m[ITTI]   Starting itti queue: TASK_TIMER as task 1
+[0m[ITTI]   Starting itti queue: TASK_L2L1 as task 2
+[0m[ITTI]   Starting itti queue: TASK_BM as task 3
+[0m[ITTI]   Starting itti queue: TASK_PHY_ENB as task 4
+[0m[ITTI]   Starting itti queue: TASK_MAC_ENB as task 5
+[0m[ITTI]   Starting itti queue: TASK_MAC_GNB as task 6
+[0m[ITTI]   Starting itti queue: TASK_RLC_ENB as task 7
+[0m[ITTI]   Starting itti queue: TASK_RRC_ENB_NB_IoT as task 8
+[0m[ITTI]   Starting itti queue: TASK_PDCP_ENB as task 9
+[0m[ITTI]   Starting itti queue: TASK_PDCP_GNB as task 10
+[0m[ITTI]   Starting itti queue: TASK_DATA_FORWARDING as task 11
+[0m[ITTI]   Starting itti queue: TASK_END_MARKER as task 12
+[0m[ITTI]   Starting itti queue: TASK_RRC_ENB as task 13
+[0m[ITTI]   Starting itti queue: TASK_RRC_GNB as task 14
+[0m[ITTI]   Starting itti queue: TASK_RAL_ENB as task 15
+[0m[ITTI]   Starting itti queue: TASK_S1AP as task 16
+[0m[ITTI]   Starting itti queue: TASK_NGAP as task 17
+[0m[ITTI]   Starting itti queue: TASK_X2AP as task 18
+[0m[ITTI]   Starting itti queue: TASK_M2AP_ENB as task 19
+[0m[ITTI]   Starting itti queue: TASK_M2AP_MCE as task 20
+[0m[ITTI]   Starting itti queue: TASK_M3AP as task 21
+[0m[ITTI]   Starting itti queue: TASK_M3AP_MME as task 22
+[0m[ITTI]   Starting itti queue: TASK_M3AP_MCE as task 23
+[0m[ITTI]   Starting itti queue: TASK_SCTP as task 24
+[0m[ITTI]   Starting itti queue: TASK_ENB_APP as task 25
+[0m[ITTI]   Starting itti queue: TASK_GNB_APP as task 26
+[0m[ITTI]   Starting itti queue: TASK_MCE_APP as task 27
+[0m[ITTI]   Starting itti queue: TASK_MME_APP as task 28
+[0m[ITTI]   Starting itti queue: TASK_FLEXRAN_AGENT as task 29
+[0m[ITTI]   Starting itti queue: TASK_PHY_UE as task 30
+[0m[ITTI]   Starting itti queue: TASK_MAC_UE as task 31
+[0m[ITTI]   Starting itti queue: TASK_RLC_UE as task 32
+[0m[ITTI]   Starting itti queue: TASK_PDCP_UE as task 33
+[0m[ITTI]   Starting itti queue: TASK_RRC_UE as task 34
+[0m[ITTI]   Starting itti queue: TASK_RRC_NRUE as task 35
+[0m[ITTI]   Starting itti queue: TASK_NAS_UE as task 36
+[0m[ITTI]   Starting itti queue: TASK_RAL_UE as task 37
+[0m[ITTI]   Starting itti queue: TASK_GTPV1_U as task 38
+[0m[ITTI]   Starting itti queue: TASK_CU_F1 as task 39
+[0m[ITTI]   Starting itti queue: TASK_DU_F1 as task 40
+[0m[ITTI]   Starting itti queue: TASK_CUCP_E1 as task 41
+[0m[ITTI]   Starting itti queue: TASK_CUUP_E1 as task 42
+[0m[ITTI]   Starting itti queue: TASK_RRC_UE_SIM as task 43
+[0m[ITTI]   Starting itti queue: TASK_RRC_GNB_SIM as task 44
+[0m[ITTI]   Starting itti queue: TASK_RRC_NSA_UE as task 45
+[0m[ITTI]   Starting itti queue: TASK_RRC_NSA_NRUE as task 46
+[0m[ITTI]   Starting itti queue: TASK_NAS_NRUE as task 47
+[0m[OPT]   OPT disabled
+[0m[HW]   Version: Branch: master Abrev. Hash: 25baf4e Date: Tue Dec 20 06:13:23 2022 +0000
+[0m[ITTI]   Created Posix thread TASK_SCTP
+[0m[X2AP]   X2AP is disabled.
+[0m[NGAP]   Starting NGAP layer
+[0m[ITTI]   Created Posix thread TASK_NGAP
+[0m[PHY]   gNB_app_task() Task ready initialize structures
+[0m[ITTI]   Created Posix thread TASK_GNB_APP
+[0m[NR_RRC]   Creating NR RRC gNB Task
+[0m[NR_PHY]   PRB blacklist 
+[0m[NR_PHY]   RC.gNB = 0x7ff6b8002fa0
+[0m[PHY]   No L1s configuration found[0m[PHY]   RC.gNB[0] = 0x7ff6be6f1010
+[0m[1;31m[PHY]   No prs_config configuration found..!!
+[0m[PHY]   gNB_app_task() RC.nb_nr_L1_inst:0
+[0m[GNB_APP]   Allocating gNB_RRC_INST for 1 instances
+[0m[PHY]   gNB_app_task() RC.nb_nr_inst:1 RC.nrrrc:0x7ff6b80048f0
+[0m[PHY]   gNB_app_task() Creating RRC instance RC.nrrrc[0]:0x7ff6b8004910 (1 of 1)
+[0m[RRC]   Read in ServingCellConfigCommon (PhysCellId 0, ABSFREQSSB 641280, DLBand 78, ABSFREQPOINTA 640008, DLBW 106,RACH_TargetReceivedPower -96
+[0m[NR_MAC]   NR band duplex spacing is 0 KHz (nr_bandtable[37].band = 78)
+[0m[NR_MAC]   NR band 78, duplex mode TDD, duplex spacing = 0 KHz
+[0m[GNB_APP]   F1AP: gNB_CU_id[0] 0
+[0m[GNB_APP]   F1AP: gNB_CU_name[0] gNB-Eurecom-CU
+[0m[GNB_APP]   pdsch_AntennaPorts N1 1
+[0m[GNB_APP]   pdsch_AntennaPorts N2 1
+[0m[GNB_APP]   pdsch_AntennaPorts XP 1
+[0m[GNB_APP]   pusch_AntennaPorts 1
+[0m[GNB_APP]   minTXRXTIME 6
+[0m[GNB_APP]   SIB1 TDA 1
+[0m[GNB_APP]   Do CSI-RS 0
+[0m[GNB_APP]   Do SRS 0
+[0m[GNB_APP]   256 QAM: force off
+[0m[GNB_APP]   SDAP layer is disabled
+[0m[GNB_APP]   Data Radio Bearer count 1
+[0m[GNB_APP]   RRC starting with node type 5
+[0m[GNB_APP]   Sending configuration message to NR_RRC task
+[0m[ITTI]   Created Posix thread TASK_RRC_GNB
+[0m[NR_RRC]   Entering main loop of NR_RRC message task
+[0m[NR_RRC]   Received message NRRRC_CONFIGURATION_REQ
+[0m[NR_RRC]   [gNB 0] Received NRRRC_CONFIGURATION_REQ : 0x7ff6b8005ff0
+[0m[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 0] Init...
+[0m[PDCP]   pdcp init,usegtp 
+[0mCMDLINE: "./nr-softmodem" "-O" "../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf" "--sa" "--gNBs.[0].force_256qam_off" 
+[CONFIG] get parameters from libconfig ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf , debug flags: 0x00000000
+[LIBCONFIG] Path for include directive set to: ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF
+[CONFIG] function config_libconfig_init returned 0
+[CONFIG] config module libconfig loaded
+[LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)
+[LIBCONFIG] log_config: 3/3 parameters successfully set, (1 to default value)
+[LIBCONFIG] log_config: 56/56 parameters successfully set, (48 to default value)
+[LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)
+[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)
+[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)
+log init done
+Reading in command-line options
+[LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)
+[LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)
+[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)
+[LIBCONFIG] list MACRLCs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf 
+[LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf 
+[LIBCONFIG] list RUs not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf 
+[LIBCONFIG] list THREAD_STRUCT not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf 
+[CONFIG] parallel_conf is set to 2
+[CONFIG] worker_conf is set to 1
+Configuration: nb_rrc_inst 1, nb_nr_L1_inst 0, nb_ru 0
+[LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)
+configuring for RAU/RRU
+CPU Freq is 2.419351 
+[LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)
+[LIBCONFIG] eNBs.[0]: 1/1 parameters successfully set, (1 to default value)
+[LIBCONFIG] gNBs.[0]: 1/1 parameters successfully set, (1 to default value)
+[LIBCONFIG] gNBs.[0].NETWORK_INTERFACES: 10/10 parameters successfully set, (3 to default value)
+[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)
+[LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)
+[LIBCONFIG] list L1s not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf 
+[LIBCONFIG] list prs_config not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf 
+[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)
+[LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)
+[LIBCONFIG] gNBs.[0].pdcch_ConfigSIB1.[0]: 2/2 parameters successfully set, (0 to default value)
+[LIBCONFIG] gNBs.[0].servingCellConfigCommon.[0]: 60/60 parameters successfully set, (9 to default value)
+[LIBCONFIG] list gNBs.[0].servingCellConfigDedicated not found in config file ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_simnovus.conf 
+NRRRC 0: Southbound Transport f1
+[LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default value)
+[LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)
+[LIBCONFIG] security: 4/4 parameters successfully set, (0 to default value)
+[LIBCONFIG] (root): 2/2 parameters successfully set, (0 to default value)
+[LIBCONFIG] gNBs.[0]: 28/28 parameters successfully set, (13 to default value)
+[LIBCONFIG] gNBs.[0].plmn_list.[0]: 3/3 parameters successfully set, (0 to default value)
+[LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[0]: 2/2 parameters successfully set, (0 to default value)
+[LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[1]: 2/2 parameters successfully set, (1 to default value)
+[LIBCONFIG] gNBs.[0].plmn_list.[0].snssaiList.[2]: 2/2 parameters successfully set, (0 to default value)
+[LIBCONFIG] gNBs.[0].amf_ip_address.[0]: 4/4 parameters successfully set, (0 to default value)
+[LIBCONFIG] gNBs.[0].SCTP: 2/2 parameters successfully set, (0 to default [GNB_APP]   default drx 0
+[0m[GTPU]   Configuring GTPu
+[0m[GTPU]   SA mode 
+[0m[GTPU]   Configuring GTPu address : 10.138.77.131 -> 834d8a0a
+[0m[GNB_APP]   [gNB 0] gNB_app_register for instance 0
+[0m[NR_MAC]   NR band duplex spacing is 0 KHz (nr_bandtable[37].band = 78)
+[0m[NR_MAC]   NR band 78, duplex mode TDD, duplex spacing = 0 KHz
+[0m[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 0] Checking release 
+[0m[NR_RRC]   do_SIB23_NR, size 9 
+ [0m[NR_RRC]   Done init_NR_SI
+[0m[NR_RRC]   max_supported_bandwidth_fr1=20
+[0m[NR_RRC]   max_supported_bandwidth_fr2=100
+[0m[NR_RRC]   max_supported_drb=8
+[0m[NR_RRC]   pdcp_sn_length=12
+[0m[NR_RRC]   rlc_am_sn_length=12
+[0m[NR_RRC]   max_dl_mimo_layers_fr1=2
+[0m[NR_RRC]   supports_ca=False
+[0m[NR_RRC]   supports_mr_dc=False
+[0m[NR_RRC]   supports_daps=False
+[0m[NR_RRC]   supports_cpac=False
+[0m[NR_RRC]   is_iab_node=False
+[0m[NR_RRC]   cell_barring_based_on_capabilities=True
+[0m[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 0] gNB:OPENAIR NR RRC IN....
+[0m[NGAP]   Registered new gNB[0] and macro gNB id 0
+[0m[NGAP]   [gNB 0] check the amf registration state
+[0m[ITTI]   Created Posix thread TASK_GTPV1_U
+[0m[GTPU]   Initializing UDP for local address 10.138.77.131 with port 2152
+[0m[F1AP]   Starting F1AP at CU
+[0m[F1AP]   F1AP_CU_SCTP_REQ(create socket)
+[0m[ITTI]   Created Posix thread TASK_CU_F1
+[0m[GTPU]   Created gtpu instance id: 103
+[0m[F1AP]   CU Task Received SCTP_NEW_ASSOCIATION_IND for instance 0
+[0m[GTPU]   Initializing UDP for local address 127.0.0.4 with port 2152
+[0m[GTPU]   Created gtpu instance id: 106
+[0m[F1AP]   CU Task Received SCTP_NEW_ASSOCIATION_RESP for instance 0
+[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0
+[0m[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_F1Setup
+[0m[F1AP]   Calling handler with instance 0
+[0m[F1AP]   Received Cell in 1 context
+[0m[NR_RRC]   Received message F1AP_SETUP_REQ
+[0m[NR_RRC]   [gNB 0] Received F1AP_SETUP_REQ : 0x7ff6a0002d30
+[0m[NR_RRC]   Received F1 Setup Request from gNB_DU 3584 (gNB-Eurecom-DU)
+[0m[93m[NR_RRC]   instance 0 mib length 3
+[0m[93m[NR_RRC]   instance 0 sib1 length 102
+[0m[F1AP]   CU Task Received F1AP_SETUP_RESP
+[0m[F1AP]   CU Task Received F1AP_GNB_CU_CONFIGURAITON_UPDATE
+[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0
+[0m[F1AP]   f1ap_decode_successful_outcome(): F1AP_ProcedureCode_id_gNBCUConfigurationUpdate
+[0m[F1AP]   Calling handler with instance 0
+[0m[F1AP]   Cell Configuration ok (assoc_id 28)
+[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0
+[0m[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_InitialULRRCMessageTransfer
+[0m[F1AP]   Calling handler with instance 0
+[0m[F1AP]   Adding a new UE with RNTI 19c5 and cu/du ue_f1ap_id 6597
+[0m[NR_RRC]   Received message F1AP_INITIAL_UL_RRC_MESSAGE
+[0m[NR_RRC]   Decoding CCCH: RNTI 19c5, inst 0, payload_size 6
+[0m[NR_RRC]   rrcsetup_request=1
+[0m[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 19c5
+[0m[NR_RRC]   rrcsetup=1
+[0m[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE
+[0m[F1AP]   Setting GNB_CU_UE_F1AP_ID 6597 associated with UE RNTI 19c5 (instance 0)
+[0m[F1AP]   GNB_DU_UE_F1AP_ID 6597 associated with UE RNTI 19c5 
+[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0
+[0m[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_InitialULRRCMessageTransfer
+[0m[F1AP]   Calling handler with instance 0
+[0m[F1AP]   Adding a new UE with RNTI 9410 and cu/du ue_f1ap_id 37904
+[0m[NR_RRC]   Received message F1AP_INITIAL_UL_RRC_MESSAGE
+[0m[NR_RRC]   Decoding CCCH: RNTI 9410, inst 0, payload_size 6
+[0m[93m[NR_RRC]   new UE rnti 9410 (coming with random value) is already there as UE 19c5, removing 19c5 from MAC/PHY
+[0m[NR_RRC]   rrcsetup_request=2
+[0m[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 9410
+[0m[NR_RRC]   rrcsetup=2
+[0m[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE
+[0m[F1AP]   Setting GNB_CU_UE_F1AP_ID 37904 associated with UE RNTI 9410 (instance 0)
+[0m[F1AP]   GNB_DU_UE_F1AP_ID 37904 associated with UE RNTI 9410 
+[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0
+[0m[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_ULRRCMessageTransfer
+[0m[F1AP]   Calling handler with instance 0
+[0m[F1AP]   Calling pdcp_data_ind for UE RNTI 9410 srb_id 1 with size 33 (DCCH) 
+[0m[NR_RRC]   Received message F1AP_UL_RRC_MESSAGE
+[0m[32m[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 9410] [RAPROC] Logical Channel UL-DCCH, processing NR_RRCSetupComplete from UE (SRB1 Active)
+[0m[NGAP]   registration_request=1
+[0m[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 9410] UE State = NR_RRC_CONNECTED 
+[0m[NR_RRC]   rrcsetup_complete=1
+[0m[93m[NGAP]   No AMF is associated to the gNB
+[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0
+[0m[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_InitialULRRCMessageTransfer
+[0m[F1AP]   Calling handler with instance 0
+[0m[F1AP]   Adding a new UE with RNTI 60af and cu/du ue_f1ap_id 24751
+[0m[NR_RRC]   Received message F1AP_INITIAL_UL_RRC_MESSAGE
+[0m[NR_RRC]   Decoding CCCH: RNTI 60af, inst 0, payload_size 6
+[0m[NR_RRC]   rrcsetup_request=3
+[0m[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 60af
+[0m[NR_RRC]   rrcsetup=3
+[0m[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE
+[0m[F1AP]   Setting GNB_CU_UE_F1AP_ID 24751 associated with UE RNTI 60af (instance 0)
+[0m[F1AP]   GNB_DU_UE_F1AP_ID 24751 associated with UE RNTI 60af 
+[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0
+[0m[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_InitialULRRCMessageTransfer
+[0m[F1AP]   Calling handler with instance 0
+[0m[F1AP]   Adding a new UE with RNTI a9eb and cu/du ue_f1ap_id 43499
+[0m[NR_RRC]   Received message F1AP_INITIAL_UL_RRC_MESSAGE
+[0m[NR_RRC]   Decoding CCCH: RNTI a9eb, inst 0, payload_size 6
+[0m[93m[NR_RRC]   new UE rnti a9eb (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY
+[0m[NR_RRC]   rrcsetup_request=4
+[0m[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI a9eb
+[0m[NR_RRC]   rrcsetup=4
+[0m[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE
+[0m[F1AP]   Setting GNB_CU_UE_F1AP_ID 43499 associated with UE RNTI a9eb (instance 0)
+[0m[F1AP]   GNB_DU_UE_F1AP_ID 43499 associated with UE RNTI a9eb 
+[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0
+[0m[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_InitialULRRCMessageTransfer
+[0m[F1AP]   Calling handler with instance 0
+[0m[F1AP]   Adding a new UE with RNTI b3bd and cu/du ue_f1ap_id 46013
+[0m[NR_RRC]   Received message F1AP_INITIAL_UL_RRC_MESSAGE
+[0m[NR_RRC]   Decoding CCCH: RNTI b3bd, inst 0, payload_size 6
+[0m[93m[NR_RRC]   new UE rnti b3bd (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY
+[0m[NR_RRC]   rrcsetup_request=5
+[0m[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI b3bd
+[0m[NR_RRC]   rrcsetup=5
+[0m[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE
+[0m[F1AP]   Setting GNB_CU_UE_F1AP_ID 46013 associated with UE RNTI b3bd (instance 0)
+[0m[F1AP]   GNB_DU_UE_F1AP_ID 46013 associated with UE RNTI b3bd 
+[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0
+[0m[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_InitialULRRCMessageTransfer
+[0m[F1AP]   Calling handler with instance 0
+[0m[F1AP]   Adding a new UE with RNTI e3cf and cu/du ue_f1ap_id 58319
+[0m[NR_RRC]   Received message F1AP_INITIAL_UL_RRC_MESSAGE
+[0m[NR_RRC]   Decoding CCCH: RNTI e3cf, inst 0, payload_size 6
+[0m[93m[NR_RRC]   new UE rnti e3cf (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY
+[0m[NR_RRC]   rrcsetup_request=6
+[0m[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI e3cf
+[0m[NR_RRC]   rrcsetup=6
+[0m[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE
+[0m[F1AP]   Setting GNB_CU_UE_F1AP_ID 58319 associated with UE RNTI e3cf (instance 0)
+[0m[F1AP]   GNB_DU_UE_F1AP_ID 58319 associated with UE RNTI e3cf 
+[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0
+[0m[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_InitialULRRCMessageTransfer
+[0m[F1AP]   Calling handler with instance 0
+[0m[F1AP]   Adding a new UE with RNTI 4535 and cu/du ue_f1ap_id 17717
+[0m[NR_RRC]   Received message F1AP_INITIAL_UL_RRC_MESSAGE
+[0m[NR_RRC]   Decoding CCCH: RNTI 4535, inst 0, payload_size 6
+[0m[93m[NR_RRC]   new UE rnti 4535 (coming with random value) is already there as UE 60af, removing 60af from MAC/PHY
+[0m[NR_RRC]   rrcsetup_request=7
+[0m[NR_RRC]   rrc_gNB_generate_RRCSetup for RNTI 4535
+[0m[NR_RRC]   rrcsetup=7
+[0m[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE
+[0m[F1AP]   Setting GNB_CU_UE_F1AP_ID 17717 associated with UE RNTI 4535 (instance 0)
+[0m[F1AP]   GNB_DU_UE_F1AP_ID 17717 associated with UE RNTI 4535 
+[0m

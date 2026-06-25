@@ -1,0 +1,37 @@
+{
+  "message": "Document uploaded successfully",
+  "file_id": "4a52acc2-2a15-4940-bbf7-e8ca29a7d313.docx",
+  "filename": "O-RAN.TIFG.E2E-Test.0-R003-v06.00.docx",
+  "file_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/4a52acc2-2a15-4940-bbf7-e8ca29a7d313.docx",
+  "file_size": 2253715,
+  "guardrails": {
+    "passed": true,
+    "blocked": false,
+    "reasons": [],
+    "scan": {
+      "safe": true,
+      "backend": "layer1_only",
+      "label": "BENIGN",
+      "score": 0.0,
+      "matched_patterns": [],
+      "chunks_scanned": 61,
+      "unsafe_chunks": 0,
+      "detail": "Tiered scan: 61 chunk(s); L1 suspicious=0; L2 llama_scanned=0; L1 clean (skipped L2)=61; unsafe=0"
+    },
+    "layers": {
+      "context": "upload",
+      "source": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/4a52acc2-2a15-4940-bbf7-e8ca29a7d313.docx",
+      "text_length": 100000,
+      "tiered_scan": {
+        "pipeline": "tiered",
+        "layer1_total_chunks": 61,
+        "layer1_suspicious_chunks": 0,
+        "layer1_clean_chunks": 61,
+        "layer2_llama_scanned_chunks": 0,
+        "layer2_skipped_chunks": 61
+      }
+    }
+  },
+  "uploaded_at": "2026-06-12T16:30:46.901269",
+  "upload_result_json": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/extract/JSON files/4a52acc2-2a15-4940-bbf7-e8ca29a7d313.upload.json"
+}

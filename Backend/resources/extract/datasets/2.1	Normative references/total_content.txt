@@ -1,0 +1,57 @@
+2.1	Normative references
+References are either specific (identified by date of publication and/or edition number or version number) or non-specific. For specific references, only the cited version applies. For non-specific references, the latest version of the referenced document (including any amendments) applies.
+NOTE:	While any hyperlinks included in this clause were valid at the time of publication, O-RAN cannot guarantee their long-term validity.
+The following referenced documents are necessary for the application of the present document.
+Void
+3GPP TR 36.104, “Evolved Universal Terrestrial Radio Access (E-UTRA); Base Station (BS) radio transmission and reception”
+NGMN Alliance, “Definition of the testing framework for the NGMN 5G pre-commercial networks trials”,  White paper July 2019, version 3.0. Available: http://www.ngmn.org
+NGM Alliance, “NGMN 5G pre-commercial networks trials - major conclusions”, White paper, December 2019, version 1.0. Available: http://www.ngmn.org
+3GPP TR 38.913: “Study on new radio access technology Radio interface protocol aspects”, March 2017.
+IETF RFC7323, “TCP Extensions for High Performance”, September 2014
+3GPP TS 38.215, “Physical layer measurements”, September 2020 
+3GPP TS 36.133, “Requirements for support of radio resource management”
+3GPP TS 38.133, “Requirements for support of radio resource management”
+O-RAN ALLIANCE, “O-RAN Architecture Description v11.0”, February 2024 
+O-RAN ALLIANCE, “O-RAN End-to-End System Testing Framework Specification 1.0”, July 2020
+O-RAN ALLIANCE, “O-RAN Fronthaul Interoperability Test Specification (IOT) 2.0”, April 2020 
+ITU-R M.2410-0, “Minimum requirements related to technical performance for IMT-2020 radio interface(s)”, November 2017. 
+3GPP TR 36.814, “Further advancements for E-UTRA physical layer aspects”, March 2017 
+3GPP TS 38.306, "User Equipment (UE) radio access capabilities", December 2020
+O-RAN ALLIANCE, “O-RAN Fronthaul Control, User and Synchronization Plane Specification v5.0”, November 2020
+3GPP TS 38.300, “NR and NG-RAN Overall Description; Stage 2”, December 2020
+3GPP TS 38.101-1, “User Equipment (UE) radio transmission and reception; Part 1: Range 1 Standalone”, December 2020
+3GPP TS 38.101-2, “User Equipment (UE) radio transmission and reception; Part 2: Range 2 Standalone”, December 2020
+3GPP TS 38.211, “Physical channels and modulation”, December 2020
+3GPP TS 38.213, “Physical layer procedures for control”, December 2020
+3GPP TS 38.214, “Physical layer procedures for data”, December 2020
+3GPP TR 38.308, “Physical Layer Aspects”, September 2017
+3GPP TSG RAN WG1 Meeting #92 R1-1801352, “Discussion on NR UE peak data rate”, March 2018
+3GPP TS 36.211, “Physical channels and modulation”, September 2020
+3GPP TR 38.801, “Radio access architecture and interfaces”, March 2017
+3GPP TS 33.511: “Security Assurance Specification (SCAS) for the next generation Node B (gNodeB) network product class” (Release 16), September 2020
+3GPP TS 23.502, “Procedures for the 5G System; Stage-2”, December 2020
+3GPP TS 23.401 “General Packet Radio Service (GPRS)enhancements for Evolved Universal Terrestrial Radio Access Network (E-UTRAN) access”
+3GPP TS 37.340 “Overall description; Stage-2”
+3GPP TS 38.401 “5G; NG-RAN; Architecture description
+3GPP TS 38.473 “5G; NG-RAN; F1 Application Protocol (F1AP)”
+3GPP TS 37.470 “W1 interface General aspects and principles”, July 2020
+NGM Alliance, “Vertical URLLC Use Cases and Requirements”, February 2020, version 2.5.4. Available: http://www.ngmn.org
+3GPP TS 28.552: “Management and orchestration; 5G performance measurements”, December 2020
+O-RAN ALLIANCE, “O-RAN Working Group 1 Use Cases Detailed Specification v13.00,” February 2024
+O-RAN ALLIANCE, “O-RAN Working Group 2 Non-RT RIC & A1 Interface: Use Cases and Requirements v05.00,” November 2021
+O-RAN ALLIANCE, “O-RAN Working Group 3 Use Cases and Requirements v01.00”, July 2021
+3GPP TS 23.501: “System architecture for the 5G System (5GS)”, December 2020
+3GPP TS 38.306: “User Equipment (UE) radio access capabilities”, December 2021
+3GPP TS 23.502: “Procedures for the 5G System (5GS)”, December 2023
+O-RAN ALLIANCE, “Certification and Badging Processes and Procedures”, April 2022
+O-RAN ALLIANCE, “Certification and Badging Test Report Templates”, April 2022
+3GPP TS 28.554, “Management and orchestration; 5G end to end Key Performance Indicators (KPI)”, June 2023
+ETSI TS 103 786, “Environmental Engineering (EE); Measurement method for energy efficiency of wireless access network equipment; Dynamic energy performance measurement method of 5G Base Station (BS)“
+O-RAN ALLIANCE, “O-RAN Working Group 1 Network Energy Saving Use Cases”, Technical Report v02.00, June 2023
+3GPP TS 38.300: “NR; NR and NG-RAN Overall Description; Stage 2”, December 2023
+
+
+==================================================
+RECURSIVE EXTRACTION RESULTS
+==================================================
+

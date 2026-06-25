@@ -1,0 +1,54 @@
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "id": "start"
+        },
+        {
+            "id": "3GPP TS 38.133"
+        },
+        {
+            "id": "Clause 4.2.2.3 Intra frequency cell selection measurement"
+        },
+        {
+            "id": "Clause 4.2.2.4 Inter frequency cell selection measurement"
+        },
+        {
+            "id": "Clause 5.3.3.1 RRC connection call flow"
+        },
+        {
+            "id": "3GPP TS 38.304"
+        },
+        {
+            "id": "Clause 5.2.2 State transition"
+        }
+    ],
+    "edges": [
+        {
+            "source": "start",
+            "target": "3GPP TS 38.133"
+        },
+        {
+            "source": "start",
+            "target": "3GPP TS 38.304"
+        },
+        {
+            "source": "3GPP TS 38.133",
+            "target": "Clause 4.2.2.3 Intra frequency cell selection measurement"
+        },
+        {
+            "source": "3GPP TS 38.133",
+            "target": "Clause 4.2.2.4 Inter frequency cell selection measurement"
+        },
+        {
+            "source": "3GPP TS 38.133",
+            "target": "Clause 5.3.3.1 RRC connection call flow"
+        },
+        {
+            "source": "3GPP TS 38.304",
+            "target": "Clause 5.2.2 State transition"
+        }
+    ]
+}

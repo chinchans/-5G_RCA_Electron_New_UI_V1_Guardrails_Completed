@@ -1,0 +1,47 @@
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "id": "start"
+        },
+        {
+            "id": "3GPP TS 38.401"
+        },
+        {
+            "id": "Clause 8.9.4 Inter O-CU mobility with SA- Xn based Handover call flow"
+        },
+        {
+            "id": "Clause 8.9.5 Inter O-CU mobility with SA- Xn based Handover call flow"
+        },
+        {
+            "id": "3GPP TS 37.340"
+        },
+        {
+            "id": "Clause 10.5.1 Inter O-CU mobility with NSA call flow"
+        }
+    ],
+    "edges": [
+        {
+            "source": "start",
+            "target": "3GPP TS 38.401"
+        },
+        {
+            "source": "start",
+            "target": "3GPP TS 37.340"
+        },
+        {
+            "source": "3GPP TS 38.401",
+            "target": "Clause 8.9.4 Inter O-CU mobility with SA- Xn based Handover call flow"
+        },
+        {
+            "source": "3GPP TS 38.401",
+            "target": "Clause 8.9.5 Inter O-CU mobility with SA- Xn based Handover call flow"
+        },
+        {
+            "source": "3GPP TS 37.340",
+            "target": "Clause 10.5.1 Inter O-CU mobility with NSA call flow"
+        }
+    ]
+}

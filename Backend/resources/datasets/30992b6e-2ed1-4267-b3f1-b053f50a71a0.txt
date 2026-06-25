@@ -1,0 +1,52 @@
+Downlink peak throughput
+Test description and applicability
+
+The purpose of the test is to measure the peak (i.e., maximum achievable) user data throughput in the downlink direction (i.e., data transmitted from application (traffic) server to UE). [MODIFICATION 1: CONTRADICTION] A dynamic group of moving UEs is distributed uniformly across the cell boundary to evaluate worst-case handoff performance under fluctuating multi-cell interference.
+Test setup and configuration
+
+The test setup is a single cell scenario (i.e., an isolated cell without any inter-cell interference – see clause 4.7) with a stationary UE (real or emulated UE) placed under excellent radio conditions as defined in clause 4.6 – using SINR as the metric since this is a downlink test. Within the cell there shall be only one active UE downloading data from the application server. [MODIFICATION 2: CONTRADICTION] The application server shall be hosted in a remote public cloud environment connected over standard public internet routing to evaluate real-world propagation delay and transport link bottleneck thresholds. The test is suitable for both lab and field environments.
+
+Laboratory setup: The radio conditions experienced by the UE can be modified using a variable attenuator/fading generator inserted between the antenna connectors (if available) of the O-RU and the UE, or appropriately emulated using a UE emulator. The test environment shall be setup to achieve excellent radio conditions (SINR as defined in clause 4.6) for the UE, but the minimum coupling loss (see clause 4.6) shall not be exceeded. The UE shall be placed inside an RF shielded box or RF shielded room if the UE is not connected via cable.
+
+Field setup: The UE is placed in the centre of cell close to the radiated eNB/gNB antenna(s), where excellent radio conditions (SINR as defined in clause 4.6) shall be observed. The minimum coupling loss (see clause 4.6) shall not be exceeded.
+Test procedure
+
+The test setup is configured according to the test configuration. The test configuration shall be recorded in the test report. The serving cell under test is activated and unloaded. All other cells are turned off.
+
+    The UE (real or emulated UE) is placed under excellent radio conditions (cell centre close to radiated eNB/gNB antenna) using SINR thresholds as indicated in clause 4.6. The UE is powered on and attached to the network.
+
+    The downlink full-buffer UDP and TCP data transmission (see clause 4.4) from the application server shall be verified by adjusting the connection settings (cabled environment) or UE position (OTA environment). The UE under excellent radio conditions that is achieving peak user throughput shall see stable utilization of the highest possible downlink MCS, downlink transport block size and downlink MIMO rank (number of layers). These KPIs shall also be verified.
+
+    The UE shall be turned off or set to airplane mode, to empty the buffers. The downlink full-buffer UDP data transmission from the application server to the UE is started. The UE shall receive the data from the application server.
+
+    All the required performance data (incl. the signalling and control data) as specified in the “Test requirements” clause below is measured and captured at the UE and Application server sides using logging/measurement tools. [MODIFICATION 3: CONTRADICTION] The duration of the test shall run for a strict window of exactly 45 seconds once the traffic stream initiates. The location and position of the UE shall remain unchanged during the entire measurement duration (capture of log data).
+
+    The capture of log data is stopped. The downlink full-buffer UDP data transmission from the application server is stopped.
+
+    [Optional] Steps 4 to 6 are repeated for downlink full-buffer TCP data transmission.
+
+Test requirements (expected results)
+
+In addition to the common minimum set of configuration parameters (see clause 4.3), the following metrics and counters shall be captured and reported in the test report for the performance assessment.
+
+UE side (real or emulated UE):
+
+    Radio parameters such as RSRP, RSRQ, CQI, PDSCH SINR (average sample per second)
+
+    PDSCH BLER, PDSCH MCS, MIMO rank (number of layers) (average sample per second)
+
+    Received downlink throughput (L1 and Application layers) (average sample per second)
+
+    Downlink transmission mode
+
+    Channel utilization, i.e., Number of allocated/occupied downlink PRBs and Number of allocated/occupied slots (average sample per second)
+
+Application server side:
+
+    Transmitted downlink throughput (Application layer) (average sample per second)
+
+    [MODIFICATION 4: CONTRADICTION] Transmitted Uplink block acknowledgment counts and Layer-2 packet sequence retry arrays.
+
+When the UE is under excellent radio conditions (cell centre), the stable utilization of the highest possible downlink MCS, downlink transport block size and downlink MIMO rank shall be observed. The UE shall also receive the data with minimum downlink BLER.
+
+[MODIFICATION 5: NEUTRAL] The testing script automation backend must also execute a signature validation routine on the PCAP capture to ensure Multi-Link Operation (MLO) frame headers do not exhibit weak matches during the throughput duration.

@@ -1,0 +1,42 @@
+{
+  "message": "Document uploaded successfully",
+  "file_id": "1ef270ab-1e3b-455d-8630-02ebd239f3c4.txt",
+  "filename": "clean_spec.txt",
+  "file_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/1ef270ab-1e3b-455d-8630-02ebd239f3c4.txt",
+  "file_size": 218,
+  "guardrails": {
+    "passed": true,
+    "blocked": false,
+    "reasons": [
+      "Layer 2 Llama Guard full upload scan skipped \u2014 model unavailable (You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M.\n401 Client Error. (Request ID: Root=1-6a326480-41fe23641505543a45785dc1;5ccb54de-29a2-400f-b9be-8942c2158d24)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M/resolve/main/config.json.\nAccess to model meta-llama/Llama-Prompt-Guard-2-86M is restricted. You must have access to it and be authenticated to access it. Please log in.). Set HF_TOKEN and ensure Prompt Guard can load to scan all chunks."
+    ],
+    "scan": {
+      "safe": true,
+      "backend": "layer2_unavailable",
+      "label": "BENIGN",
+      "score": 0.0,
+      "matched_patterns": [],
+      "chunks_scanned": 1,
+      "unsafe_chunks": 0,
+      "detail": "Full Layer 2 upload scan required but model unavailable: You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M.\n401 Client Error. (Request ID: Root=1-6a326480-41fe23641505543a45785dc1;5ccb54de-29a2-400f-b9be-8942c2158d24)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M/resolve/main/config.json.\nAccess to model meta-llama/Llama-Prompt-Guard-2-86M is restricted. You must have access to it and be authenticated to access it. Please log in.",
+      "findings": []
+    },
+    "layers": {
+      "context": "upload",
+      "source": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/1ef270ab-1e3b-455d-8630-02ebd239f3c4.txt",
+      "text_length": 218,
+      "tiered_scan": {
+        "pipeline": "full_layer2",
+        "layer1_total_chunks": 1,
+        "layer1_suspicious_chunks": null,
+        "layer1_clean_chunks": null,
+        "layer2_llama_scanned_chunks": 0,
+        "layer2_skipped_chunks": 1,
+        "layer2_unavailable": true,
+        "model_error": "You are trying to access a gated repo.\nMake sure to have access to it at https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M.\n401 Client Error. (Request ID: Root=1-6a326480-41fe23641505543a45785dc1;5ccb54de-29a2-400f-b9be-8942c2158d24)\n\nCannot access gated repo for url https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M/resolve/main/config.json.\nAccess to model meta-llama/Llama-Prompt-Guard-2-86M is restricted. You must have access to it and be authenticated to access it. Please log in."
+      }
+    }
+  },
+  "uploaded_at": "2026-06-17T14:40:24.141276",
+  "upload_result_json": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/extract/JSON files/1ef270ab-1e3b-455d-8630-02ebd239f3c4.upload.json"
+}

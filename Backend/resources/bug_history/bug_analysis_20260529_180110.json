@@ -1,0 +1,497 @@
+{
+  "error_message": "ERROR MESSAGE: /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'\ncollect2: error: ld returned 1 exit status\ngmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1\ngmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2\ngmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2\ngmake: *** [Makefile:891: nr-softmodem] Error 2\ncompilation of nr-softmodem nr-cuup params_lib",
+  "log_file": "CMake_error_2.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/CMake_error_2.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-05-29T18:01:10.586465",
+  "results": {
+    "error_message": "ERROR MESSAGE: /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'\ncollect2: error: ld returned 1 exit status\ngmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1\ngmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2\ngmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2\ngmake: *** [Makefile:891: nr-softmodem] Error 2\ncompilation of nr-softmodem nr-cuup params_lib",
+    "extracted_error": false,
+    "error_source": "user_provided",
+    "timestamp": "2026-05-29T18:01:10.518631",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/CMake_error_2.log",
+    "deployment_context": {
+      "role": "CU",
+      "active_configs": [],
+      "network_params": {
+        "gnb_ipv4": null,
+        "amf_ipv4": null,
+        "ngap_port": null,
+        "assoc_state": "UNKNOWN"
+      },
+      "log_anchors": [
+        "collect2: error: ld returned 1 exit status",
+        "gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+        "gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+        "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+        "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+        "ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+        "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+        "build have failed",
+        "/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'"
+      ],
+      "detailed_log_context": {
+        "total_lines": 39,
+        "error_sequences": [
+          {
+            "error_line": "collect2: error: ld returned 1 exit status",
+            "line_number": 32,
+            "context": [
+              "     Consolidate compiler generated dependencies of target L2_NR",
+              "     [100%] Built target L2_NR",
+              "     Consolidate compiler generated dependencies of target nr-softmodem",
+              "     [100%] Linking CXX executable nr-softmodem",
+              "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'",
+              " >>> collect2: error: ld returned 1 exit status",
+              "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt"
+            ]
+          },
+          {
+            "error_line": "gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+            "line_number": 33,
+            "context": [
+              "     [100%] Built target L2_NR",
+              "     Consolidate compiler generated dependencies of target nr-softmodem",
+              "     [100%] Linking CXX executable nr-softmodem",
+              "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'",
+              "     collect2: error: ld returned 1 exit status",
+              " >>> gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed"
+            ]
+          },
+          {
+            "error_line": "gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+            "line_number": 34,
+            "context": [
+              "     Consolidate compiler generated dependencies of target nr-softmodem",
+              "     [100%] Linking CXX executable nr-softmodem",
+              "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'",
+              "     collect2: error: ld returned 1 exit status",
+              "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              " >>> gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+            "line_number": 35,
+            "context": [
+              "     [100%] Linking CXX executable nr-softmodem",
+              "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'",
+              "     collect2: error: ld returned 1 exit status",
+              "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              " >>> gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+            "line_number": 36,
+            "context": [
+              "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'",
+              "     collect2: error: ld returned 1 exit status",
+              "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              " >>> gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+            "line_number": 37,
+            "context": [
+              "     collect2: error: ld returned 1 exit status",
+              "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              " >>> ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+            "line_number": 38,
+            "context": [
+              "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              " >>> compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "build have failed",
+            "line_number": 39,
+            "context": [
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              " >>> build have failed"
+            ]
+          }
+        ],
+        "debug_values": {},
+        "relevant_sections": []
+      },
+      "compiler_ground_truth_errors": [],
+      "cu_ip_address": "10.138.77.131",
+      "du_ip_address": "10.138.77.131",
+      "gnb_ip_address": "10.138.77.131",
+      "amf_ip_address": "192.168.70.132",
+      "core_network_machine_ip": "10.138.77.217",
+      "local_s_portc": "501",
+      "local_s_portd": "2152",
+      "remote_s_portc": "500",
+      "remote_s_portd": "2152",
+      "dnn": "oai",
+      "nssai_sst": "1",
+      "nssai_sd": "0xc",
+      "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+      "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+      "log_error_kind_raw": "cmake",
+      "log_error_kind": "cmake",
+      "build_log_mode": false,
+      "runtime_log_mode": false,
+      "other_log_mode": false,
+      "cmake_build_system_mode": true,
+      "dependency_advice_mode": false,
+      "full_build_log_excerpt": "Will compile gNB\nOPENAIR_DIR    = /home/tcs/Downloads/OAI-CU\nRunning \"cmake ../../..\"\n-- Ccache not found. Consider installing it for faster compilation. Command: sudo apt/dnf install ccache\n-- Check if /opt/asn1c/bin/asn1c supports -gen-APER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-UPER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-JER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-BER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-OER\n-- CMAKE_BUILD_TYPE is RelWithDebInfo\n-- CPU architecture is x86_64\n-- AVX512 intrinsics are OFF\n-- AVX2 intrinsics are ON\n-- LTTNG support disabled\n-- Checking for module 'libcap'\n--   No package 'libcap' found\n-- Checking for module 'cblas'\n--   No package 'cblas' found\n-- No Doxygen documentation requested\n-- No Support for Aerial\n-- Configuring done\n-- Generating done\n-- Build files have been written to: /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build\ncd /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build\nRunning \"cmake --build .  --target  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim -- -j4\"\nLog file for compilation is being written to: /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt\nConsolidate compiler generated dependencies of target L2_NR\n[100%] Built target L2_NR\nConsolidate compiler generated dependencies of target nr-softmodem\n[100%] Linking CXX executable nr-softmodem\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'\ncollect2: error: ld returned 1 exit status\ngmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1\ngmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2\ngmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2\ngmake: *** [Makefile:891: nr-softmodem] Error 2\nERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt\ncompilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed\nbuild have failed",
+      "linker_derived_hints": {
+        "asn_def_types": [
+          "F1AP_LTMConfigurationIDMapping_Item"
+        ],
+        "extra_search_queries": [
+          "F1AP_LTMConfigurationIDMapping_Item F1AP_LTMConfigurationIDMapping_Item.c asn1c generated source add_library cmake MESSAGES ASN1",
+          "openair2/F1AP/MESSAGES/ASN1 f1ap cmake f1ap ngap s1ap generated C sources list"
+        ],
+        "prompt_bullets": [
+          "Linker needs `asn_DEF_F1AP_LTMConfigurationIDMapping_Item` \u2192 the defining **`F1AP_LTMConfigurationIDMapping_Item.c`** must be compiled into `libasn1_*`. In OAI, the list of generated `.c` files is usually in **`.../MESSAGES/ASN1/<protocol>-<release>.cmake`** (e.g. `f1ap-18.6.0.cmake`), not only top-level `CMakeLists.txt`.",
+          "Log points to **`openair2/F1AP/MESSAGES/libasn1_f1ap.a`** \u2192 inspect **`openair2/F1AP/MESSAGES/ASN1/`** for **`f1ap-*.cmake`** (or similarly named) that list generated ASN.1 `.c` files for that library; patch the file list there if a `.c` is missing."
+        ],
+        "messages_lib_dir": "openair2/F1AP/MESSAGES",
+        "asn1_lib_short": "f1ap"
+      },
+      "compiler_cluster_analysis": {},
+      "build_error_mode": true
+    },
+    "log_error_kind": "cmake",
+    "ground_truth_errors": [],
+    "phase2_analysis": {
+      "suspected_functions": [],
+      "suspected_configs": [],
+      "deployment_context": {
+        "role": "CU",
+        "active_configs": [],
+        "network_params": {
+          "gnb_ipv4": null,
+          "amf_ipv4": null,
+          "ngap_port": null,
+          "assoc_state": "UNKNOWN"
+        },
+        "log_anchors": [
+          "collect2: error: ld returned 1 exit status",
+          "gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+          "gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+          "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+          "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+          "ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+          "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+          "build have failed",
+          "/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'"
+        ],
+        "detailed_log_context": {
+          "total_lines": 39,
+          "error_sequences": [
+            {
+              "error_line": "collect2: error: ld returned 1 exit status",
+              "line_number": 32,
+              "context": [
+                "     Consolidate compiler generated dependencies of target L2_NR",
+                "     [100%] Built target L2_NR",
+                "     Consolidate compiler generated dependencies of target nr-softmodem",
+                "     [100%] Linking CXX executable nr-softmodem",
+                "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'",
+                " >>> collect2: error: ld returned 1 exit status",
+                "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt"
+              ]
+            },
+            {
+              "error_line": "gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "line_number": 33,
+              "context": [
+                "     [100%] Built target L2_NR",
+                "     Consolidate compiler generated dependencies of target nr-softmodem",
+                "     [100%] Linking CXX executable nr-softmodem",
+                "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'",
+                "     collect2: error: ld returned 1 exit status",
+                " >>> gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed"
+              ]
+            },
+            {
+              "error_line": "gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "line_number": 34,
+              "context": [
+                "     Consolidate compiler generated dependencies of target nr-softmodem",
+                "     [100%] Linking CXX executable nr-softmodem",
+                "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'",
+                "     collect2: error: ld returned 1 exit status",
+                "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                " >>> gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "line_number": 35,
+              "context": [
+                "     [100%] Linking CXX executable nr-softmodem",
+                "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'",
+                "     collect2: error: ld returned 1 exit status",
+                "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                " >>> gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "line_number": 36,
+              "context": [
+                "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'",
+                "     collect2: error: ld returned 1 exit status",
+                "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                " >>> gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "line_number": 37,
+              "context": [
+                "     collect2: error: ld returned 1 exit status",
+                "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                " >>> ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "line_number": 38,
+              "context": [
+                "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                " >>> compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "build have failed",
+              "line_number": 39,
+              "context": [
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                " >>> build have failed"
+              ]
+            }
+          ],
+          "debug_values": {},
+          "relevant_sections": []
+        },
+        "compiler_ground_truth_errors": [],
+        "cu_ip_address": "10.138.77.131",
+        "du_ip_address": "10.138.77.131",
+        "gnb_ip_address": "10.138.77.131",
+        "amf_ip_address": "192.168.70.132",
+        "core_network_machine_ip": "10.138.77.217",
+        "local_s_portc": "501",
+        "local_s_portd": "2152",
+        "remote_s_portc": "500",
+        "remote_s_portd": "2152",
+        "dnn": "oai",
+        "nssai_sst": "1",
+        "nssai_sd": "0xc",
+        "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+        "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+        "log_error_kind_raw": "cmake",
+        "log_error_kind": "cmake",
+        "build_log_mode": false,
+        "runtime_log_mode": false,
+        "other_log_mode": false,
+        "cmake_build_system_mode": true,
+        "dependency_advice_mode": false,
+        "full_build_log_excerpt": "Will compile gNB\nOPENAIR_DIR    = /home/tcs/Downloads/OAI-CU\nRunning \"cmake ../../..\"\n-- Ccache not found. Consider installing it for faster compilation. Command: sudo apt/dnf install ccache\n-- Check if /opt/asn1c/bin/asn1c supports -gen-APER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-UPER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-JER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-BER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-OER\n-- CMAKE_BUILD_TYPE is RelWithDebInfo\n-- CPU architecture is x86_64\n-- AVX512 intrinsics are OFF\n-- AVX2 intrinsics are ON\n-- LTTNG support disabled\n-- Checking for module 'libcap'\n--   No package 'libcap' found\n-- Checking for module 'cblas'\n--   No package 'cblas' found\n-- No Doxygen documentation requested\n-- No Support for Aerial\n-- Configuring done\n-- Generating done\n-- Build files have been written to: /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build\ncd /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build\nRunning \"cmake --build .  --target  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim -- -j4\"\nLog file for compilation is being written to: /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt\nConsolidate compiler generated dependencies of target L2_NR\n[100%] Built target L2_NR\nConsolidate compiler generated dependencies of target nr-softmodem\n[100%] Linking CXX executable nr-softmodem\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'\ncollect2: error: ld returned 1 exit status\ngmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1\ngmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2\ngmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2\ngmake: *** [Makefile:891: nr-softmodem] Error 2\nERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt\ncompilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed\nbuild have failed",
+        "linker_derived_hints": {
+          "asn_def_types": [
+            "F1AP_LTMConfigurationIDMapping_Item"
+          ],
+          "extra_search_queries": [
+            "F1AP_LTMConfigurationIDMapping_Item F1AP_LTMConfigurationIDMapping_Item.c asn1c generated source add_library cmake MESSAGES ASN1",
+            "openair2/F1AP/MESSAGES/ASN1 f1ap cmake f1ap ngap s1ap generated C sources list"
+          ],
+          "prompt_bullets": [
+            "Linker needs `asn_DEF_F1AP_LTMConfigurationIDMapping_Item` \u2192 the defining **`F1AP_LTMConfigurationIDMapping_Item.c`** must be compiled into `libasn1_*`. In OAI, the list of generated `.c` files is usually in **`.../MESSAGES/ASN1/<protocol>-<release>.cmake`** (e.g. `f1ap-18.6.0.cmake`), not only top-level `CMakeLists.txt`.",
+            "Log points to **`openair2/F1AP/MESSAGES/libasn1_f1ap.a`** \u2192 inspect **`openair2/F1AP/MESSAGES/ASN1/`** for **`f1ap-*.cmake`** (or similarly named) that list generated ASN.1 `.c` files for that library; patch the file list there if a `.c` is missing."
+          ],
+          "messages_lib_dir": "openair2/F1AP/MESSAGES",
+          "asn1_lib_short": "f1ap"
+        },
+        "compiler_cluster_analysis": {},
+        "build_error_mode": true
+      },
+      "retrieval_method": "cmake_build_system_embeddings",
+      "ground_truth_errors": [],
+      "compiler_cluster_analysis": {},
+      "build_error_mode": true,
+      "narrow_compiler_phase2": false,
+      "log_error_kind": "cmake",
+      "top_ground_truth_clusters": [],
+      "coverage_stats": {
+        "total_compiler_errors_parsed": 0,
+        "ground_truth_with_function_name": 0,
+        "ground_truth_with_file_path": 0
+      }
+    },
+    "phase3_fixes": {
+      "error_text": "ERROR MESSAGE: /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMappingList.c.o):(.data.rel+0x78): undefined reference to `asn_DEF_F1AP_LTMConfigurationIDMapping_Item'\ncollect2: error: ld returned 1 exit status\ngmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1\ngmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2\ngmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2\ngmake: *** [Makefile:891: nr-softmodem] Error 2\ncompilation of nr-softmodem nr-cuup params_lib",
+      "fix_suggestion": {
+        "suspected_functions": [],
+        "suspected_configs": [
+          "openair2/F1AP/MESSAGES/ASN1/f1ap-16.3.1.cmake"
+        ],
+        "reason": "Linker undefined reference to asn_DEF_* \u2014 added missing generated `.c` to the ASN.1 bundle source list in the matching `*.cmake` file.",
+        "config_fix": "Ensure the generated ASN.1 source file for the missing type is listed under `f1ap_source` / `ngap_source` in the protocol bundle `.cmake`.",
+        "code_patches": [],
+        "config_patches": [
+          {
+            "config_name": "f1ap_source",
+            "file_path": "openairinterface-5g-develop/openair2/F1AP/MESSAGES/ASN1/f1ap-16.3.1.cmake",
+            "patch_type": "targeted_insertion",
+            "current_value": "    ANY_xer.c\n    aper_decoder.c",
+            "new_value": "    ANY_xer.c\n    F1AP_LTMConfigurationIDMapping_Item.c\n    aper_decoder.c",
+            "line_number": "insert `F1AP_LTMConfigurationIDMapping_Item.c` before line 8 in `f1ap_source` list (bundle ~line 3)",
+            "relevance_score": 0.99,
+            "description": "Add generated ASN.1 sources `F1AP_LTMConfigurationIDMapping_Item.c` so linker symbols `asn_DEF_F1AP_LTMConfigurationIDMapping_Item` are included in libasn1."
+          }
+        ],
+        "root_cause_analysis": "The static archive was linked without the object file that defines the ASN.1 descriptor for the missing type \u2014 usually because the generated `.c` was not listed in the bundle CMake source list.",
+        "investigation_steps": [
+          "Save the `.cmake` change, reconfigure if needed, and rebuild the target that links `libasn1_*`."
+        ],
+        "specification_context": "",
+        "investigation_commands": [
+          {
+            "command": "grep -r \"F1AP_LTMConfigurationIDMapping_Item\" openair2/F1AP/",
+            "hint": "Verify that the ASN.1 definition for F1AP_LTMConfigurationIDMapping_Item is present in source files"
+          },
+          {
+            "command": "cd /path/to/your/build && make clean && make -j$(nproc)",
+            "hint": "Clean and rebuild the entire project to regenerate and link ASN.1 generated files properly"
+          }
+        ]
+      },
+      "context_summary": {
+        "candidate_functions_count": 0,
+        "candidate_configs_count": 0,
+        "call_graph_entries": 0,
+        "pattern_matched": false
+      },
+      "phase3_llm": {
+        "skipped_llm": true,
+        "deterministic_cmake": true,
+        "parse_ok": true,
+        "max_output_tokens": 0,
+        "json_mode": false,
+        "build_error_mode": true,
+        "finish_reason": null,
+        "attempts": []
+      },
+      "phase3_cmake_diagnosis": {
+        "validated_issues": [],
+        "diagnosis_summary": "deterministic_asn1_bundle_patch",
+        "source": "filesystem"
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 1,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "grep -r \"F1AP_LTMConfigurationIDMapping_Item\" openair2/F1AP/",
+            "explanation": "Verify that the ASN.1 definition for F1AP_LTMConfigurationIDMapping_Item is present in source files"
+          },
+          {
+            "command": "cd /path/to/your/build && make clean && make -j$(nproc)",
+            "explanation": "Clean and rebuild the entire project to regenerate and link ASN.1 generated files properly"
+          }
+        ],
+        "command_count": 2
+      },
+      "command_count": 2
+    }
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260529_180110.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

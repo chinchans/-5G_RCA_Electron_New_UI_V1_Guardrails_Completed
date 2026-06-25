@@ -1,0 +1,45 @@
+{
+  "code_dir": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-develop",
+  "code_patches": [
+    {
+      "function_name": "select_amf",
+      "file_path": "openairinterface5g-develop/openair3/NGAP/ngap_gNB_nas_procedures.c",
+      "patch_type": "targeted_insertion_or_adjustment",
+      "original_code": "  return amf;",
+      "patched_code": "  return amf;\n  } else {\n    LOG_E(NGAP, \"No AMF selected for the given identity.\");\n    return NULL;\n  }",
+      "line_numbers": "after line containing \"return amf;\"",
+      "description": "Adding an else clause to handle the case where no AMF is selected, which helps in debugging and prevents silent failures."
+    },
+    {
+      "function_name": "ngap_gNB_handle_nas_first_req",
+      "file_path": "openairinterface5g-develop/openair3/NGAP/ngap_gNB_nas_procedures.c",
+      "patch_type": "targeted_insertion_or_adjustment",
+      "original_code": "    NGAP_WARN(\"No AMF is associated to the gNB\\n\");",
+      "patched_code": "    NGAP_WARN(\"No AMF is associated to the gNB\\n\");\n    rrc_gNB_generate_RRCReject(instance_p, UEfirstReq->gNB_ue_ngap_id);",
+      "line_numbers": "after line containing \"NGAP_WARN(\"No AMF is associated to the gNB\\n\");\"",
+      "description": "Calling rrc_gNB_generate_RRCReject to properly reject the connection request instead of just logging the error."
+    }
+  ],
+  "config_patches": [
+    {
+      "config_name": "GNB_IPV4_ADDRESS_FOR_NG_AMF",
+      "file_path": "openairinterface5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+      "patch_type": "set_value",
+      "current_value": "\"192.168.18.207\"",
+      "new_value": "\"10.138.77.131\"",
+      "line_number": "43",
+      "relevance_score": 0.8,
+      "description": "Must match deployment context value to ensure the gNB can correctly route messages to the AMF."
+    },
+    {
+      "config_name": "amf_ip_address",
+      "file_path": "openairinterface5g-develop/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+      "patch_type": "set_value",
+      "current_value": "({ ipv4 = \"192.168.69.131\"; })",
+      "new_value": "({ ipv4 = \"192.168.70.132\"; })",
+      "line_number": "38",
+      "relevance_score": 0.7,
+      "description": "Must match deployment context value to ensure the gNB can correctly communicate with the AMF."
+    }
+  ]
+}

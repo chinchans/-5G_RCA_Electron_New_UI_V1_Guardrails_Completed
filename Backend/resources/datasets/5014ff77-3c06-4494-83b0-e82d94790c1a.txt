@@ -1,0 +1,524 @@
+4.2.2.3.2	UE-initiated Deregistration
+The UE uses this procedure to deregister from the registered PLMN as shown in Figure 4.2.2.3.2-1.
+
+Figure 4.2.2.3.2-1: UE-initiated Deregistration
+1.	The UE sends NAS message Deregistration Request (5G-GUTI, Deregistration type (e.g. Switch off), Access Type, [Unavailability Period Duration], [NAS message container]) to the AMF.
+	Access type indicates whether the Deregistration procedure applies to the 3GPP access, to the non-3GPP access, or to both if the 3GPP access and non-3GPP access of the UE are served by the same AMF (refer to TS 23.501 [2]). The AMF shall invoke the Deregistration procedure for the target access indicated by the UE.
+	If the UE and network support Unavailability Period and an event is triggered in the UE that would make the UE unavailable for a period of time, the UE includes Unavailability Period Duration as described in clause 5.4.1.4 of TS 23.501 [2].
+	The NAS message container shall be included if the UE is sending a Deregistration Request message as an Initial NAS message and the UE has a valid 5G NAS security context and the UE needs to send non-cleartext IEs, see clause 4.4.6 of TS 24.501 [25]. If the UE does not need to send non-cleartext IEs, the UE shall send a Deregistration Request message without including the NAS message container.
+1a.	[Conditional] If the Deregistration Request message was not sent integrity protected or integrity protection verification failed, the NAS security initiation is performed as described in TS 33.501 [15], the UE includes the full Deregistration Request message as defined in TS 24.501 [25].
+2.	[Conditional] AMF to SMF (or V-SMF): Nsmf_PDUSession_ReleaseSMContext (SM Context ID).
+	If the UE has no established PDU Session over the target access indicated in step 1, then steps 2 to 5 are not executed. All PDU Sessions over the target access(es), which belong to the UE are released by the AMF sending Nsmf_PDUSession_ReleaseSMContext Request (SM Context ID) message to the SMF (or V-SMF) for each PDU Session. If the AMF determines that the secondary RAT usage reporting is required for the PDU Session, the AMF shall execute step 7 and 8 and then wait for the completion of step 8 to receive the secondary RAT usage data from the NG-RAN. After that, steps 2 to 6 in this procedure are performed to e.g. release the PDU Session(s).
+	For home routed roaming case, the V-SMF initiates the release of the PDU Session at the H-SMF by invoking the Nsmf_PDUSession_Release request.
+3.	[Conditional] The SMF (or H-SMF) releases all resources e.g. the IP address / Prefix(es) that were allocated to the PDU Session and releases the corresponding User Plane resources:
+3a.	[Conditional] The SMF (or H-SMF) sends N4 Session Release Request (N4 Session ID) message to the UPF(s) of the PDU Session. The UPF(s) shall drop any remaining packets of the PDU Session and release all tunnel resource and contexts associated with the N4 Session.
+3b.	[Conditional] The UPF(s) acknowledges the N4 Session Release Request by the transmission of an N4 Session Release Response (N4 Session ID) message to the SMF.
+4.	[Conditional] The SMF (or V-SMF) responds with Nsmf_PDUSession_ReleaseSMContext Response message.
+	For home routed roaming case, the H-SMF responds to the V-SMF with a Nsmf_PDUSession_Release response. The V-SMF releases the corresponding User Plane resources. The V-SMF responds to AMF with Nsmf_PDUSession_ReleaseSMContext Response message.
+5a.	[Conditional] If dynamic PCC applied to this session the SMF performs an SM Policy Association Termination procedure as defined in clause 4.16.6.
+5b-c.	[Conditional] If it is the last PDU Session the SMF is handling for the UE for the associated (DNN, S-NSSAI), the SMF unsubscribes from Session Management Subscription data changes notification with the UDM by means of the Nudm_SDM_Unsubscribe service operation. The SMF invokes the Nudm_UECM_Deregistration service operation so that the UDM removes the association it had stored between the SMF identity and the associated DNN and PDU Session ID.
+6.	[Conditional] If there is any association with the PCF for this UE and the UE is no more registered over any access, the AMF performs a AMF-initiated AM Policy Association Termination procedure as defined in clause 4.16.3.2 delete the association with the PCF.
+6a.	[Conditional] If there is any association with the PCF for this UE and the UE is no more registered over any access, the AMF performs a AMF-initiated UE Policy Association Termination procedure as defined in clause 4.16.13.1 delete the association with the PCF.
+7.	[Conditional] The AMF sends NAS message Deregistration Accept to UE depending on the Deregistration type i.e. if Deregistration type is switch-off, AMF does not send Deregistration Accept message.
+7a	[Conditional] If Unavailability Period Duration is received from the UE and there is "Loss of Connectivity" monitoring event subscription for the UE, the AMF triggers "Loss of Connectivity" monitoring event report and includes the remaining value of the Unavailability Period Duration.
+8.	[Conditional] AMF to AN: N2 UE Context Release Request (Cause)
+	If the target access for Deregistration procedure is 3GPP access or both 3GPP access and non-3GPP access and there is N2 signalling connection to NG-RAN, the AMF sends N2 UE Release command to NG-RAN with Cause set to Deregistration to release N2 signalling connection. The details of this step are covered by steps 2 to 4 in the AN Release procedure, as described in clause 4.2.6.
+	If the target access for Deregistration procedure is non-3GPP access or both 3GPP access and non-3GPP access and there is N2 signalling connection to the N3IWF/TNGF/W-AGF, the AMF sends N2 UE Release command to N3IWF/TNGF/W-AGF with Cause set to Deregistration to release N2 signalling connection. The details of this step are covered by steps 2 to 5 in the "Deregistration procedure for (un)trusted non-3gpp access", as described in clauses 4.12.3 / 4.12a.3 and in clause 7.2.1 of TS 23.316 [53] for W-5GAN access.
+Clause:	Clause 4.12.3	4.12.3	Deregistration procedure for untrusted non-3gpp access
+
+Figure 4.12.3-1: Deregistration procedure for untrusted non-3gpp access
+1.	The Deregistration procedure is triggered by one of the events:
+1a.	For UE-initiated Deregistration as in steps from 1 to 7 of Figures 4.2.2.3.2-1.
+1b.	For network initiated deregistration as in steps from 1 to 6 of Figure 4.2.2.3.3-1.
+If the UE is in CM-CONNECTED state either in 3GPP access, non-3GPP access or both,
+-	the AMF may explicitly deregister the UE by sending a Deregistration request message ( Deregistration type, access type set to non-3GPP) to the UE as in step 2 of Figure 4.2.2.3.3-1.
+-	the UDM may want to request the deletion of the subscribers RM contexts and PDU Sessions with the reason for removal set to subscription withdrawn to the registered AMF as in step 1 of Figure 4.2.2.3.3-1.
+2.	AMF to N3IWF: The AMF sends a N2 Context UE Release Command message to the N3IWF with the cause set to Deregistration to release N2 signalling as defined in step 4 of clause 4.12.4.2.
+3.	N3IWF to UE: The N3IWF sends INFORMATIONAL Request (Delete payload) message to the UE. The Delete payload is included to indicate the release of the IKE SA.
+4.	UE to N3IWF: The UE sends an empty INFORMATIONAL Response message to acknowledge the release of the IKE SA as described in RFC 7296 [3]. Non-3GPP access specific resources are released including the IKEv2 tunnel (and the associated IPsec resources) and the local UE contexts in N3IWF (N3 tunnel Id).
+5.	N3IWF to AMF: The N3IWF acknowledges the N2 UE Context Release Command message by sending N2 UE Context Release Complete message to the AMF as defined in step 7 of clause 4.12.4.2.
+Clause:	Clause 4.12	4.12	Procedures for Untrusted non-3GPP access
+
+
+4.12.1	General
+Clause 4.12 defines the procedures to support Untrusted non-3GPP access by describing the differences compared to the defined procedures in other clauses. The procedures for Untrusted non-3GPP access are also used by a UE that accesses SNPN services via a PLMN over 3GPP access.
+
+4.12.2	Registration via Untrusted non-3GPP Access
+
+
+4.12.2.1	General
+Clause 4.12.2 specifies how a UE can register to 5GC via an untrusted non-3GPP Access Network. It is based on the Registration procedure specified in clause 4.2.2.2.2 and it uses a vendor-specific EAP method called "EAP-5G". The EAP-5G packets utilize the "Expanded" EAP type and the existing 3GPP Vendor-Id registered with IANA under the SMI Private Enterprise Code registry. The "EAP-5G" method is used between the UE and the N3IWF and is utilized only for encapsulating NAS messages (not for authentication). If the UE needs to be authenticated, mutual authentication is executed between the UE and AUSF. The details of the authentication procedure are specified in TS 33.501 [15].
+In Registration and subsequent Registration procedures via untrusted non-3GPP access, the NAS messages are always exchanged between the UE and the AMF. When possible, the UE can be authenticated by reusing the existing UE security context in AMF.
+
+4.12.2.2	Registration procedure for untrusted non-3GPP access
+The signalling flow in Figure 4.12.2.2-1 does not show all the details of a registration procedure via untrusted non-3GPP access. It shows primarily the steps executed between the UE and N3IWF. All the details of a registration procedure, including interactions with UDM, etc. are specified in clause 4.2.2.2.2.
+
+Figure 4.12.2.2-1: Registration via untrusted non-3GPP access
+1.	The UE connects to an untrusted non-3GPP Access Network with any appropriate authentication procedure and it is assigned an IP address. For example, a non-3GPP authentication method can be used, e.g. no authentication (in the case of a free WLAN), EAP with pre-shared key, username/password, etc. When the UE decides to attach to 5GC network, the UE not operating in SNPN access mode for NWu interface selects an N3IWF in a 5G PLMN, as described in clause 6.3.6 of TS 23.501 [2]. When the UE decides to attach to 5GC network, the UE operating in SNPN access mode for NWu interface selects an N3IWF in an SNPN, as described in clause 6.3.6.2a of TS 23.501 [2].
+NOTE 1:	The UE Selection of a N3IWF that supports the S-NSSAIs needed by the UE is enabled based on ANDSP configuration defined in TS 23.501 [2]. The N3IWF selection based on this information is documented in TS 23.501 [2].
+2.	The UE proceeds with the establishment of an IPsec Security Association (SA) with the selected N3IWF by initiating an IKE initial exchange according to RFC 7296 [3]. After step 2, all subsequent IKE messages are encrypted and integrity protected by using the IKE SA established in this step.
+3.	The UE shall initiate an IKE_AUTH exchange by sending an IKE_AUTH request message. The AUTH payload is not included in the IKE_AUTH request message, which indicates that the IKE_AUTH exchange shall use EAP signalling (in this case EAP-5G signalling). If the UE supports MOBIKE, it shall include a Notify payload in the IKE_AUTH request, as specified in RFC 4555 [40], indicating that MOBIKE is supported. In addition, as specified in TS 33.501 [15], if the UE is provisioned with the N3IWF root certificate, it shall include the CERTREQ payload within the IKE_AUTH request message to request the N3IWF's certificate. In the case of WLAN access, if the UE has an MPS subscription, the UE shall include a Notify payload in the IKE_AUTH request indicating its MPS subscription.
+NOTE 2:	Based on operator policy, the N3IWF can use the MPS subscription indication at this time to handle this UE with priority.
+4.	The N3IWF responds with an IKE_AUTH response message, which includes an EAP-Request/5G-Start packet. The EAP-Request/5G-Start packet informs the UE to initiate an EAP-5G session, i.e. to start sending NAS messages encapsulated within EAP-5G packets. If the N3IWF has received a CERTREQ payload from the UE, the N3IWF shall include the CERT payload in the IKE_AUTH response message containing the N3IWF's certificate. How the UE uses the N3IWF's certificate is specified in TS 33.501 [15].
+5.	The UE shall send an IKE_AUTH request, which includes an EAP-Response/5G-NAS packet that contains the Access Network parameters (AN parameters) and a Registration Request message. The AN parameters contain information that is used by the N3IWF for selecting an AMF in the 5G core network. This information includes e.g. the GUAMI, the Selected PLMN ID (or PLMN ID and NID, see clause 5.30 of TS 23.501 [2]), the Requested NSSAI and the Establishment cause. The Establishment cause provides the reason for requesting a signalling connection with 5GC and the N3IWF may use the Establishment cause to determine the DSCP value on N2.. Whether and how the UE includes the Requested NSSAI as part of the AN parameters is dependent on the value of the Access Stratum Connection Establishment NSSAI Inclusion Mode parameter, as specified in clause 5.15.9 of TS 23.501 [2]. The registration request may contain an indication that the UE supports N3IWF selection based on the slices the UE wishes to use over untrusted non-3GPP access (i.e. that the UE supports Extended Home N3IWF identifier configuration and Slice-specific N3IWF prefix configuration). If at step 1 the UE selects the N3IWF based on Tracking/Location Area of same PLMN as described in clause 6.3.6 of TS 23.501 [2], the UE may include this TA in the last visited TAI in registration request in order to help the AMF to determine the target N3IWF as described in step 17. If the UE in SNPN access mode for NWu interface performs the Registration procedure for UE onboarding, the UE shall include an indication in the AN parameters that the connection request is for onboarding. The Registration Type "SNPN Onboarding" indicates that the UE wants to perform SNPN Onboarding Registration.
+NOTE 3:	The N3IWF does not send an EAP-Identity request because the UE includes its identity in the first IKE_AUTH. This is in line with RFC 7296 [3] clause 3.16.
+6.	The N3IWF shall select an AMF based on the received AN parameters and local policy, as specified in clause 6.3.5 of TS 23.501 [2]. The N3IWF shall then forward the Registration Request received from the UE to the selected AMF within an N2 message. This message contains N2 parameters that include the Selected PLMN ID and optionally the Selected NID and the Establishment cause.
+NOTE 4:	The Selected NID is present when the UE connects to an SNPN via Untrusted non-3GPP access.
+7.	The selected AMF may decide to request the SUCI by sending a NAS Identity Request message to UE. This NAS message and all subsequent NAS messages are sent to UE encapsulated within EAP/5G-NAS packets. The AMF may use the Establishment cause to determine the Message Priority header and then the DSCP value for subsequent signalling according to TS 29.500 [17].
+8.	The AMF may decide to authenticate the UE by invoking an AUSF. In this case, the AMF shall select an AUSF as specified in clause 6.3.4 of TS 23.501 [2] based on SUPI or SUCI.
+	The AUSF executes the authentication of the UE as specified in TS 33.501 [15]. The AUSF selects a UDM as described in clause 6.3.8 of TS 23.501 [2] and gets the authentication data from UDM. The authentication packets are encapsulated within NAS authentication messages and the NAS authentication messages are encapsulated within EAP/5G-NAS packets. After the successful authentication:
+-	In step 8h, the AUSF shall send the anchor key (SEAF key) to AMF which is used by AMF to derive NAS security keys and a security key for N3IWF (N3IWF key). The UE also derives the anchor key (SEAF key) and from that key it derives the NAS security keys and the security key for N3IWF (N3IWF key). The N3IWF key is used by the UE and N3IWF for establishing the IPsec Security Association (in step 11).
+-	In step 8h, the AUSF shall also include the SUPI, if in step 8a the AMF provided to AUSF a SUCI.
+NOTE 5:	EAP-AKA' or 5G-AKA are allowed for the authentication of UE via non-3GPP access, as specified in TS 33.501 [15]. Figure 4.12.2.2-1 only shows authentication flow using EAP-AKA'. Authentication methods other than EAP-AKA' or 5G-AKA are also allowed for UE accessing SNPN services via a PLMN, as specified in TS 33.501 [15], Annex I, as well as for UE accessing SNPN services directly via Untrusted non-3GPP access.
+	If the UE in SNPN access mode for NWu interface performs the Registration procedure for UE onboarding, the interaction between AMF and AUSF (step 8a, 8b, 8g and 8h in Figure 4.12.2.2-1) is replaced with step 9-1 or step 9-2 or step 9-3 in Figure 4.2.2.2.4-1, depending on the 5GC architecture that is used for UE onboarding.
+9a.	The AMF shall send a NAS Security Mode Command to UE in order to activate NAS security. If an EAP-AKA' authentication was successfully executed in step 8, the AMF shall encapsulate the EAP-Success received from AUSF within the NAS Security Mode Command message.
+9b.	The N3IWF shall forward the NAS Security Mode Command message to UE within an EAP/5G-NAS packet.
+9c.	The UE completes the EAP-AKA' authentication (if initiated in step 8), creates a NAS security context and an N3IWF key and sends the NAS Security Mode Complete message within an EAP/5G-NAS packet.
+9d.	The N3IWF relays the NAS Security Mode Complete message to the AMF.
+10a.	Upon receiving NAS Security Mode Complete, the AMF shall send an NGAP Initial Context Setup Request message that includes the N3IWF key.
+10b.	This triggers the N3IWF to send an EAP-Success to UE, which completes the EAP-5G session. No further EAP-5G packets are exchanged.
+11.	The IPsec SA is established between the UE and N3IWF by using the common N3IWF key that was created in the UE in step 9c and received by the N3IWF in step 10a. This IPsec SA is referred to as the "signalling IPsec SA". After the establishment of the signalling IPsec SA, the N3IWF notifies the AMF that the UE context (including AN security) was created by sending a NGAP Initial Context Setup Response. The signalling IPsec SA shall be configured to operate in tunnel mode and the N3IWF shall assign to UE:
+a)	an "inner" IP address; and
+b)	a NAS_IP_ADDRESS and a TCP port number.
+	The N3IWF may apply a DSCP value to this signalling IPsec SA, in which case all IP packets exchanged between the UE and N3IWF via the "signalling IPsec SA" shall be marked with this DSCP value. If the N3IWF has received an indication that the UE supports MOBIKE (see step 3), then the N3IWF shall include a Notify payload in the IKE_AUTH response message sent in step 11a, indicating that MOBIKE shall be supported, as specified in RFC 4555 [40].
+NOTE 6:	The DSCP value is determined by operator policy, and may e.g. be based on the DSCP value on N2.
+	All subsequent NAS messages exchanged between the UE and N3IWF shall be sent via the signalling IPsec SA and shall be carried over TCP/IP. The UE shall send NAS messages within TCP/IP packets with source address the "inner" IP address of the UE and destination address the NAS_IP_ADDRESS that is received in step 11a. The N3IWF shall send NAS messages within TCP/IP packets with source address the NAS_IP_ADDRESS and destination address the "inner" IP address of the UE. The TCP connection used for reliable NAS transport between the UE and N3IWF shall be initiated by the UE right after the signalling IPsec SA is established in step 11a. The UE shall send the TCP connection request to the NAS_IP_ADDRESS and to the TCP port number specified in TS 24.502 [41].
+12.	The AMF determines the allowed subset of the Requested NSSAI that is allowed by the Subscribed S-NSSAI(s); the AMF may detect that the N3IWF used by the UE is not compatible with this allowed subset and based on operator's policy configured in the AMF, the AMF determines whether a different N3IWF should be used. If the UE supports slice-based N3IWF selection and the AMF determines to use a different N3IWF, then the AMF proceeds with steps 15-19. Otherwise, i.e. if the AMF determines to use the selected N3IWF that supports part of the allowed subset, the AMF proceeds with steps 13 and 14. In this case, steps 15-19 are skipped.
+NOTE 7:	The AMF considers the subscribed S-NSSAI(s) before determining to trigger the UE PCF to avoid triggering the UE PCF to update the UE policies for Requested S-NSSAIs that the UE is not subscribed for.
+13.	The AMF sends the NAS Registration Accept message in an N2 message sent to the N3IWF. The N2 Message includes the Allowed NSSAI for the access type for the UE. The Allowed NSSAI is a subset of the slices supported by the selected N3IWF.
+14.	The N3IWF forwards the NAS Registration Accept message to UE via the established signalling IPsec SA. If the NAS Registration Accept message is received by the N3IWF before the IPsec SA is established, the N3IWF shall store it and forward it to the UE only after the establishment of the signalling IPsec SA.
+14b.	The AMF may trigger a UE policy association as described in clause 4.2.2.2.2 if a UE policy association does not exist yet. If the UE Registration Request contains an indication that the UE supports N3IWF selection based on the slices the UE wishes to use over untrusted non-3GPP access the AMF indicates to the PCF that the UE supports N3IWF selection based on the slices the UE wishes to use over untrusted non-3GPP access.
+	Steps 15 to 19 correspond to the case where the AMF has detected that the N3IWF used by the UE is not compatible with the subset of the requested NSSAI that is allowed by the subscribed S-NSSAI(s).
+15.	If the AMF is able to select a UE PCF that supports UE policies for slice specific N3IWF selection, the AMF may trigger UE policy association establishment if a suitable UE policy association does not exist yet. The AMF indicates to the PCF that the UE supports N3IWF selection based on the slices the UE wishes to use over untrusted non-3GPP access.
+	The AMF triggers the UE PCF to update the UE policies for slice specific N3IWF selection.
+	The AMF requests the PCF to receive a notification when the PCF has completed the update of these UE policies.
+16.	The PCF updates the UE policies for slice specific N3IWF selection per the procedure defined in figure 4.2.4.3-1. When the update of these UE policies is completed, the PCF notifies the AMF by invoking Npcf_UEPolicyControl_UpdateNotify.
+17.	The AMF sends via the N3IWF a UE Registration Reject indicating that the UE selected N3IWF was not appropriate for the requested slices that the UE is allowed to access to. The AMF optionally may provide target N3IWF information (FQDN and/or IP address) to the UE within the Registration Reject message.
+NOTE 8:	The AMF uses locally configured N3IWF information to provide target N3IWF information.
+NOTE 9:	The AMF may determine a target N3IWF that supports the subset of the requested NSSAI that is allowed by the subscribed S-NSSAI(s) based on the list of supported TAs and the corresponding list of supported slices for each TA obtained in N2 interface management procedures as specified in TS 38.413 [10]. To determine the target N3IWF, the AMF may take into account UE location corresponding to last visited TAI included in Registration Request as described at step 5 when the UE selects N3IWF based on Tracking/Location Area of same PLMN.
+18.	If supported by the UE and if the UE received target N3IWF information in step 17, the UE connects to the target N3IWF, otherwise the UE may perform N3IWF selection again using the updated N3IWF selection information received in step 16. The UE uses the target N3IWF information in the Registration Reject only for the N3IWF selection directly following the rejected registration and UE shall not store for future use.
+	The AMF provides the Access Type set to "Non-3GPP access" to the UDM when it registers with the UDM and the RAT type determined as specified in clause 5.3.2.3 of TS 23.501 [2].
+NOTE 10:	The Access Type and the RAT type are is set to "Untrusted Non-3GPP access" even when the UE accesses SNPN services via PLMN over 3GPP access.
+
+4.12.2.3	Emergency Registration for untrusted non-3GPP Access
+Emergency Registration procedure is used by UEs requiring to perform emergency services but cannot gain normal services from the network. These UEs are in limited service state as defined in TS 23.122 [22].
+The regular registration procedure described in clause 4.12.2 applies with the following differences:
+-	If the UE has no SUPI and no valid 5G-GUTI, PEI shall be included instead of its encrypted Permanent User ID (SUCI) in the NAS message.
+-	NSSAI shall not be included by the UE. The AMF shall not send the Allowed NSSAI in the Registration Accept message.
+-	If the AMF is not configured to support Emergency Registration, the AMF shall reject any Registration Request that indicates Registration type "Emergency Registration".
+-	If the AMF is configured to support Emergency Registration for unauthenticated UEs and the UE indicated Registration Type "Emergency Registration", the AMF skips the authentication and security setup or the AMF accepts that the authentication may fail and continues the Emergency Registration procedure.
+-	If the authentication is performed successfully, the NAS messages will be protected by the NAS security functions (integrity and ciphering). The AMF shall derive the N3IWF key, per TS 33.501 [15] and shall provide it to the N3IWF after the authentication completion using an NGAP Initial Context Setup Request message as in the regular registration procedure.
+-	If the authentication is skipped or authentication fails, the NAS messages will not be protected by the NAS security functions (integrity and ciphering). However, the AMF shall create an N3IWF key and shall provide it to the N3IWF after the authentication completion (whenever authentication has failed or has been skipped) using an NGAP Initial Context Setup Request message. The N3IWF shall use it to complete IKE SA establishment and shall acknowledge the AMF by sending an NGAP Initial Context Setup Response message.
+NOTE:	According to TS 33.501 [15], the UE and the AMF independently generate the KAMF (and derived keys) in an implementation defined way and populate the 5G NAS security context with this KAMF to be used when activating a 5G NAS security context."
+-	As in step 14 of figure 4.2.2.2.2-1 for Emergency Registration, if the UE was not successfully authenticated, the AMF shall not update the UDM. Also for an Emergency Registration, the AMF shall not check for access restrictions, regional restrictions or subscription restrictions.
+-	Steps 16 and 21b of figure 4.2.2.2.2-1 are not performed since AM and UE policy for the UE are not required for Emergency Registration.
+
+4.12.3	Deregistration procedure for untrusted non-3gpp access
+
+Figure 4.12.3-1: Deregistration procedure for untrusted non-3gpp access
+1.	The Deregistration procedure is triggered by one of the events:
+1a.	For UE-initiated Deregistration as in steps from 1 to 7 of Figures 4.2.2.3.2-1.
+1b.	For network initiated deregistration as in steps from 1 to 6 of Figure 4.2.2.3.3-1.
+If the UE is in CM-CONNECTED state either in 3GPP access, non-3GPP access or both,
+-	the AMF may explicitly deregister the UE by sending a Deregistration request message ( Deregistration type, access type set to non-3GPP) to the UE as in step 2 of Figure 4.2.2.3.3-1.
+-	the UDM may want to request the deletion of the subscribers RM contexts and PDU Sessions with the reason for removal set to subscription withdrawn to the registered AMF as in step 1 of Figure 4.2.2.3.3-1.
+2.	AMF to N3IWF: The AMF sends a N2 Context UE Release Command message to the N3IWF with the cause set to Deregistration to release N2 signalling as defined in step 4 of clause 4.12.4.2.
+3.	N3IWF to UE: The N3IWF sends INFORMATIONAL Request (Delete payload) message to the UE. The Delete payload is included to indicate the release of the IKE SA.
+4.	UE to N3IWF: The UE sends an empty INFORMATIONAL Response message to acknowledge the release of the IKE SA as described in RFC 7296 [3]. Non-3GPP access specific resources are released including the IKEv2 tunnel (and the associated IPsec resources) and the local UE contexts in N3IWF (N3 tunnel Id).
+5.	N3IWF to AMF: The N3IWF acknowledges the N2 UE Context Release Command message by sending N2 UE Context Release Complete message to the AMF as defined in step 7 of clause 4.12.4.2.
+
+4.12.4	N2 procedures via Untrusted non-3GPP Access
+
+
+4.12.4.1	Service Request procedures via Untrusted non-3GPP Access
+The Service Request procedure via Untrusted non-3GPP Access shall be used by a UE in CM-IDLE state over non-3GPP access to request the re-establishment of the NAS signalling connection and the re-establishment of the user plane for all or some of the PDU Sessions which are associated to non-3GPP access.
+The Service Request procedure via Untrusted non-3GPP Access shall be used by a UE in CM-CONNECTED state over non-3GPP access to request the re-establishment of the user plane for one or more PDU Sessions which are associated to non-3GPP access.
+When the UE is in CM-IDLE state over non-3GPP access, the Service Request procedure via Untrusted non-3GPP Access is as described in clause 4.2.3.2 (UE Triggered Service Request) with the following exceptions:
+-	The Service Request procedure is never a response to a Paging, i.e. there is no Network Triggered Service Request procedure via Untrusted non-3GPP Access.
+-	The (R)AN corresponds to an N3IWF.
+-	The UE establishes a "signalling IPsec SA" with the N3IWF by using the procedure specified in clause 4.12.2 for the registration via untrusted non-3GPP access. In particular, the UE includes the Service Request and the AN parameters in an EAP-5G packet, which is further encapsulated in an IKE_AUTH request.
+-	The AN parameters include the Selected PLMN ID (or PLMN ID and NID, see clause 5.30 of TS 23.501 [2]) and Establishment cause. The Establishment cause provides the reason for requesting a signalling connection with the 5GC. The UE includes GUAMI information in the AN parameters. The N3IWF selects the AMF according to GUAMI information.
+-	The N2 parameters sent from N3IWF to AMF include the Establishment cause.
+-	The user plane between the UE and N3IWF is established not with RRC signalling but with IKEv2 signalling, as specified in clause 4.12.5 (i.e. by using an IKEv2 Create_Child_SA exchange). The IKEv2 Create Child SA Request may include the Additional QoS Information to reserve non-3GPP specific QoS resources as defined in clause 4.12a.5. The user plane of each PDU Session consists of one or more Child SAs.
+When the UE is in CM-CONNECTED state over non-3GPP access, the Service Request procedure via Untrusted non-3GPP Access is as described in clause 4.2.3.2 (UE Triggered Service Request) with the following exceptions:
+-	All NAS signalling exchanged between the UE and network is transferred within the established "signalling IPsec SA".
+-	The (R)AN corresponds to an N3IWF.
+-	The user plane between the UE and N3IWF is established not with RRC signalling but with IKEv2 signalling, as specified in clause 4.12.5 (i.e. by using an IKEv2 Create_Child_SA exchange). The user plane of each PDU Session consists of one or more Child SAs.
+When the UE is in CM-CONNECTED state over non-3GPP access and the network receives downlink data for a PDU Session over non-3GPP access that has no user plane, the steps 1-4a in clause 4.2.3.3 (Network Triggered Service Request) shall be performed with the following exceptions:
+-	The (R)AN corresponds to an N3IWF.
+-	The user plane between the UE and N3IWF is established (in step 4a) with IKEv2 signalling, as specified in clause 4.12.5 (i.e. by using an IKEv2 Create_Child_SA exchange). The user plane of each PDU Session consists of one or more Child SAs.
+
+4.12.4.2	Procedure for the UE context release in the N3IWF
+This procedure is used to release the N2 signalling connection and the N3 User Plane connection. If the procedure is initiated by the AMF the IKEv2 SA for a UE is being released. The procedure will move the UE from CM-CONNECTED to CM-IDLE in AMF and all UE related context information is deleted in the N3IWF.
+Both N3IWF-initiated and AMF-initiated UE context release in the N3IWF procedures are shown in Figure 4.12.4.2-1.
+
+Figure 4.12.4.2-1: Procedure for the UE context release in the N3IWF
+1.	The UE has already registered in the 5GC and may have established one or multiple PDU Sessions.
+2.	The N3IWF detects that the UE is not reachable.
+3.	The N3IWF sends a N2 UE Context Release Request message to the AMF This step is equivalent to step 1b of Figure 4.2.6-1.
+NOTE:	AN Release procedure can also be triggered by an AMF internal event and in that case step 2 and step 3 do not take place.
+4.	AMF to N3IWF: If the AMF receives the N2 UE Context Release Request from N3IWF or if due to an internal AMF event the AMF wants to release N2 signalling, the AMF sends an N2 UE Context Release Command (Cause) to the N3IWF. The cause indicated is cause from step 3 or a cause due to internal AMF event. This step is equivalent to step 2 of Figure 4.2.6-1.
+5.	If the IKEv2 tunnel has not been released yet, the N3IWF performs the release of the IPsec tunnel as defined in RFC 7296 [3] indicating to release the IKE SA and any Child IPsec SA if existing. The N3IWF sends to the UE the indication of the release reason if received in step 4.
+6.	The UE sends an empty INFORMATIONAL Response message to acknowledge the release of the IKE SA as described in RFC 7296 [3]. The N3IWF deletes the UE's context after receiving the empty INFORMATIONAL Response message.
+7.	N3IWF to AMF: The N3IWF confirms the release of the UE-associated N2-logical connection by returning N2 UE Release Complete (list of PDU Session ID(s) with active N3 user plane) to the AMF as in step 4 defined in clause 4.2.6. The AMF marks the UE as CM-IDLE state in untrusted non-3GPP access.
+8.	For each of the PDU Sessions in the N2 UE Context Release Complete, the steps 5 to 7 in clause 4.2.6 are performed (PDU Session Update SM Context). After the AMF receives the Nsmf_PDUSession_UpdateSMContext Response as in step 7 of clause 4.2.6, the AMF considers the N3 connection as released. If list of PDU Session ID(s) with active N3 user plane is included in step 3, then this step is performed before step 4.
+
+4.12.4.3	CN-initiated selective deactivation of UP connection of an existing PDU Session associated with Untrusted non-3GPP Access
+The procedure described in clause 4.3.7 (CN-initiated selective deactivation of UP connection of an existing PDU Session) is used for CN-initiated selective deactivation of UP connection for an established PDU Session associated with non-3GPP Access of a UE in CM-CONNECTED state, with the following exceptions:
+-	The NG-RAN corresponds to an N3IWF.
+-	The user plane between the UE and N3IWF, i.e. Child SA(s) for the PDU Session, is released not with RRC signalling but with IKEv2 signalling, as specified in clause 4.12.7.
+
+4.12.5	UE Requested PDU Session Establishment via Untrusted non-3GPP Access
+Clause 4.12.5 specifies how a UE can establish a PDU Session via an untrusted non-3GPP Access Network as well as to hand over an existing PDU Session between 3GPP access and non-3GPP access. The procedure applies in non-roaming, roaming with LBO as well as in home-routed roaming scenarios.
+For non-roaming and LBO scenarios, if the UE is simultaneously registered to a 3GPP access in a PLMN different from the PLMN of the N3IWF, the functional entities in the following procedures are located in the PLMN of the N3IWF. For home-routed roaming scenarios, the AMF, V-SMF and associated UPF in VPLMN in the following procedure is located in the PLMN of the N3IWF.
+The procedure below is based on the PDU Session Establishment procedure specified in clause 4.3.2.2.1 (for non-roaming and roaming with LBO) and the PDU Session Establishment procedure specified in clause 4.3.2.2.2 (for home-routed roaming).
+
+Figure 4.12.5-1: PDU Session establishment via untrusted non-3GPP access
+1.	The UE shall send a PDU Session Establishment Request message to AMF as specified in step 1 of clause 4.3.2.2.1. This message shall be sent to N3IWF via the IPsec SA for NAS signalling (established as specified in clause 4.12.2) and the N3IWF shall transparently forward it to AMF in the 5GC.
+2a.	In the case of non-roaming or roaming with Local Breakout, steps 2-11 specified in clause 4.3.2.2.1are executed according to the PDU Session Establishment procedure over 3GPP access. In the case of home-routed roaming, steps 2-14 specified in clause 4.3.2.2.2 are executed according to the PDU Session Establishment procedure over 3GPP access.
+2b.	As described in step 12 of clause 4.3.2.2.1, the AMF shall send a N2 PDU Session Request message to N3IWF to establish the access resources for this PDU Session.
+	If L4S in untrusted non-3GPP access is supported and if applicable as per clause 5.37.3 of TS 23.501 [2], for a QoS flow.
+NOTE:	The SMF is assumed to have corresponding PCC rule(s) for the specific DNN and NSSAI associated with the L4S QoS flow for which ECN marking is expected.
+3.	Based on its own policies and configuration and based on the QoS profiles received in the previous step, the N3IWF shall determine the number of IPsec Child SAs to establish and the QoS profiles associated with each IPsec Child SA. For example, the N3IWF may decide to establish one IPsec Child SA and associate all QoS profiles with this IPsec Child SA. In this case, all QoS Flows of the PDU Session would be transferred over one IPsec Child SA. The N3IWF may bind the QoS Flow associated with PDU Set QoS parameters to an IPsec Child SA and no other QoS Flow is bound to this IPsec Child SA.
+4a.	The N3IWF shall send to UE an IKE Create_Child_SA request according to the IKEv2 specification in RFC 7296 [3] to establish the first IPsec Child SA for the PDU Session. The IKE Create_Child_SA request indicates that the requested IPsec Child SA shall operate in tunnel mode. This request shall include a 3GPP-specific Notify payload which contains (a) the QFI(s) associated with the Child SA, (b) the identity of the PDU Session associated with this Child SA, (c) optionally, a DSCP value associated with the Child SA, (d) optionally a Default Child SA indication and (e) optionally, the Additional QoS Information specified in clause 4.12a.5
+	The IKE Create_Child_SA request shall also include another 3GPP-specific Notify payload, which contains the UP_IP_ADDRESS that is specified in step 8 below.
+	If a DSCP value is included, then the UE and the N3IWF shall mark all IP packets sent over this Child SA with this DSCP value. There shall be one and only one Default Child SA per PDU session. The UE shall send all QoS Flows to this Child SA for which there is no mapping information to a specific Child SA. The IKE Create_Child_SA request also contains other information (according to RFC 7296 [3]) such as the SA payload, the Traffic Selectors (TS) for the N3IWF and the UE, etc.
+	After receiving the IKE Create_Child_SA request, if the Additional QoS Information is received, the UE may reserve non-3GPP Access Network resources according to the Additional QoS Information.
+4b.	If the UE accepts the new IPsec Child SA, the UE shall send an IKE Create_Child_SA response according to the IKEv2 specification in RFC 7296 [3]. During the IPsec Child SA establishment the UE shall not be assigned an IP address.
+4c-4d.	If in step 3 the N3IWF determined to establish multiple IPsec Child SAs for the PDU Session, then additional IPsec Child SAs shall be established, each one associated with one or more QFI(s), optionally with a DSCP value, with a UP_IP_ADDRESS and optionally with the Additional QoS Information specified in clause 4.12a.5. For each IPsec Child SA, if the Additional QoS Information is received, the UE may reserve non-3GPP Access Network resources according to the Additional QoS Information for the IPsec Child SA.
+5.	After all IPsec Child SAs are established, the N3IWF shall forward to UE via the signalling IPsec SA (see clause 4.12.2.2) the PDU Session Establishment Accept message received in step 2b.
+6.	The N3IWF shall send to AMF an N2 PDU Session Response.
+7.	In the case of non-roaming or roaming with Local Breakout, all steps specified in clause 4.3.2.2.1 after step 14 are executed according to the PDU Session Establishment procedure over 3GPP access. In the case of home-routed roaming, all steps specified in clause 4.3.2.2.2 after step 18 are executed according to the PDU Session Establishment procedure over 3GPP access.
+8.	On the user-plane:
+-	When the UE has to transmit an UL PDU, the UE shall determine the QFI associated with the UL PDU (by using the QoS rules of the PDU Session), it shall encapsulate the UL PDU inside a GRE packet and shall forward the GRE packet to N3IWF via the IPsec Child SA associated with this QFI. The header of the GRE packet carries the QFI associated with the UL PDU. The UE shall encapsulate the GRE packet into an IP packet with source address the "inner" IP address of the UE and destination address the UP_IP_ADDRESS associated with the Child SA.
+-	When the N3IWF receives a DL PDU via N3, the N3IWF uses the QFI and the identity of the PDU Session in order to determine the IPsec Child SA to use for sending the DL PDU over NWu. The N3IWF encapsulates the DL PDU inside a GRE packet and copies the QFI in the header of the GRE packet. The N3IWF may include also in the GRE header a Reflective QoS Indicator (RQI), which shall be used by the UE to enable reflective QoS. The N3IWF shall encapsulate the GRE packet into an IP packet with source address the UP_IP_ADDRESS associated with the Child SA and destination address the "inner" IP address of the UE. For QoS Flows that are configured for PDU Set handling, the N3IWF may, based on operator local configurations, use the PDU Set Importance received in the GTP-U header to determine the DSCP value for the DL packets.
+NOTE:	It is recommended that the used PDU Set Importance based transport level packet marking values only vary the drop precedence between PDUs in the transport network nodes (e.g. IP routers) on the NWu/NWt interfaces. This is needed to avoid causing packet reordering in the transport network when different DSCP marking values are used for a single QoS Flow.
+-	PDUs belonging to L4S-enabled QoS flow(s) may be transferred over dedicated IPsec Child SA(s). If a DSCP value is included, then the UE and the N3IWF shall mark all IP packets sent over this IPsec Child SA with this DSCP value.
+
+4.12.6	UE or Network Requested PDU Session Modification via Untrusted non-3GPP access
+The UE or network requested PDU Session Modification procedure via untrusted non-3GPP access is depicted in figure 4.12.6-1. The procedure applies in non-roaming, roaming with LBO as well as in home-routed roaming scenarios.
+For non-roaming and LBO scenarios, the functional entities in the following procedures are located in the PLMN of the N3IWF.
+The procedure below is based on the PDU Session Modification procedure specified in clause 4.3.3.2 (for non-roaming and roaming with LBO) and on the PDU Session Modification procedure specified in clause 4.3.3.3 (for home-routed roaming).
+
+Figure 4.12.6-1: UE or Network Requested PDU Session Modification via untrusted non-3GPP access
+1.	If the PDU Session Modification procedure is initiated by the UE, the UE shall send a PDU Session Modification Request message to AMF as specified in step 1 of clause 4.3.2.2. The message shall be sent to N3IWF via the established IPsec SA for NAS signalling. The N3IWF shall transparently forward the PDU Session Modification Request to AMF/SMF.
+2.	In the case of non-roaming or LBO, the steps 1a (from AMF) to 1e and steps 2-3 as per the PDU Session Modification procedure in clause 4.3.3.2 are executed.
+	In the case of home-routed, the steps 1a (from AMF) to 1d and steps 2-3 as per the PDU Session Modification procedure in clause 4.3.3.3 are executed.
+3.	The AMF sends N2 PDU Session Resource Modify Request (N2 SM information received from SMF, NAS message) message to the N3IWF. This step is the same as step 4 in clause 4.3.3.2 (for non-roaming and roaming with Local Breakout) and step 5 in clause 4.3.3.3 (for home-routed roaming).
+	If L4S in untrusted non-3GPP access is supported and if applicable as in clause 5.37.3 of TS 23.501 [2], for a QoS flow.
+4.	The N3IWF may issue IKEv2 signalling exchange with the UE that is related with the information received from SMF according to the IKEv2 specification in RFC 7296 [3]. Based on the N2 SM information received from the SMF, the N3IWF may perform one of the following:
+4a.	The N3IWF may decide to create a new Child SA for the new QoS Flow(s). The N3IWF may bind the QoS Flow associated with the PDU Set QoS parameters to an IPsec Child SA and no other QoS Flow is bound to this IPsec Child SA. In this case, the N3IWF establishes a new Child SA by sending an IKE_CREATE_CHILD_SA request message, which includes the SA, the PDU Session ID, the QFI(s), optionally a DSCP value and optionally the Additional QoS Information specified in clause 4.12a.5. If the Additional QoS Information is received, the UE may reserve non-3GPP Access Network resources according to the Additional QoS Information.
+	For each L4S-enabled QoS Flow, the N3IWF may establish a dedicated IPsec Child SA. If a DSCP value is included, then the UE and the N3IWF shall mark all IP packets sent over this IPsec Child SA with this DSCP value.
+4b.	The N3IWF may decide to add or remove QoS Flow(s) to/from an existing Child SA. In this case, the N3WIF updates the QoS Flow and Child SA mapping information by sending an INFORMATIONAL request message, which includes the QFI(s) associated with the Child SA and optionally the Additional QoS Information specified in clause 4.12a.6, which contains the new QoS information that should be associated with the existing Child SA. If the Additional QoS Information is received, the UE may update the reserved non-3GPP Access Network resources for the existing Child SA according to the Additional QoS Information.
+4c.	The N3IWF may decide to delete an existing Child SA, e.g. when there is no QoS Flow mapped to this Child SA. In this case, the N3IWF deletes the existing Child SA by sending INFORMATIONAL request message, which includes a Delete payload.
+NOTE:	If the N3IWF has included the Default Child SA indication during the establishment of one of the Child SAs of the PDU Session, the N3IWF may not update the mapping between QoS Flows Child SAs.
+5.	The N3IWF acknowledges N2 PDU Session Request by sending a N2 PDU Session Response Message to the AMF to acknowledge the success or failure of the request.
+6.	In the case of non-roaming or LBO, step 7 as per the PDU Session Modification procedure in clause 4.3.3.2 is executed. In the case of home-routed, the steps 8-10 as per the PDU Session Modification procedure in clause 4.3.3.3 are executed.
+7.	The N3IWF sends the PDU Session Modification Command to UE (if received in step 3) and receives the response message from UE.
+	Steps 4a/4c and step 7 may happen consecutively. Steps 7b map happen before step 4b/4d.
+8.	The N3IWF forwards the NAS message to the AMF.
+9.	For non-roaming and roaming with LBO, all the steps after step 10 in clause 4.3.3.2 are executed according to the general PDU Session Modification procedure. For home-routed roaming, all steps after step 13 in clause 4.3.3.3 are executed according to the general PDU Session Modification procedure.
+
+4.12.7	UE or network Requested PDU Session Release via Untrusted non-3GPP access
+Clause 4.12.7 specifies how a UE or network can release a PDU Session via an untrusted non-3GPP Access Network. The UE requested PDU Session Release procedure via Untrusted non-3GPP access applies in non-roaming, roaming with LBO as well as in home-routed roaming scenarios.
+For non-roaming and LBO scenarios, if the UE is simultaneously registered to a 3GPP access in a PLMN different from the PLMN of the N3IWF, the functional entities in the following procedures are located in the PLMN of the N3IWF. For home-routed roaming scenarios, the AMF, V-SMF and associated UPF in VPLMN in the following procedure is located in the PLMN of the N3IWF.
+NOTE:	If the UE is simultaneously registered to 3GPP access in the same PLMN as non-3GPP access, when non-3GPP access is not available to the UE (e.g. due to out of non-3GPP access coverage) or UE is in CM-IDLE for non-3GPP access, the UE may perform the PDU Session Release procedure via 3GPP access as described in clause 4.3.4.
+
+Figure 4.12.7-1: UE Requested PDU Session Release via Untrusted non-3GPP access
+1.	One or more PDU Sessions are already established for the UE using the procedure described in clause 4.12.2.
+2.	The UE sends a NAS message (N1 SM container (PDU Session Release Request), PDU Session ID) to the AMF via the N3IWF as defined in clause 4.3.4.
+3.	For non-roaming and roaming with LBO, the steps 1a (from AMF) to 4 according to the PDU Session Release procedure defined in clause 4.3.4.2 are executed. For home-routed roaming, the steps 1a (from AMF) to step 7 according to the PDU Session Release procedure defined in clause 4.3.4.3 are executed.
+4.	This step is the same as step 4 in clause 4.3.4.2 (non-roaming and LBO) and step 6 in clause 4.3.4.3 (home-routed roaming).
+	If the message received from the SMF does not include N2 SM Resource Release request, the AMF sends N2 Downlink NAS transport (N1 SM container (PDU Session Release Command), PDU Session ID, Cause) message to the N3IWF and steps 5 to 8 are skipped.
+5.	Upon receiving AN session release request message from the AMF, the N3IWF triggers the release of the corresponding Child SA by sending INFORMATIONAL EXCHANGE (Delete Payload) to the UE. Delete payload is included in the message listing the SPIs of the Child SAs to be deleted to this PDU Session as described in RFC 7296 [3].
+6.	The UE responds with INFORMATIONAL EXCHANGE (Delete Payload) message. Delete payload is included for the paired SAs going in the other direction as described in RFC 7296 [3].
+7.	This step is the same as step 6 in 4.3.4.2 (non-roaming and LBO) and step 8 in clause 4.3.4.3 (home-routed roaming).
+8.	For non-roaming and roaming with LBO, steps 7 according to the PDU Session Release procedure defined in clause 4.3.4.2 are executed. For home-routed roaming, step 9-10 according to the PDU Session Release procedure defined in clause 4.3.4.3 are executed.
+9.	The N3IWF delivers the NAS message (N1 SM container (PDU Session Release Command), PDU Session ID, Cause) to the UE.
+10.	The UE sends a NAS message (N1 SM container (PDU Session Release Ack), PDU Session ID) to the N3IWF.
+11.	This step is the same as step 9 in 4.3.4.2 (non-roaming and LBO) and step 11 in clause 4.3.4.3 (home-routed roaming).
+	Steps 5 and 9 may happen consecutively. Step 10 may happen before step 6.
+12.	For non-roaming and roaming with LBO, all steps after step 10 in the PDU Session Release procedure defined in clause 4.3.4.2 are executed. In the case of home-routed roaming, all steps after step 12 in the PDU Session Release procedure defined in clause 4.3.4.3 are executed.
+The network requested PDU Session Release procedure via Untrusted non-3GPP access is the same as the network requested PDU Session Release Procedure specified in clause 4.3.4.2 (for Non-Roaming and Roaming with Local Breakout) with the following differences:
+-	The (R)AN corresponds to an N3IWF.
+-	In step 5 the N3IWF upon receiving N2 SM request to release the AN resources associated with the PDU Session from the AMF, the N3IWF triggers the release of the corresponding Child SA to the UE as specified in step 5 and 6, in Figure 4.12.7-1.
+-	User Location Information is not included in the step 6, 7a, 9, 10a and 12 of the procedure.
+
+4.12.8	Mobility from a non-geographically selected AMF to a geographically selected AMF
+This procedure describes the AMF change that takes place when an UE initially served via non-3GPP access by an AMF selected based on non-geographical criteria (e.g. because the UE had no 3GPP access coverage or because only non-geographically selectable N3IWF are deployed) gets 3GPP access and is now to be served by an AMF selected in the same PLMN by the NG-RAN based on geographical criteria.
+
+Figure 4.12.8-1: Mobility from a non-geographically selected AMF to a geographically selected AMF
+1.	The UE registers over non-3GPP access, as described in clause 4.12.2. During this procedure:
+a	An AMF (source AMF) is selected by the N3IWF in step 6a, based on non-geographical criteria (e.g. because the UE has no 3GPP access coverage or because only non-geographically selectable N3IWF are deployed).
+b	The UE receives, within the Registration Accept message, a 5G-GUTI containing a GUAMI of the non-geographically selected AMF. The UE also receives an Allowed NSSAI and optionally Mapping Of Allowed NSSAI.
+2.	The UE may activate PDU Sessions over non-3GPP access, as described in clause 4.12.5.
+3.	The UE gets 3GPP access and issues a Registration Request over 3GPP access as defined in step 1 of Figure 4.2.2.2.2-1, providing its 5G-GUTI.
+	If the 5G-GUTI does not indicate an AMF of the same Region ID as that of the NG-RAN, the NG-RAN selects an AMF Set and an AMF in the AMF Set as described in clause 6.3.5 of TS 23.501 [2].
+	Steps 3 to 22 of Figure 4.2.2.2.2-1 take place including following aspects:
+-	step 4 of Figure 4.2.2.2.2-1 takes place i.e. the new AMF invokes the Namf_Communication_UEContextTransfer service operation on the old AMF to request the UE's SUPI and MM Context.
+-	in step 5 of Figure 4.2.2.2.2-1, the old AMF includes information about active NGAP association to N3IWF.
+-	in step 18 of Figure 4.2.2.2.2-1, the new AMF modifies the NGAP association toward N3IWF.
+-	in step 21 of Figure 4.2.2.2.2-1, the Registration Accept message shall include the updated 5G-GUTI that the UE will use to update its 3GPP and non-3GPP registration contexts.
+
+4.12a	Procedures for Trusted non-3GPP access
+
+
+4.12a.1	General
+Clause 4.12a defines the procedures to support trusted non-3GPP access by describing the differences compared to the defined procedures in other clauses.
+
+4.12a.2	Registration via Trusted non-3GPP Access
+
+
+4.12a.2.1	General
+Clause 4.12a.2 specifies how a UE can register to 5GC via a trusted non-3GPP Access Network. The utilized procedure is very similar with the 5GC registration procedure over untrusted non-3GPP access in clause 4.12.2.2 and it is based on the Registration procedure specified in clause 4.2.2.2.2. It uses the same vendor-specific EAP method (called "EAP-5G") as the one specified in clause 4.12.2.1. In this case, the "EAP-5G" method is used between the UE and the TNGF and is utilized for encapsulating NAS messages.
+In Registration and subsequent Registration procedures via trusted non-3GPP access, the NAS messages are always exchanged between the UE and the AMF. When possible, the UE can be authenticated by reusing the existing UE security context in AMF.
+
+4.12a.2.2	Registration procedure for trusted non-3GPP access
+The UE connects to a trusted non-3GPP Access Network (TNAN) and it also registers to 5GC over via this TNAN, by using the EAP-based procedure shown in the figure 4.12a.2.2. This procedure is very similar with the 5GC registration procedure over untrusted non-3GPP access in clause 4.12.2.2. The link between the UE and the TNAN can be any data link (L2) that supports EAP encapsulation, e.g. PPP, PANA, Ethernet, IEEE 802.3, IEEE 802.11, etc. The interface between the TNAP and TNGF is an AAA interface.
+
+Figure 4.12a.2.2-1: Registration via trusted non-3GPP access
+0.	The UE which is not operating in SNPN access mode for Yt interface selects a PLMN and a TNAN for connecting to this PLMN by using the Trusted Non-3GPP Access Network selection procedure specified in clause 6.3.12 of TS 23.501 [2]. During this procedure, the UE discovers the PLMNs with which the TNAN supports trusted connectivity (e.g. "5G connectivity").
+	The UE operating in SNPN access mode for Yt interface selects an SNPN and a TNAN for connecting to this SNPN by using the Trusted Non-3GPP Access Network selection procedure specified in clause 5.30.2.13 of TS 23.501 [2]. During this procedure, the UE discovers the SNPNs with which the TNAN supports trusted connectivity (e.g. "5G connectivity").
+NOTE 1:	In this Release, it is assumed that when the trusted non-3GPP access is a trusted WLAN access, the UE is configured (e.g. with the WLANSP rules defined in TS 23.503 [20]) to select an TNAN(SSID and TNGF) associated with a non-3GPP Tracking Area, which supports one or more of the UE's subscribed S-NSSAIs.
+1.	A layer-2 connection is established between the UE and the TNAP. In the case of IEEE Std 802.11 [48], this step corresponds to an 802.11 Association. In the case of PPP, this step corresponds to a PPP LCP negotiation. In other types of non-3GPP access (e.g. Ethernet), this step may not be required.
+2-3.	An EAP procedure is initiated. EAP messages are encapsulated into layer-2 packets, e.g. into IEEE 802.3/802.1x packets, into IEEE 802.11/802.1x packets, into PPP packets, etc. The NAI provided by the UE not operating in SNPN access mode for Yt interface indicates that the UE requests "5G connectivity" to a specific PLMN and is defined in clause 28.7.6 of TS 23.003 [33]. In the case of WLAN access, if the UE has an MPS subscription, the UE shall also include an indication of its MPS subscription in the username part of the NAI as per TS 23.003 [33]. The NAI provided by the UE operating in SNPN access mode for Yt interface indicates that the UE request "5G connectivity" to a specific SNPN and is defined in clause 28.7.6 of TS 23.003 [33]. If the WLANSP rule contains information including TNGF ID to use for specific slices and the UE supports such information, the UE builds the realm of NAI taking the TNGF ID into account. This NAI is defined in clause 28.7.6 of TS 23.003 [33] and triggers the TNAP to send an AAA request to a TNGF, which operates as an AAA proxy.
+	Between the TNAP and TNGF the EAP packets are encapsulated into AAA messages. The AAA request also include the TNAP identifier, which can be treated as the User Location Information defined in clause 5.6.2 of TS 23.501 [2]. In order to support usage of the TNAP identifier defined in TS 23.316 [53], when a 5G-RG acts as a TNAP , the W-5GAN may, as defined in clause 5.6.2 of TS 23.501 [2], provide the 5G RG civic address information in the TNAP identifier.
+NOTE 2:	In this Release, it is assumed that when the trusted non-3GPP access is a trusted WLAN access, the TNAP selects a TNGF based on the realm (e.g. MCC, MNC and TNGF ID) provided by the UE and also based on the SSID selected by the UE. In a deployment a TNGF may be reached over different SSID(s) where the TNGF supports a Tracking Area and be associated with a set of slices, or an SSID may provide access to one or more TNGF(s), where each of these TNGF(s) can support a different Tracking Area and a different set of slices.
+NOTE 3:	Based on operator policy, after receiving the indication of MPS subscription from the UE, the TNAN can treat this UE with priority.
+4-10.	An EAP-5G procedure is executed as the one specified in clause 4.12.2.2 for the untrusted non-3GPP access with the following modifications:
+-	The registration request may contain an indication that the UE supports TNGF selection based on the slices the UE wishes to use over trusted non-3GPP access (i.e. that the UE supports Extended WLANSP rule).
+-	A TNGF key (instead of an N3IWF key) is created in the UE and in the AMF after the successful authentication. The TNGF key is transferred from the AMF to TNGF in step 10a (within the N2 Initial Context Setup Request). The TNGF derives a TNAP key, which is provided to the TNAP. The TNAP key depends on the non-3GPP access technology (e.g. it is a Pairwise Master Key in the case of IEEE Std 802.11 [48]). How these security keys are created, it is specified in TS 33.501 [15].
+-	In step 5 the UE shall include the Requested NSSAI in the AN parameters only if allowed, according to the conditions defined in clause 5.15.9 of TS 23.501 [2], for the trusted non-3GPP access. The UE shall also include a UE Id in the AN parameters, e.g. a 5G-GUTI if available from a prior registration to the same PLMN or SNPN. If the UE in SNPN access mode for Yt interface performs the Registration procedure for UE onboarding, the UE shall include an indication in the AN parameters that the connection request is for onboarding.
+-	In the N2 message sent in step 6b, the TNGF includes a UE Location Information (ULI)including the TNAP ID and the UE IP address based on information received in step 3. If the ULI includes the IP address, this is set to a "null" IP address (e.g. 0.0.0.0) because the UE is not yet assigned an IP address. If the TNGF has received the TNAP ID in step 3 over Ta, the TNGF includes the TNAP ID within UE Location Information (ULI) sent to AMF. After the UE is assigned an IP address, the TNGF includes this address in subsequent N2 messages. This N2 message also includes the Selected PLMN ID and optionally the Selected NID and the Establishment cause.
+NOTE 4:	The Selected NID is present when the UE connects to an SNPN via Trusted non-3GPP access.
+-	If the UE in SNPN access mode for Yt interface performs the Registration procedure for UE onboarding, the interaction between AMF and AUSF (step 8a and step 8c in Figure 4.12a.2.2-1) is replaced with step 9-1 or step 9-2 or step 9-3 in Figure 4.2.2.2.4-1, depending on the 5GC architecture that is used for UE onboarding.
+-	After receiving the TNGF key from AMF in step 10a, the TNGF shall send to UE an EAP-Request/5G-Notification packet containing the "TNGF Contact Info", which includes the IP address of TNGF. After receiving an EAP-Response/5G-Notification packet from the UE in step 10c, the TNGF shall send message 10d containing the EAP-Success packet.
+11.	The TNAP key is used to establish layer-2 security between the UE and TNAP. In the case of IEEE Std 802.11 [48], a 4-way handshake is executed, which establishes a security context between the WLAN AP and the UE that is used to protect unicast and multicast traffic over the air.
+12.	The UE receives IP configuration from the TNAN, e.g. with DHCP.
+13.	At this point, the UE has successfully connected to the TNAN and has obtained IP configuration. The UE sets up a secure NWt connection with the TNGF as follows:
+	The UE initiates an IKE_INIT exchange using the IP address of TNGF received during the EAP-5G signalling, in step 10b. Subsequently, the UE initiates an IKE_AUTH exchange and provides its identity. The identity provided by the UE in the IKEv2 signalling should be the same as the UE Id included in the AN parameters in step 5. This enables the TNGF to locate the TNGF key that was created before for this UE, during the authentication in step 8. The TNGF key is used for mutual authentication. NULL encryption is negotiated between the UE and the TNGF, as specified in RFC 2410 [49].
+	In step 13c, the TNGF provides to UE (a) an "inner" IP address, (b) a NAS_IP_ADDRESS and a TCP port number and (c) a DSCP value. After this step, an IPsec SA is established between the UE and TNGF. This is referred to as the "signalling IPsec SA" and operates in Tunnel mode. Operation in Tunnel mode enables the use of MOBIKE [40] for re-establishing the IPsec SAs when the IP address of the UE changes during mobility events. All IP packets exchanged between the UE and TNGF via the "signalling IPsec SA" shall be marked with the above DSCP value. The UE and the TNAP may map the DSCP value to a QoS level (e.g. to an EDCA Access Class [48]) supported by the underlying non-3GPP Access Network. The mapping of a DSCP value to a QoS level of the non-3GPP Access Network is outside the scope of 3GPP.
+	Right after the establishment of the "signalling IPsec SA", the UE shall setup a TCP connection with the TNGF by using the NAS_IP_ADDRESS and the TCP port number received in step 13c. The UE shall send NAS messages within TCP/IP packets with source address the "inner" IP address of the UE and destination address the NAS_IP_ADDRESS. The TNGF shall send NAS messages within TCP/IP packets with source address the NAS_IP_ADDRESS and destination address the "inner" IP address of the UE.
+	This concludes the setup of the NWt connection between the UE and the TNGF. All subsequent NAS messages between UE and TNGF are carried over this NWt connection (i.e. encapsulated in TCP/IP/ESP).
+14.	After the NWt connection is successfully established, the TNGF responds to AMF with an N2 Initial Context Setup Response message.
+15.	The AMF determines the allowed subset of the Requested NSSAI that is allowed by the Subscribed S-NSSAI(s); the AMF may detect that the TNGF used by the UE is not compatible with this allowed subset and based on operator's policy configured in the AMF, the AMF determines whether a different TNGF should be used. If the UE supports slice-based TNGF selection and the AMF determines to use a different TNGF, then the AMF proceeds with steps 17-21. Otherwise, i.e. if the AMF determines to use the selected TNGF that supports part of allowed the subset, the AMF proceeds with step 16. In this case, steps 17-21 are skipped.
+NOTE 5:	The criteria for the AMF to determine that the TNGF used by the UE is not compatible with the subset of the requested NSSAI that is allowed by the subscribed S-NSSAI(s) is based on local AMF policies. For example the AMF can determine that the TNGF used by the UE is compatible as soon as there is one supported slice in common.
+16a-16b.	The NAS Registration Accept message is sent by the AMF and is forwarded to UE via the established NWt connection. Now the UE can use the TNAN (a) to transfer non-seamless offload traffic and (b) to establish one or more PDU Sessions.
+16c.	The AMF may trigger a UE policy association as described in clause 4.2.2.2.2 if a UE policy association does not exist yet. If the UE Registration Request contains an indication that the UE supports TNGF selection based on the slices the UE wishes to use over untrusted non-3GPP access the AMF indicates to the PCF that the UE supports TNGF selection based on the slices the UE wishes to use over trusted non-3GPP access.
+Steps 17 to 21 correspond to the case where the AMF has detected that TNGF used by the UE is not compatible with the subset of the requested NSSAI that is allowed by the subscribed S-NSSAI(s).
+17.	If the AMF is able to select a UE PCF that supports UE policies for slice specific trusted access selection, the AMF may trigger UE policy association establishment if a suitable UE policy association does not exist yet. The AMF indicates to the PCF that the UE supports TNGF selection based on the slices the UE wishes to use over trusted non-3GPP access.
+	The AMF triggers the UE PCF to update the UE policies for slice specific trusted access selection.
+	The AMF requests the PCF to receive a notification when the PCF has completed the update of these UE policies.
+18.	The PCF updates the UE policies for slice specific trusted access selection according to the procedure defined in figure 4.2.4.3-1.
+19.	When the update of these policies is completed, the PCF notifies the AMF by invoking Npcf_UEPolicyControl_UpdateNotify.
+20.	The AMF sends via the TNGF a UE Registration Reject indicating that the selected TNGF was not appropriate for the requested slices that the UE is allowed to access to. The AMF may provide target TNAN information (SSID, TNGF ID) to the UE within the Registration Reject message indicating the UE to build the NAI based on the TNGF ID.
+NOTE 6:	The AMF may determine a target TNGF that supports the subset of the requested NSSAI that is allowed by the subscribed S-NSSAI(s) based on the list of supported TAs and the corresponding list of supported slices for each TA obtained in N2 interface management procedures as specified in TS 38.413 [10] and considering UE location.
+21.	If supported by the UE and if the UE received target TNAN information in step 20, the UE connects to the target TNAN, otherwise the UE may perform TNAN selection again using the updated WLANSP rule received in step 18. If the target TNAN information includes TNGF ID, the UE shall build the NAI based on TNGF ID. The UE uses the target TNAN information in the Registration Reject only for the TNAN selection directly following the rejected registration and UE shall not store it for future use.
+
+4.12a.2.3	Emergency Registration for trusted non-3GPP Access
+Emergency Registration procedure for trusted non-3GPP access shall be supported as specified in clause 4.12.2.3 for untrusted non-3GPP access with the following differences:
+-	The regular registration shall refer to clause 4.12a.2.
+-	The N3IWF is substituted by the TNGF.
+-	The N3IWF key is substituted by the TNGF key.
+
+4.12a.3	Deregistration procedure for Trusted non-3GPP access
+The Deregistration procedure via trusted non-3GPP access shall be supported as specified in clause 4.12.3 for the untrusted non-3GPP access with the following modifications:
+-	The untrusted non-3GPP access is substituted by a trusted non-3GPP access point (TNAP).
+-	The N3IWF is substituted by the TNGF.
+-	If the UE has reserved QoS resources over non-3GPP access by using the Additional QoS Information (specified in clause 4.12a.5), then the UE shall release these resources.
+
+4.12a.4	N2 procedures via Trusted non-3GPP Access
+
+
+4.12a.4.1	Service Request procedures via Trusted non-3GPP Access
+The Service Request procedure via trusted non-3GPP access shall be supported as specified in clause 4.12.4.1 for the untrusted non-3GPP access with the following modifications:
+-	The untrusted non-3GPP access is substituted by a trusted non-3GPP access.
+-	The N3IWF is substituted by the TNGF.
+-	The user plane between the UE and TNGF is established with IKEv2 signalling, as specified in clause 4.12a.5 (i.e. by using an IKEv2 Create_Child_SA exchange). The IKEv2 Create Child SA Request shall include the Additional QoS Information to reserve non-3GPP specific QoS resources as defined in clause 4.12a.5.
+
+4.12a.4.2	Procedure for the UE context release in the TNGF
+This procedure for releasing the N2 signalling connection and the N3 user plane connection for a UE connected to 5GC via trusted non-3GPP access, shall be the same as the procedure specified in clause 4.12.4.2 for the untrusted non-3GPP access with the following modifications:
+-	The untrusted non-3GPP access is substituted by a trusted non-3GPP access point (TNAP).
+-	The N3IWF is substituted by the TNGF.
+-	If the UE has reserved any non-3GPP specific QoS resources, the UE releases these resources when the IKEv2 Child SA is released.
+
+4.12a.4.3	CN-initiated selective deactivation of UP connection of an existing PDU Session associated with Trusted non-3GPP Access
+The procedure described in clause 4.3.7 (CN-initiated selective deactivation of UP connection of an existing PDU Session) is used for CN-initiated selective deactivation of UP connection for an established PDU Session associated with trusted non-3GPP Access for a UE in CM-CONNECTED state, with the following exceptions:
+-	The NG-RAN corresponds to a TNAN including a TNGF.
+-	The user plane between the UE and TNGF, i.e. Child SA(s) for the PDU Session, is released not with RRC signalling but with IKEv2 signalling, as specified in clause 4.12a.7.
+-	If the UE has reserved any non-3GPP specific QoS resources, the UE releases these resources when the IKEv2 Child SA is released.
+
+4.12a.5	UE Requested PDU Session Establishment via Trusted non-3GPP Access
+After the UE registers to 5GC via trusted non-3GPP access, the UE may request a PDU Session establishment by using the same procedure as the one specified in clause 4.12.5 for untrusted non-3GPP access, with the following modifications:
+-	The N3IWF in Figure 4.12.5-1 should be substituted with a TNGF and the Untrusted non-3GPP access should be substituted with a Trusted non-3GPP Access Point (TNAP).
+-	The TNGF may send a TNGF Identities parameter to AMF inside an N2 Uplink NAS Transport message. The TNGF Identities parameter contains a list of identifiers (i.e. FQDNs or IP addresses) of N3 terminations supported by the TNGF. If received by the AMF, it shall forward it to the SMF, which may use it as input to UPF selection. The AMF provides ULI information received from TNGF to the SMF which then propagates it to the PCF.
+-	If the L4S in trusted non-3GPP access is supported and if applicable as in clause 5.37.3 of TS 23.501 [2], for a QoS flow.
+NOTE 1:	The SMF is assumed to have corresponding PCC rule(s) for the specific DNN and S-NSSAI associated with the L4S QoS flow(s) for which ECN marking is expected.
+-	The IKEv2 Create Child SA Request message that is sent by the TNGF to UE (in steps 4a and 4c), in order to establish a child SA for one or more QoS flows, shall also include Additional QoS Information. The Additional QoS Information shall contain:
+a)	If the IPsec child SA carries a GBR flow: QoS Characteristics and GBR QoS Flow Information:
+-	The QoS Characteristics are associated with the 5QI of the GBR flow and are defined in clause 5.7.3 of TS 23.501 [2]. The TNGF either receives the QoS Characteristics via the N2 interface (in the case of a dynamically assigned 5QI), or is pre-configured with the QoS Characteristics (in the case of a standardized 5QI).
+-	The GBR QoS Flow Information (defined in TS 38.413 [10]) is part of the QoS Profile received via the N2 interface and contains: MFBR, GFBR and optionally Maximum Packet Loss Rate. The Notification Control is not included in the QoS profile.
+b)	If the IPsec child SA carries a non-GBR flow: QoS Characteristics:
+-	The QoS Characteristics are defined in bullet a) above.
+	The TNGF may aggregate multiple GBR flows or multiple non-GBR flows into the same IPsec child SA. In this case, the TNGF derives, in an implementation specific way, the QoS Characteristics of the aggregated flow by considering the QoS Characteristics of the individual flows. Similarly, the TNGF derives, in an implementation specific way, the GBR QoS Flow Information of an aggregated GBR flow by considering the GBR QoS Flow Information of the individual GBR flows.
+NOTE 2:	The above behaviour of the TNGF does not create any impact on the N2 interface.
+-	After receiving an IKEv2 Create Child SA Request message, the UE shall use the Additional QoS Information contained in this message to determine what QoS resources to reserve over the non-3GPP access, including e.g. guaranteed bit rates and delay bounds for UL/DL communication. How the UE determines what QoS resources to reserve over the non-3GPP access and how these QoS resources are reserved, is outside the scope of 3GPP specifications.
+-	For each L4S-enabled QoS Flow, the TNGF may establish a dedicated IPsec Child SA. If a DSCP value is included, then the UE and the TNGF shall mark all IP packets sent over this Child SA with this DSCP value.
+-	If the UE fails to reserve QoS resources over non-3GPP access for the QoS flows associated with the child SA (e.g. because the non-3GPP Access Network rejects the allocation of the requested bit rates), the UE shall reject the IKEv2 Child SA Request. Based on operator policy, the network may reattempt to establish the Child SA without the Additional QoS Information.
+
+4.12a.6	UE or network Requested PDU Session Modification via Trusted non-3GPP access
+The UE or network requested PDU Session Modification procedure via trusted non-3GPP access is the same procedure as the one specified in clause 4.12.6 for untrusted non-3GPP access, with the following modifications:
+-	The N3IWF in Figure 4.12.6-1 should be substituted with a TNGF and the Untrusted non-3GPP access should be substituted with a Trusted non-3GPP Access Point (TNAP).
+	If the L4S in trusted non-3GPP access is supported and if applicable as in clause 5.37.3 of TS 23.501 [2], for a QoS flow.
+-	The IKEv2 Create Child SA Request sent by the TNGF in step 4a, in order to create new QoS flow(s) for the PDU Session, shall include the Additional QoS Information defined in clause 4.12a.5. If the UE decides to reserve QoS resources over non-3GPP access for the QoS flows associated with the Child SA but fails to reserve these resources, the UE shall reject the IKEv2 Child SA Request. Based on operator policy, the network may reattempt to establish the Child SA without the Additional QoS Information.
+	For each L4S-enabled QoS Flow, the TNGF may establish a dedicated IPsec Child SA. If a DSCP value is included, then the UE and the TNGF shall mark all IP packets sent over this Child SA with this DSCP value.
+-	The IKEv2 Informational Request sent by the TNGF in step 4b shall include the Additional QoS Information defined in clause 4.12a.5, when the IKEv2 Informational Request is sent to modify one or more existing QoS flows. If the UE decides to reserve QoS resources over non-3GPP access for the QoS flows associated with the Child SA but fails to reserve these resources, the UE shall indicate the failure in the IKEv2 Informational Response. The TNGF includes the list of QoS flows which are failed to setup in step 5. Based on operator policy, the network may reattempt to modify the failed QoS Flows without the Additional QoS Information.
+-	The IKEv2 Informational Request sent by the TNGF in step 4c to release an existing IKEv2 Child SA shall trigger the UE to release the resources reserved over non-3GPP access for this IKEv2 Child SA.
+-	If, after the PDU Session establishment, the UE determines that the QoS resources reserved over non-3GPP access for the QoS flows associated with a Child SA are released, then the UE shall initiate an INFORMATIONAL exchange, as specified in RFC 7296 [3], to delete the Child SA. After the Child SA is deleted, the TNGF initiates PDU Session Modification procedure as described in step 1e, in clause 4.3.3.2, including the list of QoS flows, which are released.
+
+4.12a.7	UE or network Requested PDU Session Release via Trusted non-3GPP access
+The UE or the network can release a PDU Session via a trusted non-3GPP Access Network as specified in clause 4.12.7 for the untrusted non-3GPP access with the following modifications:
+-	The untrusted non-3GPP access is substituted by a trusted non-3GPP access point (TNAP).
+-	The N3IWF is substituted by the TNGF.
+-	If the UE reserved any non-3GPP specific QoS resources, the UE releases these resources when the IKEv2 Child SA is released.
+
+4.12a.8	Mobility from a non-geographically selected AMF to a geographically selected AMF
+The procedure specified in clause 4.12.8 for untrusted non-3GPP access applies also to the trusted non-3GPP access with the following modifications:
+-	The untrusted non-3GPP access is substituted by a trusted non-3GPP access point (TNAP).
+-	The N3IWF is substituted by the TNGF.
+-	The PDU Session is activated in step 2 as specified in clause 4.12a.5.
+
+4.12a.9	Support of mobility from source to target TNAP
+If the UE moves from a source TNAP to a target TNAP, the UE shall perform a full authentication via the target TNAP to re-connect to the 5G system unless the UE and the network support the mechanism defined in clause 7A.2.1.2 of TS 33.501 [15].
+
+4.12b	Procedures for devices that do not support 5GC NAS over WLAN access
+
+
+4.12b.1	General
+As specified in clause 4.2.8.5 of TS 23.501 [2], devices that do not support 5GC NAS signalling over WLAN access (referred to as "Non-5G-Capable over WLAN" devices, or N5CW devices for short), may access 5GC in a PLMN or an SNPN via a trusted WLAN Access Network that supports a Trusted WLAN Interworking Function (TWIF). The following clause specifies how a N5CW device can be registered to 5GC and how it can send data via a PDU Session.
+A N5CW device may be 5G-capable over 3GPP access, in which case it is also a 5G UE over 3GPP access.
+
+4.12b.2	Initial Registration & PDU Session Establishment
+Figure 4.12b.2-1 illustrates how the N5CW device can connect to a trusted WLAN Access Network and simultaneously register to a 5G core network. A single EAP-based authentication procedure is executed for connecting the N5CW device to the trusted WLAN Access Network and for registering the N5CW device to the 5G core network.
+
+Figure 4.12b.2-1: Initial registration and PDU session establishment
+0.	The N5CW device selects a PLMN (or SNPN) and a trusted WLAN that supports "5G connectivity-without-NAS" to this PLMN (or SNPN) by using the procedure specified in clause 6.3.12a and clause 5.30.2.15 of TS 23.501 [2] for access to PLMN and SNPN, respectively.
+Steps 1-10:	Initial registration to 5GC.
+1.	The N5CW device associates with the selected trusted WLAN and the EAP authentication procedure is initiated.
+2.	The N5CW device provides its Network Access Identity (NAI). The Trusted WLAN Access Point (TWAP) selects a Trusted WLAN Interworking Function (TWIF), e.g. based on the received realm and sends an AAA request to the selected TWIF.
+	If the N5CW device has not registered over 3GPP access to 5GC of the selected PLMN or SNPN when the above procedure is initiated, then the NAI includes the SUCI as specified in clause 28.7.7 of TS 23.003 [33]. For example, when accessing a PLMN the NAI can have the following format: NAI=type1.rid678.schid0.useriduser17@nai.5gc-nn.mnc<MNC>.mcc<MCC>.3gppnetwork.org. If the selected PLMN is VPLMN, the N5CW device should use the decorated NAI format as specified in clause 28.7.9 of TS 23.003 [33] to indicate to TWAN which is the selected VPLMN, for example, NAI=nai.5gc-nn.mnc<MNC_Home>.mcc<MCC_Home>.3gppnetwork.org!type1.rid678.schid0.useriduser17@nai.5gc-nn.mnc<MNC_visited>.mcc<MCC_visited>.3gppnetwork.org.
+	If the N5CW device has registered to 5GC over 3GPP access to 5GC of the selected PLMN or SNPN (i.e. it is also a 5G UE) when the above procedure is initiated, then the NAI includes the 5G-GUTI assigned to N5CW device over 3GPP access. This enables the TWIF in step 4a below to select the same AMF as the one serving the N5CW device over 3GPP access.
+	If the N5CW device accesses to SNPN with the credentials owned by Credentials Holder, the decorated NAI as specified in clause 28.7.9 of TS 23.003 [33] should be provided. For example, NAI=nai.5gc-nn.nid<NID_Home>.mnc<MNC_Home>.mcc<MCC_Home>.3gppnetwork.org!type1.rid678.schid0.useriduser17@nai.5gc-nn.nid<NID_visited>.mnc<MNC_visited>.mcc<MCC_visited>.3gppnetwork.org.
+	The NAI provided by the N5CW device in step 2b indicates that the N5CW device wants "5G connectivity-without-NAS" towards a specific PLMN or SNPN (i.e. the PLMN or SNPN selected in step 0). For example, when accessing a PLMN, the NAI can have the following format: NAI=<5G-GUTI>@nai.5gc-nn.mnc<MNC>.mcc<MCC>.3gppnetwork.org or NAI=nai.5gc-nn.mnc<MNC_Home>.mcc<MCC_Home>.3gppnetwork.org!type1.rid678.schid0.useriduser17@nai.5gc-nn.mnc<MNC_visited>.mcc<MCC_visited>.3gppnetwork.org, the N5CW device indicating that it wants "5G connectivity-without-NAS" (5gc-nn) to the PLMN with MCC=<MCC> and MNC=<MNC> and to the PLMN with MCC=<MCC_visited> and MNC=<MNC_visited>.
+3.	The TWIF creates a 5GC Registration Request message on behalf of the N5CW device. The TWIF uses default values to populate the parameters in the Registration Request message, which are the same for all N5CW devices. The Registration type indicates "Initial Registration".
+	If the TWIF receives a Decorated NAI, in Registration Request message the TWIF send the NAI which corresponds to the HPLMN by removing the decoration, for example NAI=type1.rid678.schid0.useriduser17@ nai.5gc-nn.mnc<MNC_Home>.mcc<MCC_Home>.3gppnetwork.org.
+4.	The TWIF selects an AMF by using the 5G-GUTI in the NAI, or selects the AMF of the VPLMN indicates by the realm of the decoration in the Decorated NAI, for example "mnc<MNC_visited>.mcc<MCC_visited>.3gppnetwork.org" or selects the AMF by using the local configuration. TWIF sends an N2 message to the AMF including the Registration Request, the User Location and an AN Type.
+	If the N5CW device provides a Decorated NAI to the TWIF, the TWIF shall select the AMF in the visited PLMN/SNPN as per decoration part and remove the decoration part from the Decorated NAI (i.e. change the format to NAI format of SUCI as defined in clause 28.7.7 of TS 23.003 [33]) and provides it to AMF in the Registration Request. For example, if the NAI is "nai.5gc-nn.nid<NID_Home>.mnc<MNC_Home>.mcc<MCC_Home>.3gppnetwork.org!type1.rid678.schid0.useriduser17@nai.5gc-nn.nid<NID_visited>.mnc<MNC_visited>.mcc<MCC_visited>.3gppnetwork.org.", the TWIF selects the AMF in the SNPN corresponding to "nai.5gc-nn.nid<NID_visited>.mnc<MNC_visited>.mcc<MCC_visited>.3gppnetwork.org." and provides the AMF in the Registration Request with the NAI of "type1.rid678.schid0.useriduser17@ nai.5gc-nn.nid<NID_Home>.mnc<MNC_Home>.mcc<MCC_Home>.3gppnetwork.org".
+5.	The AMF triggers an authentication procedure by sending a request to AUSF indicating the AN type.
+6.	An EAP authentication procedure takes place between the N5CW device and AUSF. Over the N2 interface, the EAP messages are encapsulated within NAS Authentication messages. The type of EAP authentication procedure is specified in TS 33.501 [15].
+NOTE:	The SUPI used for authentication does not take the format of Decorated NAI.
+7.	After a successful authentication, the AUSF sends to AMF the EAP-Success message and the created SEAF key. The AMF derives an AN key from the received SEAF key.
+8.	The NAS Security Mode Command (SMC) is sent from the AMF to the TWIF. The selected NAS security algorithms of integrity protection and ciphering are set to NULL.
+9.	The AMF sends an N2 Initial Context Setup Request and provides the AN key to TWIF. In turn, the TWIF derives a Pairwise Master Key (PMK) from the AN key and sends the PMK key and the EAP-Success message to the Trusted WLAN Access Point, which forwards the EAP-Success to the N5CW device. The PMK is the key used to secure the WLAN air-interface communication according to IEEE Std 802.11 [48]. A layer-2 or layer-3 connection is established between the Trusted WLAN Access Point and the TWIF for transporting all user-plane traffic of the N5CW device to TWIF. This connection is later bound to an N3 connection that is created for this N5CW device.
+10.	Finally, the AMF sends a Registration Accept message to TWIF. At this point, the N5CW device is connected to the WLAN Access Network and is registered to 5GC.
+Steps 20-21:	PDU Session Establishment.
+20.	The TWIF creates a PDU Session Establishment Request message on behalf of the N5CW device and sends this message to AMF. This may be triggered by receiving an IP configuration request (e.g. DHCP Offer/Request) from the N5CW device. The TWIF may use default values to populate the parameters in the PDU Session Establishment Request message, but may also skip some PDU session parameters and let the AMF or the SMF determine these parameters based on the N5CW device subscription information received during the registration procedure. This way, default PDU session parameters can be used per N5CW device.
+	The value of the PDU Session id provided by TWIF in step 20c shall always be the same. It will be a value reserved for the PDU sessions requested by the TWIF and it will be different from the values that can be used by the N5CW device when requesting a PDU session over 3GPP access. This way, the PDU session id provided by the TWIF cannot be the same with the PDU Session ID of any PDU session established by the N5CW device over 3GPP access.
+21.	The AMF sends upon request of the SMF an N2 PDU Session Request message to TWIF in order to reserve the appropriate Access Network resources. This N2 message includes the PDU Session Establishment Accept message. In step 21b, the TWIF may reserve WLAN access resources for the user-plane communication between the N5CW device and TWIF. If and how this resource reservation is performed is outside the scope of 3GPP.
+	After the establishment of the PDU session, the TWIF assigns IP configuration data to N5CW device (e.g. with DHCP). The IP address assigned to N5CW device is the IP address allocated to the PDU session.
+Step 25:	User plane communication.
+	The TWIF binds the N5CW device-specific L2/L3 connection created in step 9g with the N3 connection created in step 21. All user-plane traffic sent by the N5CW device is forwarded to TWIF via the L2/L3 connection and then to UPF via the N3 connection. The TWIF operates as a Layer-2 relay.
+	The TWIF may receive URSP rules (see TS 23.503 [20]), which indicate the traffic that should be offloaded locally by TWIF (sent outside the PDU session) and the traffic that should be sent inside the PDU session.
+The above procedure supports only one PDU session per N5CW device whose parameters are either configured for all N5CW devices in the TWIF or are derived from default values in the N5CW device subscription.
+If the TWIF is co-located with one or more local UPFs then:
+-	In step 20c (N2 Uplink NAS Transport), the TWIF may send a TWIF Identities parameter to AMF. The TWIF Identities parameter contains a list of identifiers (i.e. FQDNs or IP addresses) of N3 terminations supported by the TWIF.
+-	If received by the AMF, it shall forward it to the SMF when invoking Nsmf_PDUSessionCreateSMContext i.e. at the establishment of the PDU Session. The SMF may use this information to select a local UPF for the PDU Session.
+
+4.12b.3	Deregistration procedure
+The Deregistration procedure for devices (N5CW devices) that do not support 5G NAS signalling over WLAN access shall be supported as specified in clause 4.12a.3 for the trusted non-3GPP access with the following modifications:
+-	The TNAP is substituted by a trusted WLAN access point (TWAP).
+-	The TNGF is substituted by the Trusted WLAN Interworking Function (TWIF).
+-	The TWIF sends and receives NAS deregistration request/accept messages on behalf of N5CW device.
+-	For both UE/Network-initiated deregistration procedures, the TWIF may initiate the release of Yt' connection between the N5CW device and TWIF.
+-	UE-initiated deregistration procedure can be initiated by the TWIF, when it has lost connectivity to the N5CW device.
+
+4.12b.4	N2 procedures
+
+
+4.12b.4.1	Service Request procedures
+The Service Request procedure for devices that do not support 5G NAS signalling over WLAN access shall be used by a TWIF when the CM state in TWIF for a N5CW device is CM-IDLE over Trusted WLAN to request the re-establishment of the NAS signalling connection and the re-establishment of the user plane for all or some of the PDU Sessions which are associated to non-3GPP access.
+The Service Request procedure for N5CW devices shall be used by a TWIF when the CM state in TWIF for a N5CW device is CM-CONNECTED over trusted WLAN to request the re-establishment of the user plane for one or more PDU Sessions which are associated to non-3GPP access.
+This Service Request procedure shall be supported as specified in clause 4.12a.4.1 for the trusted non-3GPP access with the following modifications:
+-	The trusted non-3GPP access is substituted by a trusted WLAN access point (TWAP).
+-	The TNGF is substituted by the TWIF.
+-	The TWIF sends and receives NAS messages on behalf of N5CW device.
+-	The user plane between the N5CW device and TWIF is established with Yt' connection instead of IKEv2 signalling.
+
+4.12b.4.2	Procedure for the UE context release in the TWIF
+This procedure for releasing the N2 signalling connection and the N3 user plane connection for a N5CW device connected to 5GC via trusted WLAN access, shall be the same as the procedure specified in clause 4.12a.4.2 for the trusted non-3GPP access with the following modifications:
+-	The trusted non-3GPP access is substituted by a TWAP.
+-	The TNGF is substituted by the TWIF.
+-	The TWIF may initiate the release of Yt' connection between the N5CW device and TWIF.
+
+4.12b.4.3	CN-initiated selective deactivation of UP connection of an existing PDU Session
+The procedure described in clause 4.3.7 (CN-initiated selective deactivation of UP connection of an existing PDU Session) is used for CN-initiated selective deactivation of UP connection for an established PDU Session associated with Trusted WLAN access for a N5CW device in CM-CONNECTED state, with the following exceptions:
+-	The NG-RAN corresponds to a TNAN including a TWIF.
+-	The user plane between the N5CW device and TWIF is released without neither RRC signalling nor IKEv2 signalling.
+Clause:	Clause 4.16.6	4.16.6	SM Policy Association Termination
+
+Figure 4.16.6-1: SM Policy Association Termination
+This procedure concerns both roaming and non-roaming scenarios.
+In the non-roaming case the V-PCF is not involved. In the local breakout roaming case, the H-PCF is not involved. In the home routed roaming case, the V-PCF is not involved and the H-PCF interacts only with the H-SMF.
+The procedure for Session Management Policy Termination may be initiated by:
+-	(Case A) the PCF.
+-	(Case B) the SMF.
+For local breakout roaming, the interaction with HPLMN (e.g. step 6) is not used. In local breakout roaming, the V-PCF interacts with the UDR of the VPLMN.
+1.	(Case A) The PCF may invoke the Npcf_SMPolicyControl_UpdateNotify service operation to request the release of a PDU Session. The SMF acknowledges the request.
+	The rest of the procedure corresponds to both Case A &B.
+2.	The SMF may invoke the Npcf_SMPolicyControl_Delete service operation to request the deletion of the SM Policy Association with the PCF. The SMF provides relevant information to the PCF.
+3.	When receiving the request from step2, the PCF finds the PCC Rules that require an AF to be notified and removes PCC Rules for the PDU Session.
+	If the SMF reported accumulated usage for the PDU session in step 1 the PCF deducts the value from the remaining allowed usage for the subscriber, DNN and S-NSSAI in the UDR by invoking Nudr_DM_Update (SUPI, DNN, S-NSSAI, Policy Data, Remaining allowed Usage data, updated data) service operation.
+	If the SMF reported accumulated usage for a MK(s) in step 1 the PCF deducts the value from the remaining allowed usage for the MK in the UDR by invoking Nudr_DM_Update (SUPI, DNN, S-NSSAI, Policy Data, Remaining allowed Usage data, updated data (including MK(s))) service operation.
+NOTE:	For local breakout roaming, PDU Session policy control subscription information and Remaining allowed usage subscription information for monitoring control as defined in clause 6.2.1.3 of TS 23.503 [20] are not available in V-UDR and V-PCF uses locally configured information according to the roaming agreement with the HPLMN operator.
+4.	The SMF removes all policy information about the PDU Session associated with the PDU Session.
+5.	The PCF notifies the AF as explained in clause 7.3.1 steps 6-7 of TS 23.203 [24].
+	The PCF may invoke Nbsf_Management_Deregister service operation to delete the binding created in BSF.
+	The PCF may report that a SM Policy Association is terminated as described in clause 4.16.14.2.
+	In the non-roaming case, the PCF may unsubscribe to analytics from NWDAF.
+6.	The PCF may invoke the procedure defined in clause 4.16.8 to unsubscribe to policy counter status reporting (If this is the last PDU Session for this subscriber requiring policy counter status reporting) or to modify the subscription to policy counter status reporting, (if any remaining existing PDU Sessions for this subscriber requires policy counter status reporting).
+7.	The PCF removes the information related to the terminated PDU Session and acknowledges to the SMF that the PCF handling of the PDU Session has terminated. This interaction is the response to the SMF request in step 2.
+8.	Optionally, based on operator policies, as described in clause 6.1.1.4 of TS 23.503 [20], the PCF may store the policy counters and their statuses of spending limits information into the UDR by invoking Nudr_DM_Update.
+9.	The PCF may (e.g. if it is the last PDU Session on the (DNN, S-NSSAI) couple) unsubscribe to the notification of the PDU Session related data modification from the UDR by invoking Nudr_DM_Unsubscribe (Subscription Correlation Id) if it had subscribed such notification.
+Clause:	Clause 4.16.3.2	4.16.3.2	AMF-initiated AM Policy Association Termination
+
+Figure 4.16.3.2-1: AMF-initiated AM Policy Association Termination
+This procedure concerns both roaming and non-roaming scenarios.
+In the non-roaming case the role of the V-PCF is performed by the PCF. For the roaming scenarios, the V-PCF interacts with the AMF.
+1.	The AMF decides to terminate the AM Policy Association due to the reasons listed in clause 4.16.3.1 then if a AM Policy Association was established with the (V-)PCF steps 2 to 3 are performed.
+2.	The AMF sends the Npcf_AMPolicyControl_Delete service operation including AM Policy Association ID to the (V-)PCF.
+3.	The (V-)PCF removes the policy context for the UE and replies to the AMF with an Acknowledgement including success or failure. In the non-roaming case, the PCF may unsubscribe to analytics from NWDAF. The (V-)PCF may deregister from the BSF as the PCF that handles the AM Policy Association for this UE. This is performed by using the Nbsf_Management_Deregister service operation, providing the Binding Identifier that was obtained earlier from the BSF when performing the Nbsf_Management_Register service operation.
+	If the PCF has subscribed to the policy counter status to the CHF, it invokes the procedure defined in clause 4.16.8 to unsubscribe to policy counter status reporting.
+	Optionally, based on operator policies, as described in clause 6.1.1.4 of TS 23.503 [20], the PCF may store the policy counters and their statuses of spending limits information into the UDR by invoking Nudr_DM_Update.
+4.	The AMF removes the AM Policy Association for this UE, including the Access and Mobility Control Policy related to the UE. The AMF deletes the subscription to AMF detected events requested for that Policy Association.
+Clause:	Clause 4.16.13.1	4.16.13.1	AMF-initiated UE Policy Association Termination
+The following case is considered for UE Policy Association Termination:
+1.	UE Deregistration from the network when the UE is not registered in another access type.
+2.	The mobility with change of AMF (e.g. new AMF is in different PLMN or new AMF in the same PLMN).
+3.	[Optional] 5GS to EPS mobility with N26 if the UE is not connected to the 5GC over a non-3GPP access in the same PLMN.
+4.	A change of the value of the UE Policy Association indicator received from UDM.
+The H-PCF may interact with the H-CHF in HPLMN.
+
+Figure 4.16.13.1-1: AMF-initiated UE Policy Association Termination
+This procedure concerns both roaming and non-roaming scenarios.
+In the non-roaming case, the V-PCF is not involved and the role of the PCF is performed by the H-PCF. For the roaming scenarios, the V-PCF interacts with the AMF. The V-PCF contacts the H-PCF to request removing UE Policy Association.
+1.	The AMF decides to terminate the UE Policy Association.
+2.	The AMF sends the Npcf_UEPolicyControl_Delete service operation including UE Policy Association ID to the (V-)PCF.
+3.	The (V-)PCF removes the policy context for the UE and replies to the AMF with an Acknowledgement including success or failure. The V-PCF may interact with the H-PCF. The (V-)PCF may unsubscribe to subscriber policy data changes with UDR by Nudr_DM_Unsubscribe (Subscription Correlation Id). The AMF removes the UE Policy Context.
+	If the PCF has previously registered to the BSF as the PCF that is serving this UE, the PCF shall deregister from the BSF if no AM Policy Association for this UE exists anymore. This is performed by using the Nbsf_Management_Deregister service operation, providing the Binding Identifier that was obtained earlier from the BSF when performing the Nbsf_Management_Register service operation.
+	Step 4 and Step 5 apply only to the roaming case.
+4.	The V-PCF sends the Npcf_UEPolicyControl_Delete service operation including UE Policy Association ID to the H-PCF.
+5a.	The H-PCF removes the policy context for the UE.
+	Optionally, based on operator policies, as described in clause 6.1.1.4 of TS 23.503 [20], the H-PCF may store the policy counters and their statuses of spending limits information into the H-UDR by invoking Nudr_DM_Update.
+	The H-PCF may unsubscribe to subscriber policy data changes with H-UDR by Nudr_DM_Unsubscribe (Subscription Correlation Id) for subscriber policy changes. In the non-roaming case, the H-PCF may unsubscribe to analytics from NWDAF.
+5b.	The H-PCF may invoke the procedure defined in clause 4.16.8 to unsubscribe to policy counter status reporting or to modify the subscription to policy counter status reporting in H-CHF (if remaining Policy association for this subscriber requires policy counter status reporting).
+6.	The H-PCF sends a Npcf_UEPolicyControl_Delete Response to the V-PCF with an acknowledgement including success or failure.

@@ -1,0 +1,160 @@
+{
+  "timestamp": "2025-10-10T16:22:40.824934",
+  "log_file": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\resources\\rca_logs\\9d90d8b9-2f72-4cfa-a330-198fe050cdd7_TC_rrc_connection_establishment_failure_5631.log",
+  "error_analysis": {
+    "identified_errors": {
+      "rrc_setup_failure": [
+        {
+          "line_number": 20,
+          "line": "frame = 301, slot = 5 : ERROR: RRC setup failed for UE with rnti 5631",
+          "context": [
+            "frame = 301, slot = 4 : [RRC] Establishment cause: mo-Data",
+            "frame = 301, slot = 5 : [RRC] Creating UE context for 5631",
+            "frame = 301, slot = 5 : Function: rrc_gNB_generate_RRCSetup processing",
+            "frame = 301, slot = 5 : [RRC] RRC context allocation failed for UE 5631",
+            "frame = 301, slot = 5 : [RRC] Maximum number of UEs already reached (current: 512, max: 512)",
+            "frame = 301, slot = 5 : ERROR: RRC setup failed for UE with rnti 5631",
+            "frame = 301, slot = 6 : [RRC] Failed to establish RRC connection",
+            "frame = 301, slot = 6 : Function: rrc_gNB_generate_RRCReject processing",
+            "frame = 301, slot = 6 : [RRC] Generating RRC Connection Reject for UE 5631",
+            "frame = 301, slot = 7 : [RRC] RRC Connection Reject sent to UE 5631",
+            "frame = 301, slot = 7 : Function: mac_remove_ue processing"
+          ],
+          "pattern": "RRC setup failed",
+          "severity": "high",
+          "layer": "RRC",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.8
+        },
+        {
+          "line_number": 28,
+          "line": "frame = 301, slot = 8 : [RRC] RRCConnectionSetup failed, returning to IDLE state",
+          "context": [
+            "frame = 301, slot = 6 : [RRC] Generating RRC Connection Reject for UE 5631",
+            "frame = 301, slot = 7 : [RRC] RRC Connection Reject sent to UE 5631",
+            "frame = 301, slot = 7 : Function: mac_remove_ue processing",
+            "frame = 301, slot = 7 : [MAC] Removing temporary C-RNTI 5631 from MAC context",
+            "frame = 301, slot = 8 : [RRC] Releasing RRC UE context for RNTI 5631",
+            "frame = 301, slot = 8 : [RRC] RRCConnectionSetup failed, returning to IDLE state",
+            "frame = 301, slot = 8 : Function: rrc_gNB_remove_ue_context processing",
+            "frame = 301, slot = 9 : [RRC] UE context for 5631 has been released",
+            "frame = 301, slot = 9 : [GNB] Radio Link for UE 5631 terminated due to RRC setup failure"
+          ],
+          "pattern": "RRCConnectionSetup failed, returning to IDLE state",
+          "severity": "high",
+          "layer": "RRC",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.8
+        }
+      ]
+    },
+    "error_counts": {
+      "rrc_setup_failure": 2
+    },
+    "error_timestamps": {
+      "rrc_setup_failure": []
+    },
+    "layer_counts": {
+      "RRC": 2
+    },
+    "severity_counts": {
+      "critical": 0,
+      "high": 2,
+      "medium": 0,
+      "low": 0
+    },
+    "meta": {
+      "file": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\resources\\rca_logs\\9d90d8b9-2f72-4cfa-a330-198fe050cdd7_TC_rrc_connection_establishment_failure_5631.log",
+      "lines_analyzed": 32,
+      "protocol_filter": null,
+      "timestamp": "2025-10-10T16:22:38.982228"
+    }
+  },
+  "function_analysis": null,
+  "impact_analysis": null,
+  "kb_analysis": {
+    "issue_matches": {},
+    "function_insights": {},
+    "protocol_references": {
+      "RRC": {
+        "spec_id": "38.331",
+        "title": "NR; Radio Resource Control (RRC) protocol specification",
+        "url": "https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=3197",
+        "sections": {
+          "5.3.3": "RRC connection establishment",
+          "5.3.4": "Initial security activation",
+          "5.3.5": "RRC reconfiguration",
+          "5.4": "Inter-RAT mobility",
+          "6": "Protocol data units, formats and parameters"
+        }
+      }
+    },
+    "fix_recommendations": [
+      "Check input parameters and error handling",
+      "Add unit tests to verify correct behavior",
+      "Add detailed logging around error location",
+      "Review recent code changes in affected components"
+    ],
+    "comprehensive_rca": {
+      "error_type": "rrc_setup_failure",
+      "summary": "Root Cause Analysis for rrc_setup_failure in RRC layer\n\nSpecification Context:\nThis functionality is governed by 3GPP 38.331 - NR; Radio Resource Control (RRC) protocol specification. \nRecommended Fixes:\n- Add detailed logging around error location\n- Check input parameters and error handling\n- Review recent code changes in affected components\n- Add unit tests to verify correct behavior\n\nImpact Assessment:\n- User Experience: high impact\n- System Performance: medium impact\n- System Stability: medium impact\n- Cascade Effects: This issue may affect the following layers:\n  * NGAP: Issues in RRC can propagate to NGAP layer, affecting its functionality\n  * F1AP: Issues in RRC can propagate to F1AP layer, affecting its functionality\n",
+      "historical_issues": [],
+      "fix_recommendations": [
+        "Add detailed logging around error location",
+        "Check input parameters and error handling",
+        "Review recent code changes in affected components",
+        "Add unit tests to verify correct behavior"
+      ],
+      "impact_assessment": {
+        "user_experience": "high",
+        "system_performance": "medium",
+        "stability": "medium",
+        "cascade_effects": [
+          {
+            "layer": "NGAP",
+            "impact": "affected",
+            "description": "Issues in RRC can propagate to NGAP layer, affecting its functionality"
+          },
+          {
+            "layer": "F1AP",
+            "impact": "affected",
+            "description": "Issues in RRC can propagate to F1AP layer, affecting its functionality"
+          }
+        ]
+      }
+    }
+  },
+  "ai_analysis": {
+    "root_cause": "RRC connection establishment failure in RRC layer. This indicates an issue during the RRC setup procedure. Common causes include ASN.1 encoding/decoding errors, UE capability mismatch, or resource allocation failures.",
+    "suggested_fixes": [
+      "1. Check ASN.1 encoding in nr_rrc_msg_encode.c",
+      "2. Verify RRC setup procedure implementation",
+      "3. Review UE capability handling",
+      "4. Check for resource allocation failures"
+    ],
+    "specifications": [
+      "3GPP TS 38.331 - RRC protocol specification",
+      "3GPP TS 38.331 Section 5.3.3 - RRC connection establishment",
+      "3GPP TS 38.306 - UE radio access capabilities"
+    ],
+    "function_analysis": [
+      "Check nr_rrc_setup() function implementation",
+      "Review ASN.1 encoding functions",
+      "Verify resource allocation during RRC setup"
+    ]
+  },
+  "meta": {
+    "offline_mode": true,
+    "oai_repo_dir": "openairinterface5g",
+    "components_available": {
+      "error_analyzer": true,
+      "impact_analyzer": false,
+      "function_graph": false,
+      "kb_connector": true,
+      "clang_analyzer": true,
+      "openai_client": false
+    }
+  }
+}

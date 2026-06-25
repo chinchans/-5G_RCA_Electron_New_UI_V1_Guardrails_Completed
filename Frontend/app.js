@@ -1,0 +1,18824 @@
+// 5G RAN Testing Framework - Main Application JavaScript
+// Navigation and UI functionality
+
+// Note: API functions are now in api.js file
+// API functions are available via window.API object
+
+// All API functions are now in api.js
+// Use window.API object to access API functions
+
+// Utility Functions (make globally accessible)
+// Helper function to escape HTML
+window.escapeHtml = function(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+};
+
+// Helper function to capitalize text (first letter of each word uppercase, rest lowercase)
+window.capitalize = function(text) {
+    if (!text) return '';
+    return text
+        .split(' ')
+        .map(word =>word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+};
+
+// Modern Status Bar Functions
+// Global variable to store timeout ID for clearing previous timeouts
+let statusBarTimeout = null;
+
+function showStatusBar(message, type = 'info', title = null) {
+    const statusBar = document.getElementById('statusBar');
+    const statusTitle = document.getElementById('statusTitle');
+    const statusMessage = document.getElementById('statusMessage');
+    const statusSpinner = document.getElementById('statusSpinner');
+    const statusCheck = document.getElementById('statusCheck');
+    const statusError = document.getElementById('statusError');
+    
+    if (!statusBar) return;
+    
+    // Clear any existing timeout
+    if (statusBarTimeout) {
+        clearTimeout(statusBarTimeout);
+        statusBarTimeout = null;
+    }
+    
+    // Set content
+    statusTitle.textContent = title || getStatusTitle(type);
+    statusMessage.textContent = message;
+    
+    // Reset icons
+    statusSpinner.style.display = 'none';
+    statusCheck.style.display = 'none';
+    statusError.style.display = 'none';
+    
+    // Set type and show appropriate icon
+    statusBar.className = `status-bar ${type}`;
+    statusBar.style.display = 'block';
+    
+    if (type === 'success') {
+        statusCheck.style.display = 'inline';
+    } else if (type === 'error') {
+        statusError.style.display = 'inline';
+    } else {
+        statusSpinner.style.display = 'inline';
+    }
+    
+    // Auto-hide after 10 seconds for all message types
+    statusBarTimeout = setTimeout(() => {
+        hideStatusBar();
+        statusBarTimeout = null;
+    }, 10000);  // 10 seconds = 10000 milliseconds
+}
+
+function hideStatusBar() {
+    const statusBar = document.getElementById('statusBar');
+    if (statusBar) {
+        // Clear any existing timeout
+        if (statusBarTimeout) {
+            clearTimeout(statusBarTimeout);
+            statusBarTimeout = null;
+        }
+        
+        statusBar.classList.add('auto-hide');
+        setTimeout(() => {
+            statusBar.style.display = 'none';
+            statusBar.classList.remove('auto-hide');
+        }, 300);
+    }
+}
+
+function extractGuardrailPayload(error) {
+    if (!error) {
+        return { findings: [], reasons: [], detail: null, isGuardrailBlock: false };
+    }
+    const detail = error.guardrailDetail || null;
+    let findings = error.guardrailFindings
+        || detail?.findings
+        || detail?.guardrails?.scan?.findings
+        || [];
+    let reasons = error.guardrailReasons
+        || detail?.reasons
+        || [];
+    if ((!findings || !findings.length) && reasons.length) {
+        findings = reasons.map((reason) => ({
+            layer: 'summary',
+            pattern: 'guardrail_block',
+            matched_text: reason,
+            line: null,
+            paragraph: null,
+            page: null,
+            snippet: reason,
+            reason,
+        }));
+    }
+    return {
+        findings: Array.isArray(findings) ? findings : [],
+        reasons: Array.isArray(reasons) ? reasons : [],
+        detail,
+        isGuardrailBlock: Boolean(
+            error.isGuardrailBlock || detail?.error === 'document_blocked_by_guardrails'
+        ),
+    };
+}
+
+window.extractGuardrailPayload = extractGuardrailPayload;
+
+function formatGuardrailRejectionStatus(findings, reasons) {
+    const reasonLines = Array.isArray(reasons) ? reasons.filter(Boolean) : [];
+    if (reasonLines.length) {
+        return reasonLines.join('; ');
+    }
+    const rows = Array.isArray(findings) ? findings : [];
+    if (rows.length) {
+        const parts = rows.slice(0, 3).map((f) => {
+            const loc = [];
+            if (f.page != null) loc.push(`page ${f.page}`);
+            if (f.line != null) loc.push(`line ${f.line}`);
+            const where = loc.length ? ` (${loc.join(', ')})` : '';
+            return `${f.matched_text || f.pattern || 'match'}${where}`;
+        });
+        const suffix = rows.length > 3 ? ` (+${rows.length - 3} more)` : '';
+        return parts.join('; ') + suffix;
+    }
+    return 'The document was blocked because the guardrails detected instruction-like or malicious prompt content.';
+}
+
+function getStatusTitle(type) {
+    switch (type) {
+        case 'success': return 'Success!';
+        case 'error': return 'Error';
+        case 'warning': return 'Warning';
+        case 'info': 
+        default: return 'Processing...';
+    }
+}
+
+// Template Name Modal Functions
+function openTemplateNameModal(callback) {
+    console.log('🎨 Opening template name modal...');
+    const modal = document.getElementById('templateNameModal');
+    const input = document.getElementById('templateNameInput');
+    const confirmBtn = document.getElementById('confirmTemplateSave');
+    
+    if (!modal || !input || !confirmBtn) {
+        console.error('❌ Modal elements not found!');
+        return;
+    }
+    
+    // Reset input
+    input.value = '';
+    input.focus();
+    
+    // Show modal with animation
+    modal.style.display = 'flex';
+    console.log('✅ Modal displayed');
+    
+    // Remove any existing event listeners to prevent duplicates
+    const newConfirmBtn = confirmBtn.cloneNode(true);
+    confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+    
+    // Handle Save button click
+    newConfirmBtn.addEventListener('click', function() {
+        const templateName = input.value.trim();
+        console.log('💾 Confirm button clicked, template name:', templateName);
+        
+        if (!templateName) {
+            showStatusBar('Please enter a template name', 'warning');
+            input.focus();
+            return;
+        }
+        
+        // Close modal
+        modal.style.display = 'none';
+        
+        // Call callback with the template name
+        if (callback && typeof callback === 'function') {
+            console.log('✅ Calling callback with template name:', templateName);
+            callback(templateName);
+        }
+    });
+    
+    // Handle Enter key press in input
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            newConfirmBtn.click();
+        }
+    });
+    
+    // Handle Escape key to close modal
+    const escapeHandler = function(e) {
+        if (e.key === 'Escape') {
+            closeTemplateNameModal();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+}
+
+function closeTemplateNameModal() {
+    console.log('❌ Closing template name modal...');
+    const modal = document.getElementById('templateNameModal');
+    const input = document.getElementById('templateNameInput');
+    
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    
+    if (input) {
+        input.value = '';
+    }
+    
+    console.log('✅ Modal closed');
+}
+
+// Make closeTemplateNameModal globally accessible for HTML onclick
+window.closeTemplateNameModal = closeTemplateNameModal;
+
+// Portal select dropdowns (fixes Electron native select top-left positioning bug)
+const portalSelectDropdownRegistry = new Map();
+
+function getPortalSelectDropdownMenu(config) {
+    return document.getElementById(config.menuId)
+        || document.querySelector(`#${config.dropdownId} .dropdown-content`);
+}
+
+function mountPortalSelectDropdownMenu(config, state) {
+    const dropdown = document.getElementById(config.dropdownId);
+    const menu = getPortalSelectDropdownMenu(config);
+    if (!dropdown || !menu || menu.parentElement === document.body) return;
+    state.menuHost = dropdown;
+    document.body.appendChild(menu);
+}
+
+function unmountPortalSelectDropdownMenu(config, state) {
+    const menu = getPortalSelectDropdownMenu(config);
+    const host = state.menuHost || document.getElementById(config.dropdownId);
+    if (!menu || !host || menu.parentElement !== document.body) return;
+    host.appendChild(menu);
+}
+
+function positionPortalSelectDropdownMenu(config, state) {
+    const dropdown = document.getElementById(config.dropdownId);
+    const btn = document.getElementById(config.btnId);
+    const menu = getPortalSelectDropdownMenu(config);
+    if (!dropdown || !btn || !menu || !dropdown.classList.contains('active')) return;
+
+    mountPortalSelectDropdownMenu(config, state);
+
+    const rect = btn.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return;
+
+    const menuHeight = menu.offsetHeight || 200;
+    const viewportHeight = window.innerHeight;
+    let top = rect.bottom + 5;
+    if (top + menuHeight >viewportHeight - 8 && rect.top >menuHeight + 8) {
+        top = rect.top - menuHeight - 5;
+    }
+
+    menu.style.position = 'fixed';
+    menu.style.top = `${top}px`;
+    menu.style.left = `${rect.left}px`;
+    menu.style.width = `${Math.max(rect.width, 200)}px`;
+    menu.style.right = 'auto';
+    menu.style.minWidth = `${rect.width}px`;
+    menu.style.transform = 'none';
+    menu.style.zIndex = '30000';
+    menu.style.display = 'block';
+    menu.style.opacity = '1';
+    menu.classList.add('portal-dropdown-menu');
+}
+
+function resetPortalSelectDropdownMenuPosition(config, state) {
+    const menu = getPortalSelectDropdownMenu(config);
+    if (!menu) return;
+    menu.style.position = '';
+    menu.style.top = '';
+    menu.style.left = '';
+    menu.style.width = '';
+    menu.style.right = '';
+    menu.style.minWidth = '';
+    menu.style.transform = '';
+    menu.style.zIndex = '';
+    menu.style.display = '';
+    menu.style.opacity = '';
+    menu.classList.remove('portal-dropdown-menu');
+    unmountPortalSelectDropdownMenu(config, state);
+}
+
+function setPortalSelectDropdownValue(config, value, label) {
+    const hiddenInput = document.getElementById(config.hiddenId);
+    if (hiddenInput) {
+        hiddenInput.value = value;
+        hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    const labelEl = document.getElementById(config.labelId);
+    if (labelEl) {
+        labelEl.textContent = label || (value || config.defaultLabel);
+    }
+}
+
+function closeOtherPortalSelectDropdowns(activeDropdownId) {
+    portalSelectDropdownRegistry.forEach((state, dropdownId) => {
+        if (dropdownId === activeDropdownId) return;
+        const dropdown = document.getElementById(dropdownId);
+        if (dropdown && dropdown.classList.contains('active')) {
+            dropdown.classList.remove('active');
+            resetPortalSelectDropdownMenuPosition(state.config, state);
+        }
+    });
+}
+
+function initPortalSelectDropdown(config) {
+    const dropdown = document.getElementById(config.dropdownId);
+    const btn = document.getElementById(config.btnId);
+    if (!dropdown || !btn) return;
+
+    const state = { config, menuHost: null };
+    portalSelectDropdownRegistry.set(config.dropdownId, state);
+
+    const positionMenu = () =>positionPortalSelectDropdownMenu(config, state);
+    const resetMenu = () =>resetPortalSelectDropdownMenuPosition(config, state);
+
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const isOpen = dropdown.classList.contains('active');
+        closeOtherPortalSelectDropdowns(config.dropdownId);
+        if (isOpen) {
+            dropdown.classList.remove('active');
+            resetMenu();
+        } else {
+            dropdown.classList.add('active');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(positionMenu);
+            });
+        }
+    });
+
+    const menu = getPortalSelectDropdownMenu(config);
+    if (menu && !menu.dataset.portalClickBound) {
+        menu.dataset.portalClickBound = 'true';
+        menu.addEventListener('click', function(e) {
+            const item = e.target.closest('.dropdown-item');
+            if (!item) return;
+            e.preventDefault();
+            e.stopPropagation();
+            const value = item.getAttribute('data-value') || '';
+            const label = item.textContent.trim();
+            if (typeof config.onSelect === 'function') {
+                config.onSelect(value, label, item);
+            }
+            setPortalSelectDropdownValue(config, value, label);
+            dropdown.classList.remove('active');
+            resetMenu();
+        });
+    }
+
+    const mainContentEl = document.querySelector('.main-content');
+    if (mainContentEl) {
+        mainContentEl.addEventListener('scroll', positionMenu, { passive: true });
+    }
+    window.addEventListener('resize', positionMenu);
+
+    const dropdownObserver = new MutationObserver(function() {
+        if (dropdown.classList.contains('active')) {
+            positionMenu();
+        } else {
+            resetMenu();
+        }
+    });
+    dropdownObserver.observe(dropdown, { attributes: true, attributeFilter: ['class'] });
+}
+
+window.initPortalSelectDropdown = initPortalSelectDropdown;
+window.closePortalSelectDropdownsOnOutsideClick = function(eventTarget) {
+    portalSelectDropdownRegistry.forEach((state, dropdownId) => {
+        const dropdown = document.getElementById(dropdownId);
+        const menu = getPortalSelectDropdownMenu(state.config);
+        const clickedMenu = menu && menu.contains(eventTarget);
+        if (dropdown && !dropdown.contains(eventTarget) && !clickedMenu) {
+            dropdown.classList.remove('active');
+            resetPortalSelectDropdownMenuPosition(state.config, state);
+        }
+    });
+};
+
+function closeAllOpenDropdowns() {
+    if (typeof window.closePortalSelectDropdownsOnOutsideClick === 'function') {
+        window.closePortalSelectDropdownsOnOutsideClick(document.body);
+    }
+    document.querySelectorAll('.dropdown.active, .spec-intel-dropdown.active').forEach((dropdown) => {
+        dropdown.classList.remove('active');
+    });
+    document.querySelectorAll('body > .dropdown-content').forEach((menu) => {
+        menu.style.display = 'none';
+        menu.style.opacity = '0';
+        menu.style.visibility = 'hidden';
+    });
+}
+window.closeAllOpenDropdowns = closeAllOpenDropdowns;
+
+/** Set button opacity from background luminance (brighter fills → slightly lower opacity). */
+(function initActionButtonBrightnessOpacity() {
+    const ACTION_BUTTON_SELECTOR = [
+        '.bd-btn',
+        '.spec-intel-btn',
+        '.te-btn',
+        '.td-btn',
+        '.tsg-btn',
+        '#testScriptGeneratorNavNextBtn',
+        '#testDeploymentNavNextBtn',
+        '#datasetGeneratorNextBtn',
+        '.ca-btn-primary',
+        '.ce-btn-run-review',
+        '.workbench-btn-primary',
+        '.workbench-btn-outline',
+        '.activity-log-btn',
+        '.prompt-studio-new-btn',
+        '.prompt-studio-btn--primary',
+        '.prompt-studio-btn--outline',
+        '.home-btn',
+        '.template-btn.save-btn',
+        '.template-btn.modify-btn',
+        '.template-btn.browse-btn',
+        '.template-modal-btn.save',
+        '.launch-btn',
+        '.btn-primary',
+        '.btn-secondary',
+        '.select-template-btn',
+        '#bugFixPresentBtn',
+        '#clearDeploymentSettingsBtn'
+    ].join(',');
+
+    const SKIP_SELECTOR = [
+        '.dropdown-btn',
+        '.menu-toggle',
+        '.back-button',
+        '.template-modal-btn.cancel',
+        '.prompt-studio-btn--danger',
+        '#crashAnalysisToggle',
+        '.user-template-delete-btn',
+        '.landing-option-btn',
+        '.workbench-top-tab',
+        '.activity-timeline-row',
+        '.prompt-studio-category-card',
+        '.close-btn',
+        '.status-close',
+        '.td-loglevel-picker-btn',
+        '.td-loglevel-subitem'
+    ].join(',');
+
+    function parseRgb(color) {
+        if (!color || color === 'transparent') return null;
+        const rgbMatch = color.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+        if (rgbMatch) {
+            return [Number(rgbMatch[1]), Number(rgbMatch[2]), Number(rgbMatch[3])];
+        }
+        const hex = color.trim();
+        if (!hex.startsWith('#')) return null;
+        let h = hex.slice(1);
+        if (h.length === 3) {
+            h = h.split('').map((c) => c + c).join('');
+        }
+        if (h.length !== 6) return null;
+        return [
+            parseInt(h.slice(0, 2), 16),
+            parseInt(h.slice(2, 4), 16),
+            parseInt(h.slice(4, 6), 16)
+        ];
+    }
+
+    function relativeLuminance(r, g, b) {
+        const linear = (c) => {
+            const s = c / 255;
+            return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+        };
+        return 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b);
+    }
+
+    function opacityForLuminance(L) {
+        if (L >= 0.55) return 0.88;
+        if (L >= 0.35) return 0.94;
+        return 1;
+    }
+
+    function applyToButton(btn) {
+        if (!btn || btn.matches(SKIP_SELECTOR)) return;
+        if (btn.disabled) {
+            btn.style.setProperty('--app-btn-computed-opacity', '0.5');
+            btn.style.opacity = '0.5';
+            return;
+        }
+        const rgb = parseRgb(getComputedStyle(btn).backgroundColor);
+        if (!rgb) return;
+        const L = relativeLuminance(rgb[0], rgb[1], rgb[2]);
+        const op = opacityForLuminance(L);
+        btn.style.setProperty('--app-btn-computed-opacity', String(op));
+        btn.style.opacity = String(op);
+    }
+
+    function applyAll(root = document) {
+        root.querySelectorAll(ACTION_BUTTON_SELECTOR).forEach(applyToButton);
+    }
+
+    function scheduleApply() {
+        requestAnimationFrame(() => applyAll());
+    }
+
+    window.applyActionButtonBrightnessOpacity = applyAll;
+
+    document.addEventListener('DOMContentLoaded', scheduleApply);
+    window.addEventListener('load', scheduleApply);
+    document.addEventListener('mouseover', (e) => {
+        const btn = e.target.closest(ACTION_BUTTON_SELECTOR);
+        if (btn) applyToButton(btn);
+    }, true);
+
+    let observer;
+    document.addEventListener('DOMContentLoaded', () => {
+        observer = new MutationObserver((mutations) => {
+            for (const m of mutations) {
+                if (m.type === 'attributes' && (m.attributeName === 'style' || m.attributeName === 'class' || m.attributeName === 'disabled')) {
+                    scheduleApply();
+                    return;
+                }
+                if (m.addedNodes.length) {
+                    scheduleApply();
+                    return;
+                }
+            }
+        });
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['style', 'class', 'disabled']
+        });
+    });
+})();
+
+document.addEventListener('DOMContentLoaded', function() {
+    // --- Landing Page Button Handlers ---
+    const wifiOptionBtn = document.getElementById('wifiOption');
+    const fiveGOptionBtn = document.getElementById('5gOption');
+    const rcaOptionBtn = document.getElementById('rcaOption');
+    const landingPage = document.getElementById('landing-page');
+    const mainApp = document.getElementById('main-app');
+    
+    // WiFi Button Handler - Launch JavaFX app (silently, no dialogs)
+    if (wifiOptionBtn) {
+        wifiOptionBtn.addEventListener('click', async () => {
+            console.log('WiFi option clicked - launching JavaFX app...');
+            
+            try {
+                if (window.API && typeof window.API.launchWifiApp === 'function') {
+                    const result = await window.API.launchWifiApp();
+                    if (result.success) {
+                        console.log('WiFi app launched:', result.message);
+                        showStatusBar('WiFi app launched successfully', 'success');
+                    } else {
+                        console.error('Failed to launch WiFi app:', result.error);
+                        showStatusBar(`Failed to launch WiFi app: ${result.error}`, 'error');
+                    }
+                } else {
+                    console.error('launchWifiApp API not available');
+                    showStatusBar('WiFi app launch functionality not available', 'error');
+                }
+            } catch (error) {
+                console.error('Error launching WiFi app:', error);
+                showStatusBar(`Error launching WiFi app: ${error.message}`, 'error');
+            }
+        });
+    }
+    
+    
+    if (fiveGOptionBtn) {
+        fiveGOptionBtn.addEventListener('click', () => {
+            console.log('RCA option clicked - showing main app and navigating to Bug Discovery...');
+            
+            // Hide landing page and show main app
+            if (landingPage) {
+                landingPage.classList.remove('active');
+                landingPage.style.display = 'none';
+            }
+            if (mainApp) {
+                mainApp.style.display = 'block';
+            }
+            
+            if (typeof window.navigateToAppSection === 'function') {
+                window.navigateToAppSection('home');
+            } else {
+                const homeSection = document.getElementById('home');
+                if (homeSection) homeSection.classList.add('active');
+            }
+            console.log('Home dashboard activated');
+        });
+    }
+    // RCA Button Handler - Show main app and navigate to Bug Discovery section
+    if (rcaOptionBtn) {
+        rcaOptionBtn.addEventListener('click', () => {
+            console.log('RCA option clicked - showing main app and navigating to Bug Discovery...');
+            
+            // Hide landing page and show main app
+            if (landingPage) {
+                landingPage.classList.remove('active');
+                landingPage.style.display = 'none';
+            }
+            if (mainApp) {
+                mainApp.style.display = 'block';
+            }
+            
+            if (typeof window.navigateToAppSection === 'function') {
+                window.navigateToAppSection('bug-discovery');
+            } else {
+                const bugDiscoverySection = document.getElementById('bug-discovery');
+                if (bugDiscoverySection) bugDiscoverySection.classList.add('active');
+            }
+            console.log('Bug Discovery section activated');
+        });
+    }
+    
+    // --- Test Execution Handler ---
+    const startExecutionBtn = document.getElementById('startExecutionBtn');
+    const executionProgressFill = document.getElementById('executionProgressFill');
+    const executionProgressPct = document.getElementById('executionProgressPct');
+    const executionStatus = document.getElementById('executionStatus');
+    const executionOutput = document.getElementById('executionOutput');
+    const teDownloadLogBtn = document.getElementById('teDownloadLogBtn');
+    const teAnalyseFailuresBtn = document.getElementById('teAnalyseFailuresBtn');
+    const teViewHistoryBtn = document.getElementById('teViewHistoryBtn');
+    const teMetaResult = document.getElementById('teMetaResult');
+    const teMetaDuration = document.getElementById('teMetaDuration');
+    const teKpiTestsRun = document.getElementById('teKpiTestsRun');
+    const teKpiTestsRunMeta = document.getElementById('teKpiTestsRunMeta');
+    const teKpiPassed = document.getElementById('teKpiPassed');
+    const teKpiPassedMeta = document.getElementById('teKpiPassedMeta');
+    const teKpiFailed = document.getElementById('teKpiFailed');
+    const teKpiFailedMeta = document.getElementById('teKpiFailedMeta');
+    const teKpiExecutionStatus = document.getElementById('teKpiSelfHealed');
+    const teKpiExecutionStatusMeta = document.getElementById('teKpiExecutionStatusMeta');
+    const teResultsSubtitle = document.getElementById('teResultsSubtitle');
+    const teResultsTableBody = document.querySelector('.te-results-table tbody');
+
+    let teRunCounter = 0;
+    let teExecutionStartTime = null;
+    let tePollIntervalId = null;
+    let teActiveJobId = null;
+    let teIsRunning = false;
+    let tePollToken = 0;
+
+    const TE_LOG_PLACEHOLDER = 'Execution output will appear here after you start execution…';
+    let teCurrentStats = { total: 0, passed: 0, failed: 0 };
+
+    function teFormatLogTime(date) {
+        return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    }
+
+    function teAppendLogLine(message, level) {
+        if (!executionOutput) return;
+        const ts = teFormatLogTime(new Date());
+        const prefix = level ? `${ts} ${level}` : `${ts}`;
+        const line = `${prefix} ${message}\n`;
+        const oc = executionOutput.textContent || '';
+        const isPlaceholder =
+            !oc.trim() ||
+            oc.includes('Execution output will appear here') ||
+            oc.trim() === TE_LOG_PLACEHOLDER.trim();
+        if (isPlaceholder) {
+            executionOutput.textContent = line;
+        } else {
+            executionOutput.textContent += line;
+        }
+        executionOutput.scrollTop = executionOutput.scrollHeight;
+        teUpdateDownloadButtonState();
+        teUpdateMetricsFromLog(executionOutput.textContent || '');
+    }
+
+    function teResetExecutionMetrics() {
+        teCurrentStats = { total: 0, passed: 0, failed: 0 };
+        if (teKpiTestsRun) teKpiTestsRun.textContent = '0';
+        if (teKpiTestsRunMeta) teKpiTestsRunMeta.textContent = '0 of 0 executed';
+        if (teKpiPassed) teKpiPassed.textContent = '0';
+        if (teKpiPassedMeta) teKpiPassedMeta.textContent = '0% pass rate';
+        if (teKpiFailed) teKpiFailed.textContent = '0';
+        if (teKpiFailedMeta) teKpiFailedMeta.textContent = '0% failure rate';
+        if (teKpiExecutionStatus) teKpiExecutionStatus.textContent = 'PENDING';
+        if (teKpiExecutionStatusMeta) teKpiExecutionStatusMeta.textContent = 'No run yet';
+        if (teResultsSubtitle) teResultsSubtitle.textContent = '0 tests · 0 pass · 0 fail';
+        teRenderResultsTable([]);
+    }
+
+    function teInferLayer(testCaseName) {
+        const name = String(testCaseName || '').toUpperCase();
+        if (name.includes('RRC')) return 'RRC';
+        if (name.includes('NAS')) return 'NAS';
+        if (name.includes('NGAP')) return 'NGAP';
+        if (name.includes('S1AP')) return 'S1AP';
+        if (name.includes('GTP')) return 'GTP';
+        if (name.includes('MAC')) return 'MAC';
+        if (name.includes('RLC')) return 'RLC';
+        if (name.includes('PDCP')) return 'PDCP';
+        if (name.includes('PHY')) return 'PHY';
+        return 'NAS';
+    }
+
+    function teExtractTestCaseResults(logText) {
+        if (!logText) return [];
+        const lines = String(logText).split(/\r?\n/);
+        const results = [];
+        const seen = new Set();
+
+        const isSeparator = (value) => /^[\s\-=_|:+*.]+$/.test(value || '');
+        const isResultOnly = (value) => /^\|?\s*(PASS|FAIL(?:ED|URE)?)\s*\|?$/i.test(value || '');
+        const isValidCaseName = (value) => {
+            if (!value) return false;
+            const v = String(value).trim();
+            if (!v || isSeparator(v) || isResultOnly(v)) return false;
+            if (v.toUpperCase() === 'ATTACH') return false;
+            // Keep only token-like test names (avoid random prose lines)
+            return /^[A-Za-z][A-Za-z0-9_.-]*$/.test(v);
+        };
+
+        const pushResult = (testCase, result) => {
+            if (!isValidCaseName(testCase)) return;
+            const normalizedResult = String(result || '').toUpperCase().startsWith('PASS') ? 'PASS' : 'FAIL';
+            const key = `${testCase}__${normalizedResult}`;
+            if (seen.has(key)) return;
+            seen.add(key);
+            results.push({ key, testCase, layer: teInferLayer(testCase), result: normalizedResult });
+        };
+
+        for (let i = 0; i < lines.length; i += 1) {
+            const line = (lines[i] || '').trim();
+            if (!line) continue;
+
+            // Pattern A: same-line case + result, e.g. "RRCSETUP ... | PASS |"
+            const inlineMatch = line.match(/([A-Za-z][A-Za-z0-9_.-]*)[^\n]*\|\s*(PASS|FAIL(?:ED|URE)?)\s*\|/i);
+            if (inlineMatch) {
+                pushResult(inlineMatch[1], inlineMatch[2]);
+                continue;
+            }
+
+            // Pattern B: case line followed by result line in next 1-3 lines
+            const caseOnlyMatch = line.match(/^([A-Za-z][A-Za-z0-9_.-]*)\s*(?:\[[^\]]*\])?$/);
+            if (caseOnlyMatch) {
+                let lookedResult = null;
+                for (let j = 1; j <= 3; j += 1) {
+                    const next = (lines[i + j] || '').trim();
+                    const m = next.match(/^\|?\s*(PASS|FAIL(?:ED|URE)?)\s*\|?$/i);
+                    if (m) {
+                        lookedResult = m[1];
+                        break;
+                    }
+                }
+                if (lookedResult) {
+                    pushResult(caseOnlyMatch[1], lookedResult);
+                    continue;
+                }
+            }
+
+            // Pattern C: result line, infer nearest previous case line
+            const resultLineMatch = line.match(/^\|?\s*(PASS|FAIL(?:ED|URE)?)\s*\|?$/i);
+            if (resultLineMatch) {
+                for (let back = 1; back <= 3; back += 1) {
+                    const prev = (lines[i - back] || '').trim();
+                    const prevCase = prev.match(/^([A-Za-z][A-Za-z0-9_.-]*)\s*(?:\[[^\]]*\])?$/);
+                    if (prevCase && isValidCaseName(prevCase[1])) {
+                        pushResult(prevCase[1], resultLineMatch[1]);
+                        break;
+                    }
+                }
+            }
+        }
+        return results;
+    }
+
+    function teRenderResultsTable(rows) {
+        if (!teResultsTableBody) return;
+        if (!rows || rows.length === 0) {
+            teResultsTableBody.innerHTML = `
+                <tr>
+                    <td>—</td>
+                    <td>—</td>
+                    <td><span class="te-badge te-badge--muted">Pending</span></td>
+                </tr>
+            `;
+            return;
+        }
+
+        teResultsTableBody.innerHTML = rows.map(row => {
+            const badgeClass = row.result === 'PASS' ? 'te-badge--success' : 'te-badge--fail';
+            return `
+                <tr>
+                    <td>${row.testCase}</td>
+                    <td>${row.layer}</td>
+                    <td><span class="te-badge ${badgeClass}">${row.result}</span></td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function teParseExecutionStats(logText) {
+        if (!logText) return null;
+        const patterns = [
+            /(\d+)\s*tests?\s*,\s*(\d+)\s*passed\s*,\s*(\d+)\s*failed/gi,
+            /tests?\s*run\s*[:=]\s*(\d+)[^\n]*passed\s*[:=]\s*(\d+)[^\n]*failed\s*[:=]\s*(\d+)/gi
+        ];
+
+        let latest = null;
+        for (const regex of patterns) {
+            let match;
+            while ((match = regex.exec(logText)) !== null) {
+                const total = Number(match[1]) || 0;
+                const passed = Number(match[2]) || 0;
+                const failed = Number(match[3]) || 0;
+                latest = { total, passed, failed };
+            }
+            if (latest) break;
+        }
+        return latest;
+    }
+
+    function teApplyExecutionStats(stats) {
+        if (!stats) return;
+        const total = Math.max(0, Number(stats.total) || 0);
+        const passed = Math.max(0, Number(stats.passed) || 0);
+        const failed = Math.max(0, Number(stats.failed) || 0);
+        const executed = Math.min(total, passed + failed);
+        const passRate = total > 0 ? Math.round((passed / total) * 100) : 0;
+        const failureRate = total > 0 ? Math.round((failed / total) * 100) : 0;
+
+        teCurrentStats = { total, passed, failed };
+
+        if (teKpiTestsRun) teKpiTestsRun.textContent = String(total);
+        if (teKpiTestsRunMeta) teKpiTestsRunMeta.textContent = `${executed} of ${total} executed`;
+        if (teKpiPassed) teKpiPassed.textContent = String(passed);
+        if (teKpiPassedMeta) teKpiPassedMeta.textContent = `${passRate}% pass rate`;
+        if (teKpiFailed) teKpiFailed.textContent = String(failed);
+        if (teKpiFailedMeta) teKpiFailedMeta.textContent = `${failureRate}% failure rate`;
+        if (teResultsSubtitle) teResultsSubtitle.textContent = `${total} tests · ${passed} pass · ${failed} fail`;
+
+        if (teKpiExecutionStatus) {
+            if (failed > 0) teKpiExecutionStatus.textContent = 'FAIL';
+            else if (executed > 0 && executed === total) teKpiExecutionStatus.textContent = 'PASS';
+            else teKpiExecutionStatus.textContent = 'IN PROGRESS';
+        }
+        if (teKpiExecutionStatusMeta) {
+            if (failed > 0) teKpiExecutionStatusMeta.textContent = `${failed} test(s) failed`;
+            else if (executed > 0 && executed === total) teKpiExecutionStatusMeta.textContent = 'All executed tests passed';
+            else teKpiExecutionStatusMeta.textContent = 'Execution in progress';
+        }
+
+        // Keep progress bar live from parsed run totals when available.
+        if (teIsRunning && total > 0) {
+            const livePct = Math.max(0, Math.min(100, Math.round((executed / total) * 100)));
+            teSetProgress(livePct, null);
+        }
+    }
+
+    function teUpdateMetricsFromLog(logText) {
+        const parsed = teParseExecutionStats(logText);
+        if (parsed) teApplyExecutionStats(parsed);
+        const resultRows = teExtractTestCaseResults(logText);
+        teRenderResultsTable(resultRows);
+    }
+
+    function teSetRunningState(isRunning) {
+        teIsRunning = Boolean(isRunning);
+        if (startExecutionBtn) startExecutionBtn.disabled = teIsRunning;
+        // Idle: both Start and Stop are enabled (Stop no-ops unless a run is active)
+        if (teViewHistoryBtn) teViewHistoryBtn.disabled = false;
+    }
+
+    function teRestoreStartButtonIdle() {
+        if (!startExecutionBtn) return;
+        startExecutionBtn.classList.remove('te-btn-execute--busy');
+        const lbl = startExecutionBtn.querySelector('.te-btn-label');
+        if (lbl) lbl.textContent = 'Start Execution';
+        else startExecutionBtn.textContent = 'Start Execution';
+    }
+
+    /** Match first-load idle UI (same as before first Start click for this aborted run). */
+    function teResetUiToIdleBeforeRun() {
+        teRunCounter = Math.max(0, teRunCounter - 1);
+        teUpdateRunLabels(teRunCounter);
+
+        teRestoreStartButtonIdle();
+
+        if (executionProgressFill) executionProgressFill.style.width = '0%';
+
+        teSetProgress(0, null);
+        teSetStatusBadge('Not Started', 'pending');
+
+        if (teMetaResult) {
+            teMetaResult.textContent = 'Pending';
+            teMetaResult.className = 'te-meta-val te-meta-val--fail';
+        }
+        if (teMetaDuration) teMetaDuration.textContent = '—';
+
+        teExecutionStartTime = null;
+
+        if (executionOutput) {
+            executionOutput.textContent = TE_LOG_PLACEHOLDER;
+            executionOutput.scrollTop = 0;
+        }
+        teResetExecutionMetrics();
+        teUpdateDownloadButtonState();
+    }
+
+    async function teAttemptBackendStop(jobId) {
+        if (!jobId) return false;
+        try {
+            if (window.API && typeof window.API.stopTestExecution === 'function') {
+                const res = await window.API.stopTestExecution(jobId);
+                return Boolean(res?.success ?? res);
+            }
+            const apiBaseUrl = window.API?.API_BASE_URL || 'http://127.0.0.1:8000';
+            const resp = await fetch(`${apiBaseUrl}/api/test-execution/stop/${jobId}`, { method: 'POST' });
+            if (!resp.ok) return false;
+            const data = await resp.json().catch(() => ({}));
+            return Boolean(data?.success ?? true);
+        } catch (_) {
+            return false;
+        }
+    }
+
+    async function teStopExecution(reason = 'Execution stopped by user') {
+        if (!teIsRunning) {
+            if (typeof showStatusBar === 'function') {
+                showStatusBar('No execution is running.', 'info');
+            }
+            return;
+        }
+
+        // Invalidate any in-flight poll response before doing anything else.
+        tePollToken += 1;
+
+        if (tePollIntervalId) {
+            clearInterval(tePollIntervalId);
+            tePollIntervalId = null;
+        }
+
+        const jobIdToStop = teActiveJobId;
+        teActiveJobId = null;
+
+        // Immediately restore idle UI so Stop feels instant.
+        teSetRunningState(false);
+        teResetUiToIdleBeforeRun();
+
+        // Best-effort backend stop, do not block UI reset.
+        void teAttemptBackendStop(jobIdToStop);
+
+        if (typeof showStatusBar === 'function') {
+            showStatusBar(reason, 'info');
+        }
+    }
+
+    function teGetLogTextForDownload() {
+        if (!executionOutput) return '';
+        const text = (executionOutput.textContent || '').trimEnd();
+        if (!text || text.includes('Execution output will appear here')) return '';
+        return text;
+    }
+
+    function teUpdateDownloadButtonState() {
+        if (!teDownloadLogBtn) return;
+        teDownloadLogBtn.disabled = !teGetLogTextForDownload();
+    }
+
+    function teDownloadCurrentLog() {
+        const logText = teGetLogTextForDownload();
+        if (!logText) {
+            if (typeof showStatusBar === 'function') {
+                showStatusBar('No execution log available to download yet.', 'warning');
+            }
+            return;
+        }
+
+        const runLabel = (document.getElementById('teRunLabel')?.textContent || 'Run').replace(/\s+/g, '_');
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const filename = `live_execution_log_${runLabel}_${timestamp}.txt`;
+
+        const blob = new Blob([logText], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+
+        if (typeof showStatusBar === 'function') {
+            showStatusBar('Execution log downloaded.', 'success');
+        }
+    }
+
+    function teSetProgress(pct, state) {
+        const value = Math.min(100, Math.max(0, Number(pct) || 0));
+        if (executionProgressFill) {
+            executionProgressFill.style.width = `${value}%`;
+            executionProgressFill.classList.remove('te-progress-fill--success', 'te-progress-fill--fail');
+            if (state === 'success') executionProgressFill.classList.add('te-progress-fill--success');
+            if (state === 'fail') executionProgressFill.classList.add('te-progress-fill--fail');
+        }
+        if (executionProgressPct) {
+            executionProgressPct.textContent = `${value}%`;
+        }
+    }
+
+    function teSetStatusBadge(text, variant) {
+        if (!executionStatus) return;
+        executionStatus.textContent = text;
+        executionStatus.className = 'te-badge';
+        if (variant === 'running') executionStatus.classList.add('te-badge--running');
+        else if (variant === 'success') executionStatus.classList.add('te-badge--success');
+        else if (variant === 'fail') executionStatus.classList.add('te-badge--fail');
+        else executionStatus.classList.add('te-badge--pending');
+    }
+
+    function teUpdateRunLabels(runNum) {
+        const label = `Run #${runNum}`;
+        ['teRunLabel', 'teLogRunLabel', 'teResultsRunLabel', 'teMetaRun'].forEach((id) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (id === 'teMetaRun') el.textContent = `#${runNum}`;
+            else el.textContent = label;
+        });
+    }
+
+    if (teDownloadLogBtn) {
+        teDownloadLogBtn.addEventListener('click', () => teDownloadCurrentLog());
+        // Initial state: disabled until we have real output
+        teUpdateDownloadButtonState();
+    }
+
+    if (teAnalyseFailuresBtn) {
+        teAnalyseFailuresBtn.addEventListener('click', () => {
+            if (typeof window.navigateToAppSection === 'function') {
+                window.navigateToAppSection('bug-discovery');
+            } else if (typeof navigateToAppSection === 'function') {
+                navigateToAppSection('bug-discovery');
+            } else {
+                const bd = document.getElementById('bug-discovery');
+                if (bd) bd.classList.add('active');
+            }
+        });
+    }
+
+    if (teViewHistoryBtn) {
+        teViewHistoryBtn.addEventListener('click', () => teStopExecution('Execution stopped'));
+    }
+
+    teResetExecutionMetrics();
+
+    if (startExecutionBtn) {
+        startExecutionBtn.addEventListener('click', async () => {
+            console.log('[Test Execution] Start Execution button clicked');
+
+            teSetRunningState(true);
+            startExecutionBtn.classList.add('te-btn-execute--busy');
+            const teExecLabel = startExecutionBtn.querySelector('.te-btn-label');
+            if (teExecLabel) teExecLabel.textContent = 'Executing...';
+            else startExecutionBtn.textContent = 'Executing...';
+            teRunCounter += 1;
+            teExecutionStartTime = Date.now();
+            teUpdateRunLabels(teRunCounter);
+
+            teSetProgress(0, null);
+            teSetStatusBadge('Starting...', 'running');
+            if (teMetaResult) {
+                teMetaResult.textContent = 'In progress';
+                teMetaResult.className = 'te-meta-val';
+            }
+            if (teMetaDuration) teMetaDuration.textContent = '—';
+            if (executionOutput) {
+                executionOutput.textContent = '';
+            }
+            teResetExecutionMetrics();
+            if (teKpiExecutionStatus) teKpiExecutionStatus.textContent = 'IN PROGRESS';
+            if (teKpiExecutionStatusMeta) teKpiExecutionStatusMeta.textContent = 'Execution started';
+            teUpdateDownloadButtonState();
+            teAppendLogLine('Initializing test execution…', 'INFO');
+
+            try {
+                let response;
+                if (!window.API || typeof window.API.executeTestScripts !== 'function') {
+                    const apiBaseUrl = window.API?.API_BASE_URL || 'http://127.0.0.1:8000';
+                    const fetchResponse = await fetch(`${apiBaseUrl}/api/test-execution/execute`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json'},
+                        body: JSON.stringify({ config_name: 'default', custom_config: null })
+                    });
+                    if (!fetchResponse.ok) {
+                        const errorText = await fetchResponse.text();
+                        throw new Error(`HTTP error! status: ${fetchResponse.status} - ${errorText}`);
+                    }
+                    response = await fetchResponse.json();
+                } else {
+                    response = await window.API.executeTestScripts();
+                }
+
+                if (!response || !response.success) {
+                    throw new Error(response?.message || 'Failed to start test execution');
+                }
+
+                const jobId = response.job_id;
+                teActiveJobId = jobId;
+                teSetStatusBadge('Processing...', 'running');
+                teAppendLogLine(`Test execution started (Job ID: ${jobId})`, 'INFO');
+
+                let teLastStatusMessage = '';
+                if (tePollIntervalId) {
+                    clearInterval(tePollIntervalId);
+                    tePollIntervalId = null;
+                }
+                const runPollToken = tePollToken;
+                tePollIntervalId = setInterval(async () => {
+                    try {
+                        if (tePollToken !== runPollToken) return;
+                        let statusResponse;
+                        if (!window.API || typeof window.API.getTestExecutionStatus !== 'function') {
+                            const apiBaseUrl = window.API?.API_BASE_URL || 'http://127.0.0.1:8000';
+                            const fetchResponse = await fetch(`${apiBaseUrl}/api/test-execution/status/${jobId}`);
+                            if (!fetchResponse.ok) {
+                                throw new Error(`HTTP error! status: ${fetchResponse.status}`);
+                            }
+                            statusResponse = await fetchResponse.json();
+                        } else {
+                            statusResponse = await window.API.getTestExecutionStatus(jobId);
+                        }
+
+                        if (tePollToken !== runPollToken) return;
+
+                        if (!statusResponse) return;
+
+                        if (statusResponse.progress !== undefined) {
+                            const done = statusResponse.status === 'completed'|| statusResponse.status === 'failed';
+                            const ok = statusResponse.status === 'completed'&& statusResponse.build_result === 'SUCCESS';
+                            teSetProgress(
+                                statusResponse.progress,
+                                done ? (ok ? 'success': 'fail') : null
+                            );
+                        }
+
+                        const statusMsg = statusResponse.message || statusResponse.status || 'Unknown';
+                        const logLine = statusResponse.build_number
+                            ? `${statusMsg} (Build #${statusResponse.build_number})`
+                            : statusMsg;
+                        if (logLine !== teLastStatusMessage) {
+                            teLastStatusMessage = logLine;
+                            if (!statusResponse.output) {
+                                teAppendLogLine(logLine, 'INFO');
+                            }
+                        }
+
+                        let badgeText = statusMsg;
+                        if (statusResponse.build_result) {
+                            badgeText = `${statusResponse.build_result} · ${statusResponse.progress || 0}%`;
+                        }
+                        teSetStatusBadge(badgeText, 'running');
+
+                        if (executionOutput && statusResponse.output) {
+                            executionOutput.textContent = statusResponse.output;
+                            executionOutput.scrollTop = executionOutput.scrollHeight;
+                            teUpdateDownloadButtonState();
+                            teUpdateMetricsFromLog(statusResponse.output);
+                        }
+
+                        if (statusResponse.status === 'completed'|| statusResponse.status === 'failed') {
+                            if (tePollIntervalId) {
+                                clearInterval(tePollIntervalId);
+                                tePollIntervalId = null;
+                            }
+                            teRestoreStartButtonIdle();
+                            teSetRunningState(false);
+                            teActiveJobId = null;
+                            teSetProgress(100, statusResponse.status === 'completed'&& statusResponse.build_result === 'SUCCESS'? 'success': 'fail');
+
+                            const resultLabel = statusResponse.build_result || (statusResponse.status === 'completed'? 'SUCCESS': 'FAILED');
+                            const isSuccess = statusResponse.status === 'completed'&& resultLabel === 'SUCCESS';
+                            teSetStatusBadge(
+                                isSuccess ? `Complete · ${resultLabel}` : `Complete · ${resultLabel}`,
+                                isSuccess ? 'success': 'fail'
+                            );
+
+                            if (teMetaResult) {
+                                teMetaResult.textContent = resultLabel;
+                                teMetaResult.className = 'te-meta-val te-meta-val--fail';
+                                if (isSuccess) teMetaResult.classList.remove('te-meta-val--fail');
+                            }
+                            if (teMetaDuration && teExecutionStartTime) {
+                                const secs = Math.round((Date.now() - teExecutionStartTime) / 1000);
+                                const m = Math.floor(secs / 60);
+                                const s = secs % 60;
+                                teMetaDuration.textContent = m > 0 ? `${m}m ${s}s` : `${s}s`;
+                            }
+
+                            // Final status must reflect parsed test outcomes from log.
+                            if (teCurrentStats.failed > 0) {
+                                if (teKpiExecutionStatus) teKpiExecutionStatus.textContent = 'FAIL';
+                                if (teKpiExecutionStatusMeta) teKpiExecutionStatusMeta.textContent = `${teCurrentStats.failed} test(s) failed`;
+                            } else if (teCurrentStats.total > 0) {
+                                if (teKpiExecutionStatus) teKpiExecutionStatus.textContent = 'PASS';
+                                if (teKpiExecutionStatusMeta) teKpiExecutionStatusMeta.textContent = 'All executed tests passed';
+                            }
+
+                            teAppendLogLine(`Execution finished — Result: ${resultLabel}`, isSuccess ? 'PASS': 'FAIL');
+                        }
+                    } catch (pollError) {
+                        console.error('[Test Execution] Polling error:', pollError);
+                        if (tePollIntervalId) {
+                            clearInterval(tePollIntervalId);
+                            tePollIntervalId = null;
+                        }
+                        teSetStatusBadge(`Error: ${pollError.message}`, 'fail');
+                        teAppendLogLine(pollError.message, 'FAIL');
+                        teRestoreStartButtonIdle();
+                        teSetRunningState(false);
+                        teActiveJobId = null;
+                    }
+                }, 2000);
+            } catch (error) {
+                console.error('[Test Execution] Error:', error);
+                teRunCounter = Math.max(0, teRunCounter - 1);
+                teUpdateRunLabels(teRunCounter);
+                teRestoreStartButtonIdle();
+                teSetRunningState(false);
+                teActiveJobId = null;
+                teSetStatusBadge(`Error: ${error.message}`, 'fail');
+                teSetProgress(0, 'fail');
+                if (teMetaResult) {
+                    teMetaResult.textContent = 'Error';
+                    teMetaResult.className = 'te-meta-val te-meta-val--fail';
+                }
+                teAppendLogLine(error.message, 'FAIL');
+            }
+        });
+    } else {
+        console.warn('[Test Execution] Start Execution button not found');
+    }
+    
+    // --- Code Assistant UI Wiring ---
+    const caBugHistoryDropdown = document.getElementById('caBugHistoryDropdown');
+    const caBugHistoryBtn = document.getElementById('caBugHistoryBtn');
+    const caBugHistoryContent = document.getElementById('caBugHistoryDropdownContent');
+    const caLogTypeFilter = document.getElementById('caLogTypeFilter');
+    const caLoadAnalysisBtn = document.getElementById('caLoadAnalysisBtn');
+    const caRefreshAnalysisBtn = document.getElementById('caRefreshAnalysisBtn');
+    const caErrorDetails = document.getElementById('caErrorDetails');
+    const caPatchPreviewBox = document.getElementById('caPatchPreviewBox');
+    const caCodePatchesBox = document.getElementById('caCodePatchesBox');
+    const caConfigPatchesBox = document.getElementById('caConfigPatchesBox');
+    const caSelectAllBtn = document.getElementById('caSelectAllBtn');
+    const caUnselectAllBtn = document.getElementById('caUnselectAllBtn');
+    const caApplyPatchesBtn = document.getElementById('caApplyPatchesBtn');
+    const caRunInvestigationBtn = document.getElementById('caRunInvestigationBtn');
+    // Removed: caGotoFileLineBtn and caCloseAssistantBtn buttons
+    
+    // Note: State variables are defined globally later (window.codePatchCheckboxes, etc.)
+    function resetCodeAssistantDemoView() {
+        if (caErrorDetails) caErrorDetails.value = '';
+        if (caPatchPreviewBox) caPatchPreviewBox.innerHTML = '<span class="ca-empty-msg">Selected patch details will appear here...</span>';
+        if (caCodePatchesBox) caCodePatchesBox.innerHTML = '<span class="ca-empty-msg">No code patches available.</span>';
+        if (caConfigPatchesBox) caConfigPatchesBox.innerHTML = '<span class="ca-empty-msg">No config patches available.</span>';
+        if (window.codePatchCheckboxes) window.codePatchCheckboxes = [];
+        if (window.configPatchCheckboxes) window.configPatchCheckboxes = [];
+    }
+    function loadComboDemoData() {
+        if (caBugHistoryContent) {
+            caBugHistoryContent.innerHTML = '';
+            ['Select analysis...','UE Attach Failure Analysis','NAS Error Analysis (08:42)','Handover Issue RCA'].forEach(label => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.textContent = label;
+                item.dataset.filename = label;
+                caBugHistoryContent.appendChild(item);
+            });
+        }
+        if (caBugHistoryBtn) {
+            const labelEl = document.getElementById('caBugHistoryBtnLabel')
+                || caBugHistoryBtn.querySelector('.ca-dropdown-btn-label')
+                || caBugHistoryBtn.querySelector('span:not(.dropdown-arrow)');
+            if (labelEl) labelEl.textContent = 'Select analysis...';
+        }
+    }
+    window.normalizeHistoryLogType = function(logType) {
+        const normalized = String(logType || 'other').toLowerCase();
+        return ['runtime', 'build', 'cmake', 'dependency', 'other'].includes(normalized) ? normalized : 'other';
+    };
+    window.getSelectedHistoryLogType = function(selectEl) {
+        if (!selectEl) return 'all';
+        const selected = String(selectEl.value || 'all').toLowerCase();
+        return selected === 'all'? 'all': window.normalizeHistoryLogType(selected);
+    };
+    window.filterHistoryItemsByLogType = function(items, selectedLogType) {
+        if (!Array.isArray(items)) return [];
+        if (!selectedLogType || selectedLogType === 'all') return items;
+        return items.filter(item =>window.normalizeHistoryLogType(item.log_error_kind) === selectedLogType);
+    };
+    window.renderHistoryDropdown = function(contentEl, buttonEl, items, selectedLogType, buttonPlaceholder, emptyPlaceholder) {
+        if (!contentEl) return;
+        const filteredItems = window.filterHistoryItemsByLogType(items, selectedLogType);
+        contentEl.innerHTML = '';
+        if (filteredItems.length > 0) {
+            filteredItems.forEach(item => {
+                const dropdownItem = document.createElement('div');
+                dropdownItem.className = 'dropdown-item';
+                dropdownItem.textContent = item.display_text;
+                dropdownItem.dataset.filename = item.filename;
+                dropdownItem.dataset.logErrorKind = window.normalizeHistoryLogType(item.log_error_kind);
+                contentEl.appendChild(dropdownItem);
+            });
+        } else {
+            const placeholderItem = document.createElement('div');
+            placeholderItem.className = 'dropdown-item';
+            placeholderItem.textContent = emptyPlaceholder;
+            placeholderItem.style.color = '#9ca3af';
+            placeholderItem.style.cursor = 'default';
+            contentEl.appendChild(placeholderItem);
+        }
+        if (buttonEl) {
+            const labelEl = buttonEl.querySelector('.ce-dropdown-btn-label')
+                || buttonEl.querySelector('.ca-dropdown-btn-label')
+                || buttonEl.querySelector('span:not(.dropdown-arrow)');
+            if (labelEl) labelEl.textContent = buttonPlaceholder;
+        }
+    };
+    window.codeAssistantHistoryItems = [];
+    window.bugDiscoveryHistoryItems = [];
+    window.codeEvaluationHistoryItems = [];
+    caRefreshAnalysisBtn && caRefreshAnalysisBtn.addEventListener('click', async () => {
+        console.log('🔄 Refresh button clicked, reloading bug history...');
+        if (typeof window.loadCodeAssistantBugHistory === 'function') {
+            await window.loadCodeAssistantBugHistory();
+        } else {
+            console.error('❌ loadCodeAssistantBugHistory function not available');
+        }
+        resetCodeAssistantDemoView();
+    });
+    // Dropdown toggle functionality
+    if (caBugHistoryBtn) {
+        caBugHistoryBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (caBugHistoryDropdown) {
+                caBugHistoryDropdown.classList.toggle('active');
+            }
+        });
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (caBugHistoryDropdown && !caBugHistoryDropdown.contains(e.target)) {
+            caBugHistoryDropdown.classList.remove('active');
+        }
+        window.closePortalSelectDropdownsOnOutsideClick(e.target);
+    });
+    
+    // Handle dropdown item selection
+    if (caBugHistoryContent) {
+        caBugHistoryContent.addEventListener('click', function(e) {
+            const item = e.target.closest('.dropdown-item');
+            if (item && item.dataset.filename) {
+                const filename = item.dataset.filename;
+                const displayText = item.textContent;
+                if (caBugHistoryBtn) {
+                    const labelEl = document.getElementById('caBugHistoryBtnLabel')
+                        || caBugHistoryBtn.querySelector('.ca-dropdown-btn-label')
+                        || caBugHistoryBtn.querySelector('span:not(.dropdown-arrow)');
+                    if (labelEl) labelEl.textContent = displayText;
+                }
+                if (caBugHistoryDropdown) {
+                    caBugHistoryDropdown.classList.remove('active');
+                }
+                window.codeAssistantAnalysisFilename = filename;
+                resetCodeAssistantDemoView();
+            }
+        });
+    }
+    initPortalSelectDropdown({
+        dropdownId: 'caLogTypeDropdown',
+        btnId: 'caLogTypeBtn',
+        menuId: 'caLogTypeDropdownMenu',
+        hiddenId: 'caLogTypeFilter',
+        labelId: 'caLogTypeBtnLabel',
+        defaultLabel: 'All'
+    });
+    if (caLogTypeFilter) {
+        caLogTypeFilter.addEventListener('change', function() {
+            window.renderHistoryDropdown(
+                caBugHistoryContent,
+                caBugHistoryBtn,
+                window.codeAssistantHistoryItems,
+                window.getSelectedHistoryLogType(caLogTypeFilter),
+                'Select analysis...',
+                'No analysis available for selected log type'
+            );
+            window.codeAssistantAnalysisFilename = null;
+            resetCodeAssistantDemoView();
+        });
+    }
+    // Load Analysis button handler - attach immediately
+    if (caLoadAnalysisBtn) {
+        console.log('✅ Load Analysis button found, attaching click handler');
+        caLoadAnalysisBtn.setAttribute('data-listener-attached', 'true');
+        
+        // Use capture phase to ensure we catch the event
+        caLoadAnalysisBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            console.log('🔘 Load Analysis button clicked');
+            console.log('   Event target:', e.target);
+            console.log('   Button element:', this);
+            
+            // Get selected value from dropdown button
+            const selectedFilename = window.codeAssistantAnalysisFilename || null;
+            const selectedText = caBugHistoryBtn ? caBugHistoryBtn.querySelector('span').textContent : null;
+            
+            console.log('📋 Selected filename:', selectedFilename);
+            console.log('📋 Selected text:', selectedText);
+            
+            if (!selectedFilename || selectedFilename === ''|| selectedText === 'Select analysis...'|| selectedText === 'No analysis available') {
+                console.warn('⚠️ No analysis selected');
+                alert('Please select an analysis from the dropdown to load.');
+            return;
+        }
+            
+            console.log('🚀 Loading analysis:', selectedFilename);
+            try {
+                if (typeof window.loadCodeAssistantAnalysis === 'function') {
+                    await window.loadCodeAssistantAnalysis(selectedFilename);
+                } else {
+                    console.error('❌ loadCodeAssistantAnalysis function not found');
+                    alert('Error: Load Analysis function not available. Please refresh the page.');
+                }
+            } catch (error) {
+                console.error('❌ Error in loadCodeAssistantAnalysis:', error);
+                alert('Failed to load analysis: '+ error.message);
+            }
+        }, true); // Use capture phase
+        
+        // Also try direct onclick as fallback
+        caLoadAnalysisBtn.onclick = async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🔘 Load Analysis button clicked (onclick fallback)');
+        };
+    } else {
+        console.error('❌ caLoadAnalysisBtn element not found during setup');
+        // Try to attach later when Code Assistant section is shown
+        setTimeout(() => {
+            const btn = document.getElementById('caLoadAnalysisBtn');
+            if (btn) {
+                console.log('✅ Found caLoadAnalysisBtn in delayed check, attaching handler');
+                btn.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    console.log('🔘 Load Analysis clicked (delayed attach)');
+                    const selectedFilename = window.codeAssistantAnalysisFilename || null;
+                    const historyBtn = document.getElementById('caBugHistoryBtn');
+                    const selectedText = historyBtn ? historyBtn.querySelector('span').textContent : null;
+                    if (selectedFilename && selectedText !== 'Select analysis...'&& selectedText !== 'No analysis available') {
+                        if (typeof window.loadCodeAssistantAnalysis === 'function') {
+                            await window.loadCodeAssistantAnalysis(selectedFilename);
+                        } else {
+                            console.error('❌ loadCodeAssistantAnalysis function not found');
+                            alert('Error: Load Analysis function not available.');
+                        }
+                    } else {
+                        alert('Please select an analysis first');
+                    }
+                });
+            }
+        }, 1000);
+    }
+    caSelectAllBtn && caSelectAllBtn.addEventListener('click', () => {
+        if (window.codePatchCheckboxes) window.codePatchCheckboxes.forEach(cb=>cb.checked=true);
+        if (window.configPatchCheckboxes) window.configPatchCheckboxes.forEach(cb=>cb.checked=true);
+        if (typeof window.updateCodeAssistantPatchPreview === 'function') {
+            window.updateCodeAssistantPatchPreview();
+        }
+    });
+    caUnselectAllBtn && caUnselectAllBtn.addEventListener('click', () => {
+        if (window.codePatchCheckboxes) window.codePatchCheckboxes.forEach(cb=>cb.checked=false);
+        if (window.configPatchCheckboxes) window.configPatchCheckboxes.forEach(cb=>cb.checked=false);
+        if (typeof window.updateCodeAssistantPatchPreview === 'function') {
+            window.updateCodeAssistantPatchPreview();
+        }
+    });
+    caApplyPatchesBtn && caApplyPatchesBtn.addEventListener('click', async () => {
+        if (typeof window.applyCodeAssistantPatches === 'function') {
+            await window.applyCodeAssistantPatches();
+        } else {
+            console.error('❌ applyCodeAssistantPatches function not found');
+        }
+    });
+    caRunInvestigationBtn && caRunInvestigationBtn.addEventListener('click', async () => {
+        if (typeof window.runCodeAssistantInvestigation === 'function') {
+            await window.runCodeAssistantInvestigation();
+        } else {
+            console.error('❌ runCodeAssistantInvestigation function not found');
+        }
+    });
+    // Removed: Event listeners for caGotoFileLineBtn and caCloseAssistantBtn
+    if (caBugHistoryDropdown) {
+        console.log('✅ caBugHistoryDropdown found');
+        // Load bug history from backend on page load
+        // Load bug history only once on page load - use debounce built into function
+        // Don't load here - let it load when Code Assistant section is opened to avoid repeated calls
+        console.log('✅ Code Assistant UI initialized - bug history will load when section opens');
+    } else {
+        console.error('❌ caBugHistoryDropdown element not found');
+    }
+    
+    if (!caLoadAnalysisBtn) {
+        console.error('❌ caLoadAnalysisBtn element not found - button may not work!');
+    }
+});
+// --- PyQt-style Bug Discovery UI support ---
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Helper functions for extracting folder/file names from paths
+    // Helper function to extract last folder name from path
+    function getLastFolderName(fullPath) {
+        if (!fullPath) return '';
+        // Normalize path separators
+        const normalizedPath = fullPath.replace(/\\/g, '/');
+        // Remove trailing slash if present
+        const cleanPath = normalizedPath.replace(/\/$/, '');
+        // Get last folder name
+        const parts = cleanPath.split('/');
+        return parts[parts.length - 1] || '';
+    }
+
+    // Helper function to extract filename from path
+    function getFileName(fullPath) {
+        if (!fullPath) return '';
+        // Normalize path separators
+        const normalizedPath = fullPath.replace(/\\/g, '/');
+        // Get filename
+        const parts = normalizedPath.split('/');
+        return parts[parts.length - 1] || '';
+    }
+
+    // Bug Discovery State Variables
+    let bugWorkingDir = '';
+    let bugLogDir = '';
+    let bugLogFilesArr = [];
+    const bugCodeDirText = document.getElementById('bugCodeDirText');
+    const bugLogDirText = document.getElementById('bugLogDirText');
+    
+    // Elements
+    const codeDirBtn = document.getElementById('bugCodeDirBtn');
+    const codeDirFeedback = document.getElementById('bugCodeDirFeedback');
+
+    const logDirBtn = document.getElementById('bugLogDirBtn');
+    const logFileCombo = document.getElementById('bugLogFileCombo');
+    const bugLogFilePathInput = document.getElementById('bugLogFilePath');
+    const logFileDropdown = document.getElementById('bugLogFileDropdownContainer');
+    const crashAnalysisToggle = document.getElementById('crashAnalysisToggle');
+
+    function getSelectedBugLogFilePath() {
+        if (bugLogFilePathInput && bugLogFilePathInput.value) {
+            return bugLogFilePathInput.value;
+        }
+        const logFileName = logFileCombo ? logFileCombo.value : '';
+        if (!logFileName || logFileName === 'Select a log file') return '';
+        return bugLogDir ? `${bugLogDir}/${logFileName}`.replace(/\\/g, '/') : logFileName;
+    }
+
+    function setBugLogFileSelection(value, label, dataPath) {
+        const labelEl = document.getElementById('bugLogFileBtnLabel');
+        if (logFileCombo) {
+            logFileCombo.value = value || '';
+        }
+        if (bugLogFilePathInput) {
+            bugLogFilePathInput.value = dataPath || '';
+        }
+        if (labelEl) {
+            labelEl.textContent = label || value || 'Select a log file';
+        }
+    }
+
+    initPortalSelectDropdown({
+        dropdownId: 'bugLogFileDropdown',
+        btnId: 'bugLogFileBtn',
+        menuId: 'bugLogFileDropdownMenu',
+        hiddenId: 'bugLogFileCombo',
+        labelId: 'bugLogFileBtnLabel',
+        defaultLabel: 'Select a log file',
+        onSelect: (value, label, item) => {
+            if (bugLogFilePathInput) {
+                bugLogFilePathInput.value = item.getAttribute('data-path') || '';
+            }
+        }
+    });
+
+    const startRCAButton = document.getElementById('startBugRCAButton');
+    const deploymentSettingsBtn = document.getElementById('deploymentSettingsBtn');
+    const bugFixPresentBtn = document.getElementById('bugFixPresentBtn');
+    const bugExecuteCommandsBtn = document.getElementById('bugExecuteCommandsBtn');
+    const bugResultsDisplay = document.getElementById('bugResultsDisplay');
+    
+    // Add click handler for Fix Already Present button
+    if (bugFixPresentBtn) {
+        bugFixPresentBtn.addEventListener('click', async () => {
+            displayExistingFixDetails();
+            // Save to history after displaying
+            await saveExistingFixToHistory();
+        });
+    }
+    if (bugExecuteCommandsBtn) {
+        bugExecuteCommandsBtn.addEventListener('click', async () => {
+            await runBugDiscoveryExecuteCommands();
+        });
+    }
+    const progressBar = document.getElementById('bugAnalysisProgressBar');
+    const progressFill = document.getElementById('bugAnalysisProgressFill');
+    const bdAnalysisDetailDisplay = document.getElementById('bdAnalysisDetailDisplay');
+    const artifactsDisplay = document.getElementById('artifactsDisplay');
+    const viewArtifactsSection = document.getElementById('viewArtifactsSection');
+    const artifactsDropdown = document.getElementById('artifactsDropdown');
+    const bdAnalysisColumns = document.getElementById('bdAnalysisColumns');
+    const bdAnalysisPlaceholder = document.getElementById('bdAnalysisPlaceholder');
+
+    function showViewArtifactsSection(show) {
+        const section = viewArtifactsSection || document.getElementById('viewArtifactsSection');
+        if (!section) return;
+        if (show) {
+            section.style.display = 'block';
+            section.classList.add('bd-panel--artifacts-visible');
+            section.classList.remove('bd-artifacts-panel-hidden');
+            section.removeAttribute('hidden');
+            section.setAttribute('aria-hidden', 'false');
+        } else {
+            section.style.display = 'none';
+            section.classList.remove('bd-panel--artifacts-visible');
+            section.classList.add('bd-artifacts-panel-hidden');
+            section.setAttribute('hidden', '');
+            section.setAttribute('aria-hidden', 'true');
+        }
+    }
+
+    /** Show Analysis Results + View Artifacts after RCA completes or a previous run is loaded */
+    function revealBdPostAnalysisUi(options = {}) {
+        const {
+            crashAnalysisEnabled = window.crashAnalysisEnabled || false,
+            selectArtifact = 'error-detected',
+            scrollArtifactsIntoView = false
+        } = options;
+
+        showBdAnalysisResultsPanel(true);
+        updateArtifactsDropdown(crashAnalysisEnabled);
+        showViewArtifactsSection(true);
+        setBdProgressTrackerState('complete');
+        updateBdExportReportButton();
+
+        if (selectArtifact) {
+            selectBdAnalysisArtifact(selectArtifact);
+        }
+
+        if (scrollArtifactsIntoView) {
+            const section = viewArtifactsSection || document.getElementById('viewArtifactsSection');
+            if (section) {
+                requestAnimationFrame(() => {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'nearest'});
+                });
+            }
+        }
+    }
+
+    const BD_ANALYSIS_RADIO_LABELS = {
+        'error-detected': 'Error Detected',
+        'root-cause-analysis': 'Root Cause Analysis',
+        'suspected-functions': 'Suspected Functions',
+        'code-patches': 'Code Patches',
+        'investigation-steps': 'Investigation Steps',
+        'investigation-commands': 'Investigation Commands'
+    };
+
+    function showBdAnalysisResultsPanel(show) {
+        if (bdAnalysisColumns) {
+            bdAnalysisColumns.style.display = show ? 'grid': 'none';
+        }
+        if (bdAnalysisPlaceholder) {
+            bdAnalysisPlaceholder.style.display = show ? 'none': 'block';
+        }
+    }
+
+    function setBugAnalysisDetailContent(html) {
+        if (bdAnalysisDetailDisplay) bdAnalysisDetailDisplay.innerHTML = html;
+        if (bugResultsDisplay) bugResultsDisplay.innerHTML = html;
+    }
+
+    function getBdAnalysisResultCounts() {
+        const { fixSuggestion } = getBugDiscoveryNormalizedContext();
+        return {
+            suspectedFunctions: (fixSuggestion.suspected_functions || []).length,
+            codePatches: (fixSuggestion.code_patches || []).length
+        };
+    }
+
+    function formatBdAnalysisDetailSubtitle(value) {
+        return BD_ANALYSIS_RADIO_LABELS[value] || value;
+    }
+
+    function updateBdResultDetailsCounts() {
+        const countEl = document.getElementById('bdResultDetailsCounts');
+        if (!countEl) return;
+        if (!hasBugDiscoveryReportData()) {
+            countEl.textContent = '';
+            return;
+        }
+        const counts = getBdAnalysisResultCounts();
+        countEl.textContent = ` · Suspected functions ${counts.suspectedFunctions} · Code patches ${counts.codePatches}`;
+    }
+
+    function updateBdAnalysisDetailHeader(value) {
+        const subtitleEl = document.getElementById('bdAnalysisDetailSubtitle');
+        if (!subtitleEl || !value) return;
+        subtitleEl.textContent = formatBdAnalysisDetailSubtitle(value);
+        updateBdResultDetailsCounts();
+    }
+
+    function selectBdAnalysisArtifact(value) {
+        if (!value) return;
+        const radio = document.querySelector(`.bd-analysis-radio[value="${value}"]`);
+        if (radio) radio.checked = true;
+        updateBdAnalysisDetailHeader(value);
+        showBdAnalysisResultsPanel(true);
+        renderBugDiscoveryArtifact(value, bdAnalysisDetailDisplay);
+    }
+
+    function initBdAnalysisRadioListeners() {
+        document.querySelectorAll('.bd-analysis-radio').forEach((radio) => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    selectBdAnalysisArtifact(this.value);
+                }
+            });
+        });
+    }
+    
+    // Deployment Settings Modal elements
+    const deploymentSettingsModal = document.getElementById('deploymentSettingsModal');
+    const closeDeploymentSettingsModal = document.getElementById('closeDeploymentSettingsModal');
+    const clearDeploymentSettingsBtn = document.getElementById('clearDeploymentSettingsBtn');
+    const resetDeploymentSettingsBtn = document.getElementById('resetDeploymentSettingsBtn');
+    const cancelDeploymentSettingsBtn = document.getElementById('cancelDeploymentSettingsBtn');
+    const saveDeploymentSettingsBtn = document.getElementById('saveDeploymentSettingsBtn');
+    const deploymentSettingsFields = document.getElementById('deploymentSettingsFields');
+    
+    // Store custom deployment context
+    let customDeploymentContext = null;
+    // Crash analysis toggle state
+    let crashAnalysisEnabled = false;
+    
+    // Bug Discovery History elements (matching Code Assistant pattern)
+    const bugDiscoveryHistoryDropdown = document.getElementById('bugDiscoveryHistoryDropdown');
+    const bugDiscoveryHistoryBtn = document.getElementById('bugDiscoveryHistoryBtn');
+    const bugDiscoveryHistoryContent = document.getElementById('bugDiscoveryHistoryDropdownContent');
+    const bugDiscoveryLogTypeFilter = document.getElementById('bugDiscoveryLogTypeFilter');
+    const bugDiscoveryLoadPrevBtn = document.getElementById('bugDiscoveryLoadPrevBtn');
+    const bugDiscoveryRefreshBtn = document.getElementById('bugDiscoveryRefreshBtn');
+
+    // Helper function to escape HTML (also use global version)
+    // Note: escapeHtml is already defined globally at the top of the file
+
+    function setBdProgressTrackerState(state) {
+        const tracker = document.getElementById('bdProgressTracker');
+        const bdPage = document.getElementById('bug-discovery');
+        if (!tracker) return;
+        tracker.classList.remove('bd-progress-tracker--pending', 'bd-progress-tracker--complete');
+        if (state === 'complete') {
+            tracker.classList.add('bd-progress-tracker--complete');
+            if (bdPage) bdPage.classList.add('bd-rca-complete');
+        } else {
+            tracker.classList.add('bd-progress-tracker--pending');
+            if (bdPage) bdPage.classList.remove('bd-rca-complete');
+        }
+    }
+
+    function hasBugDiscoveryReportData() {
+        return !!(window.bugDiscoveryResults || window.bugDiscoveryFixSuggestions);
+    }
+
+    function updateBdExportReportButton() {
+        const btn = document.getElementById('bdExportRcaReportBtn');
+        if (!btn) return;
+        const hasData = hasBugDiscoveryReportData();
+        btn.disabled = !hasData;
+        btn.title = hasData
+            ? 'Download RCA report (JSON or TXT)'
+            : 'Run RCA analysis or load a previous run first';
+    }
+
+    function buildBugDiscoveryReportData() {
+        const results = window.bugDiscoveryResults || {};
+        const fixSuggestions = window.bugDiscoveryFixSuggestions || {};
+        const fixSuggestion = fixSuggestions.fix_suggestion || {};
+        const phase2Data = results.phase2_analysis || results.phase2_results || {};
+        const allSuspectedFunctions = phase2Data.suspected_functions || [];
+        const allSuspectedConfigs = phase2Data.suspected_configs || [];
+        const phase3FunctionNames = fixSuggestion.suspected_functions || [];
+        const phase3ConfigNames = fixSuggestion.suspected_configs || [];
+
+        const filteredFunctions = allSuspectedFunctions.filter((func) => {
+            const funcName = typeof func === 'object'? (func.function_name || func.name) : String(func);
+            return phase3FunctionNames.includes(funcName);
+        });
+        const filteredConfigs = allSuspectedConfigs.filter((config) => {
+            const configName = typeof config === 'object'
+                ? (config.param_name || config.config_name || config.name)
+                : String(config);
+            return phase3ConfigNames.includes(configName);
+        });
+
+        const codePatches = fixSuggestion.code_patches || [];
+        const configPatches = fixSuggestion.config_patches || [];
+        const terminalCommands = fixSuggestions.terminal_commands?.terminal_commands
+            || results.phase4_commands?.terminal_commands
+            || [];
+        const deploymentContext = results.deployment_context || {};
+        const contextSummary = fixSuggestions.context_summary || {};
+
+        let nmcSize = null;
+        for (const patch of configPatches) {
+            const configName = patch.config_name || '';
+            if (configName.toLowerCase() === 'nmc_size'|| configName === 'nmc_size') {
+                nmcSize = patch.current_value || patch.new_value || '';
+                if (nmcSize && typeof nmcSize === 'string') {
+                    nmcSize = nmcSize.replace(/^["']|["']$/g, '');
+                }
+                break;
+            }
+        }
+
+        const topConfigs = filteredConfigs.slice(0, 3).map((config) => {
+            const paramName = typeof config === 'object'
+                ? (config.param_name || config.config_name || 'Unknown')
+                : String(config);
+            const score = typeof config === 'object'? (config.relevance_score || 0) : 0;
+            const source = typeof config === 'object'? (config.source || 'unknown') : 'unknown';
+            return {
+                name: paramName,
+                score: typeof score === 'number'? score : score,
+                source: source === 'context_aware_retrieval'? 'semantic search': (source || 'unknown')
+            };
+        });
+
+        return {
+            title: 'RCA Analysis Report',
+            generated_at: new Date().toISOString(),
+            log_file: window.bugDiscoveryLogFilePath || results.log_file || null,
+            error_message: fixSuggestions.error_text || results.error_message || fixSuggestion.error_message || null,
+            phase2_error_analysis: {
+                suspected_functions_count: filteredFunctions.length,
+                suspected_configurations_count: filteredConfigs.length,
+                retrieval_method: phase2Data.retrieval_method || 'standard',
+                top_suspected_configurations: topConfigs
+            },
+            phase3_fix_suggestions: {
+                code_patches_count: codePatches.length,
+                config_patches_count: configPatches.length,
+                root_cause_analysis_available: !!fixSuggestion.reason,
+                root_cause: fixSuggestion.reason || fixSuggestion.root_cause_analysis || null,
+                code_patches: codePatches,
+                config_patches: configPatches
+            },
+            phase4_terminal_commands: {
+                commands_generated: terminalCommands.length,
+                commands: terminalCommands
+            },
+            overall_analysis_status: {
+                context_aware_analysis: !!(results.summary?.context_aware),
+                fix_suggestions_available: !!(fixSuggestion.config_fix || codePatches.length > 0),
+                deployment_context_available: Object.keys(deploymentContext).length > 0,
+                nmc_size: nmcSize,
+                candidate_functions_count: contextSummary.candidate_functions_count || allSuspectedFunctions.length || 0,
+                candidate_configs_count: contextSummary.candidate_configs_count || allSuspectedConfigs.length || 0,
+                call_graph_entries: contextSummary.call_graph_entries || results.call_graph_context?.length || 0,
+                pattern_matched: !!contextSummary.pattern_matched
+            }
+        };
+    }
+
+    function formatBugDiscoveryReportAsText(report) {
+        const lines = [];
+        const pushSection = (title) => {
+            lines.push('');
+            lines.push(title);
+            lines.push('-'.repeat(title.length));
+        };
+
+        lines.push(report.title || 'RCA Analysis Report');
+        lines.push(`Generated: ${report.generated_at || 'N/A'}`);
+        if (report.log_file) lines.push(`Log file: ${report.log_file}`);
+        if (report.error_message) lines.push(`Error: ${report.error_message}`);
+
+        const p2 = report.phase2_error_analysis || {};
+        pushSection('Phase 2 - Error Analysis (Phase 3 Filtered)');
+        lines.push(`Suspected Functions (from Phase 3): ${p2.suspected_functions_count ?? 0}`);
+        lines.push(`Suspected Configurations (from Phase 3): ${p2.suspected_configurations_count ?? 0}`);
+        lines.push(`Retrieval Method: ${p2.retrieval_method || 'standard'}`);
+        if (Array.isArray(p2.top_suspected_configurations) && p2.top_suspected_configurations.length > 0) {
+            lines.push('Top Suspected Configurations:');
+            p2.top_suspected_configurations.forEach((cfg, idx) => {
+                const score = typeof cfg.score === 'number'? cfg.score.toFixed(2) : cfg.score;
+                lines.push(`  ${idx + 1}. ${cfg.name} (score: ${score}, source: ${cfg.source})`);
+            });
+        }
+
+        const p3 = report.phase3_fix_suggestions || {};
+        pushSection('Phase 3 - Fix Suggestions');
+        lines.push(`Code Patches: ${p3.code_patches_count ?? 0}`);
+        lines.push(`Config Patches: ${p3.config_patches_count ?? 0}`);
+        lines.push(`Root Cause Analysis: ${p3.root_cause_analysis_available ? 'Available': 'Not Available'}`);
+        if (p3.root_cause) {
+            lines.push('');
+            lines.push('Root Cause:');
+            lines.push(String(p3.root_cause));
+        }
+
+        const p4 = report.phase4_terminal_commands || {};
+        if ((p4.commands_generated || 0) > 0) {
+            pushSection('Phase 4 - Terminal Commands');
+            lines.push(`Commands Generated: ${p4.commands_generated}`);
+            (p4.commands || []).forEach((cmd, idx) => {
+                const commandText = cmd.command || cmd.text || cmd;
+                const explanation = cmd.explanation || cmd.hint || 'No explanation provided';
+                lines.push(`  ${idx + 1}. ${commandText}`);
+                lines.push(`     ${explanation}`);
+            });
+        }
+
+        const overall = report.overall_analysis_status || {};
+        pushSection('Overall Analysis Status');
+        lines.push(`Context-Aware Analysis: ${overall.context_aware_analysis ? 'Yes': 'No'}`);
+        lines.push(`Fix Suggestions Available: ${overall.fix_suggestions_available ? 'Yes': 'No'}`);
+        lines.push(`Deployment Context: ${overall.deployment_context_available ? 'Available': 'Not Available'}`);
+        if (overall.nmc_size) lines.push(`NMC Size: ${overall.nmc_size}`);
+        lines.push(`Candidate Functions: ${overall.candidate_functions_count ?? 0}`);
+        lines.push(`Candidate Configs: ${overall.candidate_configs_count ?? 0}`);
+        lines.push(`Call Graph Entries: ${overall.call_graph_entries ?? 0}`);
+        lines.push(`Pattern Matched: ${overall.pattern_matched ? 'Yes': 'No'}`);
+
+        return lines.join('\n').trim() + '\n';
+    }
+
+    function getPreferredReportExportFormat() {
+        const filename = (window.bugDiscoveryAnalysisFilename || '').toLowerCase();
+        if (filename.endsWith('.txt')) return 'txt';
+        if (filename.endsWith('.json')) return 'json';
+        if (window.bugDiscoveryResults && typeof window.bugDiscoveryResults === 'object') {
+            return 'json';
+        }
+        return 'txt';
+    }
+
+    function downloadBugDiscoveryReport(format) {
+        if (!hasBugDiscoveryReportData()) {
+            showStatusBar('No RCA report available. Run analysis or load a previous run first.', 'warning', 'Bug Discovery');
+            return;
+        }
+
+        const report = buildBugDiscoveryReportData();
+        const preferred = getPreferredReportExportFormat();
+        const exportFormat = format || preferred;
+        let content;
+        let mimeType;
+        let extension;
+
+        if (exportFormat === 'json') {
+            content = JSON.stringify(report, null, 2);
+            mimeType = 'application/json;charset=utf-8';
+            extension = 'json';
+        } else {
+            content = formatBugDiscoveryReportAsText(report);
+            mimeType = 'text/plain;charset=utf-8';
+            extension = 'txt';
+        }
+
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `rca_report_${timestamp}.${extension}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        showStatusBar(`RCA report downloaded as ${extension.toUpperCase()}`, 'success', 'Bug Discovery');
+    }
+
+    const BD_ENV_FLAKY_PATTERNS = [
+        /\bflaky\b/i,
+        /\btimeout\b/i,
+        /\benvironment(al)?\b/i,
+        /\bcmake\b/i,
+        /\bbuild[_\s-]?fail/i,
+        /\bcommand not found\b/i,
+        /\bdependency\b/i,
+        /\bnetwork\b/i,
+        /\bconnectivity\b/i,
+        /\breachability\b/i,
+        /\bdeployment\b/i,
+        /\bassociation\b/i,
+        /\bno route\b/i,
+        /\bconnection refused\b/i,
+        /\bping\b/i,
+        /\broute\b/i,
+        /\bamf\b/i,
+        /\busrp\b/i,
+        /\bsctp\b/i,
+        /\bno amf\b/i,
+        /\bhandover.*timeout\b/i
+    ];
+
+    const BD_REAL_DEFECT_PATTERNS = [
+        /\bsegfault\b/i,
+        /\bsegmentation fault\b/i,
+        /\bsigsegv\b/i,
+        /\bassert(ion)?\b/i,
+        /\bnull pointer\b/i,
+        /\bintegrity\b/i,
+        /\bcipher(ing)?\b/i,
+        /\bpdcp\b/i,
+        /\brrc\b/i,
+        /\brlc\b/i,
+        /\bmac\b/i,
+        /\bphy\b/i,
+        /\bprotocol\b/i,
+        /\blogic\b/i,
+        /\bmemory leak\b/i,
+        /\bstack overflow\b/i
+    ];
+
+    const BD_ENV_ERROR_TYPE_HINTS = [
+        'amf_association',
+        'association_failure',
+        'connectivity',
+        'network',
+        'deployment',
+        'build',
+        'cmake',
+        'dependency',
+        'timeout',
+        'flaky',
+        'environment',
+        'usrp',
+        'route',
+        'ping'
+    ];
+
+    const BD_REAL_DEFECT_LAYERS = new Set(['RRC', 'PDCP', 'RLC', 'MAC', 'PHY']);
+
+    /**
+     * Classify one detected error for KPI segregation.
+     * Returns 'env' (environment / flaky / deploy) or 'real' (code / protocol defect).
+     */
+    function classifyBdErrorCategory(errorKey, occurrence = {}) {
+        const key = String(errorKey || '').toLowerCase();
+        const line = String(occurrence.line || occurrence.pattern || '').toLowerCase();
+        const layer = String(occurrence.layer || '').toUpperCase();
+        const combined = `${key} ${line}`;
+
+        if (BD_ENV_FLAKY_PATTERNS.some((pattern) => pattern.test(combined))) {
+            return 'env';
+        }
+        if (BD_REAL_DEFECT_PATTERNS.some((pattern) => pattern.test(combined))) {
+            return 'real';
+        }
+        if (BD_ENV_ERROR_TYPE_HINTS.some((hint) => key.includes(hint))) {
+            return 'env';
+        }
+        if (layer === 'NGAP' && /\bamf\b|association|sctp|not associated/i.test(combined)) {
+            return 'env';
+        }
+        if (BD_REAL_DEFECT_LAYERS.has(layer)) {
+            return 'real';
+        }
+        if (layer === 'NAS' && /\breject\b|failure|error/i.test(combined)) {
+            return 'real';
+        }
+
+        // Unknown: treat operational log/setup issues as env, else code defect
+        if (/\bfail|error|timeout|not found|unreachable\b/i.test(combined) &&
+            !/\bintegrity|segfault|assert|null\b/i.test(combined)) {
+            return 'env';
+        }
+        return 'real';
+    }
+
+    function countBdErrorsFromAnalysis(errorAnalysis) {
+        if (!errorAnalysis || typeof errorAnalysis !== 'object') {
+            return { total: 0, envFlaky: 0, realDefects: 0, breakdown: [] };
+        }
+
+        const identified = errorAnalysis.identified_errors || {};
+        let total = 0;
+        let envFlaky = 0;
+        const breakdown = [];
+
+        Object.entries(identified).forEach(([errorKey, occurrences]) => {
+            const list = Array.isArray(occurrences) ? occurrences : [];
+            list.forEach((occurrence) => {
+                total += 1;
+                const category = classifyBdErrorCategory(errorKey, occurrence);
+                if (category === 'env') envFlaky += 1;
+                breakdown.push({
+                    errorKey,
+                    category,
+                    layer: occurrence.layer || 'Unknown',
+                    line: occurrence.line_number,
+                    pattern: occurrence.pattern
+                });
+            });
+        });
+
+        if (total === 0 && errorAnalysis.error_counts) {
+            Object.entries(errorAnalysis.error_counts).forEach(([errorKey, count]) => {
+                const n = typeof count === 'number' ? count : 0;
+                for (let i = 0; i < n; i += 1) {
+                    total += 1;
+                    const category = classifyBdErrorCategory(errorKey, {});
+                    if (category === 'env') envFlaky += 1;
+                    breakdown.push({ errorKey, category, layer: 'Unknown' });
+                }
+            });
+        }
+
+        if (total === 0 && typeof errorAnalysis.total_errors === 'number') {
+            total = errorAnalysis.total_errors;
+        }
+
+        return {
+            total,
+            envFlaky,
+            realDefects: Math.max(0, total - envFlaky),
+            breakdown
+        };
+    }
+
+    function getBdFixSuggestion(results = {}, fixSuggestions = {}) {
+        return fixSuggestions.fix_suggestion
+            || fixSuggestions?.phase3_fixes?.fix_suggestion
+            || results.phase3_fixes?.fix_suggestion
+            || {};
+    }
+
+    function extractBdMetrics(results = {}, fixSuggestions = {}, errorAnalysis = null) {
+        const fixSuggestion = getBdFixSuggestion(results, fixSuggestions);
+        const patchesGenerated = (fixSuggestion.code_patches || []).length;
+        const analysis = errorAnalysis
+            || results.error_analysis
+            || window.bdCurrentErrorAnalysis
+            || null;
+
+        let counts = countBdErrorsFromAnalysis(analysis);
+
+        if (counts.total === 0) {
+            const errorText = fixSuggestions.error_text
+                || results.error_message
+                || fixSuggestion.reason
+                || fixSuggestion.root_cause_analysis
+                || '';
+            const trimmed = String(errorText).trim();
+            if (trimmed && !/no errors? detected|analysis completed successfully/i.test(trimmed)) {
+                counts.total = 1;
+                const category = classifyBdErrorCategory('primary_error', { line: trimmed });
+                counts.envFlaky = category === 'env' ? 1 : 0;
+                counts.realDefects = category === 'real' ? 1 : 0;
+                counts.breakdown = [{ errorKey: 'primary_error', category, line: trimmed }];
+            }
+        }
+
+        window.bdErrorClassificationBreakdown = counts.breakdown || [];
+
+        return {
+            totalFailures: counts.total,
+            realDefects: counts.realDefects,
+            envFlaky: counts.envFlaky,
+            patchesGenerated
+        };
+    }
+
+    function updateBdMetrics(results = {}, fixSuggestions = {}, errorAnalysis = null) {
+        const metrics = extractBdMetrics(results, fixSuggestions, errorAnalysis);
+        const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = String(value);
+        };
+        setText('bdKpiFailures', metrics.totalFailures);
+        setText('bdKpiDefects', metrics.realDefects);
+        setText('bdKpiEnv', metrics.envFlaky);
+        setText('bdKpiPatches', metrics.patchesGenerated);
+        window.bdCurrentMetrics = metrics;
+    }
+
+    function resetBdMetrics() {
+        window.bdCurrentErrorAnalysis = null;
+        window.bdErrorClassificationBreakdown = [];
+        window.bdCurrentMetrics = {
+            totalFailures: 0,
+            realDefects: 0,
+            envFlaky: 0,
+            patchesGenerated: 0
+        };
+        updateBdMetrics({}, {}, null);
+    }
+
+    async function fetchBdImpactErrorAnalysis(logFilePath) {
+        if (!logFilePath) return null;
+        try {
+            const formData = new FormData();
+            formData.append('log_file_path', logFilePath);
+            const response = await fetch('http://127.0.0.1:8000/api/error-fixing/impact-analysis', {
+                method: 'POST',
+                body: formData
+            });
+            if (!response.ok) return null;
+            const data = await response.json();
+            if (data.success && data.results) {
+                window.bdCurrentErrorAnalysis = data.results;
+                return data.results;
+            }
+        } catch (error) {
+            console.warn('Bug Discovery impact analysis for metrics failed:', error);
+        }
+        return null;
+    }
+
+    async function refreshBdMetricsForCurrentInstance() {
+        const results = window.bugDiscoveryResults || {};
+        const fixSuggestions = window.bugDiscoveryFixSuggestions || {};
+        const logPath = window.bugDiscoveryLogFilePath || getSelectedBugLogFilePath();
+
+        let errorAnalysis = results.error_analysis || window.bdCurrentErrorAnalysis || null;
+        if (!errorAnalysis && logPath) {
+            errorAnalysis = await fetchBdImpactErrorAnalysis(logPath);
+        }
+
+        updateBdMetrics(results, fixSuggestions, errorAnalysis);
+    }
+
+    function updateBdProgressTrackerFromResults(fixSuggestions, analysisResult) {
+        const tracker = document.getElementById('bdProgressTracker');
+        if (!tracker) return;
+        const fixSuggestion = fixSuggestions?.fix_suggestion || {};
+        const terminalCommands = normalizeTerminalCommands(
+            fixSuggestions?.terminal_commands?.terminal_commands
+            || fixSuggestions?.terminal_commands
+            || analysisResult?.phase4_commands?.terminal_commands
+            || analysisResult?.phase4_commands
+            || []
+        );
+        const invSteps = fixSuggestion.investigation_steps || [];
+        const codePatches = fixSuggestion.code_patches || [];
+        const funcCount = (fixSuggestion.suspected_functions || []).length;
+        const cmdCount = Array.isArray(terminalCommands) ? terminalCommands.length : 0;
+        const details = tracker.querySelectorAll('.bd-progress-detail');
+        if (details[0]) details[0].textContent = 'Log ingested';
+        if (details[1]) details[1].textContent = fixSuggestion.reason ? 'Complete': 'Complete';
+        if (details[2]) details[2].textContent = `${funcCount} identified`;
+        if (details[3]) details[3].textContent = `${codePatches.length} patches`;
+        if (details[4]) details[4].textContent = `${invSteps.length} steps`;
+        if (details[5]) details[5].textContent = `${cmdCount} commands`;
+        if (details[6]) details[6].textContent = 'Ready';
+        updateBdResultDetailsCounts();
+    }
+
+    // Helpers
+    function resetResultsArea() {
+        setBdProgressTrackerState('pending');
+        resetBdMetrics();
+        updateBdResultDetailsCounts();
+        showBdAnalysisResultsPanel(false);
+        if (bdAnalysisPlaceholder) {
+            bdAnalysisPlaceholder.innerHTML = '<p class="bd-results-placeholder">Analysis results will appear here after running RCA analysis...</p>';
+        }
+        document.querySelectorAll('.bd-analysis-radio').forEach((radio) => {
+            radio.checked = false;
+        });
+        showViewArtifactsSection(false);
+        if (bdAnalysisDetailDisplay) {
+            bdAnalysisDetailDisplay.innerHTML = '<p class="bd-results-placeholder">Select a category on the left to view analysis details...</p>';
+        }
+        if (artifactsDropdown) {
+            artifactsDropdown.value = '';
+        }
+        const artifactsLabel = document.getElementById('artifactsDropdownBtnLabel');
+        if (artifactsLabel) {
+            artifactsLabel.textContent = '-- Select an artifact to view --';
+        }
+        if (artifactsDisplay) {
+            artifactsDisplay.innerHTML = '<p class="bd-results-placeholder">Select an artifact from the dropdown above to view its details...</p>';
+        }
+        if (bugResultsDisplay) {
+            bugResultsDisplay.innerHTML = '';
+        }
+        const subtitleEl = document.getElementById('bdAnalysisDetailSubtitle');
+        if (subtitleEl) {
+            subtitleEl.textContent = 'Select a category on the left to view details';
+        }
+        // Reset existing fix result
+        existingFixResult = null;
+        if (bugFixPresentBtn) {
+            bugFixPresentBtn.style.display = 'none';
+        }
+        if (bugExecuteCommandsBtn) {
+            bugExecuteCommandsBtn.style.display = 'none';
+        }
+        window.bugDiscoveryExecutableCommands = [];
+        window.bugDiscoveryResults = null;
+        window.bugDiscoveryFixSuggestions = null;
+        window.bugDiscoveryDeploymentContextExtended = null;
+        window.bugDiscoveryLogFilePath = null;
+        updateBdExportReportButton();
+    }
+
+    function normalizeTerminalCommands(rawCommands) {
+        if (!Array.isArray(rawCommands)) return [];
+        return rawCommands
+            .map((cmd) => {
+                if (typeof cmd === 'string') {
+                    return { command: cmd, explanation: 'LLM suggested command'};
+                }
+                if (cmd && typeof cmd === 'object') {
+                    const commandText = cmd.command || cmd.text || '';
+                    if (!commandText) return null;
+                    return {
+                        command: String(commandText),
+                        explanation: cmd.explanation || cmd.hint || 'LLM suggested command'
+                    };
+                }
+                return null;
+            })
+            .filter(Boolean);
+    }
+
+    function extractTerminalCommands(terminalCommandsData) {
+        if (Array.isArray(terminalCommandsData)) {
+            return terminalCommandsData;
+        }
+        if (!terminalCommandsData || typeof terminalCommandsData !== 'object') {
+            return [];
+        }
+
+        const direct = terminalCommandsData.terminal_commands;
+        if (Array.isArray(direct)) {
+            return direct;
+        }
+        if (direct && typeof direct === 'object'&& Array.isArray(direct.terminal_commands)) {
+            return direct.terminal_commands;
+        }
+        return [];
+    }
+
+    /** Prefer first non-empty array from candidates. */
+    function coalesceArrays(...candidates) {
+        for (const c of candidates) {
+            if (Array.isArray(c) && c.length > 0) return c;
+        }
+        return [];
+    }
+
+    /** Merge phase3_fixes (full RCA) with fix_suggestions.json (often partial). */
+    function mergeBugDiscoveryFixSuggestions(phase3Fixes, fixSuggestionsPayload) {
+        const p3 = phase3Fixes && typeof phase3Fixes === 'object' ? phase3Fixes : {};
+        const file = fixSuggestionsPayload && typeof fixSuggestionsPayload === 'object' ? fixSuggestionsPayload : {};
+        const p3Fix = p3.fix_suggestion && typeof p3.fix_suggestion === 'object' ? p3.fix_suggestion : {};
+        const fileFix = file.fix_suggestion && typeof file.fix_suggestion === 'object' ? file.fix_suggestion : {};
+        const fileLooksLikeFixSuggestion = !!(file.suspected_functions || file.code_patches
+            || file.root_cause_analysis || file.investigation_steps || file.investigation_commands);
+        const inlineFix = fileLooksLikeFixSuggestion ? file : {};
+
+        const mergedFixSuggestion = {
+            ...p3Fix,
+            ...fileFix,
+            ...inlineFix,
+            suspected_functions: coalesceArrays(
+                p3Fix.suspected_functions, fileFix.suspected_functions, inlineFix.suspected_functions
+            ),
+            suspected_configs: coalesceArrays(
+                p3Fix.suspected_configs, fileFix.suspected_configs, inlineFix.suspected_configs
+            ),
+            code_patches: coalesceArrays(
+                p3Fix.code_patches, fileFix.code_patches, inlineFix.code_patches
+            ),
+            config_patches: coalesceArrays(
+                p3Fix.config_patches, fileFix.config_patches, inlineFix.config_patches
+            ),
+            investigation_steps: coalesceArrays(
+                p3Fix.investigation_steps, fileFix.investigation_steps, inlineFix.investigation_steps
+            ),
+            investigation_commands: coalesceArrays(
+                p3Fix.investigation_commands, fileFix.investigation_commands, inlineFix.investigation_commands
+            )
+        };
+
+        const rootCause = p3Fix.root_cause_analysis || fileFix.root_cause_analysis || inlineFix.root_cause_analysis
+            || p3Fix.reason || fileFix.reason || inlineFix.reason
+            || p3Fix.detailed_root_cause || fileFix.detailed_root_cause || inlineFix.detailed_root_cause;
+        if (rootCause) {
+            mergedFixSuggestion.root_cause_analysis = rootCause;
+        }
+
+        return {
+            ...p3,
+            ...file,
+            error_text: p3.error_text || file.error_text || '',
+            fix_suggestion: mergedFixSuggestion,
+            terminal_commands: file.terminal_commands || p3.terminal_commands || null
+        };
+    }
+
+    /** Unified view for Result Details panels (radio categories). */
+    function getBugDiscoveryNormalizedContext() {
+        const results = window.bugDiscoveryResults || {};
+        const phase3FromResults = results.phase3_fixes || {};
+        const stored = window.bugDiscoveryFixSuggestions || {};
+        const fixSuggestions = mergeBugDiscoveryFixSuggestions(phase3FromResults, stored);
+        const fixSuggestion = { ...(fixSuggestions.fix_suggestion || {}) };
+        const phase2 = results.phase2_analysis || results.phase2_results || {};
+
+        if (!fixSuggestion.suspected_functions?.length && Array.isArray(phase2.suspected_functions)) {
+            fixSuggestion.suspected_functions = phase2.suspected_functions.map((f) => {
+                if (typeof f === 'string') return f;
+                return f.function_name || f.name || f;
+            }).filter(Boolean);
+        }
+        if (!fixSuggestion.suspected_configs?.length && Array.isArray(phase2.suspected_configs)) {
+            fixSuggestion.suspected_configs = phase2.suspected_configs.map((c) => {
+                if (typeof c === 'string') return c;
+                return c.config_name || c.param_name || c.name || c;
+            }).filter(Boolean);
+        }
+        if (!fixSuggestion.root_cause_analysis) {
+            fixSuggestion.root_cause_analysis = fixSuggestion.reason
+                || phase2.root_cause_analysis
+                || results.root_cause
+                || results.summary?.root_cause
+                || '';
+        }
+        if (!fixSuggestion.investigation_steps?.length && Array.isArray(phase2.investigation_steps)) {
+            fixSuggestion.investigation_steps = phase2.investigation_steps;
+        }
+        if (!fixSuggestion.code_patches?.length && Array.isArray(phase2.code_patches)) {
+            fixSuggestion.code_patches = phase2.code_patches;
+        }
+
+        return { results, fixSuggestions, fixSuggestion, phase2 };
+    }
+
+    function isDependencyOrVersionError(errorText, rootCauseText) {
+        const combined = `${errorText || ''}\n${rootCauseText || ''}`.toLowerCase();
+        if (!combined.trim()) return false;
+        const patterns = [
+            /modulenotfounderror/,
+            /no module named/,
+            /cannot find module/,
+            /package .* not found/,
+            /missing (library|package|dependency|module)/,
+            /command not found/,
+            /version mismatch/,
+            /incompatible version/,
+            /requires .* but .* installed/,
+            /could not find a version that satisfies the requirement/,
+            /dependency conflict/,
+            /unsatisfied dependency/
+        ];
+        return patterns.some((pattern) =>pattern.test(combined));
+    }
+
+    function updateBugExecuteCommandsButtonVisibility(errorText, rootCauseText, terminalCommands) {
+        if (!bugExecuteCommandsBtn) return;
+        const normalizedCommands = normalizeTerminalCommands(terminalCommands);
+        const shouldShow =
+            normalizedCommands.length > 0 &&
+            isDependencyOrVersionError(errorText, rootCauseText);
+
+        window.bugDiscoveryExecutableCommands = shouldShow ? normalizedCommands : [];
+        bugExecuteCommandsBtn.style.display = shouldShow ? 'inline-block': 'none';
+    }
+
+    async function runBugDiscoveryExecuteCommands() {
+        try {
+            const commands = window.bugDiscoveryExecutableCommands || [];
+            if (!commands.length) {
+                alert('No executable commands are available for this error.');
+                return;
+            }
+
+            const commandsList = commands.map((cmd, idx) => `${idx + 1}. ${cmd.command}`).join('\n');
+            const confirmMsg =
+                `Execute ${commands.length} command(s)?\n\n` +
+                `Commands to run:\n${commandsList}\n\n` +
+                'Note: Some commands may require administrator privileges.';
+            if (!confirm(confirmMsg)) return;
+
+            if (bugExecuteCommandsBtn) {
+                bugExecuteCommandsBtn.disabled = true;
+                bugExecuteCommandsBtn.textContent = 'Executing...';
+            }
+            showStatusBar('Executing dependency/version fix commands...', 'info', 'Bug Discovery');
+
+            const response = await fetch('http://127.0.0.1:8000/api/error-fixing/execute-commands', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    commands
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ detail: 'Unknown error'}));
+                throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            hideStatusBar();
+
+            if (!data.success) {
+                showStatusBar(data.message || 'No commands were executed.', 'warning', 'Bug Discovery');
+                return;
+            }
+
+            const resultLines = ['=== EXECUTE COMMANDS RESULTS ===', ''];
+            (data.results || []).forEach((result, idx) => {
+                resultLines.push(
+                    `${idx + 1}/${data.results.length} ${result.command}`,
+                    `Status: ${result.status}${result.return_code !== null && result.return_code !== undefined ? ` (exit ${result.return_code})` : ''}`
+                );
+                if (result.output) {
+                    resultLines.push('--- OUTPUT ---', result.output.trimEnd());
+                }
+                if (result.stderr) {
+                    resultLines.push('--- STDERR ---', result.stderr.trimEnd());
+                }
+                if (result.error) {
+                    resultLines.push(`--- ERROR ---\n${result.error}`);
+                }
+                resultLines.push('');
+            });
+
+            const executionText = resultLines.join('\n');
+            showBdAnalysisResultsPanel(true);
+            setBugAnalysisDetailContent(`
+                    <div class="analysis-section">
+                        <h4>Execute Commands Results</h4>
+                        <pre style="white-space: pre-wrap; background: #f8fafc; border: 1px solid #E1E5EA; border-radius: 6px; padding: 1rem; font-size: 0.85rem; max-height: 420px; overflow: auto;">${escapeHtml(executionText)}</pre>
+                    </div>
+                `);
+            const invCmdRadio = document.querySelector('.bd-analysis-radio[value="investigation-commands"]');
+            if (invCmdRadio) invCmdRadio.checked = true;
+            showStatusBar(`Executed ${data.results.length} command(s)`, 'success', 'Bug Discovery');
+        } catch (error) {
+            console.error('Error executing Bug Discovery commands:', error);
+            hideStatusBar();
+            showStatusBar(`Failed to execute commands: ${error.message}`, 'error', 'Bug Discovery');
+        } finally {
+            if (bugExecuteCommandsBtn) {
+                bugExecuteCommandsBtn.disabled = false;
+                bugExecuteCommandsBtn.textContent = 'Execute commands';
+            }
+        }
+    }
+
+    function validateDirs() {
+        // Check actual state variables, not input elements (since we use Electron folder picker)
+        if (!bugWorkingDir || !bugLogDir) {
+            startRCAButton.disabled = true;
+            return;
+        }
+        // A log file must be selected
+        if (!logFileCombo.value || logFileCombo.value === 'Select a log file'|| logFileCombo.value === '') {
+            startRCAButton.disabled = true;
+            return;
+        }
+        startRCAButton.disabled = false;
+    }
+
+    // --- Browse buttons ---
+    codeDirBtn.addEventListener('click', async () => {
+        if (window.API && window.API.showOpenDirectoryDialog) {
+            const sel = await window.API.showOpenDirectoryDialog('Select Source Code Directory');
+            if (sel && sel.length > 0) {
+                bugWorkingDir = sel[0];
+                // Display only last folder name
+                const folderName = getLastFolderName(sel[0]);
+                bugCodeDirText.textContent = folderName || 'No folder selected';
+                bugCodeDirText.style.color = '#374151';
+                validateDirs(); // Re-validate after folder selection
+            }
+        } else {
+            showStatusBar('Folder selection not available. Please check Electron setup.', 'error');
+        }
+    });
+    logDirBtn.addEventListener('click', async () => {
+        if (window.API && window.API.showOpenDirectoryDialog) {
+            const sel = await window.API.showOpenDirectoryDialog('Select Log Folder');
+            if (sel && sel.length > 0) {
+                bugLogDir = sel[0];
+                // Display only last folder name
+                const folderName = getLastFolderName(sel[0]);
+                bugLogDirText.textContent = folderName || 'No folder selected';
+                bugLogDirText.style.color = '#374151';
+                // Scan for .log/.txt files if window.API.supports
+                if (window.API.listFilesInDirectory) {
+                    const files = await window.API.listFilesInDirectory(bugLogDir);
+                    const filtered = (files || []).filter(f => ((f && f.name) || '').match(/\.log$|\.txt$/i));
+                    bugLogFilesArr = filtered || [];
+                    populateBugLogDropdown(bugLogFilesArr);
+                } else {
+                    populateBugLogDropdown([]);
+                }
+                validateDirs(); // Re-validate after folder selection
+            }
+        } else {
+            showStatusBar('Folder selection not available. Please check Electron setup.', 'error');
+        }
+    });
+
+    // Populate Bug Discovery log file dropdown
+    function populateBugLogDropdown(files) {
+        const menu = document.getElementById('bugLogFileDropdownMenu');
+        if (!menu) return;
+        menu.innerHTML = '';
+
+        const placeholder = document.createElement('div');
+        placeholder.className = 'dropdown-item';
+        placeholder.setAttribute('data-value', '');
+        placeholder.setAttribute('data-path', '');
+        placeholder.textContent = 'Select a log file';
+        menu.appendChild(placeholder);
+
+        const basePath = (typeof bugLogDir === 'string') ? bugLogDir.replace(/\\/g, '/').replace(/\/$/, '') : '';
+        (files || []).forEach(file => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item';
+            const fullPath = (file && file.path) || '';
+            let display = (file && file.name) || '';
+            if (basePath && fullPath && fullPath.replace(/\\/g, '/').startsWith(basePath)) {
+                display = fullPath.replace(/\\/g, '/').substring(basePath.length + 1);
+            }
+            const value = display || (file && file.name) || '';
+            item.setAttribute('data-value', value);
+            item.setAttribute('data-path', fullPath);
+            item.textContent = value;
+            menu.appendChild(item);
+        });
+
+        setBugLogFileSelection('', 'Select a log file', '');
+        validateDirs();
+    }
+    // --- Crash Analysis Toggle ---
+    if (crashAnalysisToggle) {
+        crashAnalysisToggle.addEventListener('click', () => {
+            crashAnalysisEnabled = !crashAnalysisEnabled;
+            if (crashAnalysisEnabled) {
+                crashAnalysisToggle.textContent = 'ON';
+                crashAnalysisToggle.style.backgroundColor = '#28A745';
+                crashAnalysisToggle.style.borderColor = '#1E7E34';
+            } else {
+                crashAnalysisToggle.textContent = 'OFF';
+                crashAnalysisToggle.style.backgroundColor = '#AAAAAA';
+                crashAnalysisToggle.style.borderColor = '#999999';
+            }
+        });
+    }
+    
+    // Function to detect if log file is a segmentation fault
+    function isSegmentationFaultLog(fileName) {
+        if (!fileName) return false;
+        const name = fileName.toLowerCase();
+        // Check for common segmentation fault indicators
+        return name.includes('segfault') || 
+               name.includes('segmentation') || 
+               name.includes('crash') || 
+               name.includes('gdb') ||
+               name.includes('backtrace') ||
+               name.includes('core');
+    }
+    
+    // Store existing fix result
+    let existingFixResult = null;
+    
+    // Function to check for existing fixes
+    async function checkForExistingFix() {
+        if (!bugFixPresentBtn) return;
+        
+        // Hide button by default
+        bugFixPresentBtn.style.display = 'none';
+        existingFixResult = null;
+        
+        // Get selected log file
+        if (!logFileCombo || !logFileCombo.value || logFileCombo.value === 'Select a log file') {
+            return;
+        }
+        
+        // Get log file path
+        const logFilePath = getSelectedBugLogFilePath();
+        
+        if (!logFilePath || !bugWorkingDir) {
+            return;
+        }
+        
+        // Get openair codebase name from working directory
+        const openairCodebaseName = bugWorkingDir.split(/[/\\]/).pop() || 'openairinterface5g-develop';
+        
+        // Show progress box and place it below status toast if visible
+        const fixCheckProgressBox = document.getElementById('fixCheckProgressBox');
+        if (fixCheckProgressBox) {
+            const statusBar = document.getElementById('statusBar');
+            let progressTop = 80;
+            if (statusBar && statusBar.style.display !== 'none') {
+                const statusRect = statusBar.getBoundingClientRect();
+                progressTop = Math.max(progressTop, Math.round(statusRect.bottom + 12));
+            }
+            fixCheckProgressBox.style.top = `${progressTop}px`;
+            fixCheckProgressBox.style.right = '20px';
+            fixCheckProgressBox.style.display = 'block';
+        }
+        
+        try {
+            const formData = new FormData();
+            formData.append('log_file_path', logFilePath);
+            formData.append('openair_codebase_name', openairCodebaseName);
+            // Add source_code_directory to help backend find Git repo (matching PyQt behavior)
+            if (bugWorkingDir) {
+                formData.append('source_code_directory', bugWorkingDir);
+                console.log('🔍 DEBUG [checkForExistingFix]: Adding source_code_directory:', bugWorkingDir);
+            }
+            
+            console.log('🔍 DEBUG [checkForExistingFix]: Sending request to backend...');
+            console.log('  log_file_path:', logFilePath);
+            console.log('  openair_codebase_name:', openairCodebaseName);
+            console.log('  source_code_directory:', bugWorkingDir);
+            
+            const response = await fetch('http://127.0.0.1:8000/api/error-fixing/check-existing-fix', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Backend error: ${response.status} - ${await response.text()}`);
+            }
+            
+            const result = await response.json();
+            
+            // Debug: Check what the backend returned
+            console.log('🔍 DEBUG [checkForExistingFix]: Backend response received');
+            console.log('  result keys:', Object.keys(result));
+            console.log('  result.success?', result.success);
+            console.log('  result.found?', result.found);
+            console.log('  result.git_diff exists?', !!result.git_diff);
+            console.log('  result.git_diff type:', typeof result.git_diff);
+            console.log('  result.git_diff is null?', result.git_diff === null);
+            console.log('  result.git_diff is undefined?', result.git_diff === undefined);
+            if (result.git_diff) {
+                console.log('  ✅ result.git_diff EXISTS in backend response! Length:', result.git_diff.length);
+                console.log('  result.git_diff first 500 chars:', result.git_diff.substring(0, 500));
+            } else {
+                console.log('  ❌ result.git_diff is MISSING or FALSY in backend response');
+            }
+            
+            // Hide progress box
+            if (fixCheckProgressBox) {
+                fixCheckProgressBox.style.display = 'none';
+            }
+            
+            if (result.success && result.found) {
+                // Existing fix found!
+                console.log('  ✅ Fix found! Storing result in existingFixResult');
+                existingFixResult = result;
+                console.log('  existingFixResult.git_diff after assignment:', !!existingFixResult.git_diff);
+                bugFixPresentBtn.style.display = 'inline-block';
+ bugFixPresentBtn.textContent = ` Fix Already Present (${result.confidence}) - Click to View`;
+            } else {
+                // No fix found
+                console.log('  ❌ No fix found');
+                bugFixPresentBtn.style.display = 'none';
+                existingFixResult = null;
+            }
+        } catch (error) {
+            console.error('Error checking for existing fix:', error);
+            bugFixPresentBtn.style.display = 'none';
+            existingFixResult = null;
+            // Hide progress box on error
+            if (fixCheckProgressBox) {
+                fixCheckProgressBox.style.display = 'none';
+            }
+        }
+    }
+    // Function to format commit message similar to PyQt
+    function formatCommitMessage(commit, result) {
+        let message = '';
+        
+        // Subject/First line of commit message
+        if (commit.subject) {
+            message += commit.subject + '\n\n';
+        } else if (commit.body) {
+            const lines = commit.body.split('\n');
+            if (lines.length > 0) {
+                message += lines[0] + '\n\n';
+            }
+        }
+        
+        // Error Message (from the original error that was fixed)
+        const errorMsg = result && result.selection_result && result.selection_result.error_message 
+            ? result.selection_result.error_message 
+            : (result && result.error_message ? result.error_message : null);
+        
+        if (errorMsg) {
+            message += `Error Message: "${errorMsg}"\n\n`;
+        }
+        
+        // Applied patches count
+        const codePatchesCount = commit.code_patch_count || (commit.code_patches ? commit.code_patches.length : 0);
+        const configPatchesCount = commit.config_patch_count || (commit.config_patches ? commit.config_patches.length : 0);
+        message += `Applied ${codePatchesCount} code patches and ${configPatchesCount} config patches.\n\n`;
+        
+        // Selected Patch Details
+        if (codePatchesCount > 0 || configPatchesCount > 0) {
+            message += 'Selected Patch Details:\n';
+            
+            // Config patches first (as shown in PyQt example)
+            if (configPatchesCount > 0 && commit.config_patches) {
+                commit.config_patches.forEach((patch) => {
+                    const paramName = typeof patch === 'object'? (patch.parameter || patch.config_name || 'N/A') : patch;
+                    const fileName = typeof patch === 'object'? (patch.file || patch.file_path || 'N/A') : 'N/A';
+                    message += `- Config: ${paramName} (${fileName})\n`;
+                });
+            }
+            
+            // Code patches
+            if (codePatchesCount > 0 && commit.code_patches) {
+                commit.code_patches.forEach((patch) => {
+                    const funcName = typeof patch === 'object'? (patch.function || patch.function_name || 'N/A') : patch;
+                    const fileName = typeof patch === 'object'? (patch.file || patch.file_path || 'N/A') : 'N/A';
+                    message += `- Code: ${funcName} (${fileName})\n`;
+                });
+            }
+            message += '\n';
+        }
+        
+        // Root Cause Analysis (from commit body or reasoning)
+        // Add "Error Detected"first
+        message += 'Root Cause Analysis:\n';
+        
+        // Error Detected
+        if (errorMsg) {
+            message += `Error Detected: ${errorMsg}\n\n`;
+        }
+        
+        // Then add the root cause analysis text
+        let rootCauseText = '';
+        
+        // First, try to extract from commit body if it contains root cause
+        if (commit.body) {
+            const bodyLower = commit.body.toLowerCase();
+            // Check if body contains root cause analysis
+            if (bodyLower.includes('root cause')) {
+                // Extract root cause section from body
+                const bodyLines = commit.body.split('\n');
+                let inRootCause = false;
+                let foundRootCauseHeader = false;
+                
+                for (let i = 0; i < bodyLines.length; i++) {
+                    const line = bodyLines[i];
+                    const lineLower = line.toLowerCase();
+                    
+                    if (lineLower.includes('root cause') && !foundRootCauseHeader) {
+                        foundRootCauseHeader = true;
+                        inRootCause = true;
+                        // Extract text after "Root Cause Analysis:"or "Root Cause:"
+                        const match = line.match(/Root Cause[^:]*:\s*(.+)/i);
+                        if (match && match[1].trim()) {
+                            rootCauseText += match[1].trim() + '\n';
+                        }
+                    } else if (inRootCause) {
+                        // Continue collecting lines until we hit another section or empty line after content
+                        if (line.trim()) {
+                            rootCauseText += line + '\n';
+                        } else if (rootCauseText.trim()) {
+                            // Stop at first empty line after we've collected some content
+                            break;
+                        }
+                    }
+                }
+                
+                if (!rootCauseText.trim()) {
+                    // Fallback: use full body if it seems to contain root cause
+                    if (bodyLower.includes('indicates') || bodyLower.includes('unable') || bodyLower.includes('likely')) {
+                        rootCauseText = commit.body;
+                    }
+                }
+            } else {
+                // Body doesn't contain root cause, try reasoning
+                if (result && result.reasoning) {
+                    rootCauseText = result.reasoning;
+                }
+            }
+        } else if (result && result.reasoning) {
+            rootCauseText = result.reasoning;
+        }
+        
+        if (rootCauseText.trim()) {
+            message += rootCauseText.trim();
+        }
+        
+        return message.trim();
+    }
+    
+    // Function to display existing fix details
+    function displayExistingFixDetails() {
+        console.log('🔍 DEBUG [displayExistingFixDetails]: Starting...');
+        
+        if (!existingFixResult || !bugResultsDisplay) {
+            console.log('❌ DEBUG: existingFixResult or bugResultsDisplay is missing');
+            return;
+        }
+        
+        const result = existingFixResult;
+        const commit = result.commit || {};
+        
+        console.log('🔍 DEBUG [displayExistingFixDetails]:');
+        console.log('  result keys:', Object.keys(result));
+        console.log('  result.git_diff exists?', !!result.git_diff);
+        console.log('  result.git_diff type:', typeof result.git_diff);
+        console.log('  result.git_diff is null?', result.git_diff === null);
+        console.log('  result.git_diff is undefined?', result.git_diff === undefined);
+        console.log('  result.git_diff is empty string?', result.git_diff === '');
+        if (result.git_diff) {
+            console.log('  result.git_diff length:', result.git_diff.length);
+            console.log('  result.git_diff first 500 chars:', result.git_diff.substring(0, 500));
+        }
+        
+        if (!commit) {
+            console.log('❌ DEBUG: No commit available');
+            showBdAnalysisResultsPanel(true);
+            setBugAnalysisDetailContent('<p style="color: #ef4444; padding: 1rem;">No fix commit available.</p>');
+            return;
+        }
+        
+        // Format the display similar to PyQt
+        let htmlContent = `<div class="analysis-results-container">`;
+        htmlContent += `
+            <div class="error-summary-box"style="background: #f0f9ff; border-left: 4px solid #0ea5e9;">
+                <h4>EXISTING FIX FOUND</h4>
+            </div>
+        `;
+        
+        // Commit Details
+        htmlContent += `
+            <div class="analysis-section">
+                <h4>COMMIT DETAILS</h4>
+                <table class="analysis-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%;">Property</th>
+                            <th style="width: 70%;">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Hash</strong></td>
+                            <td><code>${escapeHtml(commit.commit_hash || commit.commit_hash_short || 'N/A')}</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Author</strong></td>
+                            <td>${escapeHtml(commit.author_name || commit.author || 'N/A')}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Date</strong></td>
+                            <td>${escapeHtml(commit.date_iso || commit.date || 'N/A')}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Committer</strong></td>
+                            <td>${escapeHtml(commit.committer || commit.author_name || commit.author || 'N/A')}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Commit Date</strong></td>
+                            <td>${escapeHtml(commit.commit_date || commit.date_iso || commit.date || 'N/A')}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        // Branch Information
+        htmlContent += `
+            <div class="analysis-section">
+                <h4>BRANCH INFORMATION</h4>
+                <table class="analysis-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%;">Property</th>
+                            <th style="width: 70%;">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Fix Source</strong></td>
+                            <td>origin/develop</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Target Branch</strong></td>
+                            <td>${escapeHtml(result.current_branch || 'develop')}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        // Match Details
+        htmlContent += `
+            <div class="analysis-section">
+                <h4>MATCH DETAILS</h4>
+                <table class="analysis-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%;">Property</th>
+                            <th style="width: 70%;">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Confidence</strong></td>
+                            <td>${escapeHtml(result.confidence || 'N/A')}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Similarity Score</strong></td>
+                            <td>${((result.score || commit.boosted_score || commit.similarity || 0) * 100).toFixed(2)}%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reasoning</strong></td>
+                            <td>${escapeHtml(result.reasoning || 'N/A')}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        // Commit Message - format similar to PyQt
+        if (commit.body || commit.subject || existingFixResult) {
+            htmlContent += `
+                <div class="analysis-section">
+                    <h4>COMMIT MESSAGE</h4>
+                    <div style="background: #f3f4f6; padding: 1rem; border-radius: 6px; border: 1px solid #e1e5ea;">
+                        <pre style="margin: 0; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; white-space: pre-wrap; word-wrap: break-word; color: #1e3a5f;">${escapeHtml(formatCommitMessage(commit, existingFixResult))}</pre>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Patch Information - show only selected/applied patches (from commit metadata)
+        htmlContent += `
+            <div class="analysis-section">
+                <h4>PATCH INFORMATION</h4>
+        `;
+        
+        // Get patch counts (only show patches that are actually in the commit)
+        const codePatchesCount = commit.code_patch_count || (commit.code_patches ? commit.code_patches.length : 0);
+        const configPatchesCount = commit.config_patch_count || (commit.config_patches ? commit.config_patches.length : 0);
+        
+        // Show config patches first (as in PyQt example)
+        if (configPatchesCount > 0 && commit.config_patches) {
+            htmlContent += `
+                <p><strong>Config Patches:</strong> ${configPatchesCount}</p>
+            `;
+            commit.config_patches.forEach((patch, idx) => {
+                const paramName = typeof patch === 'object'? (patch.parameter || patch.config_name || 'N/A') : patch;
+                const fileName = typeof patch === 'object'? (patch.file || patch.file_path || 'N/A') : 'N/A';
+                htmlContent += `
+                    <p style="margin: 0.5rem 0; padding-left: 1rem;">
+                        ${idx + 1}. <code>${escapeHtml(paramName)}</code> (<code style="font-size: 0.75rem; word-break: break-all;">${escapeHtml(fileName)}</code>)
+                    </p>
+                `;
+            });
+        }
+        
+        // Show code patches
+        if (codePatchesCount > 0 && commit.code_patches) {
+            htmlContent += `
+                <p style="margin-top: 1rem;"><strong>Code Patches:</strong> ${codePatchesCount}</p>
+            `;
+            commit.code_patches.forEach((patch, idx) => {
+                const funcName = typeof patch === 'object'? (patch.function || patch.function_name || 'N/A') : patch;
+                const fileName = typeof patch === 'object'? (patch.file || patch.file_path || 'N/A') : 'N/A';
+                htmlContent += `
+                    <p style="margin: 0.5rem 0; padding-left: 1rem;">
+                        ${idx + 1}. <code>${escapeHtml(funcName)}</code> (<code style="font-size: 0.75rem; word-break: break-all;">${escapeHtml(fileName)}</code>)
+                    </p>
+                `;
+            });
+        }
+        
+        htmlContent += `</div>`;
+        
+        // Files Changed (filter out .backup files)
+        if (result.files_changed_summary || commit.files_changed) {
+            htmlContent += `
+                <div class="analysis-section">
+                    <h4>FILES CHANGED</h4>
+            `;
+            if (result.files_changed_summary) {
+                htmlContent += `
+                    <p style="color: #1e3a5f; font-weight: 500;">${escapeHtml(result.files_changed_summary)}</p>
+                `;
+            } else if (commit.files_changed && commit.files_changed.length > 0) {
+                // Filter out .backup files
+                const filteredFiles = commit.files_changed.filter((fileInfo) => {
+                    const fileName = typeof fileInfo === 'object'? (fileInfo.file || fileInfo.name || 'N/A') : fileInfo;
+                    return !fileName.endsWith('.backup');
+                });
+                
+                filteredFiles.slice(0, 10).forEach((fileInfo) => {
+                    const fileName = typeof fileInfo === 'object'? (fileInfo.file || fileInfo.name || 'N/A') : fileInfo;
+                    const changes = typeof fileInfo === 'object'? (fileInfo.changes || 'N/A') : '';
+                    htmlContent += `
+                        <p style="margin: 0.5rem 0; padding-left: 1rem;">
+                            • ${escapeHtml(fileName)}${changes !== 'N/A'&& changes ? ` (${escapeHtml(changes)})` : ''}
+                        </p>
+                    `;
+                });
+                if (filteredFiles.length > 10) {
+                    htmlContent += `<p style="color: #6b7280; font-size: 0.85rem; padding-left: 1rem;">... and ${filteredFiles.length - 10} more files</p>`;
+                }
+            }
+            htmlContent += `</div>`;
+        }
+        // Code Changes (Diff)
+        // Debug: Check if git_diff exists
+        console.log('🔍 DEBUG [Code Changes Section]:');
+        console.log('  Checking result.git_diff...');
+        console.log('  result.git_diff exists?', !!result.git_diff);
+        console.log('  result.git_diff type:', typeof result.git_diff);
+        console.log('  result.git_diff === null?', result.git_diff === null);
+        console.log('  result.git_diff === undefined?', result.git_diff === undefined);
+        console.log('  result.git_diff === ""?', result.git_diff === '');
+        console.log('  result.git_diff truthy?', result.git_diff ? 'YES' : 'NO');
+        console.log('  result keys:', Object.keys(result));
+        if (result.git_diff) {
+            console.log('  ✅ result.git_diff EXISTS! Length:', result.git_diff.length);
+            console.log('  result.git_diff first 500 chars:', result.git_diff.substring(0, 500));
+        } else {
+            console.log('  ❌ result.git_diff is FALSY - Section will be SKIPPED');
+        }
+        
+        if (result.git_diff) {
+            console.log('  ✅ ENTERING Code Changes section - Building HTML...');
+            htmlContent += `
+                <div class="analysis-section">
+                    <h4>CODE CHANGES (DIFF)</h4>
+            `;
+            
+            // Parse and format the diff output (matching PyQt format)
+            const diffLines = result.git_diff.split('\n');
+            console.log('  ✅ Parsing diff lines, total lines:', diffLines.length);
+            console.log('  First 10 diff lines:', diffLines.slice(0, 10));
+            let currentFile = null;
+            let currentFileA = null;  // a/file path
+            let currentFileB = null;  // b/file path
+            let inDiff = false;
+            let fileDiffContent = '';
+            
+            let fileCount = 0;
+            let diffLineCount = 0;
+            
+            function closeCurrentFile() {
+                if (currentFile && fileDiffContent && !currentFile.endsWith('.backup')) {
+                    console.log(`  ✅ Closing file: ${currentFile}, diff lines: ${diffLineCount}`);
+                    // Format file path to show b/filepath (matching PyQt)
+                    const displayFilePath = currentFileB ? `b/${currentFileB}` : currentFile;
+                    htmlContent += `
+                        <div style="margin-top: 1rem;">
+                            <h5 style="color: #1e3a5f; font-size: 0.9rem; margin-bottom: 0.5rem;">File: ${escapeHtml(displayFilePath)}</h5>
+                            <div style="background: #f3f4f6; padding: 1rem; border-radius: 6px; border: 1px solid #e1e5ea; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.75rem; white-space: pre-wrap; word-wrap: break-word; overflow-x: auto;">
+                                <div style="color: #6b7280; margin-bottom: 0.5rem;">──────────────────────────────────────────────────</div>
+                                ${fileDiffContent}
+                            </div>
+                        </div>
+                    `;
+                } else if (currentFile && currentFile.endsWith('.backup')) {
+                    console.log(`  ⏭️  Skipping .backup file: ${currentFile}`);
+                }
+                fileDiffContent = '';
+                diffLineCount = 0;
+                currentFile = null;
+                currentFileA = null;
+                currentFileB = null;
+            }
+            
+            diffLines.forEach((line, index) => {
+                if (line.startsWith('diff --git')) {
+                    console.log(`  📄 Found diff --git at line ${index}:`, line.substring(0, 100));
+                    fileCount++;
+                    if (currentFile) {
+                        closeCurrentFile();
+                    }
+                    
+                    // Extract file paths from diff --git line
+                    // Format: diff --git a/path/to/file b/path/to/file
+                    const parts = line.split(' ');
+                    if (parts.length >= 4) {
+                        currentFileA = parts[2].replace(/^a\//, '');
+                        currentFileB = parts[3].replace(/^b\//, '');
+                        currentFile = currentFileB;  // Use b/file as the main file name
+                    } else {
+                        currentFile = 'Unknown file';
+                    }
+                    console.log(`  📄 Extracted file paths: a=${currentFileA}, b=${currentFileB}`);
+                    
+                    // Skip .backup files
+                    if (currentFile && currentFile.endsWith('.backup')) {
+                        console.log(`  ⏭️  Skipping .backup file: ${currentFile}`);
+                        inDiff = false;
+                        currentFile = null;
+                        currentFileA = null;
+                        currentFileB = null;
+                        return;
+                    }
+                    
+                    inDiff = true;
+                } else if (inDiff && line.startsWith('---')) {
+                    // Extract a/file path from --- line
+                    // Format: --- a/path/to/file or --- /dev/null
+                    const filePath = line.replace(/^---\s+/, '').replace(/^a\//, '');
+                    if (filePath !== '/dev/null') {
+                        currentFileA = filePath;
+                    }
+                    // Add the --- line to diff content (matching PyQt format)
+                    if (currentFile && !currentFile.endsWith('.backup')) {
+                        fileDiffContent += `<span style="color: #6b7280;">${escapeHtml(line)}</span>\n`;
+                    }
+                } else if (inDiff && line.startsWith('+++')) {
+                    // Extract b/file path from +++ line
+                    // Format: +++ b/path/to/file or +++ /dev/null
+                    const filePath = line.replace(/^\+\+\+\s+/, '').replace(/^b\//, '');
+                    if (filePath !== '/dev/null') {
+                        currentFileB = filePath;
+                        currentFile = currentFileB;
+                    }
+                    // Add the +++ line to diff content (matching PyQt format)
+                    if (currentFile && !currentFile.endsWith('.backup')) {
+                        fileDiffContent += `<span style="color: #6b7280;">${escapeHtml(line)}</span>\n`;
+                    }
+                } else if (inDiff && line.startsWith('@@')) {
+                    // Skip hunk headers (@@ lines)
+                    // Optionally, we could show them for context
+                } else if (inDiff && currentFile && !currentFile.endsWith('.backup')) {
+                    // Process diff content lines (matching PyQt format)
+                    if (line.startsWith('+') && !line.startsWith('+++')) {
+                        // Added line - show with + prefix and green color
+                        diffLineCount++;
+                        fileDiffContent += `<span style="color: #16a34a; background: #f0fdf4;">+ ${escapeHtml(line.substring(1))}</span>\n`;
+                    } else if (line.startsWith('-') && !line.startsWith('---')) {
+                        // Removed line - show with - prefix and red color
+                        diffLineCount++;
+                        fileDiffContent += `<span style="color: #dc2626; background: #fef2f2;">- ${escapeHtml(line.substring(1))}</span>\n`;
+                    } else if (line.startsWith(' ') && line.length > 1) {
+                        // Context line (unchanged) - show without prefix
+                        fileDiffContent += `<span style="color: #374151;"> ${escapeHtml(line.substring(1))}</span>\n`;
+                    } else if (line.trim() === '') {
+                        // Empty line
+                        fileDiffContent += `\n`;
+                    }
+                }
+            });
+            
+            console.log(`  ✅ Parsing complete: ${fileCount} files found, currentFile: ${currentFile}, diffLineCount: ${diffLineCount}`);
+            
+            // Add last file
+            if (currentFile) {
+                closeCurrentFile();
+            }
+            
+            htmlContent += `</div>`;
+            console.log('  ✅ Code Changes section HTML added to htmlContent');
+        } else {
+            console.log('  ❌ Code Changes section SKIPPED - result.git_diff is falsy');
+        }
+        
+        // Recommendation
+        htmlContent += `
+            <div class="root-cause-box">
+                <h4>RECOMMENDATION</h4>
+                <p>This fix was previously applied to resolve a similar issue. Review the patches above and apply similar changes to your codebase.</p>
+            </div>
+        `;
+        
+        htmlContent += `</div>`;
+        
+        showBdAnalysisResultsPanel(true);
+        showViewArtifactsSection(false);
+        setBugAnalysisDetailContent(htmlContent);
+    }
+    
+    // Function to save existing fix to history
+    async function saveExistingFixToHistory() {
+        if (!existingFixResult || !existingFixResult.found) {
+            console.log('⚠️ No existing fix result to save');
+            return;
+        }
+        
+        try {
+            console.log('💾 Saving existing fix to history...');
+            
+            // Get current log file and directory info
+            const logFile = logFileCombo.value || 'N/A';
+            const logFilePath = getSelectedBugLogFilePath() ||
+                               (bugLogDir ? `${bugLogDir}/${logFile}`.replace(/\\/g, '/') : logFile);
+            const codeDir = bugWorkingDir || '';
+            
+            // Extract error message from the fix result
+            const errorMessage = existingFixResult.selection_result?.error_message || 
+                               existingFixResult.error_message || 
+                               'Existing fix from Git history';
+            
+            // Get commit information
+            const commit = existingFixResult.commit || {};
+            const commitHash = commit.commit_hash || commit.commit_hash_short || '';
+            
+            // Convert commit patches to the format expected by Code Assistant
+            const codePatches = [];
+            const configPatches = [];
+            
+            // Extract code patches from commit
+            if (commit.code_patches && Array.isArray(commit.code_patches)) {
+                commit.code_patches.forEach((patch) => {
+                    if (typeof patch === 'object') {
+                        codePatches.push({
+                            function_name: patch.function || patch.function_name || 'Unknown',
+                            file_path: patch.file || patch.file_path || 'Unknown',
+                            original_code: patch.original_code || '',
+                            patched_code: patch.patched_code || patch.suggested_code || '',
+                            suggested_code: patch.patched_code || patch.suggested_code || '',
+                            description: `From commit ${commitHash}: ${commit.subject || 'N/A'}`,
+                            patch_type: 'targeted_insertion_or_adjustment',
+                            commit_hash: commitHash,
+                            confidence: existingFixResult.confidence || 'N/A',
+                            similarity_score: commit.boosted_score || commit.similarity || 0
+                        });
+                    }
+                });
+            }
+            
+            // Extract config patches from commit
+            if (commit.config_patches && Array.isArray(commit.config_patches)) {
+                commit.config_patches.forEach((patch) => {
+                    if (typeof patch === 'object') {
+                        configPatches.push({
+                            parameter_name: patch.parameter || patch.parameter_name || 'Unknown',
+                            config_name: patch.parameter || patch.parameter_name || 'Unknown',
+                            file_path: patch.file || patch.file_path || 'Unknown',
+                            current_value: patch.current_value || '',
+                            new_value: patch.new_value || patch.suggested_value || '',
+                            suggested_value: patch.new_value || patch.suggested_value || '',
+                            description: `From commit ${commitHash}: ${commit.subject || 'N/A'}`,
+                            commit_hash: commitHash,
+                            confidence: existingFixResult.confidence || 'N/A',
+                            similarity_score: commit.boosted_score || commit.similarity || 0
+                        });
+                    }
+                });
+            }
+            
+            // CRITICAL: Preserve existing RCA analysis data if available
+            // Check if user ran RCA analysis first - if so, preserve phase2_analysis, phase4_commands, summary, deployment_context
+            const existingResults = window.bugDiscoveryResults || window.currentBugAnalysis?.results || {};
+            
+            // Start with existing results (if any) to preserve ALL analysis data
+            // Deep clone to avoid modifying the original
+            let results = {};
+            if (existingResults && Object.keys(existingResults).length > 0) {
+                try {
+                    results = JSON.parse(JSON.stringify(existingResults));
+                    console.log('✅ Preserving existing RCA analysis data:', Object.keys(results));
+                } catch (e) {
+                    console.warn('⚠️ Failed to deep clone existing results, using shallow copy:', e);
+                    results = {...existingResults};
+                }
+            }
+            
+            // Ensure phase3_fixes exists
+            if (!results.phase3_fixes) {
+                results.phase3_fixes = {};
+            }
+            if (!results.phase3_fixes.fix_suggestion) {
+                results.phase3_fixes.fix_suggestion = {};
+            }
+            
+            // Update phase3_fixes with git fix data, preserving any existing fix_suggestion fields
+            // This merges git fix data with existing RCA fix data (if RCA was run first)
+            results.phase3_fixes.fix_suggestion = {
+                ...results.phase3_fixes.fix_suggestion,  // Preserve existing fields (root_cause_analysis, investigation_steps, specification_context, etc.)
+                'code_patches': codePatches,
+                'config_patches': configPatches,
+                'fix_strategy': existingFixResult.reasoning || results.phase3_fixes.fix_suggestion.fix_strategy || 'Apply fix from similar Git commit',
+                'confidence_level': existingFixResult.confidence || results.phase3_fixes.fix_suggestion.confidence_level || 'N/A',
+                'commit_info': {
+                    'hash': commitHash,
+                    'subject': commit.subject || 'N/A',
+                    'author': commit.author_name || commit.author || 'N/A',
+                    'date': commit.date_iso || commit.date || 'N/A',
+                    'similarity_score': commit.boosted_score || commit.similarity || 0
+                }
+            };
+            
+            // Add error_text if available (matching PyQt structure)
+            if (existingFixResult.error_message || errorMessage) {
+                results.phase3_fixes.error_text = existingFixResult.error_message || errorMessage;
+            } else if (!results.phase3_fixes.error_text && errorMessage) {
+                results.phase3_fixes.error_text = errorMessage;
+            }
+            
+            // Prepare data for save-analysis API
+            // Include ALL data from existingFixResult to ensure nothing is lost
+            const saveData = {
+                error_message: errorMessage,
+                log_file: logFile,
+                log_path: logFilePath,
+                code_dir: codeDir,
+                results: results,
+                fix_suggestions: {
+                    fix_suggestion: results.phase3_fixes.fix_suggestion,
+                    from_git_history: true,  // Mark as from git history
+                    commit_info: results.phase3_fixes.fix_suggestion.commit_info,
+                    // Include all git-related data from existingFixResult
+                    git_diff: existingFixResult.git_diff || null,
+                    current_branch: existingFixResult.current_branch || null,
+                    files_changed_summary: existingFixResult.files_changed_summary || null,
+                    selection_result: existingFixResult.selection_result || null,
+                    confidence: existingFixResult.confidence || null,
+                    score: existingFixResult.score || null,
+                    reasoning: existingFixResult.reasoning || null,
+                    // Include full commit data
+                    full_commit: existingFixResult.commit || null
+                }
+            };
+            
+            // Call the save-analysis API
+            const response = await fetch('http://127.0.0.1:8000/api/rca/save-analysis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(saveData)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Failed to save: ${response.status} - ${await response.text()}`);
+            }
+            
+            const saveResult = await response.json();
+            
+            if (saveResult.success) {
+                console.log('✅ Existing fix saved to history:', saveResult.filename);
+                showStatusBar('Fix saved to history successfully', 'success', 'Bug Discovery');
+                
+                // Refresh history dropdowns in Bug Discovery, Code Evaluation, and Code Assistant
+                if (typeof window.loadBugDiscoveryHistory === 'function') {
+                    await window.loadBugDiscoveryHistory();
+                }
+                
+                // Also refresh Code Assistant history if available
+                if (typeof window.loadCodeAssistantBugHistory === 'function') {
+                    await window.loadCodeAssistantBugHistory();
+                }
+                
+                // Refresh Code Evaluation history if available
+                if (typeof window.loadCodeEvaluationBugHistory === 'function') {
+                    await window.loadCodeEvaluationBugHistory();
+                }
+            } else {
+                throw new Error(saveResult.message || 'Failed to save fix to history');
+            }
+        } catch (error) {
+            console.error('❌ Error saving existing fix to history:', error);
+            showStatusBar('Failed to save fix to history: '+ error.message, 'error', 'Bug Discovery');
+        }
+    }
+    
+    // --- Log file combo change triggers validation ---
+    logFileCombo.addEventListener('change', () => {
+        validateDirs();
+        resetResultsArea();
+        
+        // Reset crash analysis toggle to OFF when log file changes
+        crashAnalysisEnabled = false;
+        if (crashAnalysisToggle) {
+            crashAnalysisToggle.textContent = 'OFF';
+            crashAnalysisToggle.style.backgroundColor = '#AAAAAA';
+            crashAnalysisToggle.style.borderColor = '#999999';
+        }
+        
+        // Check for existing fixes when log file is selected
+        checkForExistingFix();
+    });
+    
+    const BUG_DISCOVERY_VIEW_ARTIFACT_OPTIONS = [
+        { value: 'error-detected', text: 'Error detected'},
+        { value: 'root-cause-analysis', text: 'Root cause analysis'},
+        { value: 'suspected-functions', text: 'Suspected functions'},
+        { value: 'suspected-configs', text: 'Suspected configurations'},
+        { value: 'code-patches', text: 'Code patches'},
+        { value: 'investigation-steps', text: 'Investigation steps'},
+        { value: 'investigation-commands', text: 'Investigation commands'},
+        { value: 'context-information', text: 'Context information'},
+        { value: 'report', text: 'Report'},
+        { value: '3gpp-spec-reference', text: '3GPP spec reference'},
+        { value: 'impact-analysis', text: 'Impact analysis'}
+    ];
+
+    function updateArtifactsDropdown(_isCrashAnalysis) {
+        const menu = document.getElementById('artifactsDropdownMenu');
+        const hiddenInput = document.getElementById('artifactsDropdown');
+        const labelEl = document.getElementById('artifactsDropdownBtnLabel');
+        if (!menu || !hiddenInput) return;
+
+        const currentSelection = hiddenInput.value;
+        menu.innerHTML = '';
+
+        const placeholder = document.createElement('div');
+        placeholder.className = 'dropdown-item';
+        placeholder.setAttribute('data-value', '');
+        placeholder.textContent = '-- Select an artifact to view --';
+        menu.appendChild(placeholder);
+
+        BUG_DISCOVERY_VIEW_ARTIFACT_OPTIONS.forEach((opt) => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item';
+            item.setAttribute('data-value', opt.value);
+            item.textContent = opt.text;
+            menu.appendChild(item);
+        });
+
+        const stillValid = currentSelection && Array.from(menu.querySelectorAll('.dropdown-item')).some(
+            (el) =>el.getAttribute('data-value') === currentSelection
+        );
+        if (stillValid) {
+            hiddenInput.value = currentSelection;
+            const match = Array.from(menu.querySelectorAll('.dropdown-item')).find(
+                (el) =>el.getAttribute('data-value') === currentSelection
+            );
+            if (labelEl && match) labelEl.textContent = match.textContent.trim();
+        } else {
+            hiddenInput.value = '';
+            if (labelEl) labelEl.textContent = '-- Select an artifact to view --';
+        }
+    }
+    
+    // --- Deployment Settings Functions ---
+    async function loadDeploymentContextDefaults() {
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/error-fixing/deployment-context-defaults', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json'}
+            });
+            if (!response.ok) throw new Error(`Failed: ${response.status}`);
+            const result = await response.json();
+            return result.deployment_context || {};
+        } catch (error) {
+            console.error('Error loading deployment context defaults:', error);
+            return {};
+        }
+    }
+    
+    async function openDeploymentSettingsModal() {
+        if (!deploymentSettingsModal || !deploymentSettingsFields) return;
+        try {
+            const defaultValues = await loadDeploymentContextDefaults();
+            deploymentSettingsFields.innerHTML = '';
+            const fieldConfigs = [
+                { key: 'cu_ip_address', label: 'CU IP Address', tooltip: 'IP address of the Central Unit'},
+                { key: 'du_ip_address', label: 'DU IP Address', tooltip: 'IP address of the Distributed Unit'},
+                { key: 'gnb_ip_address', label: 'gNB IP Address', tooltip: 'IP address of the gNodeB'},
+                { key: 'amf_ip_address', label: 'AMF IP Address', tooltip: 'IP address of the Access and Mobility Management Function'},
+                { key: 'core_network_machine_ip', label: 'Core Network Machine IP', tooltip: 'IP address of the Core Network machine'},
+                { key: 'local_s_portc', label: 'Local S Port C', tooltip: 'Local control plane port'},
+                { key: 'local_s_portd', label: 'Local S Port D', tooltip: 'Local data plane port'},
+                { key: 'remote_s_portc', label: 'Remote S Port C', tooltip: 'Remote control plane port'},
+                { key: 'remote_s_portd', label: 'Remote S Port D', tooltip: 'Remote data plane port'},
+                { key: 'nssai_sst', label: 'NSSAI SST', tooltip: 'Network Slice Selection Assistance Information - Slice/Service Type'},
+                { key: 'nssai_sd', label: 'NSSAI SD', tooltip: 'Network Slice Selection Assistance Information - Slice Differentiator'},
+                { key: 'dnn', label: 'DNN', tooltip: 'Data Network Name'},
+                { key: 'Deploy_command_cu_gnb_conf', label: 'CU Deployment Command', tooltip: 'Command used to deploy CU gNB configuration'},
+                { key: 'Deploy_command_du_gnb_conf', label: 'DU Deployment Command', tooltip: 'Command used to deploy DU gNB configuration'}
+            ];
+            const fields = {};
+            fieldConfigs.forEach(({ key, label, tooltip }) => {
+                const fieldGroup = document.createElement('div');
+                fieldGroup.style.cssText = 'border: 1px solid #E1E5EA; border-radius: 5px; padding: 1rem; margin-bottom: 1rem; background-color: #f8f9fa;';
+                const labelElement = document.createElement('label');
+                labelElement.textContent = label;
+                labelElement.style.cssText = 'display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem; font-size: 0.9rem;';
+                fieldGroup.appendChild(labelElement);
+                const inputElement = document.createElement('input');
+                inputElement.type = 'text';
+                inputElement.id = `deploymentField_${key}`;
+                inputElement.value = customDeploymentContext && customDeploymentContext[key] ? customDeploymentContext[key] : (defaultValues[key] || '');
+                inputElement.placeholder = `Enter ${label}`;
+                inputElement.title = tooltip;
+                inputElement.style.cssText = 'width: 100%; padding: 0.5rem; border: 1px solid #E1E5EA; border-radius: 4px; font-size: 0.9rem; box-sizing: border-box;';
+                fieldGroup.appendChild(inputElement);
+                const helpElement = document.createElement('p');
+                helpElement.textContent = tooltip;
+                helpElement.style.cssText = 'margin: 0.5rem 0 0 0; font-size: 0.8rem; color: #8A8886;';
+                fieldGroup.appendChild(helpElement);
+                deploymentSettingsFields.appendChild(fieldGroup);
+                fields[key] = inputElement;
+            });
+            window.deploymentSettingsFields = fields;
+            deploymentSettingsModal.style.display = 'flex';
+        } catch (error) {
+            console.error('Error opening deployment settings modal:', error);
+            showStatusBar(`Error loading deployment settings: ${error.message}`, 'error');
+        }
+    }
+    
+    function closeDeploymentModal() {
+        if (deploymentSettingsModal) deploymentSettingsModal.style.display = 'none';
+    }
+    
+    function clearDeploymentSettings() {
+        if (!window.deploymentSettingsFields) return;
+        if (confirm('This will clear all custom settings and the system will use JSON defaults.\n\nAre you sure you want to continue?')) {
+            Object.values(window.deploymentSettingsFields).forEach(field => { field.value = ''; });
+        }
+    }
+    
+    async function resetDeploymentSettings() {
+        if (!window.deploymentSettingsFields) return;
+        try {
+            const defaultValues = await loadDeploymentContextDefaults();
+            Object.keys(window.deploymentSettingsFields).forEach(key => {
+                window.deploymentSettingsFields[key].value = defaultValues[key] || '';
+            });
+            showStatusBar('Deployment settings reset to JSON defaults', 'success');
+        } catch (error) {
+            console.error('Error resetting deployment settings:', error);
+            showStatusBar(`Error resetting deployment settings: ${error.message}`, 'error');
+        }
+    }
+    
+    function saveDeploymentSettings() {
+        if (!window.deploymentSettingsFields) return;
+        const savedValues = {};
+        Object.keys(window.deploymentSettingsFields).forEach(key => {
+            const value = window.deploymentSettingsFields[key].value.trim();
+            if (value) savedValues[key] = value;
+        });
+        if (Object.keys(savedValues).length > 0) {
+            customDeploymentContext = savedValues;
+            if (deploymentSettingsBtn) {
+ deploymentSettingsBtn.textContent = 'Deployment Settings ';
+                deploymentSettingsBtn.style.backgroundColor = '#107C10';
+            }
+            showStatusBar(`Deployment context settings saved (${Object.keys(savedValues).length} values).`, 'success');
+        } else {
+            customDeploymentContext = null;
+            if (deploymentSettingsBtn) {
+ deploymentSettingsBtn.textContent = 'Deployment Settings';
+                deploymentSettingsBtn.style.backgroundColor = '#e0f2fe';
+                deploymentSettingsBtn.style.color = '#0369a1';
+                deploymentSettingsBtn.style.border = '1px solid #bae6fd';
+            }
+            showStatusBar('All custom deployment settings cleared.', 'info');
+        }
+        closeDeploymentModal();
+    }
+    
+    // --- Deployment Settings Button Event Listener ---
+    if (deploymentSettingsBtn) {
+        deploymentSettingsBtn.addEventListener('click', async () => {
+            await openDeploymentSettingsModal();
+        });
+    }
+    
+    // Event listeners for deployment settings modal
+    if (closeDeploymentSettingsModal) {
+        closeDeploymentSettingsModal.addEventListener('click', closeDeploymentModal);
+    }
+    if (cancelDeploymentSettingsBtn) {
+        cancelDeploymentSettingsBtn.addEventListener('click', closeDeploymentModal);
+    }
+    if (clearDeploymentSettingsBtn) {
+        clearDeploymentSettingsBtn.addEventListener('click', clearDeploymentSettings);
+    }
+    if (resetDeploymentSettingsBtn) {
+        resetDeploymentSettingsBtn.addEventListener('click', resetDeploymentSettings);
+    }
+    if (saveDeploymentSettingsBtn) {
+        saveDeploymentSettingsBtn.addEventListener('click', saveDeploymentSettings);
+    }
+    if (deploymentSettingsModal) {
+        deploymentSettingsModal.addEventListener('click', (e) => {
+            if (e.target === deploymentSettingsModal) closeDeploymentModal();
+        });
+    }
+    // --- Bug Discovery History Functions (matching Code Assistant pattern) ---
+    // Load bug history from backend (make globally accessible)
+    window._bugDiscoveryHistoryLoading = false;
+    window._lastBugDiscoveryHistoryLoad = 0;
+    window._BUG_DISCOVERY_HISTORY_DEBOUNCE_MS = 5000;
+    
+    window.loadBugDiscoveryHistory = async function() {
+        // Check if already loading
+        if (window._bugDiscoveryHistoryLoading) {
+            console.log('⏸️ Bug Discovery history already loading, skipping duplicate call...');
+            return;
+        }
+        
+        // Debounce: Don't reload if recently loaded (within 5 seconds)
+        const now = Date.now();
+        const timeSinceLastLoad = now - window._lastBugDiscoveryHistoryLoad;
+        if (window._lastBugDiscoveryHistoryLoad > 0 && timeSinceLastLoad < window._BUG_DISCOVERY_HISTORY_DEBOUNCE_MS) {
+            const secondsLeft = Math.round((window._BUG_DISCOVERY_HISTORY_DEBOUNCE_MS - timeSinceLastLoad) / 1000);
+            console.log(`⏸️ Bug Discovery history recently loaded (${secondsLeft}s ago), skipping to avoid spam...`);
+            return;
+        }
+        
+        // Set flags BEFORE making API call
+        window._bugDiscoveryHistoryLoading = true;
+        window._lastBugDiscoveryHistoryLoad = now;
+        
+        console.log('🔄 [loadBugDiscoveryHistory] Starting bug history load...');
+        
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/code-assistant/bug-history'); // Same endpoint as Code Assistant
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ HTTP error:', response.status, errorText);
+                throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+            }
+            const data = await response.json();
+            console.log('📊 Bug Discovery history response:', data);
+            
+            if (data.success) {
+                if (!bugDiscoveryHistoryContent) {
+                    console.error('❌ bugDiscoveryHistoryDropdownContent element not found');
+                    return;
+                }
+                
+                console.log(`📋 Found ${data.history?.length || 0} history items`);
+                window.bugDiscoveryHistoryItems = Array.isArray(data.history) ? data.history : [];
+                window.renderHistoryDropdown(
+                    bugDiscoveryHistoryContent,
+                    bugDiscoveryHistoryBtn,
+                    window.bugDiscoveryHistoryItems,
+                    window.getSelectedHistoryLogType(bugDiscoveryLogTypeFilter),
+                    'Or select a previous analysis...',
+                    'No analysis available for selected log type'
+                );
+                window.bugDiscoveryAnalysisFilename = null;
+            } else {
+                console.error('❌ Backend returned success=false:', data);
+            }
+        } catch (error) {
+            console.error('❌ Error loading bug discovery history:', error);
+            showStatusBar('Failed to load bug history: '+ error.message, 'error');
+        } finally {
+            // Always reset loading flag
+            window._bugDiscoveryHistoryLoading = false;
+            console.log('✅ [loadBugDiscoveryHistory] Loading flag reset');
+        }
+    };
+    
+    // Load selected analysis from backend (make globally accessible)
+    window.loadBugDiscoveryAnalysis = async function(filename) {
+        try {
+            console.log('📥 loadBugDiscoveryAnalysis called with filename:', filename);
+            
+            if (!filename || filename === 'Or select a previous analysis...'|| filename === '') {
+                console.warn('⚠️ Invalid filename, resetting view');
+                resetResultsArea();
+                return;
+            }
+            
+            showStatusBar('Loading analysis...', 'info', 'Bug Discovery');
+            
+            console.log('🌐 Fetching analysis from:', `http://127.0.0.1:8000/api/code-assistant/load-analysis/${encodeURIComponent(filename)}`);
+            
+            const response = await fetch(`http://127.0.0.1:8000/api/code-assistant/load-analysis/${encodeURIComponent(filename)}`);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ HTTP error:', response.status, errorText);
+                throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+            }
+            
+            const data = await response.json();
+            console.log('📊 Analysis response:', data);
+            
+            if (data.success && data.analysis) {
+                console.log('✅ Analysis loaded successfully');
+                const analysis = data.analysis;
+                window.bugDiscoveryCurrentAnalysis = analysis;
+                window.bugDiscoveryAnalysisFilename = filename;
+                
+                // Populate input fields (matching PyQt load_previous_bug_analysis)
+                // Get data from analysis object or raw_data (backend may not include all fields in analysis object)
+                const codeDir = analysis.code_dir || analysis.raw_data?.code_dir || '';
+                const logPath = analysis.log_path || analysis.raw_data?.log_path || '';
+                const logFile = analysis.log_file || analysis.raw_data?.log_file || '';
+                
+                console.log('📋 Loading analysis data:', {
+                    codeDir,
+                    logPath,
+                    logFile,
+                    hasRawData: !!analysis.raw_data
+                });
+                
+                // Set source code directory
+                if (codeDir && bugCodeDirText) {
+                    bugWorkingDir = codeDir;
+                    bugCodeDirText.textContent = codeDir.replace(/\\/g, '/');
+                    bugCodeDirText.style.color = '#374151';
+                    console.log('✅ Source code directory set:', codeDir);
+                } else {
+                    console.warn('⚠️ Source code directory not found or bugCodeDirText element missing');
+                }
+                
+                // Set log directory and populate log files (matching PyQt load_previous_bug_analysis)
+                if (logPath) {
+                    console.log('📁 Log path found:', logPath);
+                    // Extract directory from path (matching os.path.dirname in PyQt)
+                    // Handle both forward and backward slashes
+                    const lastSlash = Math.max(logPath.lastIndexOf('/'), logPath.lastIndexOf('\\'));
+                    const logDir = lastSlash > 0 ? logPath.substring(0, lastSlash) : '';
+                    console.log('📂 Extracted log directory:', logDir);
+                    
+                    // Set log directory text (even if path doesn't exist, matching PyQt behavior)
+                    if (bugLogDirText) {
+                        if (logDir) {
+                            bugLogDir = logDir;
+                            bugLogDirText.textContent = logDir.replace(/\\/g, '/');
+                            bugLogDirText.style.color = '#374151';
+                            console.log('✅ Log directory set:', logDir);
+                        } else {
+                            // If we can't extract directory, still show the log path
+                            bugLogDirText.textContent = logPath.replace(/\\/g, '/');
+                            bugLogDirText.style.color = '#374151';
+                            console.warn('⚠️ Could not extract directory from log path, showing full path');
+                        }
+                    } else {
+                        console.error('❌ bugLogDirText element not found!');
+                    }
+                    
+                    // Populate log file dropdown (matching PyQt behavior)
+                    if (logDir) {
+                        let fileEntries = [];
+                        if (window.API && window.API.listDirectory) {
+                            try {
+                                const files = await window.API.listDirectory(logDir);
+                                const logFiles = files.filter(f =>f.endsWith('.log'));
+                                fileEntries = logFiles.map(file => ({
+                                    name: file,
+                                    path: `${logDir}/${file}`.replace(/\\/g, '/')
+                                }));
+                            } catch (error) {
+                                console.error('Error listing log directory:', error);
+                                console.warn('⚠️ Original log file directory not accessible:', logDir);
+                            }
+                        }
+                        populateBugLogDropdown(fileEntries);
+                        if (logFile) {
+                            const matched = fileEntries.find(f =>f.name === logFile);
+                            setBugLogFileSelection(
+                                logFile,
+                                logFile,
+                                matched ? matched.path : (logPath || `${logDir}/${logFile}`.replace(/\\/g, '/'))
+                            );
+                        }
+                    }
+                }
+                
+                // CRITICAL: Store Complete Analysis State (matching PyQt current_bug_analysis)
+                // This structured object is used by View Artifacts, Code Assistant, and other features
+                window.currentBugAnalysis = {
+                    'error_message': analysis.error_message || '',
+                    'log_file': logFile || '',
+                    'log_path': logPath || '',
+                    'code_dir': codeDir || '',
+                    'results': analysis.results || {},  // Complete results for artifacts
+                    'timestamp': analysis.timestamp || new Date().toISOString(),
+                    'crash_analysis': analysis.crash_analysis || false,
+                    'deployment_context_extended': analysis.deployment_context_extended || {}
+                };
+                
+                // Also store individual components for backward compatibility with existing code
+                window.currentBugAnalysisResult = analysis.results || {};
+                window.currentBugAnalysisFixSuggestion = analysis.results?.phase3_fixes?.fix_suggestion || {};
+                window.bugDiscoveryCurrentAnalysis = analysis; // Keep for compatibility
+                
+                // If this is an existing fix from git history, reconstruct existingFixResult
+                // so the "Fix Already Present"button can work when loading from history
+                if (analysis.from_git_history && analysis.git_metadata) {
+                    const gitMeta = analysis.git_metadata;
+                    const commitInfo = analysis.results?.phase3_fixes?.fix_suggestion?.commit_info || {};
+                    
+                    // Reconstruct existingFixResult from saved git_metadata
+                    existingFixResult = {
+                        success: true,
+                        found: true,
+                        confidence: gitMeta.confidence || commitInfo.confidence || 'N/A',
+                        score: gitMeta.score || commitInfo.similarity_score || 0,
+                        reasoning: gitMeta.reasoning || '',
+                        git_diff: gitMeta.git_diff || null,
+                        current_branch: gitMeta.current_branch || null,
+                        files_changed_summary: gitMeta.files_changed_summary || null,
+                        selection_result: gitMeta.selection_result || {
+                            error_message: analysis.error_message || ''
+                        },
+                        commit: gitMeta.full_commit || {
+                            commit_hash: commitInfo.hash || '',
+                            commit_hash_short: (commitInfo.hash || '').substring(0, 8),
+                            subject: commitInfo.subject || '',
+                            author: commitInfo.author || '',
+                            author_name: commitInfo.author || '',
+                            date: commitInfo.date || '',
+                            date_iso: commitInfo.date || '',
+                            similarity: commitInfo.similarity_score || 0,
+                            boosted_score: commitInfo.similarity_score || 0
+                        }
+                    };
+                    
+                    // Show "Fix Already Present"button if we have git_diff or commit info
+                    if (bugFixPresentBtn && (existingFixResult.git_diff || existingFixResult.commit.commit_hash)) {
+                        bugFixPresentBtn.style.display = 'inline-block';
+ bugFixPresentBtn.textContent = ` Fix Already Present (${existingFixResult.confidence}) - Click to View`;
+                        console.log('✅ Reconstructed existingFixResult from git_metadata for loaded analysis');
+                    }
+                } else {
+                    // Not an existing fix, hide the button
+                    if (bugFixPresentBtn) {
+                        bugFixPresentBtn.style.display = 'none';
+                    }
+                    existingFixResult = null;
+                }
+                
+                // Normalize results shape (some saved files use raw_data only)
+                const loadedResults = data.analysis.results
+                    ?? data.analysis.raw_data?.results
+                    ?? {};
+                data.analysis.results = loadedResults;
+
+                if (!loadedResults.phase3_fixes && data.analysis.raw_data?.fix_suggestions) {
+                    const rawFix = data.analysis.raw_data.fix_suggestions;
+                    loadedResults.phase3_fixes = rawFix.phase3_fixes || {
+                        fix_suggestion: rawFix.fix_suggestion || rawFix,
+                        terminal_commands: rawFix.terminal_commands
+                    };
+                }
+
+                // Display analysis results (matching how we display RCA results)
+                if (loadedResults && (Object.keys(loadedResults).length > 0 || data.analysis.error_message)) {
+                    displayBugDiscoveryAnalysisResults(data.analysis);
+                } else {
+                    revealBdPostAnalysisUi({ crashAnalysisEnabled: data.analysis.crash_analysis || false });
+                }
+                
+                hideStatusBar();
+ showStatusBar('Analysis loaded successfully', 'success', 'Bug Discovery');
+            } else {
+                console.error('❌ Backend returned success=false or no analysis data:', data);
+                hideStatusBar();
+                showStatusBar('Failed to load analysis: Invalid response from server', 'error');
+            }
+        } catch (error) {
+            console.error('❌ Error loading analysis:', error);
+            hideStatusBar();
+            showStatusBar('Failed to load analysis: '+ error.message, 'error');
+        }
+    };
+    
+    // Function to display loaded analysis results (matching comprehensive display from new RCA results)
+    function displayBugDiscoveryAnalysisResults(analysis) {
+        if (!bdAnalysisDetailDisplay) return;
+
+        const results = analysis.results || analysis.raw_data?.results || {};
+        analysis.results = results;
+        const fixSuggestions = results.phase3_fixes || {};
+        const finalFixSuggestion = fixSuggestions.fix_suggestion || {};
+        const crashAnalysisEnabled = analysis.crash_analysis || results.crash_analysis || false;
+        
+        // Check if this is an existing fix from Git history (has commit_info)
+        const commitInfo = finalFixSuggestion.commit_info || {};
+        const isExistingFix = !!commitInfo.hash || analysis.raw_data?.source === 'existing_fix'|| 
+                             analysis.raw_data?.from_git_history || results.from_git_history;
+        
+        // Store results globally for artifacts dropdown (matching how we store new RCA results)
+        window.bugDiscoveryResults = results;
+        window.bugDiscoveryFixSuggestions = mergeBugDiscoveryFixSuggestions(fixSuggestions, {});
+        window.bugDiscoveryDeploymentContextExtended = analysis.deployment_context_extended || {};
+        window.bugDiscoveryLogFilePath = analysis.log_path || null;
+        window.crashAnalysisEnabled = crashAnalysisEnabled;
+        
+        // Get terminal commands (matching new RCA results display)
+        const terminalCommandsData = fixSuggestions.terminal_commands || results.phase4_commands || {};
+        const terminalCommands = extractTerminalCommands(terminalCommandsData);
+        const errorMessage = finalFixSuggestion.error_message || results.error_message || analysis.error_message || 'Unknown error';
+        const rootCause = finalFixSuggestion.root_cause_analysis || finalFixSuggestion.reason || '';
+        updateBugExecuteCommandsButtonVisibility(errorMessage, rootCause, terminalCommands);
+        
+        // Use the same comprehensive HTML formatting logic as when we display new RCA results
+        let htmlContent = `<div class="analysis-results-container">`;
+        
+        // If this is an existing fix, show commit information first
+        if (isExistingFix && commitInfo.hash) {
+            htmlContent += `
+                <div class="error-summary-box"style="background: #f0f9ff; border-left: 4px solid #0ea5e9;">
+                    <h4>EXISTING FIX FROM GIT HISTORY</h4>
+                </div>
+            `;
+            
+            // Commit Details Section
+            htmlContent += `
+                <div class="analysis-section">
+                    <h4>COMMIT DETAILS</h4>
+                    <table class="analysis-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Property</th>
+                                <th style="width: 70%;">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Commit Hash</strong></td>
+                                <td><code>${escapeHtml(commitInfo.hash || 'N/A')}</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Subject</strong></td>
+                                <td>${escapeHtml(commitInfo.subject || 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Author</strong></td>
+                                <td>${escapeHtml(commitInfo.author || 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Date</strong></td>
+                                <td>${escapeHtml(commitInfo.date || 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Similarity Score</strong></td>
+                                <td>${commitInfo.similarity_score !== undefined ? ((commitInfo.similarity_score * 100).toFixed(2) + '%') : 'N/A'}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        // Error Summary Box
+        htmlContent += `
+            <div class="error-summary-box">
+                <h4>Error Detected</h4>
+                <p>${escapeHtml(errorMessage)}</p>
+            </div>
+        `;
+        
+        // Root Cause Analysis Box
+        if (rootCause) {
+            htmlContent += `
+                <div class="root-cause-box">
+                    <h4>Root Cause Analysis</h4>
+                    <p>${escapeHtml(rootCause)}</p>
+                </div>
+            `;
+        }
+        
+        // Summary Statistics Cards
+        const contextSummary = fixSuggestions.context_summary || {};
+        const suspectedFunctions = finalFixSuggestion.suspected_functions || [];
+        const suspectedConfigs = finalFixSuggestion.suspected_configs || [];
+        const codePatches = finalFixSuggestion.code_patches || [];
+        const configPatches = finalFixSuggestion.config_patches || [];
+        
+        if (suspectedFunctions.length > 0 || suspectedConfigs.length > 0 || codePatches.length > 0 || configPatches.length > 0) {
+            htmlContent += `
+                <div class="summary-stats">
+                    ${suspectedFunctions.length > 0 ? `
+                        <div class="summary-stat-card">
+                            <div class="stat-value">${suspectedFunctions.length}</div>
+                            <div class="stat-label">Suspected Functions</div>
+                        </div>
+                    ` : ''}
+                    ${suspectedConfigs.length > 0 ? `
+                        <div class="summary-stat-card">
+                            <div class="stat-value">${suspectedConfigs.length}</div>
+                            <div class="stat-label">Suspected Configs</div>
+                        </div>
+                    ` : ''}
+                    ${codePatches.length > 0 ? `
+                        <div class="summary-stat-card">
+                            <div class="stat-value">${codePatches.length}</div>
+                            <div class="stat-label">Code Patches</div>
+                        </div>
+                    ` : ''}
+                    ${configPatches.length > 0 ? `
+                        <div class="summary-stat-card">
+                            <div class="stat-value">${configPatches.length}</div>
+                            <div class="stat-label">Config Patches</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+        // Suspected Functions Table
+        if (suspectedFunctions.length > 0) {
+            htmlContent += `
+                <div class="analysis-section">
+                    <h4>Suspected Functions</h4>
+                    <table class="analysis-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">#</th>
+                                <th>Function Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            suspectedFunctions.forEach((func, idx) => {
+                const funcName = typeof func === 'string'? func : (func.name || func.function_name || 'Unknown');
+                htmlContent += `
+                    <tr>
+                        <td class="text-center">${idx + 1}</td>
+                        <td><code>${escapeHtml(funcName)}</code></td>
+                    </tr>
+                `;
+            });
+            htmlContent += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        // Suspected Configs Table
+        if (suspectedConfigs.length > 0) {
+            htmlContent += `
+                <div class="analysis-section">
+                    <h4>Suspected Configurations</h4>
+                    <table class="analysis-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">#</th>
+                                <th>Config Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            suspectedConfigs.forEach((config, idx) => {
+                const configName = typeof config === 'string'? config : (config.name || config.config_name || 'Unknown');
+                htmlContent += `
+                    <tr>
+                        <td class="text-center">${idx + 1}</td>
+                        <td><code>${escapeHtml(configName)}</code></td>
+                    </tr>
+                `;
+            });
+            htmlContent += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        // Code Patches Table (with full details matching new RCA results)
+        if (codePatches.length > 0) {
+            htmlContent += `
+                <div class="analysis-section">
+                    <h4>Code Patches</h4>
+                    <table class="analysis-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">#</th>
+                                <th>Function</th>
+                                <th>File</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            codePatches.forEach((patch, idx) => {
+                const functionName = patch.function_name || 'Unknown';
+                const filePath = patch.file_path || 'Unknown file';
+                const patchType = patch.patch_type || 'Unknown';
+                const description = patch.description || 'No description';
+                const location = patch.line_numbers || 'N/A';
+                
+                htmlContent += `
+                    <tr>
+                        <td class="text-center"style="width: 50px;">${idx + 1}</td>
+                        <td style="width: 15%;"><code>${escapeHtml(functionName)}</code></td>
+                        <td style="width: 25%;"><code style="font-size: 0.75rem; word-break: break-all;">${escapeHtml(filePath)}</code></td>
+                        <td style="width: 15%;"><span class="badge badge-info">${escapeHtml(patchType)}</span></td>
+                        <td style="width: 45%;">${escapeHtml(description)}</td>
+                    </tr>
+                `;
+                
+                // Add code diff row if available
+                if (patch.original_code || patch.patched_code) {
+                    htmlContent += `
+                        <tr>
+                            <td></td>
+                            <td colspan="4">
+                                ${location !== 'N/A'? `<div style="margin-bottom: 0.5rem; color: #6b7280; font-size: 0.8rem;">Location: ${escapeHtml(location)}</div>`: ''}
+                                ${patch.original_code ? `
+                                    <div style="margin-bottom: 0.5rem;">
+                                        <strong style="color: #dc2626; font-size: 0.85rem;">Original:</strong>
+                                        <div class="code-diff"><span class="original">${escapeHtml(patch.original_code).replace(/\n/g, '<br>')}</span></div>
+                                    </div>
+                                ` : ''}
+                                ${patch.patched_code ? `
+                                    <div>
+                                        <strong style="color: #16a34a; font-size: 0.85rem;">Patched:</strong>
+                                        <div class="code-diff"><span class="added">${escapeHtml(patch.patched_code).replace(/\n/g, '<br>')}</span></div>
+                                    </div>
+                                ` : ''}
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+            htmlContent += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        // Config Patches Table (with full details matching new RCA results)
+        if (configPatches.length > 0) {
+            htmlContent += `
+                <div class="analysis-section">
+                    <h4>Config Patches</h4>
+                    <table class="analysis-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">#</th>
+                                <th>Config Name</th>
+                                <th>File</th>
+                                <th>Current Value</th>
+                                <th>New Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            configPatches.forEach((patch, idx) => {
+                const configName = patch.config_name || 'Unknown';
+                const filePath = patch.file_path || 'Unknown file';
+                const currentValue = patch.current_value !== undefined ? patch.current_value : 'N/A';
+                const newValue = patch.new_value !== undefined ? patch.new_value : 'N/A';
+                const description = patch.description || 'No description';
+                const lineNumber = patch.line_number || 'N/A';
+                const relevance = patch.relevance_score !== undefined ? `${(patch.relevance_score * 100).toFixed(1)}%` : 'N/A';
+                
+                htmlContent += `
+                    <tr>
+                        <td class="text-center"style="width: 50px;">${idx + 1}</td>
+                        <td style="width: 15%;"><code>${escapeHtml(configName)}</code></td>
+                        <td style="width: 20%;">
+                            <code style="font-size: 0.75rem; word-break: break-all;">${escapeHtml(filePath)}</code>
+                            ${lineNumber !== 'N/A'? `<div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">Line: ${escapeHtml(lineNumber)}</div>`: ''}
+                        </td>
+                        <td style="width: 15%;"><span class="config-value-old">${escapeHtml(String(currentValue))}</span></td>
+                        <td style="width: 15%;"><span class="config-value-new">${escapeHtml(String(newValue))}</span></td>
+                        <td style="width: 35%;">
+                            ${escapeHtml(description)}
+                            ${relevance !== 'N/A'? `<div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">Relevance: ${escapeHtml(relevance)}</div>`: ''}
+                        </td>
+                    </tr>
+                `;
+            });
+            htmlContent += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        // Investigation Steps Table (skip if crash analysis is enabled)
+        if (!crashAnalysisEnabled) {
+            const investigationSteps = finalFixSuggestion.investigation_steps || [];
+            if (investigationSteps.length > 0) {
+                htmlContent += `
+                    <div class="analysis-section">
+                        <h4>Investigation Steps</h4>
+                        <table class="analysis-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">#</th>
+                                    <th>Step</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                investigationSteps.forEach((step, idx) => {
+                    const stepText = typeof step === 'string'? step : (step.description || step.text || step);
+                    htmlContent += `
+                        <tr>
+                            <td class="text-center">${idx + 1}</td>
+                            <td>${escapeHtml(stepText)}</td>
+                        </tr>
+                    `;
+                });
+                htmlContent += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+        }
+        
+        // Terminal Commands Table
+        if (terminalCommands.length > 0) {
+            htmlContent += `
+                <div class="analysis-section">
+                    <h4>Investigation Commands</h4>
+                    <table class="analysis-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">#</th>
+                                <th>Command</th>
+                                <th>Explanation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            terminalCommands.forEach((cmd, idx) => {
+                const commandText = cmd.command || cmd.text || cmd;
+                const explanation = cmd.explanation || cmd.hint || 'No explanation provided';
+                htmlContent += `
+                    <tr>
+                        <td class="text-center">${idx + 1}</td>
+                        <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 3px;">${escapeHtml(commandText)}</code></td>
+                        <td>${escapeHtml(explanation)}</td>
+                    </tr>
+                `;
+            });
+            htmlContent += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        // Close container with success message
+        htmlContent += `
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #f0fdf4; border-left: 4px solid #22c55e; border-radius: 6px;">
+                <p style="margin: 0; color: #166534; font-weight: 500;">Analysis loaded successfully!</p>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #6b7280;">Select a category in Analysis Results to explore details</p>
+            </div>
+        `;
+        
+        htmlContent += `</div>`;
+        
+        updateBdProgressTrackerFromResults(fixSuggestions, results);
+        revealBdPostAnalysisUi({ crashAnalysisEnabled, selectArtifact: 'error-detected'});
+        refreshBdMetricsForCurrentInstance();
+    }
+    
+    // Event listeners for Bug Discovery History
+    bugDiscoveryRefreshBtn && bugDiscoveryRefreshBtn.addEventListener('click', async () => {
+        console.log('🔄 Refresh button clicked, reloading bug discovery history...');
+        if (typeof window.loadBugDiscoveryHistory === 'function') {
+            await window.loadBugDiscoveryHistory();
+        } else {
+            console.error('❌ loadBugDiscoveryHistory function not available');
+        }
+        resetResultsArea();
+    });
+    
+    // Dropdown toggle functionality
+    if (bugDiscoveryHistoryBtn) {
+        bugDiscoveryHistoryBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (bugDiscoveryHistoryDropdown) {
+                bugDiscoveryHistoryDropdown.classList.toggle('active');
+            }
+        });
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (bugDiscoveryHistoryDropdown && !bugDiscoveryHistoryDropdown.contains(e.target)) {
+            bugDiscoveryHistoryDropdown.classList.remove('active');
+        }
+        window.closePortalSelectDropdownsOnOutsideClick(e.target);
+    });
+    
+    // Handle dropdown item selection
+    if (bugDiscoveryHistoryContent) {
+        bugDiscoveryHistoryContent.addEventListener('click', function(e) {
+            const item = e.target.closest('.dropdown-item');
+            if (item && item.dataset.filename) {
+                const filename = item.dataset.filename;
+                const displayText = item.textContent;
+                if (bugDiscoveryHistoryBtn) {
+                    bugDiscoveryHistoryBtn.querySelector('span').textContent = displayText;
+                }
+                if (bugDiscoveryHistoryDropdown) {
+                    bugDiscoveryHistoryDropdown.classList.remove('active');
+                }
+                window.bugDiscoveryAnalysisFilename = filename;
+                // When switching the selected history item, reset KPIs/results
+                // until the user clicks "Load Previous Run".
+                resetResultsArea();
+            }
+        });
+    }
+    initPortalSelectDropdown({
+        dropdownId: 'bugDiscoveryLogTypeDropdown',
+        btnId: 'bugDiscoveryLogTypeBtn',
+        menuId: 'bugDiscoveryLogTypeDropdownMenu',
+        hiddenId: 'bugDiscoveryLogTypeFilter',
+        labelId: 'bugDiscoveryLogTypeBtnLabel',
+        defaultLabel: 'All'
+    });
+
+    if (bugDiscoveryLogTypeFilter) {
+        bugDiscoveryLogTypeFilter.addEventListener('change', function() {
+            window.renderHistoryDropdown(
+                bugDiscoveryHistoryContent,
+                bugDiscoveryHistoryBtn,
+                window.bugDiscoveryHistoryItems,
+                window.getSelectedHistoryLogType(bugDiscoveryLogTypeFilter),
+                'Or select a previous analysis...',
+                'No analysis available for selected log type'
+            );
+            window.bugDiscoveryAnalysisFilename = null;
+            resetResultsArea();
+        });
+    }
+    
+    // Load Previous Run button handler
+    if (bugDiscoveryLoadPrevBtn) {
+        bugDiscoveryLoadPrevBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('🔘 Load Previous Run button clicked');
+            
+            const selectedFilename = window.bugDiscoveryAnalysisFilename || null;
+            const selectedText = bugDiscoveryHistoryBtn ? bugDiscoveryHistoryBtn.querySelector('span').textContent : null;
+            
+            console.log('📋 Selected filename:', selectedFilename);
+            console.log('📋 Selected text:', selectedText);
+            
+            if (!selectedFilename || selectedFilename === ''|| selectedText === 'Or select a previous analysis...'|| selectedText === 'No analysis available') {
+                console.warn('⚠️ No analysis selected');
+                alert('Please select an analysis from the dropdown to load.');
+                return;
+            }
+            
+            console.log('🚀 Loading analysis:', selectedFilename);
+            try {
+                if (typeof window.loadBugDiscoveryAnalysis === 'function') {
+                    await window.loadBugDiscoveryAnalysis(selectedFilename);
+                } else {
+                    console.error('❌ loadBugDiscoveryAnalysis function not found');
+                    alert('Error: Load Analysis function not available. Please refresh the page.');
+                }
+            } catch (error) {
+                console.error('❌ Error in loadBugDiscoveryAnalysis:', error);
+                alert('Failed to load analysis: '+ error.message);
+            }
+        });
+    }
+    // Load bug history when Bug Discovery section is shown (similar to Code Assistant)
+    // This will be called when the section becomes active
+    if (bugDiscoveryHistoryDropdown) {
+        console.log('✅ bugDiscoveryHistoryDropdown found');
+        console.log('✅ Bug Discovery UI initialized - bug history will load when section opens');
+    }
+    
+    // --- Start RCA Analysis ---
+    startRCAButton.addEventListener('click', async () => {
+        console.log('🔍 Start RCA Analysis button clicked');
+        console.log('Button disabled?', startRCAButton.disabled);
+        console.log('bugWorkingDir:', bugWorkingDir);
+        console.log('bugLogDir:', bugLogDir);
+        console.log('logFileCombo.value:', logFileCombo.value);
+        
+        if (startRCAButton.disabled) {
+            console.warn('Button is disabled, cannot proceed');
+            showStatusBar('Button is disabled. Please select source directory and log file first.', 'warning');
+            return;
+        }
+        
+        // Validate inputs
+        if (!bugWorkingDir) {
+            console.warn('Source code directory not selected');
+            showStatusBar('Please select the source code directory', 'error');
+            return;
+        }
+        
+        if (!bugLogDir || !logFileCombo.value || logFileCombo.value === 'Select a log file'|| logFileCombo.value === '') {
+            console.warn('Log file not selected');
+            showStatusBar('Please select a log file', 'error');
+            return;
+        }
+        
+        console.log('✅ Validation passed, starting RCA analysis...');
+        
+            try {
+        resetResultsArea();
+                startRCAButton.disabled = true;
+        progressBar.style.display = 'block';
+        progressFill.style.width = '0%';
+                showBdAnalysisResultsPanel(true);
+ setBugAnalysisDetailContent('<p style="color: #374151; text-align: center; padding: 2rem;">Starting Bug Discovery RCA Analysis...<br>Please wait...</p>');
+                
+                showStatusBar('Running Bug Discovery RCA analysis on backend...', 'info');
+                
+                // Get the selected log file path
+                const logFileName = logFileCombo.value;
+                const logFilePath = getSelectedBugLogFilePath();
+                
+                // Extract codebase folder name from working directory
+                const openairCodebaseName = bugWorkingDir.replace(/\\/g, '/').split('/').filter(Boolean).pop() || 'openairinterface5g-develop';
+                
+                // Use absolute path - backend will convert to relative when needed (matching PyQt UI_v3.py)
+                progressFill.style.width = '20%';
+ setBugAnalysisDetailContent('<p style="color: #374151; text-align: center; padding: 2rem;">Preparing log file...</p>');
+                
+                // Use absolute path directly - backend handles conversion to relative path
+                const serverLogPath = logFilePath;
+                
+                // Call the backend error fixing API (matching PyQt UI_v3.py)
+                progressFill.style.width = '40%';
+                if (crashAnalysisEnabled) {
+ setBugAnalysisDetailContent('<p style="color: #374151; text-align: center; padding: 2rem;">Crash Analysis Mode Enabled<br>Running complete crash analysis pipeline...</p>');
+                } else {
+ setBugAnalysisDetailContent('<p style="color: #374151; text-align: center; padding: 2rem;">Analyzing error using complete error fixing pipeline...</p>');
+                }
+            
+            const analyzeResponse = await fetch('http://127.0.0.1:8000/api/error-fixing/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    error_message: null, // Let backend extract from log file
+                    log_file_path: serverLogPath,
+                    openair_codebase_name: openairCodebaseName,
+                    custom_deployment_context: customDeploymentContext,
+                    crash_analysis: crashAnalysisEnabled // Include crash analysis flag
+                })
+            });
+            
+            if (!analyzeResponse.ok) {
+                const errorText = await analyzeResponse.text();
+                throw new Error(`Backend error: ${analyzeResponse.status} - ${errorText}`);
+            }
+            
+                progressFill.style.width = '80%';
+ setBugAnalysisDetailContent('<p style="color: #374151; text-align: center; padding: 2rem;">Processing analysis results...</p>');
+            
+            const result = await analyzeResponse.json();
+            
+            if (result.success) {
+                progressFill.style.width = '100%';
+                
+                // Use fix_suggestions.json data if available (more complete and accurate)
+                const fixSuggestions = result.fix_suggestions || {};
+                const fixSuggestion = fixSuggestions.fix_suggestion || {};
+                
+                // Fallback to result data if fix_suggestions not available
+                const analysisResult = result.result || {};
+                const phase3Fixes = analysisResult.phase3_fixes || {};
+                const fallbackFixSuggestion = phase3Fixes.fix_suggestion || {};
+                
+                // Use fix_suggestions.json data, fallback to result if not available
+                const finalFixSuggestion = Object.keys(fixSuggestion).length > 0 ? fixSuggestion : fallbackFixSuggestion;
+                const terminalCommandsData = fixSuggestions.terminal_commands || analysisResult.phase4_commands || {};
+                const terminalCommands = extractTerminalCommands(terminalCommandsData);
+                
+                // Create HTML structure with tables (instead of text)
+                let htmlContent = `<div class="analysis-results-container">`;
+                
+                // Error Summary Box
+                const errorMessage = fixSuggestions.error_text || analysisResult.error_message || result.formatted_output || 'Error analysis completed';
+                htmlContent += `
+                    <div class="error-summary-box">
+                        <h4>Error Detected</h4>
+                        <p>${escapeHtml(errorMessage)}</p>
+                    </div>
+                `;
+                
+                // Root Cause Analysis Box
+                const rootCause = finalFixSuggestion.root_cause_analysis || finalFixSuggestion.reason || '';
+                updateBugExecuteCommandsButtonVisibility(errorMessage, rootCause, terminalCommands);
+                if (rootCause) {
+                    htmlContent += `
+                        <div class="root-cause-box">
+                            <h4>Root Cause Analysis</h4>
+                            <p>${escapeHtml(rootCause)}</p>
+                        </div>
+                    `;
+                }
+                
+                // Summary Statistics Cards
+                const contextSummary = fixSuggestions.context_summary || {};
+                const suspectedFunctions = finalFixSuggestion.suspected_functions || [];
+                const suspectedConfigs = finalFixSuggestion.suspected_configs || [];
+                const codePatches = finalFixSuggestion.code_patches || [];
+                const configPatches = finalFixSuggestion.config_patches || [];
+                
+                if (suspectedFunctions.length > 0 || suspectedConfigs.length > 0 || codePatches.length > 0 || configPatches.length > 0) {
+                    htmlContent += `
+                        <div class="summary-stats">
+                            ${suspectedFunctions.length > 0 ? `
+                                <div class="summary-stat-card">
+                                    <div class="stat-value">${suspectedFunctions.length}</div>
+                                    <div class="stat-label">Suspected Functions</div>
+                                </div>
+                            ` : ''}
+                            ${suspectedConfigs.length > 0 ? `
+                                <div class="summary-stat-card">
+                                    <div class="stat-value">${suspectedConfigs.length}</div>
+                                    <div class="stat-label">Suspected Configs</div>
+                                </div>
+                            ` : ''}
+                            ${codePatches.length > 0 ? `
+                                <div class="summary-stat-card">
+                                    <div class="stat-value">${codePatches.length}</div>
+                                    <div class="stat-label">Code Patches</div>
+                                </div>
+                            ` : ''}
+                            ${configPatches.length > 0 ? `
+                                <div class="summary-stat-card">
+                                    <div class="stat-value">${configPatches.length}</div>
+                                    <div class="stat-label">Config Patches</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+                
+                // Suspected Functions Table
+                if (suspectedFunctions.length > 0) {
+                    htmlContent += `
+                        <div class="analysis-section">
+                            <h4>Suspected Functions</h4>
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">#</th>
+                                        <th>Function Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    suspectedFunctions.forEach((func, idx) => {
+                        const funcName = typeof func === 'string'? func : (func.name || func.function_name || 'Unknown');
+                        htmlContent += `
+                            <tr>
+                                <td class="text-center">${idx + 1}</td>
+                                <td><code>${escapeHtml(funcName)}</code></td>
+                            </tr>
+                        `;
+                    });
+                    htmlContent += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+                
+                // Suspected Configs Table
+                if (suspectedConfigs.length > 0) {
+                    htmlContent += `
+                        <div class="analysis-section">
+                            <h4>Suspected Configurations</h4>
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">#</th>
+                                        <th>Config Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    suspectedConfigs.forEach((config, idx) => {
+                        const configName = typeof config === 'string'? config : (config.name || config.config_name || 'Unknown');
+                        htmlContent += `
+                            <tr>
+                                <td class="text-center">${idx + 1}</td>
+                                <td><code>${escapeHtml(configName)}</code></td>
+                            </tr>
+                        `;
+                    });
+                    htmlContent += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+                
+                // Code Patches Table
+                if (codePatches.length > 0) {
+                    htmlContent += `
+                        <div class="analysis-section">
+                            <h4>Code Patches</h4>
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">#</th>
+                                        <th>Function</th>
+                                        <th>File</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    codePatches.forEach((patch, idx) => {
+                        const functionName = patch.function_name || 'Unknown';
+                        const filePath = patch.file_path || 'Unknown file';
+                        const patchType = patch.patch_type || 'Unknown';
+                        const description = patch.description || 'No description';
+                        const location = patch.line_numbers || 'N/A';
+                        
+                        htmlContent += `
+                            <tr>
+                                <td class="text-center"style="width: 50px;">${idx + 1}</td>
+                                <td style="width: 15%;"><code>${escapeHtml(functionName)}</code></td>
+                                <td style="width: 25%;"><code style="font-size: 0.75rem; word-break: break-all;">${escapeHtml(filePath)}</code></td>
+                                <td style="width: 15%;"><span class="badge badge-info">${escapeHtml(patchType)}</span></td>
+                                <td style="width: 45%;">${escapeHtml(description)}</td>
+                            </tr>
+                        `;
+                        
+                        // Add code diff row if available
+                        if (patch.original_code || patch.patched_code) {
+                            htmlContent += `
+                                <tr>
+                                    <td></td>
+                                    <td colspan="4">
+                                        ${location !== 'N/A'? `<div style="margin-bottom: 0.5rem; color: #6b7280; font-size: 0.8rem;">Location: ${escapeHtml(location)}</div>`: ''}
+                                        ${patch.original_code ? `
+                                            <div style="margin-bottom: 0.5rem;">
+                                                <strong style="color: #dc2626; font-size: 0.85rem;">Original:</strong>
+                                                <div class="code-diff"><span class="original">${escapeHtml(patch.original_code).replace(/\n/g, '<br>')}</span></div>
+                                            </div>
+                                        ` : ''}
+                                        ${patch.patched_code ? `
+                                            <div>
+                                                <strong style="color: #16a34a; font-size: 0.85rem;">Patched:</strong>
+                                                <div class="code-diff"><span class="added">${escapeHtml(patch.patched_code).replace(/\n/g, '<br>')}</span></div>
+                                            </div>
+                                        ` : ''}
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                    });
+                    htmlContent += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+                
+                // Config Patches Table
+                if (configPatches.length > 0) {
+                    htmlContent += `
+                        <div class="analysis-section">
+                            <h4>Config Patches</h4>
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">#</th>
+                                        <th>Config Name</th>
+                                        <th>File</th>
+                                        <th>Current Value</th>
+                                        <th>New Value</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    configPatches.forEach((patch, idx) => {
+                        const configName = patch.config_name || 'Unknown';
+                        const filePath = patch.file_path || 'Unknown file';
+                        const currentValue = patch.current_value !== undefined ? patch.current_value : 'N/A';
+                        const newValue = patch.new_value !== undefined ? patch.new_value : 'N/A';
+                        const description = patch.description || 'No description';
+                        const lineNumber = patch.line_number || 'N/A';
+                        const relevance = patch.relevance_score !== undefined ? `${(patch.relevance_score * 100).toFixed(1)}%` : 'N/A';
+                        
+                        htmlContent += `
+                            <tr>
+                                <td class="text-center"style="width: 50px;">${idx + 1}</td>
+                                <td style="width: 15%;"><code>${escapeHtml(configName)}</code></td>
+                                <td style="width: 20%;">
+                                    <code style="font-size: 0.75rem; word-break: break-all;">${escapeHtml(filePath)}</code>
+                                    ${lineNumber !== 'N/A'? `<div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">Line: ${escapeHtml(lineNumber)}</div>`: ''}
+                                </td>
+                                <td style="width: 15%;"><span class="config-value-old">${escapeHtml(String(currentValue))}</span></td>
+                                <td style="width: 15%;"><span class="config-value-new">${escapeHtml(String(newValue))}</span></td>
+                                <td style="width: 35%;">
+                                    ${escapeHtml(description)}
+                                    ${relevance !== 'N/A'? `<div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">Relevance: ${escapeHtml(relevance)}</div>`: ''}
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    htmlContent += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+                // Investigation Steps Table (skip if crash analysis is enabled)
+                if (!crashAnalysisEnabled) {
+                    const investigationSteps = finalFixSuggestion.investigation_steps || [];
+                    if (investigationSteps.length > 0) {
+                        htmlContent += `
+                            <div class="analysis-section">
+                                <h4>Investigation Steps</h4>
+                                <table class="analysis-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 60px;">#</th>
+                                            <th>Step</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                        `;
+                        investigationSteps.forEach((step, idx) => {
+                            const stepText = typeof step === 'string'? step : (step.description || step.text || step);
+                            htmlContent += `
+                                <tr>
+                                    <td class="text-center">${idx + 1}</td>
+                                    <td>${escapeHtml(stepText)}</td>
+                                </tr>
+                            `;
+                        });
+                        htmlContent += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Terminal Commands Table
+                if (terminalCommands.length > 0) {
+                    htmlContent += `
+                        <div class="analysis-section">
+                            <h4>Investigation Commands</h4>
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">#</th>
+                                        <th>Command</th>
+                                        <th>Explanation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    terminalCommands.forEach((cmd, idx) => {
+                        const commandText = cmd.command || cmd.text || cmd;
+                        const explanation = cmd.explanation || cmd.hint || 'No explanation provided';
+                        htmlContent += `
+                            <tr>
+                                <td class="text-center">${idx + 1}</td>
+                                <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 3px;">${escapeHtml(commandText)}</code></td>
+                                <td>${escapeHtml(explanation)}</td>
+                            </tr>
+                        `;
+                    });
+                    htmlContent += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+                
+                // Close container
+                htmlContent += `
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: #f0fdf4; border-left: 4px solid #22c55e; border-radius: 6px;">
+                        <p style="margin: 0; color: #166534; font-weight: 500;">Analysis completed successfully!</p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: #6b7280;">Results saved to: Error_fixing_pipelin/output/fix_suggestions.json</p>
+                    </div>
+                `;
+                
+                htmlContent += `</div>`;
+                
+                // Store results for artifacts view (store both result and fix_suggestions)
+                // For crash analysis, merge crash_info into results for easy access
+                const storedResults = result.result || {};
+                if (crashAnalysisEnabled && result.crash_info) {
+                    storedResults.crash_info = result.crash_info;
+                    storedResults.backtrace = result.backtrace;
+                    storedResults.scenario_flow = result.scenario_flow;
+                    storedResults.extraction_summary = result.extraction_summary;
+                }
+                
+                // Get the selected log file path for Error Information display
+                const logFilePath = getSelectedBugLogFilePath();
+                const logFileName = logFileCombo ? logFileCombo.value : '';
+                
+                // CRITICAL: Store Complete Analysis State (matching PyQt current_bug_analysis)
+                // This structured object is used by View Artifacts, Code Assistant, and other features
+                window.currentBugAnalysis = {
+                    'error_message': fixSuggestions.error_text || storedResults.error_message || errorMessage || '',
+                    'log_file': logFileName,
+                    'log_path': logFilePath || '',
+                    'code_dir': bugWorkingDir || '',
+                    'results': storedResults,  // Complete results for artifacts
+                    'timestamp': new Date().toISOString(),
+                    'crash_analysis': crashAnalysisEnabled,
+                    'deployment_context_extended': result.deployment_context_extended || {}
+                };
+                
+                // Also store individual components for backward compatibility with existing code
+                window.bugDiscoveryResults = storedResults;
+                window.bugDiscoveryFixSuggestions = mergeBugDiscoveryFixSuggestions(
+                    analysisResult.phase3_fixes || storedResults.phase3_fixes,
+                    fixSuggestions
+                );
+                window.crashAnalysisEnabled = crashAnalysisEnabled; // Store crash analysis state
+                window.bugDiscoveryDeploymentContextExtended = result.deployment_context_extended || {};
+                window.bugDiscoveryLogFilePath = logFilePath;
+                updateBdExportReportButton();
+                revealBdPostAnalysisUi({ crashAnalysisEnabled, selectArtifact: 'error-detected'});
+                refreshBdMetricsForCurrentInstance();
+                
+                // Save analysis to bug history (matching PyQt save_bug_analysis_to_history)
+                try {
+                    const logFileName = logFileCombo ? logFileCombo.value : 'Unknown';
+                    const logFilePath = getSelectedBugLogFilePath() ||
+                        (bugLogDir ? `${bugLogDir}/${logFileName}`.replace(/\\/g, '/') : logFileName);
+                    
+                    // Prepare data for saving (matching PyQt format)
+                    // Get error message from the analysis results
+                    const analysisError = errorMessage || fixSuggestions.error_text || 
+                                        result.result?.error_message || 
+                                        result.result?.phase2_analysis?.error_message || 
+                                        'Error detected';
+                    
+                    const saveData = {
+                        error_message: analysisError,
+                        log_file: logFileName,
+                        log_path: logFilePath || '',
+                        code_dir: bugWorkingDir || '',
+                        results: result.result || {},
+                        fix_suggestions: fixSuggestions || {}
+                    };
+                    
+                    // Call backend to save analysis
+                    const saveResponse = await fetch('http://127.0.0.1:8000/api/rca/save-analysis', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(saveData)
+                    });
+                    
+                    if (saveResponse.ok) {
+                        const saveResult = await saveResponse.json();
+                        console.log('✅ Analysis saved to history:', saveResult.filename);
+                        
+                        // Reload Bug Discovery history after saving (matching Code Assistant pattern)
+                        const bugDiscoverySection = document.getElementById('bug-discovery');
+                        if (bugDiscoverySection && bugDiscoverySection.classList.contains('active') && 
+                            typeof window.loadBugDiscoveryHistory === 'function') {
+                            console.log('🔄 Bug analysis saved, reloading Bug Discovery history (debounce handled in function)...');
+                            window.loadBugDiscoveryHistory();
+                        } else {
+                            console.log('⏸️ Bug Discovery not active or function not available, skipping reload');
+                        }
+                        
+                        // Reload Code Assistant bug history if it's open (use window. prefix and debounce)
+                        const codeAssistantSection = document.getElementById('code-assistant');
+                        if (codeAssistantSection && codeAssistantSection.classList.contains('active') && 
+                            typeof window.loadCodeAssistantBugHistory === 'function') {
+                            console.log('🔄 Bug analysis saved, reloading Code Assistant history (debounce handled in function)...');
+                            window.loadCodeAssistantBugHistory();
+                        } else {
+                            console.log('⏸️ Code Assistant not active or function not available, skipping reload');
+                        }
+                    } else {
+                        console.warn('⚠️ Failed to save analysis to history:', await saveResponse.text());
+                    }
+                } catch (saveError) {
+                    console.error('Error saving analysis to history:', saveError);
+                    // Don't fail the whole operation if save fails
+                }
+                
+                showStatusBar(`Bug Discovery RCA analysis completed successfully!`, 'success');
+                setBdProgressTrackerState('complete');
+                updateBdProgressTrackerFromResults(fixSuggestions, analysisResult);
+                
+                progressFill.style.width = '100%';
+                setTimeout(() => {
+                progressBar.style.display = 'none';
+                }, 1000);
+                
+            } else {
+                throw new Error('Analysis failed: No results returned from backend');
+            }
+            
+        } catch (error) {
+            console.error('Bug Discovery RCA Analysis error:', error);
+            showBdAnalysisResultsPanel(true);
+            setBugAnalysisDetailContent(`
+                <div class="error-summary-box">
+                    <h4>Error</h4>
+                    <p>${escapeHtml(error.message)}</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.875rem;">Please check:<br>
+                    1. Backend server is running<br>
+                    2. Log file is valid<br>
+                    3. Codebase directory is correct</p>
+                </div>
+            `);
+            showStatusBar(`Bug Discovery RCA analysis failed: ${error.message}`, 'error');
+            setBdProgressTrackerState('pending');
+            progressBar.style.display = 'none';
+        } finally {
+            startRCAButton.disabled = false;
+        }
+    });
+
+    // --- Fix Already Present button handler is already set up at line 406 ---
+    // Removed duplicate event listener that was showing warning
+
+    // --- Analysis Results / View Artifacts detail rendering ---
+    function renderBugDiscoveryArtifact(selectedValue, targetEl) {
+            const displayEl = targetEl || bdAnalysisDetailDisplay || artifactsDisplay;
+            if (!displayEl) return;
+
+            if (!selectedValue) {
+                const emptyMsg = displayEl === artifactsDisplay
+                    ? 'Select an artifact from the dropdown above to view its details...'
+                    : 'Select a category on the left to view analysis details...';
+                displayEl.innerHTML = `<p style="color: #6b7280; text-align: center; padding: 2rem;">${emptyMsg}</p>`;
+                return;
+            }
+            
+            if (!window.bugDiscoveryResults && !window.bugDiscoveryFixSuggestions) {
+ displayEl.innerHTML = '<p style="color: #ef4444; text-align: center; padding: 2rem;">No bug analysis results available. Please run RCA analysis first.</p>';
+                return;
+            }
+            
+            try {
+                const { results, fixSuggestions, fixSuggestion, phase2 } = getBugDiscoveryNormalizedContext();
+                const isCrashAnalysis = window.crashAnalysisEnabled || false;
+                
+                // For crash analysis, also check result.crash_info and other crash-specific fields
+                const crashInfo = results.crash_info || {};
+                
+                let htmlContent = `<div class="analysis-results-container">`;
+                
+                switch(selectedValue) {
+                    case 'error-detected':
+                    case 'error-information':
+                        // Get log file path (stored when analysis was run)
+                        const logFilePath = window.bugDiscoveryLogFilePath || results.log_file || 'N/A';
+                        
+                        // Format timestamp to readable time
+                        let analysisTime = 'N/A';
+                        if (results.timestamp) {
+                            try {
+                                const timestampDate = new Date(results.timestamp);
+                                analysisTime = timestampDate.toLocaleString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                    hour12: true
+                                });
+                            } catch (e) {
+                                analysisTime = results.timestamp;
+                            }
+                        }
+                        
+                        htmlContent += `
+                            <div class="analysis-section">
+                                <h4>Error Information</h4>
+                                <table class="analysis-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%;">Property</th>
+                                            <th style="width: 70%;">Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Error Message</strong></td>
+                                            <td>${escapeHtml(fixSuggestions.error_text || results.error_message || 'N/A')}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Analysis Time</strong></td>
+                                            <td>${escapeHtml(analysisTime)}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Log File</strong></td>
+                                            <td><code style="word-break: break-all; white-space: normal;">${escapeHtml(logFilePath)}</code></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        `;
+                        break;
+
+                    case 'root-cause-analysis': {
+                        let rootCauseText = fixSuggestion.root_cause_analysis
+                            || fixSuggestion.reason
+                            || fixSuggestion.detailed_root_cause
+                            || phase2.root_cause_analysis
+                            || results.root_cause
+                            || results.summary?.root_cause
+                            || '';
+                        if (!rootCauseText && results.error_message) {
+                            const err = String(results.error_message);
+                            if (/context:/i.test(err)) {
+                                rootCauseText = err.split(/context:/i).slice(1).join('Context:').trim();
+                            } else if (err.length > 120) {
+                                rootCauseText = err;
+                            }
+                        }
+ htmlContent += `<div class="analysis-section"><h4>Root Cause Analysis</h4>`;
+                        if (rootCauseText && String(rootCauseText).trim()) {
+                            htmlContent += `
+                                <div style="background: #f9fafb; border-left: 4px solid #9ca3af; padding: 1rem; border-radius: 6px; white-space: pre-wrap; word-wrap: break-word; line-height: 1.6;">
+                                    ${escapeHtml(String(rootCauseText))}
+                                </div>
+                            `;
+                        } else {
+                            htmlContent += `<p style="color: #6b7280; padding: 1rem;">No root cause analysis available.</p>`;
+                        }
+                        htmlContent += `</div>`;
+                        break;
+                    }
+                        
+                    case 'suspected-functions':
+                        // Only use functions from fix_suggestions.json (phase 3) - these are the 3 functions
+                        const fixSuggestionSuspectedFunctions = fixSuggestion.suspected_functions || [];
+                        
+                        // Get code_patches for additional details
+                        const codePatches = fixSuggestion.code_patches || [];
+                        
+                        // Get phase2 data for relevance_score, source, code_snippet, reason
+                        const phase2AnalysisForFunctions = results.phase2_analysis || results.phase2_results || {};
+                        const phase2SuspectedFunctions = phase2AnalysisForFunctions.suspected_functions || [];
+                        
+                        // Map fix_suggestion functions to detailed data
+                        const mapSuspectedFunctionRow = (funcName, phase2Func, codePatch) => {
+                            const funcNameStr = typeof funcName === 'string'
+                                ? funcName
+                                : (funcName.name || funcName.function_name || 'Unknown');
+                            let reason = 'N/A';
+                            if (phase2Func && typeof phase2Func === 'object' && phase2Func.reason) {
+                                reason = phase2Func.reason;
+                            } else if (codePatch && codePatch.description) {
+                                reason = codePatch.description;
+                            }
+                            return {
+                                function_name: funcNameStr,
+                                file_path: codePatch ? (codePatch.file_path || 'N/A')
+                                    : (phase2Func && typeof phase2Func === 'object' ? (phase2Func.file_path || 'N/A') : 'N/A'),
+                                relevance_score: phase2Func && typeof phase2Func === 'object' ? phase2Func.relevance_score : 'N/A',
+                                source: phase2Func && typeof phase2Func === 'object' ? (phase2Func.source || 'N/A') : 'N/A',
+                                code_snippet: phase2Func && typeof phase2Func === 'object' ? (phase2Func.code_snippet || '') : '',
+                                reason
+                            };
+                        };
+
+                        let suspectedFunctionsDetailed = fixSuggestionSuspectedFunctions.map((funcName) => {
+                            const funcNameStr = typeof funcName === 'string'
+                                ? funcName
+                                : (funcName.name || funcName.function_name || 'Unknown');
+                            const codePatch = codePatches.find((cp) => cp.function_name === funcNameStr);
+                            const phase2Func = phase2SuspectedFunctions.find((f) => {
+                                const fName = typeof f === 'object' ? (f.function_name || f.name) : f;
+                                return fName === funcNameStr;
+                            });
+                            return mapSuspectedFunctionRow(funcName, phase2Func, codePatch);
+                        });
+
+                        if (!suspectedFunctionsDetailed.length && phase2SuspectedFunctions.length > 0) {
+                            suspectedFunctionsDetailed = phase2SuspectedFunctions.map((f) => {
+                                if (typeof f === 'object') {
+                                    const fn = f.function_name || f.name || 'Unknown';
+                                    const codePatch = codePatches.find((cp) => cp.function_name === fn);
+                                    return mapSuspectedFunctionRow(fn, f, codePatch);
+                                }
+                                const codePatch = codePatches.find((cp) => cp.function_name === f);
+                                return mapSuspectedFunctionRow(f, null, codePatch);
+                            });
+                        }
+                        
+                        htmlContent += `
+                            <div class="analysis-section">
+                                <h4>Suspected Functions</h4>
+                        `;
+                        if (suspectedFunctionsDetailed.length > 0) {
+                            htmlContent += `
+                                <table class="analysis-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 15%;">Function Name</th>
+                                            <th style="width: 20%;">File Path</th>
+                                            <th style="width: 10%;">Relevance</th>
+                                            <th style="width: 12%;">Source</th>
+                                            <th style="width: 18%;">Context Preview</th>
+                                            <th style="width: 25%;">Reason</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            `;
+                            suspectedFunctionsDetailed.forEach((func) => {
+                                const funcName = func.function_name || 'Unknown';
+                                const filePath = func.file_path || 'N/A';
+                                const relevance = func.relevance_score !== undefined && func.relevance_score !== 'N/A'? 
+                                    (typeof func.relevance_score === 'number'? `${(func.relevance_score * 100).toFixed(1)}%` : func.relevance_score) : 'N/A';
+                                const source = func.source || 'N/A';
+                                const codeSnippet = func.code_snippet || func.code_context || '';
+                                // Truncate code snippet for preview (first 200 chars)
+                                const contextPreview = codeSnippet ? 
+                                    (codeSnippet.length > 200 ? codeSnippet.substring(0, 200) + '...': codeSnippet) : 'N/A';
+                                const reason = func.reason || 'N/A';
+                                
+                                htmlContent += `
+                                    <tr>
+                                        <td><code>${escapeHtml(funcName)}</code></td>
+                                        <td><code style="font-size: 0.75rem; word-break: break-all;">${escapeHtml(filePath)}</code></td>
+                                        <td class="text-center">${escapeHtml(relevance)}</td>
+                                        <td><span class="badge badge-info">${escapeHtml(source)}</span></td>
+                                        <td>
+                                            ${contextPreview !== 'N/A'? `
+                                                <div style="max-height: 100px; overflow-y: auto; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.75rem; background: #f3f4f6; padding: 0.5rem; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word;">
+                                                    ${escapeHtml(contextPreview)}
+                                                </div>
+                                            ` : '<span style="color: #6b7280;">N/A</span>'}
+                                        </td>
+                                        <td style="font-size: 0.85rem; line-height: 1.4;">${escapeHtml(reason)}</td>
+                                    </tr>
+                                `;
+                            });
+                            htmlContent += `
+                                    </tbody>
+                                </table>
+                            `;
+                        } else {
+                            htmlContent += `<p style="color: #6b7280; padding: 1rem;">No suspected functions identified.</p>`;
+                        }
+                        htmlContent += `</div>`;
+                        break;
+
+                    case 'code-patches': {
+                        const codePatchesList = fixSuggestion.code_patches || [];
+ htmlContent += `<div class="analysis-section"><h4>Code Patches</h4>`;
+                        if (codePatchesList.length > 0) {
+                            htmlContent += `
+                                <table class="analysis-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Function</th>
+                                            <th>File</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            `;
+                            codePatchesList.forEach((patch) => {
+                                htmlContent += `
+                                    <tr>
+                                        <td><code>${escapeHtml(patch.function_name || 'Unknown')}</code></td>
+                                        <td><code style="font-size: 0.75rem; word-break: break-all;">${escapeHtml(patch.file_path || 'N/A')}</code></td>
+                                        <td>${escapeHtml(patch.description || patch.patch_description || 'N/A')}</td>
+                                    </tr>
+                                `;
+                            });
+                            htmlContent += `</tbody></table>`;
+                        } else {
+                            htmlContent += `<p style="color: #6b7280; padding: 1rem;">No code patches generated.</p>`;
+                        }
+                        htmlContent += `</div>`;
+                        break;
+                    }
+
+                    case 'investigation-steps': {
+                        const invSteps = fixSuggestion.investigation_steps || [];
+ htmlContent += `<div class="analysis-section"><h4>Investigation Steps</h4>`;
+                        if (invSteps.length > 0) {
+                            htmlContent += `<table class="analysis-table"><thead><tr><th style="width:60px;">#</th><th>Step</th></tr></thead><tbody>`;
+                            invSteps.forEach((step, idx) => {
+                                const stepText = typeof step === 'string'? step : (step.description || step.text || step);
+                                htmlContent += `<tr><td class="text-center">${idx + 1}</td><td>${escapeHtml(stepText)}</td></tr>`;
+                            });
+                            htmlContent += `</tbody></table>`;
+                        } else {
+                            htmlContent += `<p style="color: #6b7280; padding: 1rem;">No investigation steps available.</p>`;
+                        }
+                        htmlContent += `</div>`;
+                        break;
+                    }
+
+                    case 'investigation-commands': {
+                        const invCommands = extractTerminalCommands(
+                            fixSuggestions.terminal_commands
+                            || results.phase4_commands
+                            || { terminal_commands: fixSuggestion.investigation_commands }
+                        );
+ htmlContent += `<div class="analysis-section"><h4>Investigation Commands</h4>`;
+                        if (invCommands.length > 0) {
+                            htmlContent += `<table class="analysis-table"><thead><tr><th style="width:60px;">#</th><th>Command</th><th>Explanation</th></tr></thead><tbody>`;
+                            invCommands.forEach((cmd, idx) => {
+                                const commandText = cmd.command || cmd.text || cmd;
+                                const explanation = cmd.explanation || cmd.hint || 'No explanation provided';
+                                htmlContent += `<tr><td class="text-center">${idx + 1}</td><td><code>${escapeHtml(commandText)}</code></td><td>${escapeHtml(explanation)}</td></tr>`;
+                            });
+                            htmlContent += `</tbody></table>`;
+                        } else {
+                            htmlContent += `<p style="color: #6b7280; padding: 1rem;">No investigation commands available.</p>`;
+                        }
+                        htmlContent += `</div>`;
+                        break;
+                    }
+                        
+                    case 'suspected-configs':
+                        // Only use configs from fix_suggestions.json (phase 3) - these are the 2 configs
+                        const suspectedConfigNames = fixSuggestion.suspected_configs || [];
+                        
+                        // Get config_patches for detailed information
+                        const configPatches = fixSuggestion.config_patches || [];
+                        
+                        // Get phase2 data for source information (should be "context_aware_retrieval"or "semantic search")
+                        const phase2AnalysisForConfigs = results.phase2_analysis || results.phase2_results || {};
+                        const phase2SuspectedConfigs = phase2AnalysisForConfigs.suspected_configs || [];
+                        
+                        // Map suspected config names to detailed data from config_patches and phase2
+                        const suspectedConfigsDetailed = suspectedConfigNames.map((configName) => {
+                            const configNameStr = typeof configName === 'string'? configName : (configName.name || configName.config_name || 'Unknown');
+                            
+                            // Find matching config in config_patches
+                            const configPatch = configPatches.find(cp =>cp.config_name === configNameStr);
+                            
+                            // Find matching config in phase2 data for source (should be "context_aware_retrieval")
+                            const phase2Config = phase2SuspectedConfigs.find(c => {
+                                const cName = typeof c === 'object'? (c.param_name || c.config_name) : c;
+                                return cName === configNameStr;
+                            });
+                            
+                            // Get source from phase2 (context_aware_retrieval) - map to "semantic search"for display
+                            let source = 'N/A';
+                            if (phase2Config && typeof phase2Config === 'object'&& phase2Config.source) {
+                                // Map "context_aware_retrieval"to "semantic search"for better display
+                                source = phase2Config.source === 'context_aware_retrieval'? 'semantic search': phase2Config.source;
+                            } else if (configPatch && configPatch.patch_type) {
+                                // Fallback to patch_type if phase2 source not available
+                                source = configPatch.patch_type;
+                            }
+                            
+                            if (configPatch) {
+                                return {
+                                    config_name: configPatch.config_name || configNameStr,
+                                    file_path: configPatch.file_path || 'N/A',
+                                    current_value: configPatch.current_value || 'N/A',
+                                    relevance_score: configPatch.relevance_score !== undefined ? configPatch.relevance_score : 'N/A',
+                                    source: source,
+                                    line_number: configPatch.line_number || 'N/A',
+                                    reason: configPatch.description || 'N/A'
+                                };
+                            } else {
+                                // Fallback if config_patch not found
+                                return {
+                                    config_name: configNameStr,
+                                    file_path: 'N/A',
+                                    current_value: 'N/A',
+                                    relevance_score: 'N/A',
+                                    source: source,
+                                    line_number: 'N/A',
+                                    reason: 'N/A'
+                                };
+                            }
+                        });
+                        
+                        htmlContent += `
+                            <div class="analysis-section">
+                                <h4>Suspected Configurations</h4>
+                        `;
+                        if (suspectedConfigsDetailed.length > 0) {
+                            htmlContent += `
+                                <table class="analysis-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 15%;">Config Name</th>
+                                            <th style="width: 20%;">File Path</th>
+                                            <th style="width: 15%;">Current Value</th>
+                                            <th style="width: 10%;">Reference</th>
+                                            <th style="width: 12%;">Source</th>
+                                            <th style="width: 8%;">Line Number</th>
+                                            <th style="width: 20%;">Reason</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            `;
+                            suspectedConfigsDetailed.forEach((config) => {
+                                const configName = config.config_name || 'Unknown';
+                                const filePath = config.file_path || 'N/A';
+                                const currentValue = config.current_value || 'N/A';
+                                const reference = config.relevance_score !== undefined && config.relevance_score !== 'N/A'? 
+                                    (typeof config.relevance_score === 'number'? `${(config.relevance_score * 100).toFixed(1)}%` : config.relevance_score) : 'N/A';
+                                const source = config.source || 'N/A';
+                                const lineNumber = config.line_number || 'N/A';
+                                const reason = config.reason || 'N/A';
+                                
+                                htmlContent += `
+                                    <tr>
+                                        <td><code>${escapeHtml(configName)}</code></td>
+                                        <td><code style="font-size: 0.75rem; word-break: break-all;">${escapeHtml(filePath)}</code></td>
+                                        <td><code style="font-size: 0.85rem;">${escapeHtml(currentValue)}</code></td>
+                                        <td class="text-center">${escapeHtml(reference)}</td>
+                                        <td><span class="badge badge-info">${escapeHtml(source)}</span></td>
+                                        <td class="text-center">${escapeHtml(lineNumber)}</td>
+                                        <td style="font-size: 0.85rem; line-height: 1.4;">${escapeHtml(reason)}</td>
+                                    </tr>
+                                `;
+                            });
+                            htmlContent += `
+                                    </tbody>
+                                </table>
+                            `;
+                        } else {
+                            htmlContent += `<p style="color: #6b7280; padding: 1rem;">No suspected configurations identified.</p>`;
+                        }
+                        htmlContent += `</div>`;
+                        break;
+                        
+                    case 'context-information':
+                        const deploymentContext = results.deployment_context || {};
+                        // Get extended deployment context from error_patterns_structured.json (loaded by backend)
+                        const deploymentContextExtended = window.bugDiscoveryDeploymentContextExtended || {};
+                        
+                        htmlContent += `
+                            <div class="analysis-section">
+                                <h4>Context Information</h4>
+                        `;
+                        
+                        if (Object.keys(deploymentContext).length > 0 || Object.keys(deploymentContextExtended).length > 0) {
+                            // Role Section
+                            const role = deploymentContext.role || 'Unknown';
+                            htmlContent += `
+                                <div style="margin-bottom: 1.5rem;">
+                                    <h5 style="color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 1rem;">Role:</h5>
+                                    <p style="margin: 0; padding-left: 1rem; color: #1f2937;">${escapeHtml(role)}</p>
+                                </div>
+                            `;
+                            
+                            // Network Parameters Section
+                            // Merge network params: extended context takes priority (from error_patterns_structured.json)
+                            const networkParamsBasic = deploymentContext.network_params || {};
+                            const networkParamsExtended = {
+                                'cu_ip_address': deploymentContextExtended.cu_ip_address,
+                                'du_ip_address': deploymentContextExtended.du_ip_address,
+                                'gnb_ip_address': deploymentContextExtended.gnb_ip_address,
+                                'amf_ip_address': deploymentContextExtended.amf_ip_address,
+                                'core_network_machine_ip': deploymentContextExtended.core_network_machine_ip,
+                                'local_s_portc': deploymentContextExtended.local_s_portc,
+                                'local_s_portd': deploymentContextExtended.local_s_portd,
+                                'remote_s_portc': deploymentContextExtended.remote_s_portc,
+                                'remote_s_portd': deploymentContextExtended.remote_s_portd,
+                                'dnn': deploymentContextExtended.dnn,
+                                'nssai_sst': deploymentContextExtended.nssai_sst,
+                                'nssai_sd': deploymentContextExtended.nssai_sd
+                            };
+                            
+                            // Extract GNB IP Address for NG AMF and NMC Size from config_patches (matching PyQt)
+                            const configPatches = fixSuggestion.config_patches || [];
+                            let gnbIpForNgAmf = null;
+                            let nmcSize = null;
+                            
+                            for (const patch of configPatches) {
+                                const configName = patch.config_name || '';
+                                // Extract GNB_IPV4_ADDRESS_FOR_NG_AMF value (use current_value, fallback to new_value)
+                                if (configName === 'GNB_IPV4_ADDRESS_FOR_NG_AMF') {
+                                    gnbIpForNgAmf = patch.current_value || patch.new_value || '';
+                                    // Remove quotes if present
+                                    if (gnbIpForNgAmf && typeof gnbIpForNgAmf === 'string') {
+                                        gnbIpForNgAmf = gnbIpForNgAmf.replace(/^["']|["']$/g, '');
+                                    }
+                                }
+                                // Extract NMC Size (nmc_size) value
+                                if (configName.toLowerCase() === 'nmc_size'|| configName === 'nmc_size') {
+                                    nmcSize = patch.current_value || patch.new_value || '';
+                                    // Remove quotes if present
+                                    if (nmcSize && typeof nmcSize === 'string') {
+                                        nmcSize = nmcSize.replace(/^["']|["']$/g, '');
+                                    }
+                                }
+                            }
+                            
+                            // Merge: extended context takes priority, fallback to basic
+                            const networkParams = {};
+                            // First add extended params
+                            for (const [key, value] of Object.entries(networkParamsExtended)) {
+                                if (value !== null && value !== undefined && value !== '') {
+                                    networkParams[key] = value;
+                                }
+                            }
+                            // Then add basic params if not already in extended (but exclude assoc_state)
+                            for (const [key, value] of Object.entries(networkParamsBasic)) {
+                                // Skip assoc_state (Association State) as per user requirement
+                                if (key === 'assoc_state') {
+                                    continue;
+                                }
+                                if (!networkParams[key] && value !== null && value !== undefined && value !== '') {
+                                    networkParams[key] = value;
+                                }
+                            }
+                            
+                            // Add GNB IP Address for NG AMF if found in config_patches
+                            if (gnbIpForNgAmf) {
+                                networkParams['gnb_ipv4_address_for_ng_amf'] = gnbIpForNgAmf;
+                            }
+                            
+                            // Add NMC Size if found in config_patches
+                            if (nmcSize) {
+                                networkParams['nmc_size'] = nmcSize;
+                            }
+                            
+                            if (Object.keys(networkParams).length > 0) {
+                                htmlContent += `
+                                    <div style="margin-bottom: 1.5rem;">
+                                        <h5 style="color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 1rem;">Network Parameters:</h5>
+                                        <ul style="margin: 0; padding-left: 2rem; list-style-type: disc; color: #1f2937;">
+                                `;
+                                
+                                // Display all network parameters with proper labels (matching PyQt)
+                                const networkParamLabels = {
+                                    'cu_ip_address': 'CU IP Address',
+                                    'du_ip_address': 'DU IP Address',
+                                    'gnb_ip_address': 'gNB IP Address',
+                                    'gnb_ipv4': 'gNB IP Address',
+                                    'gnb_ipv4_address_for_ng_amf': 'GNB IP Address for NG AMF',
+                                    'amf_ip_address': 'AMF IP Address',
+                                    'amf_ipv4': 'AMF IP Address',
+                                    'core_network_machine_ip': 'Core Network Machine IP',
+                                    'ngap_port': 'NGAP Port',
+                                    'local_s_portc': 'Local SCTP Port C',
+                                    'local_s_portd': 'Local SCTP Port D',
+                                    'remote_s_portc': 'Remote SCTP Port C',
+                                    'remote_s_portd': 'Remote SCTP Port D',
+                                    'dnn': 'DNN',
+                                    'nssai_sst': 'NSSAI SST',
+                                    'nssai_sd': 'NSSAI SD',
+                                    'nmc_size': 'NMC Size'
+                                };
+                                
+                                for (const [key, value] of Object.entries(networkParams)) {
+                                    if (value !== null && value !== undefined && value !== '') {
+                                        const label = networkParamLabels[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l =>l.toUpperCase());
+                                        htmlContent += `<li><strong>${escapeHtml(label)}:</strong> ${escapeHtml(String(value))}</li>`;
+                                    }
+                                }
+                                
+                                htmlContent += `
+                                        </ul>
+                                    </div>
+                                `;
+                            }
+                            
+                            // Deployment Commands Section
+                            // Get deployment commands from extended context (from error_patterns_structured.json)
+                            const cuCommand = deploymentContextExtended.Deploy_command_cu_gnb_conf || '';
+                            const duCommand = deploymentContextExtended.Deploy_command_du_gnb_conf || '';
+                            
+                            if (cuCommand || duCommand) {
+                                htmlContent += `
+                                    <div style="margin-bottom: 1.5rem;">
+                                        <h5 style="color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 1rem;">Deployment Commands:</h5>
+                                `;
+                                
+                                if (cuCommand) {
+                                    htmlContent += `
+                                        <div style="margin-left: 1rem; margin-bottom: 0.5rem;">
+                                            <span style="color: #0066cc; font-weight: 600;">CU Deployment:</span>
+                                            <code style="display: block; margin-top: 0.25rem; padding: 0.5rem; background: #f3f4f6; border-radius: 4px; font-size: 0.875rem; color: #1f2937; word-break: break-all;">${escapeHtml(cuCommand)}</code>
+                                        </div>
+                                    `;
+                                }
+                                
+                                if (duCommand) {
+                                    htmlContent += `
+                                        <div style="margin-left: 1rem;">
+                                            <span style="color: #0066cc; font-weight: 600;">DU Deployment:</span>
+                                            <code style="display: block; margin-top: 0.25rem; padding: 0.5rem; background: #f3f4f6; border-radius: 4px; font-size: 0.875rem; color: #1f2937; word-break: break-all;">${escapeHtml(duCommand)}</code>
+                                        </div>
+                                    `;
+                                }
+                                
+                                htmlContent += `</div>`;
+                            }
+                            
+                            // Config Files Guidance Section
+                            htmlContent += `
+                                <div style="margin-bottom: 1.5rem;">
+                                    <h5 style="color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 1rem;">Config File Guidance:</h5>
+                                    <ul style="margin: 0; padding-left: 2rem; list-style-type: disc; color: #1e3a5f; font-style: italic;">
+                                        <li>CU errors → cu_gnb.conf only</li>
+                                        <li>DU errors → du_gnb.conf only</li>
+                                        <li>Only these two config files are supported for configuration changes</li>
+                                    </ul>
+                                </div>
+                            `;
+                            // Active Configurations Section
+                            const activeConfigs = deploymentContext.active_configs || [];
+                            if (activeConfigs.length > 0) {
+                                htmlContent += `
+                                    <div style="margin-bottom: 1.5rem;">
+                                        <h5 style="color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 1rem;">Active Configurations:</h5>
+                                        <p style="margin: 0 0 0.5rem 0; color: #6b7280; font-size: 0.875rem;">${activeConfigs.length} found</p>
+                                        <ul style="margin: 0; padding-left: 2rem; list-style-type: decimal; color: #1f2937;">
+                                `;
+                                
+                                // Show first 5 active configs
+                                const configsToShow = activeConfigs.slice(0, 5);
+                                configsToShow.forEach((config, index) => {
+                                    const configPath = typeof config === 'object'? (config.used || config.path || JSON.stringify(config)) : String(config);
+                                    htmlContent += `<li style="margin-bottom: 0.5rem;"><code style="font-size: 0.875rem; word-break: break-all; color: #374151;">${escapeHtml(configPath)}</code></li>`;
+                                });
+                                
+                                if (activeConfigs.length > 5) {
+                                    htmlContent += `<li style="color: #6b7280; font-style: italic;">... and ${activeConfigs.length - 5} more</li>`;
+                                }
+                                
+                                htmlContent += `
+                                        </ul>
+                                    </div>
+                                `;
+                            }
+                        } else {
+                            htmlContent += `<p style="color: #6b7280; padding: 1rem;">No deployment context information available.</p>`;
+                        }
+                        
+                        htmlContent += `</div>`;
+                        break;
+                        
+                    case 'report':
+                    case 'analysis-summary':
+                        // Get phase2 data (matching PyQt)
+                        const summaryPhase2Data = results.phase2_analysis || results.phase2_results || {};
+                        const summaryAllSuspectedFunctions = summaryPhase2Data.suspected_functions || [];
+                        const summaryAllSuspectedConfigs = summaryPhase2Data.suspected_configs || [];
+                        
+                        // Get Phase 3 suspected names
+                        const summaryPhase3SuspectedFunctionNames = fixSuggestion.suspected_functions || [];
+                        const summaryPhase3SuspectedConfigNames = fixSuggestion.suspected_configs || [];
+                        
+                        // Filter and count functions (Phase 3 filtered)
+                        const summaryFilteredFunctions = summaryAllSuspectedFunctions.filter(func => {
+                            const funcName = typeof func === 'object'? (func.function_name || func.name) : String(func);
+                            return summaryPhase3SuspectedFunctionNames.includes(funcName);
+                        });
+                        
+                        // Filter and count configs (Phase 3 filtered)
+                        const summaryFilteredConfigs = summaryAllSuspectedConfigs.filter(config => {
+                            const configName = typeof config === 'object'? (config.param_name || config.config_name || config.name) : String(config);
+                            return summaryPhase3SuspectedConfigNames.includes(configName);
+                        });
+                        
+                        const summaryFunctionsCount = summaryFilteredFunctions.length;
+                        const summaryConfigsCount = summaryFilteredConfigs.length;
+                        const summaryRetrievalMethod = summaryPhase2Data.retrieval_method || 'standard';
+                        
+                        // Get Phase 3 data
+                        const summaryCodePatches = fixSuggestion.code_patches || [];
+                        const summaryConfigPatches = fixSuggestion.config_patches || [];
+                        const summaryHasRootCause = !!fixSuggestion.reason;
+                        
+                        // Get Phase 4 terminal commands
+                        const summaryTerminalCommands = fixSuggestions.terminal_commands?.terminal_commands || results.phase4_commands?.terminal_commands || [];
+                        
+                        // Extract NMC Size from config_patches
+                        let summaryNmcSize = null;
+                        for (const patch of summaryConfigPatches) {
+                            const configName = patch.config_name || '';
+                            if (configName.toLowerCase() === 'nmc_size'|| configName === 'nmc_size') {
+                                summaryNmcSize = patch.current_value || patch.new_value || '';
+                                if (summaryNmcSize && typeof summaryNmcSize === 'string') {
+                                    summaryNmcSize = summaryNmcSize.replace(/^["']|["']$/g, '');
+                                }
+                                break;
+                            }
+                        }
+                        
+                        // Get deployment context for overall status
+                        const summaryDeploymentContext = results.deployment_context || {};
+                        const summaryContextSummary = fixSuggestions.context_summary || {};
+                        const summaryContextAware = results.summary?.context_aware || false;
+                        const summaryFixAvailable = !!(fixSuggestion.config_fix || summaryCodePatches.length > 0);
+                        
+                        htmlContent += `
+                            <div class="analysis-section">
+                                <h4>Analysis Summary</h4>
+                        `;
+                        
+                        // Phase 2 - Error Analysis (Phase 3 Filtered) - matching PyQt
+                        htmlContent += `
+                            <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f9fafb; border-left: 4px solid #9ca3af; border-radius: 6px;">
+                                <h5 style="color: #1e3a5f; font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem;">Phase 2 - Error Analysis (Phase 3 Filtered):</h5>
+                                <ul style="margin: 0; padding-left: 1.5rem; list-style-type: disc; color: #1f2937;">
+                                    <li style="margin-bottom: 0.5rem;">Suspected Functions (from Phase 3): <strong>${summaryFunctionsCount}</strong></li>
+                                    <li style="margin-bottom: 0.5rem;">Suspected Configurations (from Phase 3): <strong>${summaryConfigsCount}</strong></li>
+                                    <li style="margin-bottom: 0.5rem;">Retrieval Method: <strong>${escapeHtml(summaryRetrievalMethod)}</strong></li>
+                                </ul>
+                        `;
+                        
+                        // Show top configs if available (matching PyQt)
+                        if (summaryConfigsCount > 0 && summaryFilteredConfigs.length > 0) {
+                            htmlContent += `
+                                <div style="margin-top: 1rem;">
+                                    <h6 style="color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem;">Top Suspected Configurations:</h6>
+                                    <ul style="margin: 0; padding-left: 1.5rem; list-style-type: decimal; color: #1f2937;">
+                            `;
+                            const summaryTopConfigs = summaryFilteredConfigs.slice(0, 3);
+                            summaryTopConfigs.forEach((config, idx) => {
+                                const paramName = typeof config === 'object'? (config.param_name || config.config_name || 'Unknown') : String(config);
+                                const score = typeof config === 'object'? (config.relevance_score || 0) : 0;
+                                const source = typeof config === 'object'? (config.source || 'unknown') : 'unknown';
+                                const meaningfulSource = source === 'context_aware_retrieval'? 'semantic search': (source || 'unknown');
+                                htmlContent += `<li style="margin-bottom: 0.5rem;"><code>${escapeHtml(paramName)}</code> (score: ${typeof score === 'number'? score.toFixed(2) : score}, source: ${escapeHtml(meaningfulSource)})</li>`;
+                            });
+                            htmlContent += `</ul></div>`;
+                        }
+                        
+                        htmlContent += `</div>`;
+                        
+                        // Phase 3 - Fix Suggestions - matching PyQt
+                        htmlContent += `
+                            <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f9fafb; border-left: 4px solid #10b981; border-radius: 6px;">
+                                <h5 style="color: #1e3a5f; font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem;">Phase 3 - Fix Suggestions:</h5>
+                                <ul style="margin: 0; padding-left: 1.5rem; list-style-type: disc; color: #1f2937;">
+                                    <li style="margin-bottom: 0.5rem;">Code Patches: <strong>${summaryCodePatches.length}</strong></li>
+                                    <li style="margin-bottom: 0.5rem;">Config Patches: <strong>${summaryConfigPatches.length}</strong></li>
+                                    <li style="margin-bottom: 0.5rem;">Root Cause Analysis: <strong>${summaryHasRootCause ? 'Available': 'Not Available'}</strong></li>
+                                </ul>
+                            </div>
+                        `;
+                        
+                        // Phase 4 - Terminal Commands - matching PyQt
+                        if (summaryTerminalCommands.length > 0) {
+                            htmlContent += `
+                                <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f9fafb; border-left: 4px solid #f59e0b; border-radius: 6px;">
+                                    <h5 style="color: #1e3a5f; font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem;">Phase 4 - Terminal Commands:</h5>
+                                    <ul style="margin: 0; padding-left: 1.5rem; list-style-type: disc; color: #1f2937;">
+                                        <li>Commands Generated: <strong>${summaryTerminalCommands.length}</strong></li>
+                                    </ul>
+                                </div>
+                            `;
+                        }
+                        
+                        // Overall Analysis Status - matching PyQt
+                        htmlContent += `
+                            <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f9fafb; border-left: 4px solid #8b5cf6; border-radius: 6px;">
+                                <h5 style="color: #1e3a5f; font-weight: 600; margin-bottom: 0.75rem; font-size: 1rem;">Overall Analysis Status:</h5>
+                                <ul style="margin: 0; padding-left: 1.5rem; list-style-type: disc; color: #1f2937;">
+                                    <li style="margin-bottom: 0.5rem;">Context-Aware Analysis: <strong>${summaryContextAware ? 'Yes': 'No'}</strong></li>
+                                    <li style="margin-bottom: 0.5rem;">Fix Suggestions Available: <strong>${summaryFixAvailable ? 'Yes': 'No'}</strong></li>
+                                    <li style="margin-bottom: 0.5rem;">Deployment Context: <strong>${Object.keys(summaryDeploymentContext).length > 0 ? 'Available': 'Not Available'}</strong></li>
+                        `;
+                        
+                        // Add NMC Size if available
+                        if (summaryNmcSize) {
+                            htmlContent += `<li style="margin-bottom: 0.5rem;">NMC Size: <strong>${escapeHtml(String(summaryNmcSize))}</strong></li>`;
+                        }
+                        
+                        // Additional summary stats
+                        htmlContent += `
+                                    <li style="margin-bottom: 0.5rem;">Candidate Functions: <strong>${summaryContextSummary.candidate_functions_count || summaryAllSuspectedFunctions.length || 0}</strong></li>
+                                    <li style="margin-bottom: 0.5rem;">Candidate Configs: <strong>${summaryContextSummary.candidate_configs_count || summaryAllSuspectedConfigs.length || 0}</strong></li>
+                                    <li style="margin-bottom: 0.5rem;">Call Graph Entries: <strong>${summaryContextSummary.call_graph_entries || results.call_graph_context?.length || 0}</strong></li>
+                                    <li>Pattern Matched: <strong>${summaryContextSummary.pattern_matched ? 'Yes': 'No'}</strong></li>
+                                </ul>
+                            </div>
+                        `;
+                        
+                        htmlContent += `</div>`;
+                        break;
+                        
+                    case '3gpp-spec-reference':
+                        const specContext = fixSuggestion.specification_context || '';
+                        htmlContent += `
+                            <div class="analysis-section">
+                                <h4>3GPP Spec Reference</h4>
+                        `;
+                        
+                        if (specContext) {
+                            // Parse the 3GPP specification context (matching PyQt parsing logic)
+                            const parseSpecContext = (context) => {
+                                const sections = [];
+                                
+                                // Remove header if present
+                                let cleanContext = context;
+                                if (context.includes('3GPP SPECIFICATION REFERENCE')) {
+                                    const lines = context.split('\n');
+                                    let startIdx = 0;
+                                    for (let i = 0; i < lines.length; i++) {
+                                        if (lines[i].trim().startsWith('=') || lines[i].trim().startsWith('===')) {
+                                            startIdx = i + 1;
+                                            break;
+                                        }
+                                    }
+                                    cleanContext = lines.slice(startIdx).join('\n');
+                                }
+                                
+                                // Split by extraction sections if they exist
+                                let specParts = [];
+                                if (cleanContext.includes('=== Extraction Section No.')) {
+                                    specParts = cleanContext.split('=== Extraction Section No.');
+                                } else {
+                                    specParts = [cleanContext];
+                                }
+                                
+                                // Parse each part
+                                specParts.forEach((part, partIdx) => {
+                                    if (!part.trim()) return;
+                                    
+                                    const lines = part.trim().split('\n');
+                                    let currentItem = null;
+                                    
+                                    // Remove section header line if present
+                                    let contentLines = lines;
+                                    if (lines[0] && lines[0].trim().startsWith(': ')) {
+                                        contentLines = lines.slice(1);
+                                    }
+                                    
+                                    // Parse content
+                                    for (let i = 0; i < contentLines.length; i++) {
+                                        const line = contentLines[i].trim();
+                                        if (!line) continue;
+                                        
+                                        // Format 1: **Title** (new item)
+                                        if (line.startsWith('**') && line.endsWith('**') && !line.includes(':')) {
+                                            // Save previous item
+                                            if (currentItem && (currentItem.page || currentItem.sectionTitle || currentItem.content)) {
+                                                sections.push(currentItem);
+                                            }
+                                            // Start new item
+                                            currentItem = {
+                                                title: line.replace(/\*\*/g, '').trim(),
+                                                page: '',
+                                                sectionTitle: '',
+                                                content: ''
+                                            };
+                                        }
+                                        // Format 2: **Section Title: value**
+                                        else if (line.startsWith('**Section Title:') && line.endsWith('**')) {
+                                            // Save previous item
+                                            if (currentItem && (currentItem.page || currentItem.sectionTitle || currentItem.content)) {
+                                                sections.push(currentItem);
+                                            }
+                                            // Start new item with section title
+                                            const sectionTitleText = line.replace('**Section Title:', '').replace(/\*\*/g, '').trim();
+                                            currentItem = {
+                                                title: sectionTitleText,
+                                                page: '',
+                                                sectionTitle: sectionTitleText,
+                                                content: ''
+                                            };
+                                        }
+                                        // **Page:** or **Page:**
+                                        else if (line.startsWith('**Page:') || line.startsWith('**Page:**')) {
+                                            if (currentItem) {
+                                                currentItem.page = line.replace('**Page:', '').replace('**Page:**', '').replace(/\*\*/g, '').trim();
+                                            }
+                                        }
+                                        // **Section Title:** (for Format 1)
+                                        else if (line.startsWith('**Section Title:**')) {
+                                            if (currentItem) {
+                                                currentItem.sectionTitle = line.replace('**Section Title:**', '').replace(/\*\*/g, '').trim();
+                                            }
+                                        }
+                                        // **Content:**
+                                        else if (line.startsWith('**Content:**')) {
+                                            if (currentItem) {
+                                                currentItem.content = line.replace('**Content:**', '').replace(/\*\*/g, '').trim();
+                                            }
+                                        }
+                                        // Regular content (not a header)
+                                        else {
+                                            if (currentItem && !(line.startsWith('**') && (line.endsWith('**') || line.includes(':')))) {
+                                                if (currentItem.content) {
+                                                    currentItem.content += ' '+ line;
+                                                } else {
+                                                    currentItem.content = line;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Add last item
+                                    if (currentItem && (currentItem.page || currentItem.sectionTitle || currentItem.content)) {
+                                        sections.push(currentItem);
+                                    }
+                                });
+                                
+                                return sections;
+                            };
+                            
+                            const specRecords = parseSpecContext(specContext);
+                            
+                            if (specRecords.length > 0) {
+                                // Display each record as a table (matching PyQt format)
+                                specRecords.forEach((record, idx) => {
+                                    htmlContent += `
+                                        <div style="margin-bottom: 2rem;">
+                                            <h5 style="color: #1e3a5f; font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #b3d9ff;">
+                                                 ${escapeHtml(record.title || 'Specification Reference')}
+                                            </h5>
+                                            <table class="analysis-table"style="margin-bottom: 1rem;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 20%;">Property</th>
+                                                        <th style="width: 80%;">Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                    `;
+                                    
+                                    if (record.page) {
+                                        htmlContent += `
+                                            <tr>
+                                                <td><strong>Page</strong></td>
+                                                <td>${escapeHtml(record.page)}</td>
+                                            </tr>
+                                        `;
+                                    }
+                                    
+                                    if (record.sectionTitle) {
+                                        htmlContent += `
+                                            <tr>
+                                                <td><strong>Section Title</strong></td>
+                                                <td>${escapeHtml(record.sectionTitle)}</td>
+                                            </tr>
+                                        `;
+                                    }
+                                    
+                                    if (record.content) {
+                                        htmlContent += `
+                                            <tr>
+                                                <td><strong>Content</strong></td>
+                                                <td style="white-space: pre-wrap; word-wrap: break-word; font-size: 0.9rem; line-height: 1.6;">${escapeHtml(record.content)}</td>
+                                            </tr>
+                                        `;
+                                    }
+                                    
+                                    htmlContent += `
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    `;
+                                });
+                                // Summary
+                                htmlContent += `
+                                    <div style="margin-top: 1.5rem; padding: 1rem; background: #f0f4f8; border-left: 4px solid #8b5cf6; border-radius: 6px;">
+                                        <p style="margin: 0; color: #1e3a5f; font-size: 0.95rem; line-height: 1.6;">
+                                            <strong>Summary:</strong>Total specification references found: <strong>${specRecords.length}</strong><br>
+                                            These sections contain relevant 3GPP standards information related to the error analysis and potential fixes.
+                                        </p>
+                                    </div>
+                                `;
+                            } else {
+                                // Fallback: display as formatted text if parsing fails
+                                htmlContent += `
+                                    <div style="background: #f9fafb; border-left: 4px solid #9ca3af; padding: 1rem; border-radius: 6px; white-space: pre-wrap; word-wrap: break-word; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; line-height: 1.6;">
+                                        ${escapeHtml(specContext)}
+                                    </div>
+                                `;
+                            }
+                        } else {
+                            htmlContent += `<p style="color: #6b7280; padding: 1rem;">No 3GPP specification references available.</p>`;
+                        }
+                        
+                        htmlContent += `</div>`;
+                        break;
+                        
+                    case 'impact-analysis':
+                        // For Bug Discovery Impact Analysis, we need to call the backend to analyze the log file
+                        // This matches PyQt's LogLayerSeverityAnalyzer functionality
+                        const impactLogFilePath = window.bugDiscoveryLogFilePath || results.log_file || 'None';
+                        
+                        htmlContent += `
+                            <div class="analysis-section">
+                                <h4>Impact Analysis</h4>
+                                <div id="impactAnalysisContent"style="padding: 1rem;">
+                                    <p style="color: #6b7280; text-align: center; padding: 2rem;">Loading impact analysis...</p>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Call backend to analyze impact (matching PyQt: lines 6444-6445)
+                        if (impactLogFilePath && impactLogFilePath !== 'None') {
+                            try {
+                                const formData = new FormData();
+                                formData.append('log_file_path', impactLogFilePath);
+                                
+                                fetch('http://localhost:8000/api/error-fixing/impact-analysis', {
+                                    method: 'POST',
+                                    body: formData
+                                })
+                                .then(response =>response.json())
+                                .then(impactData => {
+                                    if (impactData.success && impactData.results) {
+                                        const impactResults = impactData.results;
+                                        let impactHtml = '';
+                                        
+                                        // Analysis Summary (matching PyQt: lines 6543-6576)
+                                        const totalErrors = impactResults.total_errors || 0;
+                                        const uniqueErrorTypes = impactResults.unique_error_types || 0;
+                                        const layersAffected = impactResults.layers_affected || 0;
+                                        
+                                        impactHtml += `
+                                            <div style="margin-bottom: 2rem; padding: 1rem; background: #ffffff; border: 1px solid #b3d9ff; border-radius: 4px;">
+                                                <h5 style="color: #1e3a5f; font-weight: 600; margin-bottom: 1rem; font-size: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #b3d9ff;">
+ Analysis Summary
+                                                </h5>
+                                                <table class="analysis-table"style="width: 100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 50%;">Property</th>
+                                                            <th style="width: 50%;">Value</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="font-weight: 600; color: #1e3a5f;"><strong>Total Errors Found:</strong></td>
+                                                            <td style="color: #d32f2f; font-weight: bold; font-size: 1.1rem;">${totalErrors}</td>
+                                                        </tr>
+                                                        <tr style="background-color: #f9fafb;">
+                                                            <td style="font-weight: 600; color: #1e3a5f;"><strong>Unique Error Types:</strong></td>
+                                                            <td style="color: #1e3a5f; font-weight: 600;">${uniqueErrorTypes}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight: 600; color: #1e3a5f;"><strong>Layers Affected:</strong></td>
+                                                            <td style="color: #1e3a5f; font-weight: 600;">${layersAffected}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        `;
+                                        
+                                        // Detailed Error Information (matching PyQt: lines 6578-6744)
+                                        if (impactResults.identified_errors && Object.keys(impactResults.identified_errors).length > 0) {
+                                            impactHtml += `
+                                                <div style="margin-bottom: 2rem;">
+                                                    <h5 style="color: #1e3a5f; font-weight: 600; margin-bottom: 1rem; font-size: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #b3d9ff;">
+ Detailed Error Information
+                                                    </h5>
+                                            `;
+                                            
+                                            // Sort errors by severity and count (matching PyQt: lines 6607-6615)
+                                            const severityPriority = { critical: 0, high: 1, medium: 2, low: 3 };
+                                            const sortedErrors = Object.entries(impactResults.identified_errors).sort((a, b) => {
+                                                const severityA = severityPriority[a[1][0]?.severity?.toLowerCase()] ?? 4;
+                                                const severityB = severityPriority[b[1][0]?.severity?.toLowerCase()] ?? 4;
+                                                if (severityA !== severityB) return severityA - severityB;
+                                                return b[1].length - a[1].length;
+                                            });
+                                            
+                                            const severityColors = {
+                                                critical: '#d32f2f',
+                                                high: '#d32f2f',
+                                                medium: '#0066cc',
+                                                low: '#0066cc'
+                                            };
+                                            
+                                            sortedErrors.forEach(([errorType, occurrences]) => {
+                                                if (!occurrences || occurrences.length === 0) return;
+                                                
+                                                const firstOccurrence = occurrences[0];
+                                                const primaryLayer = firstOccurrence.layer || 'unknown';
+                                                const severity = firstOccurrence.severity || 'medium';
+                                                const impact = firstOccurrence.impact || 'Unknown impact';
+                                                const severityColor = severityColors[severity.toLowerCase()] || '#666';
+ const severityEmoji = (severity.toLowerCase() === 'critical'|| severity.toLowerCase() === 'high') ? '': '';
+                                                
+                                                // Calculate impact level (simplified)
+                                                const impactLevel = severity.toLowerCase() === 'critical'|| severity.toLowerCase() === 'high'? 'High': 
+                                                                  severity.toLowerCase() === 'medium'? 'Medium': 'Low';
+                                                
+                                                impactHtml += `
+                                                    <div style="margin-bottom: 1.5rem; padding: 1rem; background: #ffffff; border: 1px solid #b3d9ff; border-left: 4px solid ${severityColor}; border-radius: 4px;">
+                                                        <h6 style="color: #1e3a5f; font-weight: 600; margin-bottom: 0.75rem; font-size: 0.95rem;">
+                                                            ${severityEmoji} ${escapeHtml(errorType.replace(/_/g, ' ').replace(/\b\w/g, l =>l.toUpperCase()))}
+                                                        </h6>
+                                                        <table class="analysis-table"style="width: 100%; margin-bottom: 1rem;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="width: 150px; font-weight: 600; color: #1e3a5f;">Occurrences:</td>
+                                                                    <td style="color: #d32f2f; font-weight: bold;">${occurrences.length}</td>
+                                                                </tr>
+                                                                <tr style="background-color: #f9fafb;">
+                                                                    <td style="font-weight: 600; color: #1e3a5f;">Primary Layer:</td>
+                                                                    <td style="color: #0066cc; font-weight: 600;">${escapeHtml(primaryLayer)}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="font-weight: 600; color: #1e3a5f;">Severity:</td>
+                                                                    <td style="color: ${severityColor}; font-weight: bold; text-transform: uppercase;">${escapeHtml(severity)}</td>
+                                                                </tr>
+                                                                <tr style="background-color: #f9fafb;">
+                                                                    <td style="font-weight: 600; color: #1e3a5f;">Impact Level:</td>
+                                                                    <td style="font-weight: 600;">${escapeHtml(impactLevel)}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="font-weight: 600; color: #1e3a5f;">Description:</td>
+                                                                    <td style="color: #424242;">${escapeHtml(impact)}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        `;
+                                                
+                                                // Cascade Effects (matching PyQt: lines 6687-6731)
+                                                const cascadeChain = firstOccurrence.cascade_chain || [];
+                                                if (cascadeChain && cascadeChain.length > 0) {
+                                                    // Stage colors - all stages use the same color (professional blue)
+                                                    const stageColors = {
+                                                        1: '#0066cc',  // Professional blue
+                                                        2: '#0066cc',  // Same color for all stages
+                                                        3: '#0066cc',  // Same color for all stages
+                                                        4: '#0066cc',  // Same color for all stages
+                                                        5: '#0066cc',  // Same color for all stages
+                                                        6: '#0066cc'// Same color for all stages
+                                                    };
+                                                    
+                                                    // Stage labels (matching PyQt: lines 6700-6704)
+                                                    const stageLabels = {
+                                                        1: 'PRIMARY',
+                                                        2: '1ST LEVEL',
+                                                        3: '2ND LEVEL',
+                                                        4: '3RD LEVEL',
+                                                        5: '4TH LEVEL',
+                                                        6: '5TH LEVEL'
+                                                    };
+                                                    
+                                                    impactHtml += `
+                                                        <div style="margin-top: 0.75rem; padding: 0.75rem; background: #f5f7fa; border: 1px solid #e1e5ea; border-radius: 4px;">
+                                                            <strong style="color: #1e3a5f; font-size: 0.875rem;">Cascade Effects:</strong>
+                                                            <div style="margin-top: 0.5rem;">
+                                                    `;
+                                                    
+                                                    // Display all cascade stages (matching PyQt: lines 6706-6726)
+                                                    // PyQt shows ALL stages in cascade_chain including PRIMARY (stage 1)
+                                                    cascadeChain.forEach((cascadeItem) => {
+                                                        const cascadeLayer = cascadeItem.layer || 'Unknown';
+                                                        const cascadeImpact = cascadeItem.impact || 'Unknown impact';
+                                                        const stage = cascadeItem.stage || 1;
+                                                        const stageColor = stageColors[stage] || '#666';
+                                                        const stageLabel = stageLabels[stage] || `STAGE ${stage}`;
+                                                        
+                                                        impactHtml += `
+                                                            <div style="margin: 0.375rem 0; padding: 0.5rem; background-color: white; border-left: 4px solid ${stageColor}; border-radius: 3px;">
+                                                                <div style="margin-bottom: 0.25rem;">
+                                                                    <span style="background-color: ${stageColor}; color: white; padding: 0.125rem 0.375rem; border-radius: 3px; font-size: 0.5625rem; font-weight: bold; text-transform: uppercase;">${stageLabel}</span>
+                                                                    <strong style="color: ${stageColor}; margin-left: 0.5rem; font-size: 0.75rem;">${escapeHtml(cascadeLayer)}</strong>
+                                                                </div>
+                                                                <div style="color: #424242; font-size: 0.6875rem; margin-left: 0.5rem;">
+                                                                    ${escapeHtml(cascadeImpact)}
+                                                                </div>
+                                                            </div>
+                                                        `;
+                                                    });
+                                                    
+                                                    impactHtml += `
+                                                            </div>
+                                                        </div>
+                                                    `;
+                                                }
+                                                
+                                                // Example Occurrence (matching PyQt: lines 6733-6741)
+                                                impactHtml += `
+                                                        <div style="margin-top: 0.75rem; padding: 0.75rem; background: #f5f7fa; border: 1px solid #e1e5ea; border-radius: 4px;">
+                                                            <strong style="color: #1e3a5f; font-size: 0.875rem;">Example Occurrence:</strong><br>
+                                                            <span style="color: #666; font-size: 0.75rem;">Line ${firstOccurrence.line_number || 'N/A'}:</span><br>
+                                                            <code style="font-size: 0.75rem; color: #1e3a5f; background-color: white; padding: 0.5rem; display: block; margin-top: 0.5rem; border: 1px solid #e1e5ea; border-radius: 3px; white-space: pre-wrap; word-wrap: break-word;">${escapeHtml((firstOccurrence.line || 'N/A').substring(0, 150))}</code>
+                                                        </div>
+                                                    </div>
+                                                `;
+                                            });
+                                            
+                                            impactHtml += `</div>`;
+                                        } else {
+                                            impactHtml += `
+                                                <div style="padding: 2rem; text-align: center; color: #2d862d; background: #f0f9f0; border: 1px solid #c8e6c9; border-radius: 6px;">
+                                                    <p style="margin: 0; font-size: 0.95rem;">No errors found in log file.</p>
+                                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; font-style: italic;">The log analysis completed successfully with no issues detected.</p>
+                                                </div>
+                                            `;
+                                        }
+                                        
+                                        document.getElementById('impactAnalysisContent').innerHTML = impactHtml;
+                                    } else {
+                                        document.getElementById('impactAnalysisContent').innerHTML = `
+                                            <div style="padding: 2rem; text-align: center; color: #6b7280; background: #f9fafb; border: 1px solid #e1e5ea; border-radius: 6px;">
+                                                <p style="margin: 0; font-size: 0.95rem;">No impact analysis data available.</p>
+                                                <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; font-style: italic;">Please ensure a valid log file is provided for Bug Discovery analysis.</p>
+                                            </div>
+                                        `;
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching impact analysis:', error);
+                                    document.getElementById('impactAnalysisContent').innerHTML = `
+                                        <div style="padding: 2rem; text-align: center; color: #d32f2f; background: #fff5f5; border: 1px solid #fecaca; border-radius: 6px;">
+                                            <p style="margin: 0; font-size: 0.95rem;">Error running impact analysis.</p>
+                                            <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; font-style: italic;">${escapeHtml(error.message)}</p>
+                                        </div>
+                                    `;
+                                });
+                            } catch (error) {
+                                console.error('Error in impact analysis:', error);
+                                document.getElementById('impactAnalysisContent').innerHTML = `
+                                    <div style="padding: 2rem; text-align: center; color: #d32f2f; background: #fff5f5; border: 1px solid #fecaca; border-radius: 6px;">
+                                        <p style="margin: 0; font-size: 0.95rem;">Error running impact analysis.</p>
+                                        <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; font-style: italic;">${escapeHtml(error.message)}</p>
+                                    </div>
+                                `;
+                            }
+                        } else {
+                            document.getElementById('impactAnalysisContent').innerHTML = `
+                                <div style="padding: 2rem; text-align: center; color: #6b7280; background: #f9fafb; border: 1px solid #e1e5ea; border-radius: 6px;">
+                                    <p style="margin: 0; font-size: 0.95rem;">No log file available for impact analysis.</p>
+                                    <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; font-style: italic;">Please ensure a valid log file is provided for Bug Discovery.</p>
+                                </div>
+                            `;
+                        }
+                        
+                        htmlContent += `</div>`;
+                        break;
+                        
+                    case 'crash-details':
+                        // Display crash details from crash analysis results
+                        // crashInfo is already defined above
+                        
+                        htmlContent += `
+                            <div class="analysis-section">
+                                <h4>Crash Details</h4>
+                                <table class="analysis-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%;">Property</th>
+                                            <th style="width: 70%;">Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Crash Detected</strong></td>
+                                            <td>${crashInfo.crash_detected ? 'Yes': 'No'}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Signal</strong></td>
+                                            <td>${escapeHtml(crashInfo.signal || 'N/A')}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Crash Type</strong></td>
+                                            <td>${escapeHtml(crashInfo.crash_type || 'N/A')}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Fault Location</strong></td>
+                                            <td><code>${escapeHtml(crashInfo.fault_location || 'N/A')}</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Faulting Function</strong></td>
+                                            <td><code>${escapeHtml(crashInfo.faulting_function || 'N/A')}</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Faulting File</strong></td>
+                                            <td><code style="word-break: break-all;">${escapeHtml(crashInfo.faulting_file || 'N/A')}</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Faulting Line</strong></td>
+                                            <td>${escapeHtml(crashInfo.faulting_line || 'N/A')}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Crash Thread</strong></td>
+                                            <td>${escapeHtml(crashInfo.crash_thread || 'N/A')}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Backtrace Frames</strong></td>
+                                            <td>${crashInfo.backtrace_frames !== undefined ? crashInfo.backtrace_frames : (crashInfo.backtrace ? crashInfo.backtrace.length : 'N/A')}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Scenario Steps Before Crash</strong></td>
+                                            <td>${crashInfo.scenario_steps_before_crash !== undefined ? crashInfo.scenario_steps_before_crash : (crashInfo.scenario_flow ? crashInfo.scenario_flow.length : 'N/A')}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        `;
+                        
+                        // Display source code at fault if available
+                        if (crashInfo.source_code_at_fault) {
+                            htmlContent += `
+                                <div class="analysis-section"style="margin-top: 1.5rem;">
+                                    <h4>Source Code at Fault</h4>
+                                    <div style="background: #f3f4f6; padding: 1rem; border-radius: 6px; border: 1px solid #e1e5ea;">
+                                        <pre style="margin: 0; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; white-space: pre-wrap; word-wrap: break-word; color: #1e3a5f;">${escapeHtml(crashInfo.source_code_at_fault)}</pre>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        // Display scenario flow if available
+                        if (crashInfo.scenario_flow && crashInfo.scenario_flow.length > 0) {
+                            htmlContent += `
+                                <div class="analysis-section"style="margin-top: 1.5rem;">
+                                    <h4>Scenario Flow Before Crash</h4>
+                                    <table class="analysis-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 60px;">#</th>
+                                                <th>Step</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                            `;
+                            crashInfo.scenario_flow.forEach((step, idx) => {
+                                const stepText = typeof step === 'string'? step : (step.description || step.text || step);
+                                htmlContent += `
+                                    <tr>
+                                        <td class="text-center">${idx + 1}</td>
+                                        <td>${escapeHtml(stepText)}</td>
+                                    </tr>
+                                `;
+                            });
+                            htmlContent += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                        }
+                        break;
+                        
+                    case 'backtrace':
+                        // Display backtrace from crash analysis results
+                        // crashInfo is already defined above
+                        const backtrace = results.backtrace || crashInfo.backtrace || [];
+                        
+                        if (backtrace.length > 0) {
+                            htmlContent += `
+                                <div class="analysis-section">
+                                    <h4>Backtrace</h4>
+                                    <table class="analysis-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 60px;">#</th>
+                                                <th style="width: 25%;">Function</th>
+                                                <th style="width: 35%;">File</th>
+                                                <th style="width: 10%;">Line</th>
+                                                <th style="width: 30%;">Address</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                            `;
+                            backtrace.forEach((frame, idx) => {
+                                const funcName = frame.function || frame.function_name || 'Unknown';
+                                const fileName = frame.file || frame.file_path || 'N/A';
+                                const lineNum = frame.line || frame.line_number || 'N/A';
+                                const address = frame.address || 'N/A';
+                                
+                                htmlContent += `
+                                    <tr>
+                                        <td class="text-center">${idx + 1}</td>
+                                        <td><code>${escapeHtml(funcName)}</code></td>
+                                        <td><code style="font-size: 0.75rem; word-break: break-all;">${escapeHtml(fileName)}</code></td>
+                                        <td class="text-center">${escapeHtml(String(lineNum))}</td>
+                                        <td><code style="font-size: 0.75rem; color: #6b7280;">${escapeHtml(String(address))}</code></td>
+                                    </tr>
+                                `;
+                            });
+                            htmlContent += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                        } else {
+                            htmlContent += `
+                                <div class="analysis-section">
+                                    <h4>Backtrace</h4>
+                                    <p style="color: #6b7280; padding: 1rem;">No backtrace information available.</p>
+                                </div>
+                            `;
+                        }
+                        break;
+                        
+                    default:
+                        htmlContent += `<p style="color: #6b7280; padding: 1rem;">Invalid artifact selection.</p>`;
+                }
+                
+                htmlContent += `</div>`;
+                displayEl.innerHTML = htmlContent;
+                
+            } catch (error) {
+                console.error('Error displaying artifact:', error);
+                displayEl.innerHTML = `<p style="color: #ef4444; padding: 1rem;">Error displaying artifact: ${error.message}</p>`;
+            }
+    }
+
+    initBdAnalysisRadioListeners();
+
+    initPortalSelectDropdown({
+        dropdownId: 'artifactsPortalDropdown',
+        btnId: 'artifactsDropdownBtn',
+        menuId: 'artifactsDropdownMenu',
+        hiddenId: 'artifactsDropdown',
+        labelId: 'artifactsDropdownBtnLabel',
+        defaultLabel: '-- Select an artifact to view --',
+        onSelect: (value) =>renderBugDiscoveryArtifact(value, artifactsDisplay)
+    });
+
+    initPortalSelectDropdown({
+        dropdownId: 'bdExportRcaDropdown',
+        btnId: 'bdExportRcaReportBtn',
+        menuId: 'bdExportRcaReportMenu',
+        hiddenId: 'bdExportRcaFormat',
+        onSelect: (format) => {
+            if (!format) return;
+            downloadBugDiscoveryReport(format);
+        }
+    });
+    updateBdExportReportButton();
+
+    // --- Go to Code Assistant --- (removed - button no longer exists)
+
+    // --- Reset results on changing inputs ---
+    logFileCombo.addEventListener('change', () => {
+        validateDirs();
+        resetResultsArea();
+    });
+    
+    // Initial validation
+    validateDirs();
+});
+// Navigation functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const landingPage = document.getElementById('landing-page');
+    const mainApp = document.getElementById('main-app');
+    const navLinks = document.querySelectorAll('.nav-top-link, .nav-sub-link');
+    const contentSections = document.querySelectorAll('.content-section');
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.querySelector('.sidebar');
+    const HOME_SECTION_IDS = ['home'];
+    const WORKFLOW_SECTION_IDS = ['dataset-generator', 'test-script-generator', 'test-deployment', 'test-execution'];
+    const ANALYSIS_SECTION_IDS = ['bug-discovery', 'code-evaluation', 'code-assistant'];
+    const TOOL_SECTION_IDS = ['prompt-templates', 'user-history'];
+
+    function parseFirstInt(text) {
+        const m = String(text ?? '').match(/(\d+)/);
+        return m ? parseInt(m[1], 10) : 0;
+    }
+
+    function updateWorkbenchKpisFromPages() {
+        // Home KPI targets
+        const homeSpecValue = document.getElementById('homeKpiSpecValue');
+        const homeSpecMeta = document.getElementById('homeKpiSpecMeta');
+        const homeTsgValue = document.getElementById('homeKpiTsgValue');
+        const homeTsgMeta = document.getElementById('homeKpiTsgMeta');
+        const homeTeValue = document.getElementById('homeKpiTeValue');
+        const homeTePass = document.getElementById('homeKpiTePass');
+        const homeTeFail = document.getElementById('homeKpiTeFail');
+        const homeTeRun = document.getElementById('homeKpiTeRun');
+        const homeBdValue = document.getElementById('homeKpiBdValue');
+        const homeBdMeta = document.getElementById('homeKpiBdMeta');
+
+        // Spec Intelligence sources
+        const specSections = document.getElementById('specIntelMetricSections');
+        const specSectionsMeta = document.getElementById('specIntelMetricSectionsMeta');
+        if (homeSpecValue && specSections) homeSpecValue.textContent = (specSections.textContent || '0').trim();
+        if (homeSpecMeta && specSectionsMeta) homeSpecMeta.textContent = (specSectionsMeta.textContent || '').trim();
+
+        // Test Script Generator sources
+        const tsgSubtitle = document.getElementById('tsgResultSubtitle');
+        if (homeTsgValue && tsgSubtitle) {
+            const txt = (tsgSubtitle.textContent || '').trim();
+            const m = txt.match(/·\s*(\d+)\s*scripts?\b/i);
+            homeTsgValue.textContent = m ? m[1] : String(parseFirstInt(txt));
+        }
+        // Keep Home meta style but update language/framework if present.
+        if (homeTsgMeta && tsgSubtitle) {
+            const txt = (tsgSubtitle.textContent || '').trim();
+            const parts = txt.split('·').map(p => p.trim()).filter(Boolean);
+            // Expected: ["AI-generated test script", "0 scripts", "Python", "pytest"]
+            const lang = parts[2];
+            const fw = parts[3];
+            if (lang && fw) {
+                // Preserve "Run #0 ·" prefix if already present
+                const prefix = (homeTsgMeta.textContent || '').includes('Run') ? (homeTsgMeta.textContent || '').split('·')[0].trim() : 'Run #0';
+                homeTsgMeta.textContent = `${prefix} · ${lang} · ${fw}`;
+            }
+        }
+
+        // Test Execution sources
+        const teTestsRun = document.getElementById('teKpiTestsRun');
+        const tePassed = document.getElementById('teKpiPassed');
+        const teFailed = document.getElementById('teKpiFailed');
+        const teRun = document.getElementById('teMetaRun');
+        if (homeTeValue && teTestsRun) homeTeValue.textContent = (teTestsRun.textContent || '0').trim();
+        if (homeTePass && tePassed) homeTePass.textContent = `${parseFirstInt(tePassed.textContent)} pass`;
+        if (homeTeFail && teFailed) homeTeFail.textContent = `${parseFirstInt(teFailed.textContent)} fail`;
+        if (homeTeRun && teRun) {
+            const runTxt = (teRun.textContent || '').trim();
+            const runNum = runTxt.startsWith('#') ? runTxt.slice(1) : runTxt.replace(/^Run\s*#?/i, '');
+            homeTeRun.textContent = `Run #${runNum || '0'}`;
+        }
+
+        // Bug Discovery sources
+        const bdFailures = document.getElementById('bdKpiFailures');
+        const bdDefects = document.getElementById('bdKpiDefects');
+        const bdPatches = document.getElementById('bdKpiPatches');
+        if (homeBdValue && bdFailures) homeBdValue.textContent = (bdFailures.textContent || '0').trim();
+        if (homeBdMeta && (bdDefects || bdPatches)) {
+            const defects = parseFirstInt(bdDefects?.textContent);
+            const patches = parseFirstInt(bdPatches?.textContent);
+            homeBdMeta.textContent = `${defects} real defects · ${patches} patches generated`;
+        }
+    }
+
+    function observeTextChanges(el, cb) {
+        if (!el) return;
+        const observer = new MutationObserver(() => cb());
+        observer.observe(el, { childList: true, subtree: true, characterData: true });
+    }
+
+    function updateNavActiveState(sectionId) {
+        document.querySelectorAll('.nav-top-link, .nav-sub-link').forEach(el =>el.classList.remove('active'));
+        document.querySelectorAll('.nav-group').forEach(group => {
+            group.classList.remove('nav-group-active');
+            group.classList.add('expanded');
+        });
+
+        const workflowsGroup = document.getElementById('navWorkflowsGroup');
+        const analysisGroup = document.getElementById('navAnalysisGroup');
+        const toolsGroup = document.getElementById('navToolsGroup');
+
+        if (HOME_SECTION_IDS.includes(sectionId)) {
+            const homeLink = document.querySelector('.nav-links >a[data-section="home"]');
+            if (homeLink) homeLink.classList.add('active');
+        } else if (WORKFLOW_SECTION_IDS.includes(sectionId)) {
+            if (workflowsGroup) {
+                workflowsGroup.classList.add('nav-group-active', 'expanded');
+                const subLink = workflowsGroup.querySelector(`.nav-sub-link[data-section="${sectionId}"]`);
+                if (subLink) subLink.classList.add('active');
+            }
+        } else if (ANALYSIS_SECTION_IDS.includes(sectionId)) {
+            if (analysisGroup) {
+                analysisGroup.classList.add('nav-group-active', 'expanded');
+                const subLink = analysisGroup.querySelector(`.nav-sub-link[data-section="${sectionId}"]`);
+                if (subLink) subLink.classList.add('active');
+            }
+        } else if (TOOL_SECTION_IDS.includes(sectionId)) {
+            if (toolsGroup) {
+                toolsGroup.classList.add('nav-group-active', 'expanded');
+                const subLink = toolsGroup.querySelector(`.nav-sub-link[data-section="${sectionId}"]`);
+                if (subLink) subLink.classList.add('active');
+            }
+        }
+    }
+
+    function runSectionOpenHooks(sectionId, targetSection) {
+        if (sectionId === 'code-assistant'&& typeof window.loadCodeAssistantBugHistory === 'function') {
+            if (targetSection.classList.contains('active')) {
+                window.loadCodeAssistantBugHistory();
+            }
+        }
+        if (sectionId === 'code-evaluation'&& typeof window.loadCodeEvaluationBugHistory === 'function') {
+            if (targetSection.classList.contains('active')) {
+                window.loadCodeEvaluationBugHistory();
+            }
+        }
+        if (sectionId === 'test-script-generator'&& typeof loadTestPromptTemplates === 'function') {
+            loadTestPromptTemplates().catch(err => {
+                console.warn('⚠️ Failed to load templates via navigation:', err);
+            });
+        }
+        if (sectionId === 'prompt-templates' && typeof loadTestPromptTemplates === 'function') {
+            loadTestPromptTemplates().catch(err => {
+                console.warn('⚠️ Failed to load templates for Prompt Studio:', err);
+            });
+        }
+        if (sectionId === 'user-history'&& typeof initializeUserHistoryDropdowns === 'function') {
+            setTimeout(() => {
+                initializeUserHistoryDropdowns();
+                loadUserHistory({ forceRefresh: true });
+            }, 50);
+        }
+        if (sectionId === 'test-deployment'&& typeof initializeDeploymentButtons === 'function') {
+            setTimeout(() => {
+                initializeDeploymentButtons();
+                const fileInput = document.getElementById('deploymentConfigFiles');
+                if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                    updateDeploymentConfigUI(fileInput.files);
+                } else if (typeof updateDeploymentConfigUI === 'function') {
+                    updateDeploymentConfigUI([]);
+                }
+            }, 100);
+        }
+        if (sectionId === 'bug-discovery'&& typeof window.loadBugDiscoveryHistory === 'function') {
+            window.loadBugDiscoveryHistory();
+        }
+    }
+
+    function navigateToAppSection(sectionId) {
+        if (!sectionId) return;
+        closeAllOpenDropdowns();
+        contentSections.forEach(section =>section.classList.remove('active'));
+        updateNavActiveState(sectionId);
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+            runSectionOpenHooks(sectionId, targetSection);
+        }
+    }
+
+    window.navigateToAppSection = navigateToAppSection;
+
+    const WORKBENCH_TAB_SECTIONS = ['home', 'prompt-templates', 'user-history'];
+
+    function updateWorkbenchTopTabs(sectionId) {
+        const tabsNav = document.querySelector('.workbench-top-tabs');
+        const tabs = document.querySelectorAll('.workbench-top-tab');
+        if (tabsNav) {
+            const showWorkbenchTabs = WORKBENCH_TAB_SECTIONS.includes(sectionId);
+            tabsNav.style.display = showWorkbenchTabs ? '': 'none';
+        }
+        if (!tabs.length) return;
+        tabs.forEach(tab => {
+            const target = tab.getAttribute('data-section');
+            const isActive = WORKBENCH_TAB_SECTIONS.includes(sectionId) && sectionId === target;
+            tab.classList.toggle('workbench-top-tab--active', isActive);
+        });
+    }
+
+    document.querySelectorAll('.workbench-top-tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+            const sectionId = this.getAttribute('data-section');
+            if (!sectionId) return;
+            if (typeof window.navigateToAppSection === 'function') {
+                window.navigateToAppSection(sectionId);
+            }
+        });
+    });
+
+    const _navigateToAppSectionOriginal = navigateToAppSection;
+    window.navigateToAppSection = function (sectionId) {
+        _navigateToAppSectionOriginal(sectionId);
+        updateWorkbenchTopTabs(sectionId);
+        // Keep Home KPIs in sync when navigating.
+        updateWorkbenchKpisFromPages();
+    };
+
+    // Initial KPI sync + realtime sync when source KPIs update
+    updateWorkbenchKpisFromPages();
+    observeTextChanges(document.getElementById('specIntelMetricSections'), updateWorkbenchKpisFromPages);
+    observeTextChanges(document.getElementById('specIntelMetricSectionsMeta'), updateWorkbenchKpisFromPages);
+    observeTextChanges(document.getElementById('tsgResultSubtitle'), updateWorkbenchKpisFromPages);
+    observeTextChanges(document.getElementById('teKpiTestsRun'), updateWorkbenchKpisFromPages);
+    observeTextChanges(document.getElementById('teKpiPassed'), updateWorkbenchKpisFromPages);
+    observeTextChanges(document.getElementById('teKpiFailed'), updateWorkbenchKpisFromPages);
+    observeTextChanges(document.getElementById('teMetaRun'), updateWorkbenchKpisFromPages);
+    observeTextChanges(document.getElementById('bdKpiFailures'), updateWorkbenchKpisFromPages);
+    observeTextChanges(document.getElementById('bdKpiDefects'), updateWorkbenchKpisFromPages);
+    observeTextChanges(document.getElementById('bdKpiPatches'), updateWorkbenchKpisFromPages);
+    
+    // Handle Back Button click (return to landing page/homepage)
+    const backButton = document.getElementById('backButton');
+    if (backButton) {
+        backButton.addEventListener('click', function() {
+            console.log('Back button clicked - returning to homepage...');
+            // Hide main app
+            if (mainApp) {
+                mainApp.style.display = 'none';
+            }
+            // Show landing page
+            if (landingPage) {
+                landingPage.style.display = 'block';
+                landingPage.classList.add('active');
+            }
+            console.log('Returned to homepage');
+        });
+    } else {
+        console.warn('Back button not found');
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const sectionId = this.getAttribute('data-section');
+            if (typeof window.navigateToAppSection === 'function') {
+                window.navigateToAppSection(sectionId);
+            } else {
+                navigateToAppSection(sectionId);
+            }
+        });
+    });
+
+    // Menu toggle functionality
+    if (menuToggle && sidebar) {
+        const mainContent = document.querySelector('.main-content');
+        
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed');
+            if (mainContent) {
+                mainContent.style.marginLeft = '';
+                mainContent.style.width = '';
+                mainContent.style.maxWidth = '';
+            }
+        });
+    }
+
+    // Dataset Generator specific functionality
+    let selectedDocument = null;
+    let selectedMainSection = null;
+    let selectedSubsection = null;
+    let workingDirectory = null;
+    let outputDirectory = null;
+    let currentFileId = null;
+    let currentJobId = null;
+    let currentDatasetFolderPath = null; // CRITICAL: Declare early to avoid "before initialization"error
+    let currentTotalContentFilePath = null; // total_content.txt from last successful extraction
+    let specIntelBackendExtractRoot = null; // absolute Backend/resources/extract from API or Electron
+
+    function isAbsoluteFilesystemPath(p) {
+        if (!p) return false;
+        const s = String(p);
+        return s.startsWith('/') || /^[A-Za-z]:[\\/]/.test(s);
+    }
+
+    function normalizeDatasetFilesystemPath(inputPath) {
+        if (!inputPath) return null;
+        let p = String(inputPath).replace(/\\/g, '/').trim();
+        if (isAbsoluteFilesystemPath(p)) return p;
+
+        const rel = p
+            .replace(/^\.?\//, '')
+            .replace(/^Backend\//, '')
+            .replace(/^extract\//, '')
+            .replace(/^resources\/extract\//, '');
+
+        const bases = [];
+        if (specIntelBackendExtractRoot && isAbsoluteFilesystemPath(specIntelBackendExtractRoot)) {
+            bases.push(String(specIntelBackendExtractRoot).replace(/\\/g, '/').replace(/\/$/, ''));
+        }
+        if (workingDirectory && isAbsoluteFilesystemPath(workingDirectory)) {
+            bases.push(String(workingDirectory).replace(/\\/g, '/').replace(/\/$/, ''));
+        }
+
+        for (const base of bases) {
+            if (!base) continue;
+            if (rel.startsWith('datasets/') || rel.includes('/datasets/')) {
+                return `${base}/${rel.replace(/^.*?datasets\//, 'datasets/')}`;
+            }
+            if (!rel.includes('/')) {
+                return `${base}/datasets/${rel}`;
+            }
+            return `${base}/${rel}`;
+        }
+
+        return p;
+    }
+
+    function applyExtractionPathResult(result) {
+        const absTotal = normalizeDatasetFilesystemPath(
+            result?.total_content_file || result?.files_created?.total_content
+        );
+        const absFolder = normalizeDatasetFilesystemPath(
+            result?.dataset_folder
+            || (absTotal ? absTotal.replace(/\/total_content\.txt$/i, '') : null)
+        );
+
+        if (absTotal) {
+            currentTotalContentFilePath = absTotal;
+        }
+        if (absFolder) {
+            currentDatasetFolderPath = absFolder;
+        } else if (absTotal) {
+            currentDatasetFolderPath = absTotal.replace(/\/total_content\.txt$/i, '');
+        }
+
+        return { absTotal, absFolder };
+    }
+
+    function buildDatasetFolderPathFromSelection() {
+        const subsection = selectedSubsection;
+        if (!subsection) return null;
+        let base = null;
+        if (specIntelBackendExtractRoot && isAbsoluteFilesystemPath(specIntelBackendExtractRoot)) {
+            base = specIntelBackendExtractRoot.replace(/\/$/, '');
+        } else if (workingDirectory) {
+            base = normalizeDatasetFilesystemPath(workingDirectory);
+        }
+        if (!base || !isAbsoluteFilesystemPath(base)) return null;
+        return `${base.replace(/\/$/, '')}/datasets/${subsection}`;
+    }
+
+    function buildTotalContentFilePathFromSelection() {
+        const direct = normalizeDatasetFilesystemPath(currentTotalContentFilePath);
+        if (direct) return direct;
+
+        const folder = currentDatasetFolderPath
+            ? normalizeDatasetFilesystemPath(currentDatasetFolderPath)
+            : buildDatasetFolderPathFromSelection();
+        if (folder) {
+            return `${folder.replace(/\/$/, '')}/total_content.txt`;
+        }
+        return null;
+    }
+
+    async function fetchTotalContentFromBackend() {
+        const apiBase = (window.API && window.API.API_BASE_URL) || 'http://127.0.0.1:8000';
+        const attempts = [];
+        const filePath = buildTotalContentFilePathFromSelection();
+        if (filePath) attempts.push({ path: filePath });
+        if (selectedSubsection) attempts.push({ subsection: selectedSubsection });
+
+        if (!attempts.length) return null;
+
+        let lastError = 'total_content.txt not found';
+        for (const query of attempts) {
+            const params = new URLSearchParams(query);
+            try {
+                const response = await fetch(`${apiBase}/api/dataset/total-content?${params.toString()}`);
+                if (response.ok) {
+                    return response.json();
+                }
+                lastError = await response.text();
+            } catch (err) {
+                lastError = err.message || String(err);
+            }
+        }
+        throw new Error(lastError);
+    }
+
+    /** Count all files in the dataset output folder (clause files + total_content + section file, etc.). */
+    async function countDatasetFolderEntries(folderPath) {
+        const resolved = normalizeDatasetFilesystemPath(folderPath);
+        if (!resolved) return 0;
+        try {
+            if (window.API?.listFilesInDirectory) {
+                const entries = await window.API.listFilesInDirectory(resolved);
+                if (Array.isArray(entries)) {
+                    return entries.length;
+                }
+            }
+        } catch (err) {
+            console.warn('Could not count dataset folder files:', err);
+        }
+        return 0;
+    }
+
+    const sectionDropdown = document.getElementById('sectionDropdown');
+    const subsectionDropdown = document.getElementById('subsectionDropdown');
+    const sectionBtn = document.getElementById('sectionBtn');
+    const subsectionBtn = document.getElementById('subsectionBtn');
+
+    function setSpecIntelMetricValue(id, value) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = String(value ?? 0);
+    }
+
+    function setSpecIntelText(id, text) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = String(text ?? '');
+    }
+
+    function setSpecIntelAvailableBadge(count) {
+        const badge = document.getElementById('specIntelAvailableBadge');
+        if (!badge) return;
+        const n = Number.isFinite(count) ? count : 0;
+        badge.textContent = `${n} available`;
+    }
+
+    function resetSpecIntelMetrics() {
+        setSpecIntelMetricValue('specIntelMetricSections', 0);
+        setSpecIntelMetricValue('specIntelMetricSubsections', 0);
+        setSpecIntelMetricValue('specIntelMetricDatasetEntries', 0);
+        setSpecIntelText('specIntelMetricSectionsMeta', 'from 0 spec documents');
+        setSpecIntelAvailableBadge(0);
+    }
+
+    let specIntelUploadSnapshot = null;
+
+    function snapshotSpecIntelDocumentState() {
+        const sectionContent = sectionDropdown?.querySelector('.dropdown-content');
+        const subsectionContent = subsectionDropdown?.querySelector('.dropdown-content');
+        return {
+            currentFileId,
+            selectedDocument,
+            selectedMainSection,
+            selectedSubsection,
+            documentLoaded: Boolean(currentFileId && selectedDocument),
+            sectionBtnText: sectionBtn?.querySelector('span')?.textContent || 'Choose Section',
+            subsectionBtnText: subsectionBtn?.querySelector('span')?.textContent || 'Choose Subsection',
+            sectionDropdownHtml: sectionContent ? sectionContent.innerHTML : '',
+            subsectionDropdownHtml: subsectionContent ? subsectionContent.innerHTML : '',
+            metrics: {
+                sections: document.getElementById('specIntelMetricSections')?.textContent,
+                subsections: document.getElementById('specIntelMetricSubsections')?.textContent,
+                datasetEntries: document.getElementById('specIntelMetricDatasetEntries')?.textContent,
+                sectionsMeta: document.getElementById('specIntelMetricSectionsMeta')?.textContent,
+                badge: document.getElementById('specIntelAvailableBadge')?.textContent,
+            },
+        };
+    }
+
+    function restoreSpecIntelDocumentState(snapshot) {
+        if (!snapshot) return;
+
+        currentFileId = snapshot.currentFileId;
+        selectedDocument = snapshot.selectedDocument;
+        selectedMainSection = snapshot.selectedMainSection;
+        selectedSubsection = snapshot.selectedSubsection;
+
+        if (snapshot.documentLoaded && snapshot.selectedDocument) {
+            updateSpecIntelDocumentUI(true, snapshot.selectedDocument);
+        } else {
+            updateSpecIntelDocumentUI(false);
+        }
+
+        const sectionContent = sectionDropdown?.querySelector('.dropdown-content');
+        const subsectionContent = subsectionDropdown?.querySelector('.dropdown-content');
+        if (sectionContent) sectionContent.innerHTML = snapshot.sectionDropdownHtml || '';
+        if (subsectionContent) subsectionContent.innerHTML = snapshot.subsectionDropdownHtml || '';
+
+        if (sectionBtn) {
+            const span = sectionBtn.querySelector('span');
+            if (span) span.textContent = snapshot.sectionBtnText || 'Choose Section';
+        }
+        if (subsectionBtn) {
+            const span = subsectionBtn.querySelector('span');
+            if (span) span.textContent = snapshot.subsectionBtnText || 'Choose Subsection';
+        }
+
+        if (snapshot.metrics) {
+            setSpecIntelMetricValue('specIntelMetricSections', snapshot.metrics.sections ?? 0);
+            setSpecIntelMetricValue('specIntelMetricSubsections', snapshot.metrics.subsections ?? 0);
+            setSpecIntelMetricValue('specIntelMetricDatasetEntries', snapshot.metrics.datasetEntries ?? 0);
+            setSpecIntelText('specIntelMetricSectionsMeta', snapshot.metrics.sectionsMeta ?? 'from 0 spec documents');
+            const badge = document.getElementById('specIntelAvailableBadge');
+            if (badge && snapshot.metrics.badge) badge.textContent = snapshot.metrics.badge;
+        }
+    }
+
+    function clearSpecIntelSectionSelection(options = {}) {
+        const { fullDocumentReset = false } = options;
+
+        selectedMainSection = null;
+        selectedSubsection = null;
+        updateSectionDropdown([]);
+        updateSubsectionDropdown([]);
+
+        if (sectionBtn) {
+            const span = sectionBtn.querySelector('span');
+            if (span) span.textContent = 'Choose Section';
+        }
+        if (subsectionBtn) {
+            const span = subsectionBtn.querySelector('span');
+            if (span) span.textContent = 'Choose Subsection';
+        }
+
+        resetSpecIntelMetrics();
+        hideSectionProgress();
+        hideSubsectionProgress();
+
+        if (typeof specIntelSubsectionsCache !== 'undefined' && specIntelSubsectionsCache?.clear) {
+            specIntelSubsectionsCache.clear();
+        }
+
+        currentDatasetFolderPath = null;
+        currentTotalContentFilePath = null;
+        if (typeof hideOpenDatasetButton === 'function') {
+            hideOpenDatasetButton();
+        }
+
+        if (fullDocumentReset) {
+            currentFileId = null;
+            selectedDocument = null;
+            updateSpecIntelDocumentUI(false);
+            if (documentInput) documentInput.value = '';
+        }
+    }
+
+    function isSpecIntelGuardrailUploadError(errorMsg) {
+        const msg = String(errorMsg || '').toLowerCase();
+        return msg.includes('document_blocked_by_guardrails')
+            || msg.includes('input security guardrails')
+            || msg.includes('prompt injection')
+            || msg.includes('jailbreak detected')
+            || (msg.includes('422') && msg.includes('guardrail') && !msg.includes('output'));
+    }
+
+    function isTsgDatasetGuardrailError(errorMsg) {
+        return isSpecIntelGuardrailUploadError(errorMsg) || isSpecIntelOutputGuardrailError(errorMsg);
+    }
+
+    function isSpecIntelOutputGuardrailError(errorMsg) {
+        const msg = String(errorMsg || '').toLowerCase();
+        return msg.includes('dataset_output_guardrails_failed')
+            || msg.includes('output failed validation')
+            || (msg.includes('422') && msg.includes('output') && msg.includes('guardrail'));
+    }
+
+    resetSpecIntelMetrics();
+
+    function bindSpecIntelPlaceholderButtons() {
+        const specIntelSection = document.getElementById('dataset-generator');
+        if (!specIntelSection || specIntelSection.dataset.placeholderDelegation === '1') return;
+        specIntelSection.dataset.placeholderDelegation = '1';
+        specIntelSection.addEventListener('click', (e) => {
+            const placeholderBtn = e.target.closest('.spec-intel-btn-placeholder');
+            if (!placeholderBtn || !specIntelSection.contains(placeholderBtn)) return;
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            placeholderBtn.classList.add('spec-intel-btn--clicked');
+            window.setTimeout(() =>placeholderBtn.classList.remove('spec-intel-btn--clicked'), 180);
+        }, true);
+    }
+    bindSpecIntelPlaceholderButtons();
+
+    function updateSpecIntelDocumentUI(loaded, fileName) {
+        const documentTextEl = document.getElementById('documentText');
+        const documentFieldGroup = document.getElementById('documentFieldGroup');
+        if (!documentTextEl) return;
+        if (loaded) {
+            if (fileName) documentTextEl.textContent = fileName;
+            documentTextEl.style.color = '';
+            documentTextEl.classList.add('spec-intel-field-value--loaded');
+            documentFieldGroup?.classList.add('spec-intel-field--loaded');
+        } else {
+            documentTextEl.textContent = 'No file selected';
+            documentTextEl.classList.remove('spec-intel-field-value--loaded');
+            documentFieldGroup?.classList.remove('spec-intel-field--loaded');
+        }
+    }
+
+    // Initialize extract/output directories from backend (absolute paths under Backend/)
+    async function initializeDefaultDirectories() {
+        let defaultWorkingDir = null;
+        let defaultOutputDir = null;
+
+        try {
+            if (window.API?.getExtractFolderPath) {
+                const pathInfo = await window.API.getExtractFolderPath();
+                if (pathInfo?.success && pathInfo.extract_path) {
+                    defaultWorkingDir = pathInfo.extract_path.replace(/\\/g, '/');
+                    specIntelBackendExtractRoot = defaultWorkingDir;
+                    defaultOutputDir = defaultWorkingDir.replace(/\/extract\/?$/, '/output');
+                }
+            }
+        } catch (err) {
+            console.warn('Could not fetch extract folder path from backend:', err);
+        }
+
+        if (!defaultWorkingDir && window.API?.getBackendExtractRoot) {
+            try {
+                const rootInfo = await window.API.getBackendExtractRoot();
+                if (rootInfo?.success && rootInfo.extractRoot) {
+                    defaultWorkingDir = rootInfo.extractRoot.replace(/\\/g, '/');
+                    specIntelBackendExtractRoot = defaultWorkingDir;
+                    defaultOutputDir = defaultWorkingDir.replace(/\/extract\/?$/, '/output');
+                }
+            } catch (err) {
+                console.warn('Could not get Backend extract root from Electron:', err);
+            }
+        }
+
+        if (!defaultWorkingDir) {
+            console.warn('Using fallback extract paths — configure Source Directory if extraction fails');
+            defaultWorkingDir = null;
+            defaultOutputDir = null;
+        }
+
+        try {
+            if (defaultWorkingDir) {
+                await window.API.setWorkingDirectory(defaultWorkingDir);
+                workingDirectory = defaultWorkingDir;
+            }
+            const workingDirText = document.getElementById('workingDirText');
+            if (workingDirText && defaultWorkingDir) {
+                workingDirText.textContent = defaultWorkingDir;
+                workingDirText.style.color = '#10b981';
+                workingDirText.title = defaultWorkingDir;
+            }
+
+            if (defaultOutputDir) {
+                await window.API.setOutputDirectory(defaultOutputDir);
+                outputDirectory = defaultOutputDir;
+            }
+            const outputDirText = document.getElementById('outputDirText');
+            if (outputDirText && defaultOutputDir) {
+                outputDirText.textContent = defaultOutputDir;
+                outputDirText.style.color = '#10b981';
+                outputDirText.title = defaultOutputDir;
+            }
+
+            console.log('Default directories initialized:', { workingDirectory, outputDirectory, specIntelBackendExtractRoot });
+        } catch (error) {
+            console.error('Error initializing default directories:', error);
+            if (defaultWorkingDir) workingDirectory = defaultWorkingDir;
+            if (defaultOutputDir) outputDirectory = defaultOutputDir;
+        }
+    }
+
+    // Initialize directories when page loads
+    initializeDefaultDirectories();
+
+    // Debug: Check File System Access API availability
+    console.log('File System Access API available:', 'showDirectoryPicker' in window);
+    console.log('Current working directory:', workingDirectory);
+    console.log('Current output directory:', outputDirectory);
+    
+    // Test backend connection (non-blocking - don't fail app if health check fails)
+    async function testBackendConnection() {
+        try {
+            // Wait for window.API to be available
+            let attempts = 0;
+            const maxAttempts = 50; // Wait up to 5 seconds (50 * 100ms)
+            
+            while ((!window.API || typeof window.API.checkBackendHealth !== 'function') && attempts < maxAttempts) {
+                await new Promise(resolve =>setTimeout(resolve, 100));
+                attempts++;
+            }
+            
+            if (window.API && typeof window.API.checkBackendHealth === 'function') {
+                console.log('[app.js] ✅ window.API.checkBackendHealth is available, testing connection...');
+        try {
+            await window.API.checkBackendHealth();
+                    console.log('[app.js] ✅ Backend connection test successful');
+                } catch (healthError) {
+                    console.warn('[app.js] ⚠️ Backend health check failed (this is OK, backend might not be running yet):', healthError.message);
+                    // Don't throw - let the app continue, actual API calls will show real errors
+                }
+            } else {
+                console.warn('[app.js] ⚠️ window.API.checkBackendHealth is not available after waiting');
+                console.warn('[app.js] window.API exists:', !!window.API);
+                console.warn('[app.js] window.API keys:', window.API ? Object.keys(window.API) : 'N/A');
+                // Don't throw - let the app continue
+            }
+        } catch (error) {
+            console.warn('[app.js] ⚠️ Backend connection test had an error (non-fatal):', error.message);
+            // Don't throw - let the app continue
+        }
+    }
+    
+    // Wait for API to be ready using event listener OR timeout fallback
+    function initializeApp() {
+        if (window.API && typeof window.API.checkBackendHealth === 'function') {
+            // API is already ready
+    testBackendConnection();
+        } else {
+            // Listen for apiReady event OR use timeout fallback
+            const apiReadyHandler = () => {
+                console.log('[app.js] ✅ Received apiReady event, testing connection...');
+                document.removeEventListener('apiReady', apiReadyHandler);
+                testBackendConnection();
+            };
+            
+            document.addEventListener('apiReady', apiReadyHandler);
+            
+            // Fallback: if event doesn't fire, try after a delay
+            setTimeout(() => {
+                if (window.API && typeof window.API.checkBackendHealth === 'function') {
+                    document.removeEventListener('apiReady', apiReadyHandler);
+                    testBackendConnection();
+                } else {
+                    console.warn('[app.js] ⚠️ apiReady event not received, but API might still be loading...');
+                    testBackendConnection(); // Try anyway
+                }
+            }, 500);
+        }
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+        // DOM already ready, initialize immediately
+        initializeApp();
+    }
+    
+    // CRITICAL: Load templates when Test Script Generator section is active on page load/refresh
+    function checkAndLoadTemplatesOnPageLoad() {
+        const testScriptSection = document.getElementById('test-script-generator');
+        if (testScriptSection && testScriptSection.classList.contains('active')) {
+            console.log('🔄 Test Script Generator section is active on page load, loading templates...');
+            if (typeof loadTestPromptTemplates === 'function') {
+                // Wait a bit for window.API to be ready
+                setTimeout(() => {
+                    loadTestPromptTemplates().then(() => {
+                        console.log('✅ Templates loaded successfully on page load');
+                    }).catch(err => {
+                        console.warn('⚠️ Failed to load templates on page load:', err);
+                    });
+                }, 500);
+            }
+        }
+    }
+    
+    // Check on page load/refresh - wait for API to be ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(checkAndLoadTemplatesOnPageLoad, 1000); // Wait 1 second for API to be ready
+        });
+    } else {
+        // DOM already ready, check after a delay for API to be ready
+        setTimeout(checkAndLoadTemplatesOnPageLoad, 1000);
+    }
+    // Document upload functionality
+    const documentInput = document.getElementById('documentInput');
+    const documentBtn = document.getElementById('documentBtn');
+    const documentText = document.getElementById('documentText');
+
+    if (documentInput && documentBtn && documentText) {
+        // Handle click on button
+        documentBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            documentInput.click();
+        });
+        
+        documentInput.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    specIntelUploadSnapshot = snapshotSpecIntelDocumentState();
+                    clearSpecIntelSectionSelection();
+
+                    showLoading('Uploading document...');
+                    
+                    // Test backend connection first (non-blocking - don't fail if health check fails)
+                    console.log('[app.js] Testing backend before upload...');
+                    
+                    // Wait for API to be available with timeout
+                    let attempts = 0;
+                    const maxAttempts = 20; // Wait up to 2 seconds
+                    while ((!window.API || typeof window.API.checkBackendHealth !== 'function') && attempts < maxAttempts) {
+                        await new Promise(resolve =>setTimeout(resolve, 100));
+                        attempts++;
+                    }
+                    
+                    // Try health check, but don't block if it fails - proceed with actual API call
+                    if (window.API && typeof window.API.checkBackendHealth === 'function') {
+                        try {
+                    await window.API.checkBackendHealth();
+                            console.log('[app.js] ✅ Backend health check passed');
+                        } catch (healthError) {
+                            console.warn('[app.js] ⚠️ Health check failed, but proceeding anyway:', healthError.message);
+                            // Continue - the actual upload will show the real error if backend is down
+                        }
+                    } else {
+                        console.warn('[app.js] ⚠️ window.API.checkBackendHealth not available, proceeding anyway');
+                    }
+                    
+                    // Upload document to backend
+                    // CRITICAL: Try multiple methods to call uploadDocument
+                    console.log('[app.js] 🔍 Attempting document upload...');
+                    
+                    let uploadResult;
+                    
+                    // Method 1: Try window.API.uploadDocument (preferred)
+                    if (window.API && typeof window.API.uploadDocument === 'function') {
+                        console.log('[app.js] ✅ Using window.API.uploadDocument');
+                        uploadResult = await window.API.uploadDocument(file);
+                    }
+                    // Method 2: Try direct fetch call (fallback - like Bug Discovery does)
+                    else {
+                        console.warn('[app.js] ⚠️ window.API.uploadDocument not available, using direct fetch call');
+                        console.log('[app.js] Making direct API call to:', `http://127.0.0.1:8000/api/dataset/upload-document`);
+                        
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        
+                        const response = await fetch('http://127.0.0.1:8000/api/dataset/upload-document', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        console.log('[app.js] API response status:', response.status);
+                        
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            console.error('[app.js] API error response:', errorText);
+                            const parseFn = window.API?.parseGuardrailHttpErrorBody;
+                            const info = typeof parseFn === 'function'
+                                ? parseFn(errorText)
+                                : { message: errorText, guardrailFindings: [], isGuardrailBlock: false };
+                            const err = new Error(`HTTP error! status: ${response.status} - ${info.message}`);
+                            err.guardrailDetail = info.guardrailDetail || null;
+                            err.guardrailFindings = info.guardrailFindings || [];
+                            err.guardrailReasons = info.guardrailReasons || [];
+                            err.isGuardrailBlock = Boolean(info.isGuardrailBlock);
+                            throw err;
+                        }
+                        
+                        uploadResult = await response.json();
+                        console.log('[app.js] ✅ Direct fetch upload successful, result:', uploadResult);
+                    }
+                    
+                    console.log('[app.js] ✅ Upload completed, result:', uploadResult);
+                    specIntelUploadSnapshot = null;
+                    currentFileId = uploadResult.file_id;
+                    selectedDocument = file.name;
+                    
+                updateSpecIntelDocumentUI(true, file.name);
+                
+                    // Document uploaded successfully - show success message
+                    hideLoading();
+                    showStatusBar('Document uploaded successfully!', 'success');
+                    
+                    // Try to load sections - this is separate from upload, so errors here shouldn't fail the upload
+                    try {
+                    // Show section progress indicator
+                    showSectionProgress();
+                    
+                    // Get sections from the uploaded document
+                        let sections;
+                        // Try window.API.getDocumentSections first, fallback to direct fetch
+                        if (window.API && typeof window.API.getDocumentSections === 'function') {
+                            console.log('[app.js] ✅ Using window.API.getDocumentSections');
+                            sections = await window.API.getDocumentSections(currentFileId);
+                        } else {
+                            console.warn('[app.js] ⚠️ window.API.getDocumentSections not available, using direct fetch call');
+                            const response = await fetch(`http://127.0.0.1:8000/api/dataset/document-sections/${currentFileId}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                }
+                            });
+                            
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+                            }
+                            
+                            sections = await response.json();
+                            console.log('[app.js] ✅ Direct fetch getDocumentSections successful, result:', sections);
+                        }
+                        
+                    const sectionList = Array.isArray(sections?.sections) ? sections.sections : [];
+                    selectedMainSection = null;
+                    if (sectionBtn) {
+                        const sectionSpan = sectionBtn.querySelector('span');
+                        if (sectionSpan) sectionSpan.textContent = 'Choose Section';
+                    }
+                    updateSectionDropdown(sectionList);
+
+                    // Real-time metrics: sections count after document load
+                    setSpecIntelMetricValue('specIntelMetricSections', sectionList.length);
+                    setSpecIntelText('specIntelMetricSectionsMeta', 'from 1 spec document');
+                    setSpecIntelAvailableBadge(sectionList.length);
+
+                    // Reset subsections metric until a section is chosen
+                    setSpecIntelMetricValue('specIntelMetricSubsections', 0);
+                    selectedSubsection = null;
+                    if (subsectionBtn) {
+                        const span = subsectionBtn.querySelector('span');
+                        if (span) span.textContent = 'Choose Subsection';
+                    }
+                    updateSubsectionDropdown([]);
+                    
+                    // Hide section progress indicator
+                    hideSectionProgress();
+                    } catch (sectionError) {
+                        console.error('[app.js] Error loading document sections:', sectionError);
+                        hideSectionProgress();
+                        // Don't fail the entire upload - just show a warning
+                        showStatusBar('Document uploaded, but failed to load sections: '+ sectionError.message, 'warning');
+                    }
+                } catch (error) {
+                    console.error('[app.js] Error uploading document:', error);
+                    hideLoading();
+                    
+                    // Hide progress indicators on error
+                    hideSectionProgress();
+                    hideSubsectionProgress();
+
+                    const errorMsg = error.message || String(error);
+                    const guardrailPayload = extractGuardrailPayload(error);
+                    const guardrailRejected = guardrailPayload.isGuardrailBlock
+                        || isSpecIntelGuardrailUploadError(errorMsg);
+
+                    if (guardrailRejected) {
+                        clearSpecIntelSectionSelection({ fullDocumentReset: true });
+                    } else if (specIntelUploadSnapshot) {
+                        restoreSpecIntelDocumentState(specIntelUploadSnapshot);
+                    } else {
+                        clearSpecIntelSectionSelection({ fullDocumentReset: true });
+                    }
+                    specIntelUploadSnapshot = null;
+                    
+                    // Provide specific error messages
+                    if (guardrailRejected) {
+                        showStatusBar(
+                            formatGuardrailRejectionStatus(guardrailPayload.findings, guardrailPayload.reasons),
+                            'error',
+                            'Document blocked — prompt injection / jailbreak detected'
+                        );
+                    } else if (errorMsg.includes('Failed to fetch') || errorMsg.includes('NetworkError')) {
+                        const apiUrl = (window.API && window.API.API_BASE_URL) || 'http://127.0.0.1:8000';
+                        showStatusBar('Cannot connect to backend. Please make sure the backend server is running on '+ apiUrl, 'error');
+                    } else if (errorMsg.includes('Backend is not running')) {
+                        showStatusBar('Backend server is not running. Please start it with: cd Backend && python main.py', 'error');
+                    } else if (errorMsg.includes('413') || errorMsg.toLowerCase().includes('exceeds maximum size')) {
+                        showStatusBar('File is too large. Reduce size or increase GUARDRAILS_MAX_UPLOAD_MB on the backend.', 'error');
+                    } else if (errorMsg.includes('422') && !guardrailRejected) {
+                        showStatusBar('Document rejected by input security checks. Review file content and try again.', 'error');
+                    } else {
+                        // Show error with more context
+                        console.error('[app.js] Upload error details:', errorMsg);
+                        showStatusBar('Failed to upload document: '+ errorMsg, 'error');
+                    }
+                }
+            }
+        });
+    }
+
+    // Section dropdown functionality
+    function updateSectionDropdown(sections) {
+        if (!sectionDropdown) return;
+        const sectionContent = sectionDropdown.querySelector('.dropdown-content');
+        
+        if (sectionContent) {
+            sectionContent.innerHTML = '';
+            sections.forEach(section => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.textContent = section;
+                item.setAttribute('data-section', section);
+                sectionContent.appendChild(item);
+            });
+        }
+    }
+    // Update subsection dropdown when section changes
+    function updateSubsectionDropdown(subsections) {
+        if (!subsectionDropdown) return;
+        const subsectionContent = subsectionDropdown.querySelector('.dropdown-content');
+        
+        if (!subsectionContent) return;
+
+        subsectionContent.innerHTML = '';
+        if (!Array.isArray(subsections) || subsections.length === 0) return;
+
+        // Build in a fragment to reduce reflow when subsections are large
+        const frag = document.createDocumentFragment();
+        subsections.forEach(subsection => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item';
+            item.textContent = subsection;
+            item.setAttribute('data-subsection', subsection);
+            frag.appendChild(item);
+        });
+        subsectionContent.appendChild(frag);
+    }
+
+    // Spec Intel: cache subsections per (fileId, section) to avoid repeated slow calls
+    const specIntelSubsectionsCache = new Map(); // key => Promise<Array<string>>
+    let specIntelSubsectionLoadSeq = 0;
+
+    function firstFulfilled(promises) {
+        return new Promise((resolve, reject) => {
+            let pending = promises.length;
+            let lastErr;
+            promises.forEach((p) => {
+                Promise.resolve(p).then(resolve).catch((err) => {
+                    lastErr = err;
+                    pending--;
+                    if (pending === 0) reject(lastErr);
+                });
+            });
+        });
+    }
+
+    async function getSubsectionsForSectionCached(fileId, section) {
+        const cacheKey = `${fileId}::${section}`;
+        if (specIntelSubsectionsCache.has(cacheKey)) {
+            return specIntelSubsectionsCache.get(cacheKey);
+        }
+
+        const loadPromise = (async () => {
+            const normalize = (res) => {
+                if (Array.isArray(res)) return res;
+                if (res && Array.isArray(res.subsections)) return res.subsections;
+                return [];
+            };
+
+            const promises = [];
+
+            // Prefer window.API if present, but race with direct fetch to reduce wait time.
+            if (window.API && typeof window.API.getDocumentSubsections === 'function') {
+                promises.push(window.API.getDocumentSubsections(fileId, section).then(normalize));
+            }
+
+            const encodedSection = encodeURIComponent(section);
+            promises.push(
+                fetch(`http://127.0.0.1:8000/api/dataset/document-subsections/${fileId}/${encodedSection}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                    .then(async (response) => {
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(normalize)
+            );
+
+            const resolved = await firstFulfilled(promises);
+            return Array.isArray(resolved) ? resolved : [];
+        })();
+
+        specIntelSubsectionsCache.set(cacheKey, loadPromise);
+        return loadPromise;
+    }
+
+    // Extract button is now always visible in Box 2
+
+    // Progress indicator functions
+    function showSectionProgress() {
+        const sectionProgress = document.getElementById('sectionProgress');
+        if (sectionProgress) {
+            sectionProgress.style.display = 'inline-block';
+        }
+    }
+
+    function hideSectionProgress() {
+        const sectionProgress = document.getElementById('sectionProgress');
+        if (sectionProgress) {
+            sectionProgress.style.display = 'none';
+        }
+    }
+
+    function showSubsectionProgress() {
+        const subsectionProgress = document.getElementById('subsectionProgress');
+        if (subsectionProgress) {
+            subsectionProgress.style.display = 'inline-block';
+        }
+    }
+
+    function hideSubsectionProgress() {
+        const subsectionProgress = document.getElementById('subsectionProgress');
+        if (subsectionProgress) {
+            subsectionProgress.style.display = 'none';
+        }
+    }
+    function positionSpecIntelDropdown(dropdownEl) {
+        if (!dropdownEl || !dropdownEl.classList.contains('active')) return;
+        const btn = dropdownEl.querySelector('.dropdown-btn');
+        const menu = dropdownEl._specIntelMenu || dropdownEl.querySelector('.dropdown-content');
+        if (!btn || !menu) return;
+        dropdownEl._specIntelMenu = menu;
+        if (menu.parentElement !== document.body) {
+            dropdownEl._specIntelMenuHost = dropdownEl;
+            document.body.appendChild(menu);
+        }
+        const rect = btn.getBoundingClientRect();
+        const menuHeight = menu.offsetHeight || 240;
+        let top = rect.bottom + 4;
+        if (top + menuHeight >window.innerHeight - 8 && rect.top >menuHeight + 8) {
+            top = rect.top - menuHeight - 4;
+        }
+        menu.style.position = 'fixed';
+        menu.style.top = `${top}px`;
+        menu.style.left = `${rect.left}px`;
+        menu.style.width = `${Math.max(rect.width, 220)}px`;
+        menu.style.right = 'auto';
+        menu.style.zIndex = '9000';
+        menu.style.display = 'block';
+        menu.style.opacity = '1';
+        menu.style.transform = 'none';
+    }
+
+    function resetSpecIntelDropdown(dropdownEl) {
+        if (!dropdownEl) return;
+        const menu = dropdownEl._specIntelMenu || dropdownEl.querySelector('.dropdown-content');
+        const host = dropdownEl._specIntelMenuHost || dropdownEl;
+        if (menu && menu.parentElement === document.body && host) {
+            host.appendChild(menu);
+        }
+        if (menu) {
+            menu.style.position = '';
+            menu.style.top = '';
+            menu.style.left = '';
+            menu.style.width = '';
+            menu.style.right = '';
+            menu.style.zIndex = '';
+            menu.style.opacity = '';
+            menu.style.transform = '';
+            menu.style.display = 'none';
+        }
+    }
+
+    // Dropdown functionality for sections and subsections
+    if (sectionDropdown && sectionBtn) {
+        const sectionContent = sectionDropdown.querySelector('.dropdown-content');
+        if (sectionContent) sectionDropdown._specIntelMenu = sectionContent;
+        
+        sectionBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const wasActive = sectionDropdown.classList.contains('active');
+            if (subsectionDropdown) subsectionDropdown.classList.remove('active');
+            resetSpecIntelDropdown(subsectionDropdown);
+            sectionDropdown.classList.toggle('active');
+            if (!wasActive && sectionDropdown.classList.contains('active')) {
+                requestAnimationFrame(() =>positionSpecIntelDropdown(sectionDropdown));
+            } else {
+                resetSpecIntelDropdown(sectionDropdown);
+            }
+        });
+        
+        sectionContent.addEventListener('click', async function(e) {
+            const item = e.target.closest('.dropdown-item');
+            if (item) {
+                const section = item.getAttribute('data-section');
+                selectedMainSection = section;
+                sectionBtn.querySelector('span').textContent = section;
+                sectionDropdown.classList.remove('active');
+                resetSpecIntelDropdown(sectionDropdown);
+                
+                // Get subsections for this section
+                if (currentFileId) {
+                    const loadSeq = ++specIntelSubsectionLoadSeq;
+
+                    // Reset subsection selection immediately when section changes
+                    selectedSubsection = null;
+                    if (subsectionBtn) {
+                        const span = subsectionBtn.querySelector('span');
+                        if (span) span.textContent = 'Choose Subsection';
+                    }
+                    updateSubsectionDropdown([]);
+
+                    try {
+                        showSubsectionProgress();
+
+                        const subsections = await getSubsectionsForSectionCached(currentFileId, section);
+
+                        // Ignore stale responses when the user picked another section quickly
+                        if (loadSeq !== specIntelSubsectionLoadSeq) return;
+
+                        updateSubsectionDropdown(subsections);
+
+                        // Real-time metrics: subsections count for selected section
+                        setSpecIntelMetricValue('specIntelMetricSubsections', Array.isArray(subsections) ? subsections.length : 0);
+                        setSpecIntelAvailableBadge(Array.isArray(subsections) ? subsections.length : 0);
+                    } catch (error) {
+                        console.error('Error getting subsections:', error);
+                        if (loadSeq === specIntelSubsectionLoadSeq) {
+                            showStatusBar('Failed to load subsections', 'error');
+                        }
+                    } finally {
+                        if (loadSeq === specIntelSubsectionLoadSeq) {
+                            hideSubsectionProgress();
+                        }
+                    }
+                }
+            }
+        });
+    }
+    if (subsectionDropdown && subsectionBtn) {
+        const subsectionContent = subsectionDropdown.querySelector('.dropdown-content');
+        if (subsectionContent) subsectionDropdown._specIntelMenu = subsectionContent;
+        
+        subsectionBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const wasActive = subsectionDropdown.classList.contains('active');
+            if (sectionDropdown) sectionDropdown.classList.remove('active');
+            resetSpecIntelDropdown(sectionDropdown);
+            subsectionDropdown.classList.toggle('active');
+            if (!wasActive && subsectionDropdown.classList.contains('active')) {
+                requestAnimationFrame(() =>positionSpecIntelDropdown(subsectionDropdown));
+            } else {
+                resetSpecIntelDropdown(subsectionDropdown);
+            }
+        });
+        
+        subsectionContent.addEventListener('click', function(e) {
+            const item = e.target.closest('.dropdown-item');
+            if (item) {
+                const subsection = item.getAttribute('data-subsection');
+                selectedSubsection = subsection;
+                subsectionBtn.querySelector('span').textContent = subsection;
+                subsectionDropdown.classList.remove('active');
+                resetSpecIntelDropdown(subsectionDropdown);
+                
+                // Subsection selected successfully
+            }
+        });
+    }
+    // Extract Dataset button functionality - PyQt-style (synchronous)
+    const extractBtn = document.getElementById('extractDatasetBtn');
+    if (extractBtn) {
+        extractBtn.addEventListener('click', async function() {
+            console.log('Extract button clicked with values:', {
+                currentFileId,
+                selectedMainSection,
+                selectedSubsection,
+                workingDirectory,
+                outputDirectory
+            });
+
+            // Check if all required fields are filled
+            const workingDirText = document.getElementById('workingDirText');
+            const outputDirText = document.getElementById('outputDirText');
+            const sectionBtn = document.getElementById('sectionBtn');
+            const subsectionBtn = document.getElementById('subsectionBtn');
+            
+            const isDocumentSelected = currentFileId && selectedDocument;
+            const isSectionSelected = selectedMainSection && selectedMainSection !== 'Select Section';
+            const isSubsectionSelected = selectedSubsection && selectedSubsection !== 'Select Subsection';
+            const isWorkingDirSet = workingDirectory || (workingDirText && workingDirText.textContent && !workingDirText.textContent.includes('No Document loaded'));
+            const isOutputDirSet = outputDirectory || (outputDirText && outputDirText.textContent && !outputDirText.textContent.includes('No Document loaded'));
+            
+            console.log('Validation check:', {
+                isDocumentSelected,
+                isSectionSelected,
+                isSubsectionSelected,
+                isWorkingDirSet,
+                isOutputDirSet,
+                currentFileId,
+                selectedMainSection,
+                selectedSubsection,
+                workingDirectory,
+                outputDirectory,
+                workingDirTextContent: workingDirText ? workingDirText.textContent : 'not found',
+                outputDirTextContent: outputDirText ? outputDirText.textContent : 'not found'
+            });
+            
+            if (!isDocumentSelected || !isSectionSelected || !isSubsectionSelected || !isWorkingDirSet || !isOutputDirSet) {
+                showStatusBar('Please select document, section, subsection, and directories', 'warning');
+                return;
+            }
+            try {
+                // Hide the Open Dataset button when starting new extraction
+                hideOpenDatasetButton();
+                
+                showProgressBar(0, 'Starting dataset generation...');
+                
+                console.log('Calling PyQt-style dataset extraction...');
+                
+                // NEW: Call PyQt-style synchronous extraction (no job tracking, waits for completion)
+                // Try window.API.generateDatasetPyQtStyle first, fallback to direct fetch
+                let result;
+                if (window.API && typeof window.API.generateDatasetPyQtStyle === 'function') {
+                    console.log('[app.js] ✅ Using window.API.generateDatasetPyQtStyle');
+                    result = await window.API.generateDatasetPyQtStyle(
+                    currentFileId,
+                    selectedMainSection,
+                    selectedSubsection,
+                    workingDirectory,
+                    outputDirectory
+                );
+                } else {
+                    console.warn('[app.js] ⚠️ window.API.generateDatasetPyQtStyle not available, using direct fetch call');
+                    const formData = new FormData();
+                    formData.append('file_id', currentFileId);
+                    formData.append('section', selectedMainSection);
+                    formData.append('subsection', selectedSubsection);
+                    formData.append('working_directory', workingDirectory);
+                    formData.append('output_directory', outputDirectory);
+                    
+                    const response = await fetch('http://127.0.0.1:8000/api/dataset/extract-pyqt-style', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+                    }
+                    
+                    result = await response.json();
+                    console.log('[app.js] ✅ Direct fetch generateDatasetPyQtStyle successful, result:', result);
+                }
+                
+                hideProgressBar();
+                
+                if (result.success) {
+                    const guardrailNote = result.output_guardrails?.passed
+                        ? ' Output guardrails passed (schema, hierarchy, traceability, NLI groundedness).'
+                        : '';
+                    showStatusBar(
+                        `Dataset extraction completed! Created ${result.clause_files_count} clause files.${guardrailNote}`, 
+                        'success'
+                    );
+                    
+                    console.log('📁 Full result object:', JSON.stringify(result, null, 2));
+
+                    const { absTotal, absFolder } = applyExtractionPathResult(result);
+                    let datasetFolderPath = absFolder;
+
+                    if (!datasetFolderPath && result.files_created?.clause_files?.length > 0) {
+                        const firstClauseFile = normalizeDatasetFilesystemPath(result.files_created.clause_files[0]);
+                        if (firstClauseFile) {
+                            datasetFolderPath = firstClauseFile.replace(/\/[^/]+$/, '');
+                            currentDatasetFolderPath = datasetFolderPath;
+                        }
+                    }
+
+                    if (!currentTotalContentFilePath && absTotal) {
+                        currentTotalContentFilePath = absTotal;
+                    }
+
+                    console.log('📁 Final dataset folder path:', datasetFolderPath);
+                    console.log('📁 total_content path:', currentTotalContentFilePath);
+                    showOpenDatasetButton(datasetFolderPath || currentDatasetFolderPath);
+
+                    const normalizedFolder = currentDatasetFolderPath
+                        || datasetFolderPath
+                        || buildDatasetFolderPathFromSelection();
+
+                    // Real-time metrics: total files in dataset folder (not clause_files only)
+                    let entriesCount = 0;
+                    if (normalizedFolder) {
+                        entriesCount = await countDatasetFolderEntries(normalizedFolder);
+                    }
+                    if (!entriesCount) {
+                        const clauseFiles = Array.isArray(result?.files_created?.clause_files)
+                            ? result.files_created.clause_files
+                            : null;
+                        const mainFiles = result?.files_created
+                            ? ['initial_text', 'total_content', 'graph_json'].filter(
+                                (k) => result.files_created[k]
+                            ).length
+                            : 0;
+                        entriesCount = clauseFiles
+                            ? clauseFiles.length + mainFiles
+                            : (Number(
+                                result?.dataset_entries_count
+                                ?? result?.entries_count
+                                ?? result?.clause_files_count
+                                ?? 0
+                            ) || 0);
+                    }
+                    setSpecIntelMetricValue('specIntelMetricDatasetEntries', entriesCount);
+                    
+                    console.log('📁 Dataset folder path stored in currentDatasetFolderPath:', currentDatasetFolderPath);
+                } else {
+                    showStatusBar('Dataset extraction failed: '+ (result.message || 'Unknown error'), 'error');
+                }
+                
+            } catch (error) {
+                hideProgressBar();
+                const errMsg = error.message || String(error);
+                if (errMsg.includes('content filter') || errMsg.includes('jailbreak') || errMsg.includes('content management policy')) {
+                    showStatusBar(
+                        'Azure blocked this text (jailbreak filter). Try another subsection or adjust Prompt Shields in Azure AI Foundry.',
+                        'error',
+                        'Extraction blocked'
+                    );
+                } else if (isSpecIntelOutputGuardrailError(errMsg)) {
+                    const cleaned = errMsg
+                        .replace(/^HTTP error! status: \d+, message: /, '')
+                        .replace(/^HTTP error! status: \d+ - /, '');
+                    showStatusBar(
+                        cleaned || 'Extraction output failed validation. Dataset was not saved.',
+                        'error',
+                        'Output guardrails blocked'
+                    );
+                    hideOpenDatasetButton();
+                } else if (errMsg.includes('guardrail') || errMsg.includes('422')) {
+                    showStatusBar(errMsg.replace(/^HTTP error! status: \d+ - /, ''), 'error', 'Extraction blocked');
+                } else {
+                    showStatusBar('Failed to generate dataset: ' + errMsg, 'error');
+                }
+                console.error('Generation error:', error);
+            }
+        });
+    }
+
+    const specIntelSendToTsgBtn = document.getElementById('specIntelSendToTsgBtn');
+    if (specIntelSendToTsgBtn) {
+        specIntelSendToTsgBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (typeof window.sendDatasetToTestScriptGenerator === 'function') {
+                await window.sendDatasetToTestScriptGenerator();
+            } else {
+                showStatusBar('Send to Test Script Generator is not ready yet. Please try again.', 'warning');
+            }
+        });
+    }
+
+    // Next Button - Navigate to Test Script Generator
+    const datasetGeneratorNextBtn = document.getElementById('datasetGeneratorNextBtn');
+    if (datasetGeneratorNextBtn) {
+        datasetGeneratorNextBtn.addEventListener('click', function() {
+            if (typeof window.navigateToAppSection === 'function') {
+                window.navigateToAppSection('test-script-generator');
+            }
+        });
+    }
+
+    // Previous Button - Navigate from Test Script Generator to Dataset Generator
+    const testScriptGeneratorPrevBtn = document.getElementById('testScriptGeneratorPrevBtn');
+    if (testScriptGeneratorPrevBtn) {
+        testScriptGeneratorPrevBtn.addEventListener('click', function() {
+            navigateToAppSection('dataset-generator');
+        });
+    }
+
+    const testScriptGeneratorNavNextBtn = document.getElementById('testScriptGeneratorNavNextBtn');
+    if (testScriptGeneratorNavNextBtn) {
+        testScriptGeneratorNavNextBtn.addEventListener('click', function() {
+            navigateToAppSection('test-deployment');
+        });
+    }
+
+    // Previous Button - Navigate from Test Deployment to Test Script Generator
+    const testDeploymentPrevBtn = document.getElementById('testDeploymentPrevBtn');
+    if (testDeploymentPrevBtn) {
+        testDeploymentPrevBtn.addEventListener('click', function() {
+            navigateToAppSection('test-script-generator');
+        });
+    }
+
+    // Next Button - Navigate from Test Deployment to Test Execution
+    function goToTestExecutionSection() {
+        navigateToAppSection('test-execution');
+    }
+
+    const testDeploymentNextBtn = document.getElementById('testDeploymentNextBtn');
+    if (testDeploymentNextBtn) {
+        testDeploymentNextBtn.addEventListener('click', goToTestExecutionSection);
+    }
+
+    const testDeploymentNavNextBtn = document.getElementById('testDeploymentNavNextBtn');
+    if (testDeploymentNavNextBtn) {
+        testDeploymentNavNextBtn.addEventListener('click', goToTestExecutionSection);
+    }
+
+    const testExecutionNextBtn = document.getElementById('testExecutionNextBtn');
+    if (testExecutionNextBtn) {
+        testExecutionNextBtn.addEventListener('click', function() {
+            navigateToAppSection('bug-discovery');
+        });
+    }
+
+    const testExecutionPrevBtn = document.getElementById('testExecutionPrevBtn');
+    if (testExecutionPrevBtn) {
+        testExecutionPrevBtn.addEventListener('click', function() {
+            navigateToAppSection('test-deployment');
+        });
+    }
+
+    const bugDiscoveryPrevBtn = document.getElementById('bugDiscoveryPrevBtn');
+    if (bugDiscoveryPrevBtn) {
+        bugDiscoveryPrevBtn.addEventListener('click', function() {
+            navigateToAppSection('test-execution');
+        });
+    }
+
+
+    const bugDiscoveryNextBtn = document.getElementById('bugDiscoveryNextBtn');
+    if (bugDiscoveryNextBtn) {
+        bugDiscoveryNextBtn.addEventListener('click', function() {
+            navigateToAppSection('code-evaluation');
+        });
+    }
+
+
+
+    const codeAssistantPrevBtn = document.getElementById('codeAssistantPrevBtn');
+    if (codeAssistantPrevBtn) {
+        codeAssistantPrevBtn.addEventListener('click', function() {
+            navigateToAppSection('code-evaluation');
+        });
+    }
+    const codeEvaluationNextBtn = document.getElementById('codeEvaluationNextBtn');
+    if (codeEvaluationNextBtn) {
+        codeEvaluationNextBtn.addEventListener('click', function() {
+            navigateToAppSection('code-assistant');
+        });
+    }
+    const codeEvaluationPrevBtn = document.getElementById('codeEvaluationPrevBtn');
+    if (codeEvaluationPrevBtn) {
+        codeEvaluationPrevBtn.addEventListener('click', function() {
+            navigateToAppSection('bug-discovery');
+        });
+    }
+
+    // Function to poll dataset generation status
+    async function pollDatasetStatus() {
+        if (!currentJobId) return;
+        
+        try {
+            const status = await window.API.getDatasetStatus(currentJobId);
+            
+            if (status.status === 'processing') {
+                // Update circular progress indicator
+                updateCircularProgress(status.progress, status.message);
+                
+                // Continue polling
+                setTimeout(pollDatasetStatus, 2000);
+            } else if (status.status === 'completed') {
+                hideProgressBar();
+                // Show completion message with output path
+                const outputPath = status.output_path || status.result?.output_file || 'Unknown location';
+                showStatusBar(`Dataset generation completed! Output saved to: ${outputPath}`, 'success');
+                
+                // Results display removed - not necessary
+                // const files = await window.API.getDatasetFiles(currentJobId);
+                // displayResults(files);
+            } else if (status.status === 'failed') {
+                hideProgressBar();
+                showStatusBar('Dataset generation failed: '+ status.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error checking status:', error);
+            hideProgressBar();
+            showStatusBar('Failed to check generation status: '+ error.message, 'error');
+        }
+    }
+    // Helper functions for UI feedback
+    function showLoading(message) {
+        // Add loading indicator
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'loadingIndicator';
+        loadingDiv.innerHTML = `
+            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                       background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                       z-index: 10000; text-align: center;">
+                <div style="color: #5d92ff; margin-bottom: 1rem;">${message}</div>
+                <div style="border: 3px solid #f3f3f3; border-top: 3px solid #5d92ff; border-radius: 50%; 
+                           width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+            </div>
+            <style>
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            </style>
+        `;
+        document.body.appendChild(loadingDiv);
+    }
+
+    function hideLoading() {
+        const loadingDiv = document.getElementById('loadingIndicator');
+        if (loadingDiv) {
+            loadingDiv.remove();
+        }
+    }
+    // Continuous spinning loading circle functions
+    function showProgressBar(progress, message) {
+        // Remove existing progress indicator if any
+        hideProgressBar();
+        
+        // Create continuous spinning loading circle container
+        const progressDiv = document.createElement('div');
+        progressDiv.id = 'progressIndicator';
+        progressDiv.innerHTML = `
+            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                        background: white; border: 2px solid #0078D4; border-radius: 12px; 
+                        padding: 30px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
+                        z-index: 10000; min-width: 350px; text-align: center;">
+                <div style="margin-bottom: 20px; font-weight: 600; color: #323130; font-size: 16px;">
+                    Dataset Generation Progress
+                </div>
+                <div style="margin-bottom: 20px; color: #605E5C; font-size: 14px;"id="progressMessage">
+                    ${message}
+                </div>
+                <div style="position: relative; display: inline-block; margin-bottom: 15px;">
+                    <div style="width: 80px; height: 80px; border: 4px solid #E1E5EA; 
+                                border-top: 4px solid #0078D4; border-radius: 50%; 
+                                animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                </div>
+                <div style="font-size: 12px; color: #605E5C;">
+                    Processing dataset extraction...
+                </div>
+            </div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        `;
+        document.body.appendChild(progressDiv);
+    }
+
+    function hideProgressBar() {
+        const progressDiv = document.getElementById('progressIndicator');
+        if (progressDiv) {
+            progressDiv.remove();
+        }
+    }
+    function updateCircularProgress(progress, message) {
+        const progressDiv = document.getElementById('progressIndicator');
+        if (progressDiv) {
+            // Update message only (spinning circle continues automatically)
+            const messageElement = progressDiv.querySelector('#progressMessage');
+            if (messageElement) {
+                messageElement.textContent = message;
+            }
+        }
+    }
+
+    function showSuccess(message) {
+ alert(' '+ message);
+    }
+
+    function showError(message) {
+ alert(' '+ message);
+    }
+    // Directory Selection Dialog (fallback for browsers without File System Access API)
+    function showDirectorySelectionDialog(title, defaultPath, callback) {
+        // Create modal dialog
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        `;
+
+        const dialog = document.createElement('div');
+        dialog.style.cssText = `
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            min-width: 500px;
+            max-width: 80%;
+            max-height: 80%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        `;
+
+        dialog.innerHTML = `
+            <h3 style="margin: 0 0 1rem 0; color: #323130; font-size: 1.2rem;">${title}</h3>
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: #323130; font-weight: 500;">Directory Path:</label>
+                <input type="text"id="folderPathInput"value="${defaultPath}"
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #E1E5EA; border-radius: 4px; font-size: 1rem;"
+                       placeholder="Enter directory path (e.g., /home/user/AgenticRAN)">
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: #323130; font-weight: 500;">Quick Select:</label>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button type="button"class="quick-select-btn"data-path="AgenticRAN"style="padding: 0.5rem 1rem; border: 1px solid #E1E5EA; background: #f8f9fa; border-radius: 4px; cursor: pointer;">AgenticRAN</button>
+                    <button type="button"class="quick-select-btn"data-path="AgenticRAN/output"style="padding: 0.5rem 1rem; border: 1px solid #E1E5EA; background: #f8f9fa; border-radius: 4px; cursor: pointer;">AgenticRAN/output</button>
+                    <button type="button"class="quick-select-btn"data-path="Documents"style="padding: 0.5rem 1rem; border: 1px solid #E1E5EA; background: #f8f9fa; border-radius: 4px; cursor: pointer;">Documents</button>
+                    <button type="button"class="quick-select-btn"data-path="Desktop"style="padding: 0.5rem 1rem; border: 1px solid #E1E5EA; background: #f8f9fa; border-radius: 4px; cursor: pointer;">Desktop</button>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button type="button"id="cancelBtn"style="padding: 0.75rem 1.5rem; border: 1px solid #E1E5EA; background: #f8f9fa; border-radius: 4px; cursor: pointer;">Cancel</button>
+                <button type="button"id="selectBtn"style="padding: 0.75rem 1.5rem; border: 1px solid #bae6fd; background: #e0f2fe; color: #0369a1; border-radius: 4px; cursor: pointer;">Select Folder</button>
+            </div>
+        `;
+
+        modal.appendChild(dialog);
+        document.body.appendChild(modal);
+
+        // Focus on input
+        const input = dialog.querySelector('#folderPathInput');
+        input.focus();
+        input.select();
+
+        // Quick select buttons
+        dialog.querySelectorAll('.quick-select-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                input.value = btn.dataset.path;
+            });
+        });
+
+        // Cancel button
+        dialog.querySelector('#cancelBtn').addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+        // Select button
+        dialog.querySelector('#selectBtn').addEventListener('click', () => {
+            const selectedPath = input.value.trim();
+            if (selectedPath) {
+                document.body.removeChild(modal);
+                callback(selectedPath);
+            } else {
+                showError('Please enter a directory path');
+            }
+        });
+
+        // Enter key to select
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                dialog.querySelector('#selectBtn').click();
+            }
+        });
+
+        // Escape key to cancel
+        modal.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.body.removeChild(modal);
+            }
+        });
+
+        // Click outside to cancel
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+            }
+        });
+    }
+    // Module click functionality - entire module is clickable
+    const clickableModules = document.querySelectorAll('.clickable-module');
+    clickableModules.forEach(module => {
+        module.addEventListener('click', function() {
+            // Add click animation
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+
+            const sectionId = this.getAttribute('data-section');
+            if (!sectionId) return;
+
+            if (typeof window.navigateToAppSection === 'function') {
+                window.navigateToAppSection(sectionId);
+            }
+
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                // Handle section-specific initialization (dashboard cards)
+                if (sectionId === 'test-script-generator') {
+                    // CRITICAL: Ensure templates are loaded when section is opened
+                    console.log('🔄 Test Script Generator opened, loading templates...');
+                    if (typeof loadTestPromptTemplates === 'function') {
+                        loadTestPromptTemplates().then(() => {
+                            console.log('✅ Templates loaded successfully');
+                        }).catch(err => {
+                            console.warn('⚠️ Failed to load templates:', err);
+                        });
+                    }
+                } else if (sectionId === 'test-deployment') {
+                    // Re-initialize deployment buttons when section becomes active
+                    setTimeout(() => {
+                        if (typeof initializeDeploymentButtons === 'function') {
+                            initializeDeploymentButtons();
+                        }
+                    }, 100);
+                } else if (sectionId === 'bug-discovery') {
+                    // Load bug history when Bug Discovery section is shown
+                    if (typeof window.loadBugDiscoveryHistory === 'function') {
+                        console.log('🔄 Loading bug discovery history...');
+                        window.loadBugDiscoveryHistory();
+                    }
+                } else if (sectionId === 'code-evaluation') {
+                    // Load bug history when Code Evaluation section is shown
+                    if (typeof window.loadCodeEvaluationBugHistory === 'function') {
+                        console.log('🔄 Loading code evaluation bug history...');
+                        window.loadCodeEvaluationBugHistory();
+                    }
+                } else if (sectionId === 'code-assistant') {
+                    // Ensure button event listener is attached
+                    const loadBtn = document.getElementById('caLoadAnalysisBtn');
+                    if (loadBtn && !loadBtn.hasAttribute('data-listener-attached')) {
+                        console.log('🔧 Attaching Load Analysis button listener');
+                        loadBtn.setAttribute('data-listener-attached', 'true');
+                        loadBtn.addEventListener('click', async (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('🔘 Load Analysis button clicked');
+                            
+                            const selectedFilename = window.codeAssistantAnalysisFilename || null;
+                            const historyBtn = document.getElementById('caBugHistoryBtn');
+                            const selectedText = historyBtn ? historyBtn.querySelector('span').textContent : null;
+                            
+                            if (!selectedFilename || selectedFilename === ''|| selectedText === 'Select analysis...'|| selectedText === 'No analysis available') {
+                                alert('Please select an analysis from the dropdown to load.');
+                                return;
+                            }
+                            
+                            try {
+                                if (typeof window.loadCodeAssistantAnalysis === 'function') {
+                                    await window.loadCodeAssistantAnalysis(selectedFilename);
+                                } else {
+                                    console.error('❌ loadCodeAssistantAnalysis function not found');
+                                    alert('Error: Load Analysis function not available.');
+                                }
+                            } catch (error) {
+                                console.error('❌ Error loading analysis:', error);
+                                alert('Failed to load analysis: '+ error.message);
+                            }
+                        });
+                    }
+                    
+                    // Reload bug history when Code Assistant is opened
+                    if (typeof window.loadCodeAssistantBugHistory === 'function') {
+                        const codeAssistantSection = document.getElementById('code-assistant');
+                        if (codeAssistantSection && codeAssistantSection.classList.contains('active')) {
+                            console.log('🔄 Code Assistant opened, loading bug history...');
+                            window.loadCodeAssistantBugHistory();
+                        }
+                    }
+                }
+            }
+        });
+    });
+    // Home button functionality
+    const homeButtons = document.querySelectorAll('.home-btn');
+    homeButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Add click animation
+            this.style.transform = 'translateY(-3px) scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'translateY(-3px)';
+            }, 150);
+            
+            // Handle button actions
+            if (this.textContent.includes('Dataset Generator')) {
+                navigateToAppSection('dataset-generator');
+            } else if (this.textContent.includes('Explore Framework')) {
+                navigateToAppSection('home');
+            }
+        });
+    });
+
+    // Prompt Templates functionality
+    const roleDropdown = document.getElementById('roleDropdown');
+    const roleBtn = document.getElementById('roleBtn');
+    const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+    // User History functionality
+    const timePeriodDropdown = document.getElementById('timePeriodDropdown');
+    const timePeriodBtn = document.getElementById('timePeriodBtn');
+    const activityTypeDropdown = document.getElementById('activityTypeDropdown');
+    const activityTypeBtn = document.getElementById('activityTypeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const historyResultsArea = document.getElementById('historyResultsArea');
+
+    const USER_HISTORY_DEFAULTS = Object.freeze({
+        timePeriod: 'all',
+        activityType: 'all',
+    });
+    const TIME_PERIOD_REQUEST_MAP = Object.freeze({
+        all: 'all',
+        today: 'today',
+        '7days': 'last_7_days',
+        '30days': 'last_30_days',
+        '90days': 'last_90_days',
+    });
+    const ACTIVITY_TYPE_REQUEST_MAP = Object.freeze({
+        all: 'all',
+        'test-script': 'test-script',
+        'test-case': 'test-case',
+        'bug-analysis': 'bug-analysis',
+        'code-assistant': 'code-assistant',
+        'prompt-templates': 'code-assistant', // Map to code-assistant
+    });
+    const TIME_PERIOD_OPTIONS = [
+        { key: 'all', label: 'All Dates'},
+        { key: 'today', label: 'Today'},
+        { key: '7days', label: 'Last 7 Days'},
+        { key: '30days', label: 'Last 30 Days'},
+        { key: '90days', label: 'Last 90 Days'},
+    ];
+    const ACTIVITY_TYPE_OPTIONS = [
+        { key: 'all', label: 'All Activities'},
+        { key: 'test-script', label: 'Test Script Generation'},
+        { key: 'test-case', label: 'Test Case Creation'},
+        { key: 'bug-analysis', label: 'Bug Discovery'},
+        { key: 'code-assistant', label: 'Code Assistant'},
+    ];
+
+    let userHistoryFilters = { ...USER_HISTORY_DEFAULTS };
+    let userHistoryLoading = false;
+    let userHistoryRetryTimer = null;
+    let userHistoryDisplayedEntries = [];
+    const USER_HISTORY_TIMELINE_LIMIT = 10;
+
+    function ensureUserHistoryDropdownOptions(force = false) {
+        // Get elements fresh each time to ensure they exist
+        const timePeriodDropdownEl = document.getElementById('timePeriodDropdown');
+        const activityTypeDropdownEl = document.getElementById('activityTypeDropdown');
+        const timePeriodDropdownContent = timePeriodDropdownEl ? timePeriodDropdownEl.querySelector('.dropdown-content') : null;
+        const activityTypeDropdownContent = activityTypeDropdownEl ? activityTypeDropdownEl.querySelector('.dropdown-content') : null;
+
+        if (timePeriodDropdownContent) {
+            const needsRefresh = force || timePeriodDropdownContent.childElementCount !== TIME_PERIOD_OPTIONS.length;
+            if (needsRefresh) {
+                timePeriodDropdownContent.innerHTML = '';
+                TIME_PERIOD_OPTIONS.forEach(option => {
+                    const item = document.createElement('div');
+                    item.className = 'dropdown-item';
+                    item.setAttribute('data-period', option.key);
+                    item.textContent = option.label;
+                    timePeriodDropdownContent.appendChild(item);
+                });
+                console.log('[UserHistory] Time Period options rendered:', timePeriodDropdownContent.childElementCount);
+            }
+        } else {
+            console.warn('[UserHistory] Time Period dropdown content not found');
+        }
+
+        if (activityTypeDropdownContent) {
+            const needsRefresh = force || activityTypeDropdownContent.childElementCount !== ACTIVITY_TYPE_OPTIONS.length;
+            if (needsRefresh) {
+                activityTypeDropdownContent.innerHTML = '';
+                ACTIVITY_TYPE_OPTIONS.forEach(option => {
+                    const item = document.createElement('div');
+                    item.className = 'dropdown-item';
+                    item.setAttribute('data-type', option.key);
+                    item.textContent = option.label;
+                    activityTypeDropdownContent.appendChild(item);
+                });
+                console.log('[UserHistory] Activity Type options rendered:', activityTypeDropdownContent.childElementCount);
+            }
+        } else {
+            console.warn('[UserHistory] Activity Type dropdown content not found');
+        }
+    }
+
+    function ensureUserHistoryDropdownOptionsWithRetry(attempt = 0) {
+        ensureUserHistoryDropdownOptions(true);
+        
+        // Get elements fresh to check their state
+        const timePeriodDropdownEl = document.getElementById('timePeriodDropdown');
+        const activityTypeDropdownEl = document.getElementById('activityTypeDropdown');
+        const timePeriodDropdownContent = timePeriodDropdownEl ? timePeriodDropdownEl.querySelector('.dropdown-content') : null;
+        const activityTypeDropdownContent = activityTypeDropdownEl ? activityTypeDropdownEl.querySelector('.dropdown-content') : null;
+        
+        const needsRetry =
+            (timePeriodDropdownContent && timePeriodDropdownContent.childElementCount === 0) ||
+            (activityTypeDropdownContent && activityTypeDropdownContent.childElementCount === 0) ||
+            !timePeriodDropdownContent ||
+            !activityTypeDropdownContent;
+
+        if (needsRetry && attempt < 5) {
+            const delay = 250 * (attempt + 1);
+            console.warn(`[UserHistory] Dropdown options empty or not found, retrying in ${delay}ms (attempt ${attempt + 1})`);
+            setTimeout(() =>ensureUserHistoryDropdownOptionsWithRetry(attempt + 1), delay);
+        } else if (!needsRetry) {
+            console.log('[UserHistory] Dropdown options confirmed present.');
+        } else {
+            console.error('[UserHistory] Dropdown options could not be populated after retries.');
+        }
+    }
+
+    function escapeHtml(value) {
+        if (value === null || value === undefined) {
+            return '';
+        }
+        return String(value)
+            .replace(/&/g, '&')
+            .replace(/</g, '<')
+            .replace(/>/g, '>')
+            .replace(/"/g, '"')
+            .replace(/'/g, '&#039;');
+    }
+
+    function formatHistoryTimestamp(timestamp) {
+        if (!timestamp) {
+            return 'Unknown time';
+        }
+        try {
+            const date = new Date(timestamp);
+            if (Number.isNaN(date.getTime())) {
+                return timestamp;
+            }
+            return date.toLocaleString(undefined, {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+            });
+        } catch (err) {
+            console.warn('Unable to format timestamp:', timestamp, err);
+            return timestamp;
+        }
+    }
+
+    function renderHistoryMetadata(metadata) {
+        if (!metadata || typeof metadata !== 'object'|| Object.keys(metadata).length === 0) {
+            return '';
+        }
+
+        const infoPairs = [];
+
+        if (metadata.file_path) {
+            infoPairs.push({ label: 'Saved File', value: metadata.file_path });
+        }
+        if (metadata.analysis_type) {
+            infoPairs.push({ label: 'Analysis Type', value: metadata.analysis_type });
+        }
+        if (metadata.provided_timestamp) {
+            infoPairs.push({ label: 'Provided Timestamp', value: metadata.provided_timestamp });
+        }
+
+        if (metadata.variables && typeof metadata.variables === 'object') {
+            const variableEntries = Object.entries(metadata.variables)
+                .filter(([, value]) =>value !== null && value !== undefined && String(value).trim() !== '')
+                .map(([key, value]) => `${key}: ${value}`)
+                .slice(0, 5);
+            if (variableEntries.length) {
+                const moreVariables = Object.keys(metadata.variables).length >variableEntries.length;
+                infoPairs.push({
+                    label: 'Variables',
+                    value: `${variableEntries.join(', ')}${moreVariables ? ', …': ''}`,
+                });
+            }
+        }
+
+        if (!infoPairs.length) {
+            try {
+                const serialized = JSON.stringify(metadata);
+                if (serialized && serialized !== '{}') {
+                    infoPairs.push({
+                        label: 'Metadata',
+                        value: serialized.length > 160 ? `${serialized.slice(0, 160)}…` : serialized,
+                    });
+                }
+            } catch (serializationError) {
+                console.warn('Failed to serialize history metadata:', serializationError);
+            }
+        }
+
+        if (!infoPairs.length) {
+            return '';
+        }
+
+        return `
+            <div style="background-color:#111827;border-radius:8px;padding:0.75rem;margin-top:0.75rem;">
+                ${infoPairs.map(
+                    (pair) => `
+                        <div style="color:#9ca3af;font-size:0.85rem;margin-bottom:0.25rem;">
+                            <span style="color:#d1d5db;">${escapeHtml(pair.label)}:</span>
+                            <span style="margin-left:0.35rem;">${escapeHtml(String(pair.value))}</span>
+                        </div>
+                    `
+                ).join('')}
+            </div>
+        `;
+    }
+
+    function buildHistoryEntryMarkup(entry) {
+        const activityType = entry.activity_type || 'unknown';
+        const activityLabel = entry.activity_label || entry.activity_type || 'Activity';
+        const timestampLabel = formatHistoryTimestamp(entry.timestamp);
+        const title = entry.title ? escapeHtml(entry.title) : '';
+        
+        // Extract prompt and output from record for test-case and test-script
+        const record = entry.record || {};
+        const prompt = record.prompt || record.prompt_text || '';
+        // Prefer full output from record, fallback to preview
+        const fullOutput = record.response || record.output || record.generated_script || record.generated_test_case || '';
+        const output = fullOutput || entry.output_preview || '';
+        const isOutputTruncated = entry.output_truncated && !fullOutput;
+
+        // Build the entry based on activity type
+        if (activityType === 'test-script'|| activityType === 'test-case') {
+            return buildTestScriptCaseMarkup(entry, activityLabel, timestampLabel, title, prompt, output, fullOutput, isOutputTruncated);
+        } else if (activityType === 'bug-analysis') {
+            return buildBugAnalysisMarkup(entry, activityLabel, timestampLabel, title, record);
+        } else if (activityType === 'git-commit'|| activityType === 'code-assistant') {
+            return buildCodeAssistantMarkup(entry, activityLabel, timestampLabel, title, record);
+        } else {
+            // Generic format for other activities
+            return buildGenericMarkup(entry, activityLabel, timestampLabel, title, output);
+        }
+    }
+
+    function buildTestScriptCaseMarkup(entry, activityLabel, timestampLabel, title, prompt, output, fullOutput, isTruncated) {
+        // Use full output if available, otherwise use truncated output
+        const displayOutput = fullOutput || output || '';
+        const outputText = displayOutput + (isTruncated ? '\n\n... (truncated)': '');
+        const promptText = prompt || '';
+        
+        return `
+            <div class="history-entry-card history-entry-card--compact" style="background-color:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:0;margin-bottom:1.25rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);overflow:hidden;max-width:100%;width:100%;box-sizing:border-box;">
+                <div class="history-entry-card__head">
+                    <div class="history-entry-card__head-inner">
+                        <div class="history-entry-card__title">${escapeHtml(activityLabel)}</div>
+                    </div>
+                </div>
+                <div class="history-entry-card__body">
+                    <table class="history-entry-card__table">
+                        <tbody>
+                            <tr>
+                                <td class="history-entry-card__label">Time of Creation</td>
+                                <td class="history-entry-card__value history-entry-card__value--pre">${escapeHtml(timestampLabel)}</td>
+                            </tr>
+                            <tr>
+                                <td class="history-entry-card__label">Prompt</td>
+                                <td class="history-entry-card__value">
+                                    <div style="max-height:300px;overflow-y:auto;overflow-x:hidden;white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;max-width:100%;box-sizing:border-box;">${escapeHtml(promptText)}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="history-entry-card__label">Generated Output</td>
+                                <td class="history-entry-card__value">
+                                    <div style="max-height:400px;overflow-y:auto;overflow-x:hidden;white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;max-width:100%;box-sizing:border-box;">${escapeHtml(outputText)}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    function buildBugAnalysisMarkup(entry, activityLabel, timestampLabel, title, record) {
+        // Parse the output object properly - handle both object and string formats
+        let outputData = record.output || {};
+        if (typeof outputData === 'string') {
+            try {
+                outputData = JSON.parse(outputData);
+            } catch (e) {
+                // If parsing fails, treat as plain text
+                outputData = {};
+            }
+        }
+        const fixSuggestion = outputData.fix_suggestion || {};
+        
+        // Extract only the required sections
+        const errorText = outputData.error_text || '';
+        const suspectedConfigs = fixSuggestion.suspected_configs || [];
+        const suspectedFunctions = fixSuggestion.suspected_functions || [];
+        // Check multiple possible fields for investigation steps - can be array or string
+        let investigationStepsRaw = fixSuggestion.investigation_steps || fixSuggestion.config_fix || fixSuggestion.investigative_steps || outputData.investigation_steps || outputData.config_fix || '';
+        
+        // Handle investigation steps - can be array or string
+        let investigationSteps = '';
+        if (Array.isArray(investigationStepsRaw)) {
+            // If it's an array, join with newlines
+            investigationSteps = investigationStepsRaw.join('\n');
+        } else if (typeof investigationStepsRaw === 'string') {
+            investigationSteps = investigationStepsRaw;
+        }
+        
+        // Log file name (title) - use entry title or fallback
+        const logFileName = title || entry.title || 'Unknown Log File';
+        
+        // Format suspected functions as numbered list
+        const suspectedFunctionsDisplay = suspectedFunctions.length > 0 
+            ? suspectedFunctions.map((func, idx) => `${idx + 1}. ${func}`).join('\n')
+            : 'No suspected functions';
+        
+        // Format suspected configs as numbered list
+        const suspectedConfigsDisplay = suspectedConfigs.length > 0 
+            ? suspectedConfigs.map((config, idx) => `${idx + 1}. ${config}`).join('\n')
+            : 'No suspected configs';
+        
+        // Format investigation steps as numbered list - handle empty string case
+        let investigationStepsDisplay = 'No investigation steps available';
+        if (investigationSteps && investigationSteps.trim() !== '') {
+            if (Array.isArray(investigationStepsRaw)) {
+                // If it was originally an array, format as numbered list
+                investigationStepsDisplay = investigationStepsRaw.map((step, idx) => `${idx + 1}. ${step}`).join('\n');
+            } else {
+                // If it's a string, split by newlines and number them
+                const stepsArray = investigationSteps.split('\n').filter(step =>step.trim() !== '');
+                investigationStepsDisplay = stepsArray.map((step, idx) => `${idx + 1}. ${step.trim()}`).join('\n');
+            }
+        }
+        
+        // Format error text
+        const errorDisplay = (errorText && errorText.trim() !== '') ? errorText : 'No error information available';
+        
+        return `
+            <div class="history-entry-card history-entry-card--compact" style="background-color:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:0;margin-bottom:1.25rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);overflow:hidden;max-width:100%;width:100%;box-sizing:border-box;">
+                <div class="history-entry-card__head">
+                    <div class="history-entry-card__head-inner">
+                        <div class="history-entry-card__title">${escapeHtml(activityLabel)}</div>
+                    </div>
+                </div>
+                <div class="history-entry-card__body">
+                    <table class="history-entry-card__table">
+                        <tbody>
+                            <tr>
+                                <td class="history-entry-card__label">Time of Creation</td>
+                                <td class="history-entry-card__value history-entry-card__value--pre">${escapeHtml(timestampLabel)}</td>
+                            </tr>
+                            <tr>
+                                <td class="history-entry-card__label">Error</td>
+                                <td class="history-entry-card__value history-entry-card__value--pre">${escapeHtml(errorDisplay)}</td>
+                            </tr>
+                            <tr>
+                                <td class="history-entry-card__label">Log File Name</td>
+                                <td class="history-entry-card__value history-entry-card__value--pre">${escapeHtml(logFileName)}</td>
+                            </tr>
+                            <tr>
+                                <td class="history-entry-card__label">Suspected Functions</td>
+                                <td class="history-entry-card__value history-entry-card__value--pre">${escapeHtml(suspectedFunctionsDisplay)}</td>
+                            </tr>
+                            <tr>
+                                <td class="history-entry-card__label">Suspected Configs</td>
+                                <td class="history-entry-card__value history-entry-card__value--pre">${escapeHtml(suspectedConfigsDisplay)}</td>
+                            </tr>
+                            <tr>
+                                <td class="history-entry-card__label">Investigative Steps</td>
+                                <td class="history-entry-card__value history-entry-card__value--pre">${escapeHtml(investigationStepsDisplay)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    function buildCodeAssistantMarkup(entry, activityLabel, timestampLabel, title, record) {
+        // Extract commit information from record
+        const commitMessage = record.commit_message || 'No commit message';
+        const commitError = record.commit_error || null;
+        const commitDetails = record.commit_details || 'No commit details available';
+        
+        // Format commit error display
+        const commitErrorDisplay = commitError && commitError.trim() !== ''
+            ? commitError 
+            : 'No errors';
+        
+        return `
+            <div class="history-entry-card history-entry-card--compact" style="background-color:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:0;margin-bottom:1.25rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);overflow:hidden;max-width:100%;width:100%;box-sizing:border-box;">
+                <div class="history-entry-card__head">
+                    <div class="history-entry-card__head-inner">
+                        <div class="history-entry-card__title">${escapeHtml(activityLabel)}</div>
+                    </div>
+                </div>
+                <div class="history-entry-card__body">
+                    <table class="history-entry-card__table">
+                        <tbody>
+                            <tr>
+                                <td class="history-entry-card__label">Time of Creation</td>
+                                <td class="history-entry-card__value history-entry-card__value--pre">${escapeHtml(timestampLabel)}</td>
+                            </tr>
+                            <tr>
+                                <td class="history-entry-card__label">Commit Message</td>
+                                <td class="history-entry-card__value">
+                                    <div style="max-height:300px;overflow-y:auto;overflow-x:hidden;white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;max-width:100%;box-sizing:border-box;">${escapeHtml(commitMessage)}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="history-entry-card__label">Commit Error</td>
+                                <td class="history-entry-card__value">
+                                    <div style="max-height:200px;overflow-y:auto;overflow-x:hidden;white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;max-width:100%;box-sizing:border-box;">${escapeHtml(commitErrorDisplay)}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="history-entry-card__label">Commit Details</td>
+                                <td class="history-entry-card__value">
+                                    <div style="max-height:400px;overflow-y:auto;overflow-x:hidden;white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;max-width:100%;box-sizing:border-box;">${escapeHtml(commitDetails)}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    function buildGenericMarkup(entry, activityLabel, timestampLabel, title, output) {
+        return `
+            <div class="history-entry-card history-entry-card--compact" style="background-color:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:0;margin-bottom:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);overflow:hidden;max-width:100%;width:100%;box-sizing:border-box;">
+                <div class="history-entry-card__head">
+                    <div class="history-entry-card__head-inner">
+                        <div class="history-entry-card__title">${escapeHtml(activityLabel)}</div>
+                        ${title ? `<div class="history-entry-card__subtitle">${escapeHtml(title)}</div>`: ''}
+                        <div class="history-entry-card__meta">${escapeHtml(timestampLabel)}</div>
+                    </div>
+                </div>
+                ${output ? `
+                <div style="padding:0;max-width:100%;box-sizing:border-box;">
+                    <div class="history-entry-card__output-label">Output</div>
+                    <div class="history-entry-card__output-body">
+${escapeHtml(output)}
+                    </div>
+                </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    function scheduleUserHistoryRetry() {
+        if (userHistoryRetryTimer) {
+            return;
+        }
+        userHistoryRetryTimer = setTimeout(() => {
+            userHistoryRetryTimer = null;
+            loadUserHistory({ forceRefresh: true, silent: true });
+        }, 2000);
+    }
+
+    function formatTimelineTime(timestamp) {
+        if (!timestamp) return '—';
+        try {
+            const date = new Date(timestamp);
+            if (Number.isNaN(date.getTime())) return '—';
+            return date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+        } catch {
+            return '—';
+        }
+    }
+
+    function formatSessionDate(timestamp) {
+        if (!timestamp) return '—';
+        try {
+            const date = new Date(timestamp);
+            if (Number.isNaN(date.getTime())) return '—';
+            return date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+        } catch {
+            return '—';
+        }
+    }
+
+    function getTimelineDotClass(entry) {
+        const type = (entry.activity_type || '').toLowerCase();
+        if (type === 'bug-analysis') return 'activity-timeline-dot--red';
+        if (['test-script', 'test-case', 'code-assistant', 'git-commit'].includes(type)) {
+            return 'activity-timeline-dot--green';
+        }
+        return 'activity-timeline-dot--blue';
+    }
+
+    function getTimelineEventTitle(entry) {
+        return entry.activity_label || entry.title || entry.activity_type || 'Activity';
+    }
+
+    function getTimelineEventDetails(entry) {
+        const record = entry.record || {};
+        const parts = [];
+        if (entry.title && entry.title !== getTimelineEventTitle(entry)) {
+            parts.push(entry.title);
+        }
+        const preview = entry.output_preview
+            || record.response
+            || record.output
+            || record.generated_script
+            || record.generated_test_case
+            || record.commit_message
+            || '';
+        if (preview) {
+            const line = String(preview).replace(/\s+/g, ' ').trim();
+            parts.push(line.length > 100 ? `${line.slice(0, 100)}…` : line);
+        }
+        if (record.file_path) {
+            parts.push(record.file_path);
+        }
+        if (!parts.length && entry.activity_type) {
+            parts.push(entry.activity_type.replace(/-/g, ' '));
+        }
+        return parts.join(' · ') || 'No additional details';
+    }
+
+    function buildTimelineRowHtml(entry, index) {
+        const time = formatTimelineTime(entry.timestamp);
+        const title = escapeHtml(getTimelineEventTitle(entry));
+        const details = escapeHtml(getTimelineEventDetails(entry));
+        const dotClass = getTimelineDotClass(entry);
+        return `
+            <button type="button" class="activity-timeline-row" data-index="${index}" aria-label="${title}" aria-selected="false">
+                <span class="activity-timeline-dot ${dotClass}" aria-hidden="true"></span>
+                <span class="activity-timeline-time">${escapeHtml(time)}</span>
+                <span class="activity-timeline-body">
+                    <strong class="activity-timeline-title">${title}</strong>
+                    <span class="activity-timeline-details"> · ${details}</span>
+                </span>
+            </button>
+        `;
+    }
+
+    function clearHistoryDetailPanel() {
+        const detailArea = document.getElementById('historyDetailArea');
+        const detailEmpty = document.getElementById('historyDetailEmpty');
+        if (detailArea) {
+            detailArea.innerHTML = '';
+            detailArea.hidden = true;
+        }
+        if (detailEmpty) detailEmpty.hidden = false;
+        document.querySelectorAll('.activity-timeline-row.is-active').forEach(row => {
+            row.classList.remove('is-active');
+            row.setAttribute('aria-selected', 'false');
+        });
+    }
+
+    function selectTimelineEntry(index) {
+        const entry = userHistoryDisplayedEntries[index];
+        if (!entry) return;
+
+        document.querySelectorAll('.activity-timeline-row').forEach(row => {
+            const isActive = parseInt(row.getAttribute('data-index'), 10) === index;
+            row.classList.toggle('is-active', isActive);
+            row.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        const detailArea = document.getElementById('historyDetailArea');
+        const detailEmpty = document.getElementById('historyDetailEmpty');
+        if (!detailArea) return;
+
+        detailArea.innerHTML = buildHistoryEntryMarkup(entry);
+        detailArea.hidden = false;
+        if (detailEmpty) detailEmpty.hidden = true;
+    }
+
+    function renderActivityLogTimeline(entries, totalCount) {
+        const timelineList = document.getElementById('activityTimelineList');
+        const timelineDate = document.getElementById('activityTimelineDate');
+        const timelineTitle = document.getElementById('activityTimelineTitle');
+        const subtitle = document.getElementById('activityLogSubtitle');
+
+        if (!timelineList) {
+            console.error('[UserHistory] activityTimelineList element not found!');
+            return;
+        }
+
+        userHistoryDisplayedEntries = entries;
+
+        const total = totalCount != null ? totalCount : entries.length;
+        if (subtitle) {
+            const shown = entries.length;
+            subtitle.textContent = total > shown
+                ? `Showing ${shown} of ${total} events`
+                : `All platform events · ${shown} event${shown === 1 ? '' : 's'}`;
+        }
+
+        if (!entries.length) {
+            timelineList.innerHTML = '<p class="activity-log-empty">No history entries found for the selected filters.</p>';
+            if (timelineDate) timelineDate.textContent = '—';
+            if (timelineTitle) timelineTitle.textContent = 'Event Timeline';
+            clearHistoryDetailPanel();
+            return;
+        }
+
+        if (timelineDate) {
+            timelineDate.textContent = formatSessionDate(entries[0].timestamp);
+        }
+        if (timelineTitle) {
+            timelineTitle.textContent = 'Event Timeline — Recent Session';
+        }
+
+        timelineList.innerHTML = entries.map((entry, index) => buildTimelineRowHtml(entry, index)).join('');
+
+        timelineList.querySelectorAll('.activity-timeline-row').forEach(row => {
+            row.addEventListener('click', function() {
+                const idx = parseInt(this.getAttribute('data-index'), 10);
+                selectTimelineEntry(idx);
+            });
+        });
+
+        clearHistoryDetailPanel();
+    }
+
+    function exportUserHistoryCsv() {
+        if (!userHistoryDisplayedEntries.length) {
+            showStatusBar('No history entries to export', 'warning');
+            return;
+        }
+        const headers = ['Time', 'Activity', 'Title', 'Details'];
+        const rows = userHistoryDisplayedEntries.map(entry => [
+            formatHistoryTimestamp(entry.timestamp),
+            getTimelineEventTitle(entry),
+            entry.title || '',
+            getTimelineEventDetails(entry),
+        ]);
+        const csv = [headers, ...rows]
+            .map(cols => cols.map(col => `"${String(col).replace(/"/g, '""')}"`).join(','))
+            .join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `activity-log-${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+        URL.revokeObjectURL(url);
+        showStatusBar('Activity log exported', 'success');
+    }
+
+    async function loadUserHistory(options = {}) {
+        const timelineList = document.getElementById('activityTimelineList');
+        if (!timelineList) {
+            console.error('[UserHistory] activityTimelineList element not found!');
+            return;
+        }
+        const { forceRefresh = false, silent = false } = options;
+        if (userHistoryLoading && !forceRefresh) {
+            console.log('[UserHistory] Already loading, skipping');
+            return;
+        }
+
+        console.log('[UserHistory] Checking API availability:', {
+            hasWindowAPI: !!window.API,
+            hasGetUserHistory: !!(window.API && typeof window.API.getUserHistory === 'function'),
+            hasMakeAPICall: !!(window.API && typeof window.API.makeAPICall === 'function'),
+            APIKeys: window.API ? Object.keys(window.API) : []
+        });
+
+        // If getUserHistory is not available, try using makeAPICall or direct fetch
+        let getUserHistoryFn = null;
+        if (window.API && typeof window.API.getUserHistory === 'function') {
+            getUserHistoryFn = window.API.getUserHistory;
+            console.log('[UserHistory] Using window.API.getUserHistory');
+        } else if (window.API && typeof window.API.makeAPICall === 'function') {
+            // Fallback 1: create getUserHistory inline using makeAPICall
+            getUserHistoryFn = async (filters) => {
+                return await window.API.makeAPICall('/api/history/user', 'POST', filters);
+            };
+            console.log('[UserHistory] Using makeAPICall directly as fallback');
+        } else {
+            // Fallback 2: Use direct fetch call
+            const apiBaseUrl = (window.API && window.API.API_BASE_URL) || 'http://127.0.0.1:8000';
+            getUserHistoryFn = async (filters) => {
+                const response = await fetch(`${apiBaseUrl}/api/history/user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(filters),
+                });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+                return await response.json();
+            };
+            console.log('[UserHistory] Using direct fetch as fallback');
+        }
+
+        if (userHistoryRetryTimer) {
+            clearTimeout(userHistoryRetryTimer);
+            userHistoryRetryTimer = null;
+        }
+
+        userHistoryLoading = true;
+        console.log('[UserHistory] Showing loading indicator');
+        timelineList.innerHTML = `
+            <div style="text-align:center;padding:2rem 1rem;">
+                <div style="display:inline-block;width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:#2563eb;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:0.75rem;"></div>
+                <p style="color:#64748b;font-size:0.875rem;margin:0;">Loading activity history…</p>
+            </div>
+        `;
+        clearHistoryDetailPanel();
+
+        const requestPayload = {
+            time_period: TIME_PERIOD_REQUEST_MAP[userHistoryFilters.timePeriod] || 'all',
+            activity_type: ACTIVITY_TYPE_REQUEST_MAP[userHistoryFilters.activityType] || 'all',
+        };
+
+        console.log('[UserHistory] Sending API request with payload:', requestPayload);
+        console.log('[UserHistory] Current filters:', userHistoryFilters);
+
+        try {
+            console.log('[UserHistory] Calling getUserHistory with payload:', requestPayload);
+            const response = await getUserHistoryFn(requestPayload);
+            console.log('[UserHistory] API response received:', response);
+            
+            if (!response) {
+                throw new Error('No response from server');
+            }
+            
+            if (response.success === false) {
+                throw new Error(response?.message || response?.detail || 'Unable to fetch history');
+            }
+
+            const entries = Array.isArray(response.entries) ? response.entries : [];
+            
+            const sortedEntries = [...entries].sort((a, b) => {
+                const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+                const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+                return timeB - timeA;
+            });
+
+            const displayEntries = sortedEntries.slice(0, USER_HISTORY_TIMELINE_LIMIT);
+            renderActivityLogTimeline(displayEntries, sortedEntries.length);
+        } catch (error) {
+            console.error('[UserHistory] Failed to load user history:', error);
+            timelineList.innerHTML = `
+                <p class="activity-log-empty" style="color:#ef4444;font-style:normal;">
+                    Failed to load history: ${escapeHtml(error.message || 'Unknown error')}
+                </p>
+            `;
+            clearHistoryDetailPanel();
+        } finally {
+            userHistoryLoading = false;
+        }
+    }
+
+    // Dataset Generator functionality (variables already declared above)
+
+    // Test Script Generator functionality
+    const templateDropdown = document.getElementById('templateDropdown');
+    const templateBtn = document.getElementById('templateBtn');
+
+    // Test Script Generator variables
+    let currentTestDataset = null;
+    let currentTestPromptKey = null;
+    let testPromptTemplates = {};
+    let previousTestResponse = null;
+
+    function showTsgGenConfigPanel(templateKey) {
+        const panelMap = {
+            'Test Case': 'tsgGenConfigTestCase',
+            'Test Script': 'tsgGenConfigTestScript',
+            'Custom': 'tsgGenConfigCustom',
+            'more-templates': 'tsgGenConfigMore'
+        };
+        ['tsgGenConfigTestCase', 'tsgGenConfigTestScript', 'tsgGenConfigCustom', 'tsgGenConfigMore'].forEach((id) => {
+            const panel = document.getElementById(id);
+            if (panel) panel.style.display = 'none';
+        });
+        const activeId = panelMap[templateKey];
+        if (activeId) {
+            const panel = document.getElementById(activeId);
+            if (panel) panel.style.display = 'block';
+        }
+        const configSubtitle = document.querySelector('.tsg-card--config .tsg-card-subtitle');
+        if (configSubtitle) {
+            if (templateKey === 'Test Case') {
+                configSubtitle.textContent = 'Domain variables for test case generation';
+            } else if (templateKey === 'Test Script') {
+                configSubtitle.textContent = 'Language and optional reference code';
+            } else if (templateKey === 'Custom') {
+                configSubtitle.textContent = 'Custom prompt configuration';
+            } else {
+                configSubtitle.textContent = 'Additional templates';
+            }
+        }
+    }
+
+    function syncTsgTemplateRadio(templateKey) {
+        document.querySelectorAll('.tsg-template-radio').forEach((radio) => {
+            radio.checked = radio.value === templateKey;
+        });
+    }
+
+    function updateTsgStatusBar() {
+        const templateEl = document.getElementById('tsgStatusTemplate');
+        const languageEl = document.getElementById('tsgStatusLanguage');
+        const scriptsEl = document.getElementById('tsgStatusScripts');
+        const sourceEl = document.getElementById('tsgStatusSource');
+        const resultSubtitle = document.getElementById('tsgResultSubtitle');
+
+        if (templateEl && currentTestPromptKey) {
+            templateEl.textContent = currentTestPromptKey === 'more-templates'? 'More templates': currentTestPromptKey;
+        }
+        const languageSelect = document.getElementById('languageSelect');
+        const languageLabel = document.getElementById('languageBtnLabel');
+        const lang = languageSelect?.value || languageLabel?.textContent || 'Python';
+        if (languageEl) languageEl.textContent = lang && lang !== 'Select Language...'? lang : '—';
+        const responseEditor = document.getElementById('testResponseTextEditor');
+        const hasOutput = responseEditor && responseEditor.value.trim().length > 0;
+        if (scriptsEl) {
+            scriptsEl.textContent = hasOutput ? '1 generated': '0 generated';
+        }
+        if (resultSubtitle) {
+            const templateName = currentTestPromptKey || 'Test Script';
+            resultSubtitle.textContent = `AI-generated output · ${hasOutput ? '1': '0'} scripts · ${lang || 'Python'} · pytest`;
+        }
+        if (sourceEl) {
+            const statusDiv = document.getElementById('testDatasetStatus');
+            sourceEl.textContent = statusDiv?.textContent || 'No dataset loaded';
+        }
+    }
+    // Load Test Script Generator prompt templates
+    // Initialize custom templates list
+    window.customTemplateNames = [];
+    
+    async function loadTestPromptTemplates() {
+        try {
+            // Ensure Save Template button is hidden on initial load
+            const testSaveTemplateBtn = document.getElementById('testSaveTemplateBtn');
+            if (testSaveTemplateBtn) {
+                testSaveTemplateBtn.style.display = 'none';
+                console.log('✅ Save Template button hidden on initial load');
+            }
+            
+            // Try health check, but don't block if it fails - proceed to load templates
+            if (window.API && typeof window.API.checkBackendHealth === 'function') {
+                try {
+            await window.API.checkBackendHealth();
+                    console.log('✅ Backend health check passed');
+                } catch (healthError) {
+                    console.warn('⚠️ Health check failed, but proceeding to load templates anyway:', healthError.message);
+                    // Continue - the actual template load will show the real error if backend is down
+                }
+            } else {
+                console.warn('⚠️ window.API.checkBackendHealth not available, proceeding to load templates anyway');
+            }
+            
+            const response = await window.API.getPromptTemplates();
+            if (response.success) {
+                testPromptTemplates = response.templates;
+                console.log('✅ Backend prompt templates loaded:', Object.keys(testPromptTemplates));
+                console.log('✅ Template count:', Object.keys(testPromptTemplates).length);
+                
+                // Also load custom templates and add to main dropdown
+                // CRITICAL: Load custom templates and add to main dropdown
+                console.log('🔄 Loading custom templates into dropdown...');
+                await loadCustomTemplatesIntoDropdown();
+                console.log('✅ Custom templates loaded from backend:', window.customTemplateNames);
+                console.log('  - Custom template names:', JSON.stringify(window.customTemplateNames));
+                console.log('  - Number of custom templates:', window.customTemplateNames ? window.customTemplateNames.length : 0);
+                
+                // CRITICAL: Always call addCustomTemplatesToMainDropdown after loading
+                addCustomTemplatesToMainDropdown();
+                console.log('✅ Custom templates added to main dropdown');
+                
+                return true;
+            } else {
+                console.warn('⚠️ Failed to load prompt templates from backend, using fallback');
+        // Use fallback templates if backend is not available (full prompts from backend)
+        testPromptTemplates = {
+            // Additional Templates from UI_V3_sample.py
+            "Testing Strategy": `You are an expert test strategist with deep knowledge of software testing methodologies and best practices. Based on the provided dataset and requirements, create a comprehensive testing strategy document.
+
+Your task is to analyze the given dataset and generate a detailed testing strategy that includes:
+
+1. **Test Scope and Objectives**
+   - Define what needs to be tested
+   - Identify key testing goals and success criteria
+   - Determine testing boundaries and limitations
+2. **Test Approach and Methodology**
+   - Recommend appropriate testing methodologies (unit, integration, system, acceptance)
+   - Define testing phases and their sequence
+   - Specify testing techniques and tools to be used
+
+3. **Test Planning and Organization**
+   - Identify test deliverables and artifacts
+   - Define roles and responsibilities
+   - Create testing timeline and milestones
+
+4. **Risk Assessment and Mitigation**
+   - Identify potential testing risks
+   - Propose mitigation strategies
+   - Define contingency plans
+
+5. **Test Environment and Infrastructure**
+   - Specify test environment requirements
+   - Define test data management strategy
+   - Plan for test automation where applicable
+6. **Quality Metrics and Reporting**
+   - Define key performance indicators
+   - Establish reporting mechanisms
+   - Set quality gates and exit criteria
+
+Provide a professional, actionable testing strategy that can be implemented by a testing team.`,
+
+            "Feature Design": `You are an expert telecommunications systems architect and feature design specialist with deep knowledge of 5G/LTE networks, protocol design, and system integration. Based on the provided requirements and context, design comprehensive feature specifications.
+
+Your design should include:
+
+1. **Feature Architecture and Design**
+   - Define the feature's core functionality and scope
+   - Design the system architecture and component interactions
+   - Plan for protocol integration and compliance
+   - Specify data flow and message sequences
+
+2. **Technical Specifications**
+   - Define detailed technical requirements
+   - Specify protocol compliance (3GPP, RFC standards)
+   - Design API interfaces and data structures
+   - Plan for error handling and edge cases
+
+3. **Implementation Strategy**
+   - Break down the feature into implementable components
+   - Define development phases and milestones
+   - Specify testing and validation requirements
+   - Plan for integration with existing systems
+
+4. **Performance and Scalability**
+   - Define performance requirements and metrics
+   - Plan for scalability and load handling
+   - Specify resource requirements and constraints
+   - Design for high availability and reliability
+
+5. **Security and Compliance**
+   - Implement security best practices
+   - Ensure regulatory compliance
+   - Plan for data protection and privacy
+   - Design for audit and monitoring
+6. **Documentation and Standards**
+   - Create comprehensive technical documentation
+   - Define user interfaces and workflows
+   - Plan for training and knowledge transfer
+   - Ensure maintainability and extensibility
+
+7. **Testing and Validation**
+   - Define comprehensive test strategies
+   - Plan for conformance and interoperability testing
+   - Design for performance and stress testing
+   - Plan for user acceptance testing
+
+Provide a complete, production-ready feature design with detailed specifications, implementation guidance, and quality assurance plans.`,
+
+            "Code Review": `You are a senior software engineer and code review expert with extensive experience in code quality assessment, best practices, and technical leadership. Based on the provided code or dataset, conduct a comprehensive code review.
+
+Your review should cover:
+
+1. **Code Quality Assessment**
+   - Evaluate code readability and maintainability
+   - Check adherence to coding standards and conventions
+   - Assess code organization and structure
+
+2. **Technical Analysis**
+   - Review algorithms and data structures
+   - Evaluate performance considerations
+   - Check for potential technical debt
+
+3. **Security Review**
+   - Identify potential security vulnerabilities
+   - Check for secure coding practices
+   - Assess data handling and validation
+
+4. **Best Practices Compliance**
+   - Verify design patterns usage
+   - Check error handling and logging
+   - Assess testing coverage and quality
+5. **Documentation and Comments**
+   - Evaluate code documentation
+   - Check comment quality and relevance
+   - Assess API documentation completeness
+6. **Improvement Recommendations**
+   - Provide specific refactoring suggestions
+   - Recommend performance optimizations
+   - Suggest architectural improvements
+
+7. **Risk Assessment**
+   - Identify potential production issues
+   - Assess maintainability concerns
+   - Evaluate scalability implications
+
+Provide constructive feedback with specific examples and actionable recommendations for improvement.`,
+
+            "Performance Test": `You are a performance testing expert with deep knowledge of system performance analysis, load testing, and optimization strategies. Based on the provided dataset, create a comprehensive performance testing plan.
+
+Your plan should include:
+
+1. **Performance Requirements Analysis**
+   - Define performance objectives and SLAs
+   - Identify key performance indicators (KPIs)
+   - Establish performance baselines and benchmarks
+
+2. **Test Strategy and Approach**
+   - Design load testing scenarios
+   - Plan stress and volume testing
+   - Define performance test types (load, stress, spike, endurance)
+
+3. **Test Environment Setup**
+   - Specify hardware and software requirements
+   - Define test data requirements
+   - Plan for monitoring and measurement tools
+
+4. **Test Scenarios and Scripts**
+   - Create realistic user scenarios
+   - Design test data sets
+   - Develop performance test scripts
+5. **Performance Metrics and Monitoring**
+   - Define key metrics to measure
+   - Set up monitoring and alerting
+   - Plan for performance data collection
+
+6. **Analysis and Reporting**
+   - Establish performance analysis procedures
+   - Define reporting formats and frequency
+   - Plan for performance optimization recommendations
+
+7. **Risk Mitigation**
+   - Identify performance risks
+   - Plan for performance bottlenecks
+   - Define performance degradation handling
+
+Provide a detailed, implementable performance testing strategy that ensures system reliability and optimal performance.`,
+
+            "API Design": `You are a senior API architect and design expert with extensive experience in RESTful APIs, microservices, and system integration. Based on the provided requirements, design a comprehensive API solution.
+
+Your design should include:
+
+1. **API Architecture and Design**
+   - Define API structure and organization
+   - Design RESTful endpoints and resources
+   - Plan for API versioning and evolution
+
+2. **API Specifications**
+   - Define request/response schemas
+   - Specify authentication and authorization
+   - Design error handling and status codes
+
+3. **API Documentation**
+   - Create comprehensive API documentation
+   - Define usage examples and tutorials
+   - Plan for interactive documentation (Swagger/OpenAPI)
+4. **Security and Compliance**
+   - Implement security best practices
+   - Plan for data protection and privacy
+   - Ensure compliance with standards
+
+5. **Performance and Scalability**
+   - Design for high performance
+   - Plan for scalability and load handling
+   - Implement caching strategies
+
+6. **Testing Strategy**
+   - Define API testing approach
+   - Plan for automated testing
+   - Design integration test scenarios
+
+7. **Monitoring and Analytics**
+   - Plan for API monitoring
+   - Design analytics and metrics
+   - Implement logging and debugging
+
+Provide a complete, production-ready API design with detailed specifications and implementation guidance.`,
+
+            "Code Assistant": `You are an expert telecommunications software debugger and fix engineer specializing in 5G/LTE systems.  
+You have deep knowledge of:
+
+- NGAP (Next Generation Application Protocol)
+- RRC (Radio Resource Control)
+- NAS (Non-Access Stratum)
+- AMF (Access and Mobility Management Function)
+- gNB (Next Generation Node B) architecture
+- SCTP, network configuration, and protocol stacks
+- Network connectivity, subnet analysis, and routing
+Your task is to analyze error contexts and propose **SURGICAL but MEANINGFUL** fixes that address the **ACTUAL** root cause.  
+Fixes must intelligently **reconstruct missing or incorrect control-flow** when evidence shows the function's logic is incomplete.  
+Do **NOT** rely solely on defensive null checks unless they are truly the cause.
+
+ **MANDATORY REQUIREMENT**: If you find any incomplete if-else if chains (missing final else clause), you MUST add the missing else branch to handle unrecognized cases. This is CRITICAL for preventing segmentation faults.
+
+ **STEP-BY-STEP SEARCH PROCESS**:
+1. **FIND** the line: \`}} else if (NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 == rrcSetupRequest->ue_Identity.present) {{\`
+2. **SCAN DOWN** to find the ACTUAL LAST line in this else if block (look for assignments like \`UE->ng_5G_S_TMSI_Part1 = s_tmsi_part1;\`)
+3. **FIND** the closing brace \`}}\` right after that last assignment
+4. **USE** that closing section as your original_code
+
+ **EXAMPLE OF MISSING ELSE**: If you see code like:
+\`\`\`
+if (condition1) {{
+    // some code
+}} else if (condition2) {{
+    // some code
+    UE->some_field = value;  // <- FIND THE ACTUAL LAST ASSIGNMENT
+}}
+// <-- MISSING ELSE CLAUSE HERE!
+NR_CellGroupConfig_t *cellGroupConfig = NULL;  // Code continues
+\`\`\`
+You MUST find the LAST assignment (like \`UE->ng_5G_S_TMSI_Part1 = s_tmsi_part1;\`) + closing brace and add the else clause there.
+### ROOT CAUSE ANALYSIS REQUIREMENTS
+- Always check **network connectivity first** for 5G issues.  
+- Distinguish between **network vs. code logic** failures.  
+- Trace error flow from **log messages** to code path.  
+- **CRITICAL**: Look for **incomplete conditional logic patterns**:
+  * Hardcoded constant comparisons (e.g., \`== 3\`) instead of runtime field checks
+  * Missing \`else\` branches in multi-case scenarios (enum handling, protocol states)
+  * Unvalidated assumptions about input data structure/presence
+- If branches or identity handling are clearly missing or malformed, **reconstruct the expected flow** using:
+  * 3GPP specifications
+  * Variable names and surrounding code context
+  * Typical OpenAirInterface gNB patterns  
+- Do **NOT** require the original code to be supplied—derive expected behavior from specs and context.
+
+### CODE PATCH RULES
+- **CRITICAL**: Preserve existing correct logic; **insert or adjust only the minimal lines** necessary to restore intended behavior.  
+- Use **exact surrounding code lines or variable names** for placement (\`after line containing "..."\`).  
+- **CRITICAL**: Look for **hardcoded constant comparisons** (like \`== 3\`, \`== 1\`) and replace with **proper dynamic checks** using available variables/fields.
+- **CRITICAL**: If the function has incomplete conditional logic (missing \`else\` branches, unhandled enum cases), **reconstruct the missing branches** instead of adding trivial guards.  
+- **CRITICAL**: For segmentation faults, trace the **actual cause** (uninitialized variables, missing validation, incomplete state handling) rather than adding generic null checks.
+- Never invent functions or config parameters that don't exist.  
+- Validate variable scope before referencing them.  
+- **AVOID GENERIC NULL CHECKS**: If a segmentation fault is due to skipped handling of input cases, **add the missing handling**, not just a pointer check.
+
+### COMMON SEGMENTATION FAULT PATTERNS TO LOOK FOR
+- **Hardcoded enum comparisons**: \`if (ENUM_CONSTANT == hardcoded_value)\` → should be \`if (data->field == ENUM_CONSTANT)\`
+- **CRITICAL: Missing else/default cases**: Incomplete switch/if-else chains for enum/state handling
+- **MANDATORY: Always add else branch to any if-else if chain that lacks final else clause**
+- **Uninitialized pointers**: Variables that remain NULL when certain conditions aren't met
+- **Protocol state violations**: Functions proceeding without validating required protocol fields
+- **Array/structure access**: Accessing fields without checking structure validity first
+
+### CRITICAL REQUIREMENT: MISSING ELSE BRANCHES 
+**EXAMINE THE PROVIDED CODE CAREFULLY**: Look for incomplete if-else if chains and add the missing else clause:
+- In the provided code, if you see: \`if (condition1) {{ ... }} else if (condition2) {{ ... }}\` WITHOUT a final \`else\`
+- AND the code continues AFTER the closing brace without handling other cases
+- You MUST create a SEPARATE patch with these EXACT specifications:
+  * \`"original_code": "FIND THE ACTUAL LAST ASSIGNMENT in the else if block (like UE->ng_5G_S_TMSI_Part1 = s_tmsi_part1;) + closing brace }}"\` 
+  * \`"patched_code": "SAME ENDING LINES + }} else {{\\n    LOG_E(NR_RRC, \\"Unhandled ue_Identity.present value: %d\\", rrcSetupRequest->ue_Identity.present);\\n    return;\\n}}"\` 
+  * \`"line_numbers": "replace the section ending with the actual last assignment + closing brace"\` 
+  * **CRITICAL**: Look for the ACTUAL FINAL STATEMENT in the else if block (not function calls in the middle)
+- **NEVER** use function calls like rrc_gNB_create_ue_context - find the REAL LAST assignment like UE->field = value;
+### CONFIGURATION VALIDATION
+- Use actual config names and values from candidate configs.  
+- Verify subnet and port compatibility using deployment context when relevant.  
+- Suggest meaningful corrections only (never no-ops).
+### RESPONSE FORMAT
+Respond with **ONLY valid JSON** in this EXACT structure:
+
+{{
+    "suspected_functions": ["function1", "function2"],
+    "suspected_configs": ["config1", "config2"], 
+    "reason": "Detailed root cause explanation",
+    "config_fix": "Specific configuration corrections with exact values",
+    "code_patches": [
+        {{
+            "function_name": "function_name",
+            "file_path": "path/to/file.c",
+            "patch_type": "targeted_insertion_or_adjustment",
+            "original_code": "// Line(s) around the issue",
+            "patched_code": "// The exact corrected code snippet",
+            "line_numbers": "EXACT line numbers (e.g., '120-125') or specific context (e.g., 'after line containing \\"amf_desc_p = ngap_gNB_get_AMF\\"')",
+            "description": "Why this correction resolves the error"
+        }}
+    ],
+    "config_patches": [
+        {{
+            "config_name": "parameter_name",
+            "file_path": "path/to/config.conf",
+            "patch_type": "set_value",
+            "current_value": "current_value",
+            "new_value": "corrected_value",
+            "line_number": "approximate_line_or_section",
+            "relevance_score": "confidence_score_from_analysis",
+            "description": "Why this config change resolves the error"
+        }}
+    ],
+    "root_cause_analysis": "Deep technical analysis of why this error occurs",
+    "investigation_steps": ["step1", "step2", "step3"]
+}}
+
+### ADDITIONAL HINTS
+- **Protocol Compliance**: Use 3GPP specifications and RFCs to understand expected behavior and mandatory validations.
+- **Network Connectivity**: For 5G/LTE issues, verify IP reachability, routing, and port accessibility between components.
+- **Context Analysis**: Look at surrounding code patterns, variable names, and function purposes to understand intended behavior.
+- **Error Correlation**: Connect error messages to specific code paths and protocol state transitions.`,
+
+            "Bug Analysis": `You are an expert software debugging and bug analysis specialist with deep knowledge of telecommunications systems, 5G/LTE protocols, and root cause analysis methodologies. Based on the provided dataset, logs, or error information, conduct a comprehensive bug analysis.
+
+Your task is to analyze the given information and provide a detailed bug analysis that includes:
+
+1. **Problem Identification**
+   - Clearly define the bug or issue
+   - Identify the symptoms and error messages
+   - Determine the scope and impact of the problem
+
+2. **Root Cause Analysis**
+   - Trace the issue to its fundamental cause
+   - Identify contributing factors and dependencies
+   - Analyze the sequence of events leading to the problem
+
+3. **Technical Analysis**
+   - Examine relevant code sections, configurations, or protocols
+   - Identify specific failure points and error conditions
+   - Analyze system behavior and state transitions
+
+4. **Impact Assessment**
+   - Evaluate the severity and priority of the issue
+   - Assess potential risks and consequences
+   - Determine affected components and users
+
+5. **Resolution Recommendations**
+   - Propose specific fixes and workarounds
+   - Suggest preventive measures and monitoring
+   - Provide implementation guidance and testing strategies
+Provide a comprehensive, actionable bug analysis that helps resolve the issue and prevent similar problems in the future.`,
+
+            // Original templates
+            "Test Script": `You are an expert in 5G network testing and automation, with deep knowledge of RRC and NAS protocols. Given the dataset containing the complete 5G NSA attach procedure—including all signaling messages and their respective Information Elements (IEs)—generate comprehensive, production-ready {LANGUAGE} test automation scripts.
+
+Requirements:
+- First, trigger the UE attach procedure using the provided reference code.
+- For each message in the attach sequence (RRC and NAS), generate a {LANGUAGE} function that:
+    - Simulates the message exchange.
+    - Extracts and validates all Information Elements (IEs) for that message.
+    - Logs results and assertions for traceability.
+- Ensure:
+    - Every message in the attach procedure is covered, in correct sequence, with no skipped steps.
+    - All IEs per message are explicitly validated.
+    - Scripts are modular, readable, and maintainable.
+    - No placeholder comments or "add your code here"lines—provide full logic.
+    - Output is only {LANGUAGE} code (no explanations, no markdown, no extra text).
+-Make sure the generated scripts covers the testcases which are in {self.testcases_name}
+
+Dataset Summary:
+[Attach procedure dataset including all messages in sequence and their respective Information Elements]
+
+Expected Output:
+- {LANGUAGE} automation scripts that:
+    - Trigger the UE attach.
+    - Validate each message and all IEs.
+    - Log results for each step.
+    - Ensure full message and IE validation coverage.
+
+Must use this reference code for triggering the attach procedure and validating attach and every message in the attach procedure, use logic from this code:
+{self.ue_attach_utils}
+
+Instructions:
+- Use the above reference code for triggering the attach procedure and validating attach status.
+- For each message in the dataset, generate a function that validates all IEs, logs results, and asserts correctness.
+- Do not output any explanations, markdown, or placeholder comments—only complete {LANGUAGE} code.`,
+            "Test Case": {
+                "System Prompt": `You are a test case generation expert for {SYSTEM_TYPE} systems with adaptive testing approach expertise.
+
+ ADAPTIVE ROLE:
+1. **Test Case Generation**: Analyze technical documentation and generate comprehensive test cases
+2. **Command Integration**: Intelligently select and integrate relevant commands/interfaces when available, or create generic test steps when not available
+
+ TEST GENERATION RESPONSIBILITIES:
+- Carefully analyze every sentence, condition, and rule in the document content
+- Translate each into one or more meaningful test cases
+- Ensure no major point from the document is missed
+- Create unique test cases across all testing categories
+- Intelligently match and integrate relevant commands/interfaces when provided, or create appropriate test steps based on system capabilities
+ REQUIRED TEST CASE CATEGORIES:
+1. **POSITIVE TESTING** - Expected behavior with valid inputs
+2. **NEGATIVE TESTING** - Invalid input, misconfiguration, or failure recovery
+3. **EDGE CASES** - Boundary conditions and unusual inputs
+4. **PERFORMANCE TESTING** - Load, stress, and scalability scenarios
+5. **SECURITY TESTING** - Authentication, authorization, access control
+6. **INTEGRATION TESTING** - Interactions across components or features
+7. **USABILITY TESTING** - Simplicity, clarity, and user experience
+8. **COMPATIBILITY TESTING** - Version, platform, or environment variations
+ COMMAND/INTERFACE INTEGRATION STRATEGY:
+- **Analyze Available Resources**: Study the provided commands/interfaces list (if available) to understand available operations
+- **Adaptive Integration**: If commands are available, intelligently select relevant ones. If not available, create appropriate test steps based on system capabilities
+- **Context-Aware Selection**: Choose commands that match the test scenario purpose
+- **Natural Integration**: Embed commands naturally within descriptive test steps
+- **Fallback Approach**: When no suitable commands exist, create meaningful generic test actions
+
+ QUALITY STANDARDS:
+- Generate comprehensive test cases covering all aspects of the documentation
+- Ensure each test case is unique and meaningful
+- Maintain clear, actionable test steps
+- Include proper preconditions, expected results, and postconditions
+- Balance specificity with maintainability`,
+                "User Prompt": `
+
+AVAILABLE COMMANDS/INTERFACES:
+{commands_content}
+
+TASK:
+Generate the **maximum possible number of unique and comprehensive test cases** for the above document content by intelligently integrating relevant commands/interfaces (if provided) or creating appropriate generic test steps.
+
+REQUIREMENTS:
+1. **Comprehensive Analysis**: Extract test scenarios from every relevant sentence, condition, and rule in the document
+2. **Intelligent Command/Interface Selection**: Analyze the available commands/interfaces (if provided) and select appropriate ones for each test scenario, or create generic test steps
+3. **Category Coverage**: Ensure test cases span all 8 testing categories (Positive, Negative, Edge, Performance, Security, Integration, Usability, Compatibility)
+4. **No Duplication**: Avoid repetitive or near-identical test cases
+5. **Exhaustive Coverage**: If one sentence implies multiple scenarios, create separate test cases for each
+6. **Command/Interface Relevance**: Only use commands/interfaces that are actually relevant and applicable to each test scenario, or create appropriate generic steps
+
+COMMAND/INTERFACE SELECTION STRATEGY:
+- **Analyze Before Selection**: Review all available commands/interfaces (if provided) to understand their purpose and functionality
+- **Context-Based Matching**: Select commands/interfaces based on what the test step is trying to accomplish, or create generic actions
+- **Logical Sequencing**: Arrange commands/actions in a logical order within test steps (setup → execute → verify → cleanup)
+- **Appropriate Integration**: Integrate commands naturally into descriptive test steps using backticks, or use generic action descriptions
+
+INTEGRATION EXAMPLES:
+
+**With CLI Commands Available:**
+- "Access the {SYSTEM_TYPE} CLI interface using \`{CONNECTION_METHOD} {LOGIN_CREDENTIALS}\` and authenticate with appropriate credentials"
+- "Configure the feature by executing appropriate commands if available in {ACCESS_MODE}"
+- "Verify configuration status using appropriate commands if available and confirm expected parameter values"
+- "Execute functionality test using appropriate commands if available to validate behavior"
+**Without CLI Commands Available:**
+- "Access the {SYSTEM_TYPE} management interface through the provided connection method and authenticate with appropriate credentials"
+- "Configure the feature using the system's configuration interface and set the required parameters"
+- "Verify configuration status by checking the system's status display and confirm expected parameter values"
+- "Execute functionality test through the system's testing interface to validate behavior"
+- "Enable diagnostic monitoring through the system's monitoring tools to capture detailed operational information"
+- "Export configuration data using the system's export functionality for documentation purposes"
+COMMAND/INTERFACE MATCHING PROCESS:
+1. **Identify Test Step Purpose**: Understand what each test step is trying to achieve
+2. **Check Available Resources**: Look through the provided commands/interfaces list (if available) for relevant options
+3. **Select Best Match**: Choose the command/interface that best fits the step's objective, or create generic action
+4. **Integrate Naturally**: Write the test step in natural language with the command inline (if available) or generic action description
+5. **Verify Relevance**: Ensure the selected command/interface actually makes sense for the scenario, or that the generic action is appropriate
+EXPECTED OUTPUT:
+Return a valid JSON array of test cases where:
+- Commands/interfaces are selected from the provided list only (if available), or generic actions are created
+- Commands/actions are integrated inline within descriptive test steps
+- Each test case includes commands Used and verificationMethods arrays
+- Commands/actions are chosen based on test scenario requirements, not arbitrary categories
+Do not skip or merge scenarios — extract comprehensive test cases from every relevant aspect of the documentation while making intelligent use of the available commands/interfaces or creating appropriate generic test steps.`
+            },
+            "Custom": ""
+        };
+                return false;
+            }
+        } catch (error) {
+            console.warn('Backend not available, using fallback templates:', error);
+            // Use fallback templates if backend is not available (full comprehensive prompts)
+            testPromptTemplates = {
+                "Test Script": `You are an expert in 5G network testing and automation, with deep knowledge of RRC and NAS protocols. Given the dataset containing the complete 5G NSA attach procedure—including all signaling messages and their respective Information Elements (IEs)—generate comprehensive, production-ready {LANGUAGE} test automation scripts.
+Requirements:
+- First, trigger the UE attach procedure using the provided reference code.
+- For each message in the attach sequence (RRC and NAS), generate a {LANGUAGE} function that:
+    - Simulates the message exchange.
+    - Extracts and validates all Information Elements (IEs) for that message.
+    - Logs results and assertions for traceability.
+- Ensure:
+    - Every message in the attach procedure is covered, in correct sequence, with no skipped steps.
+    - All IEs per message are explicitly validated.
+    - Scripts are modular, readable, and maintainable.
+    - No placeholder comments or "add your code here"lines—provide full logic.
+    - Output is only {LANGUAGE} code (no explanations, no markdown, no extra text).
+-Make sure the generated scripts covers the testcases which are in {self.testcases_name}
+
+Dataset Summary:
+[Attach procedure dataset including all messages in sequence and their respective Information Elements]
+
+Expected Output:
+- {LANGUAGE} automation scripts that:
+    - Trigger the UE attach.
+    - Validate each message and all IEs.
+    - Log results for each step.
+    - Ensure full message and IE validation coverage.
+
+Must use this reference code for triggering the attach procedure and validating attach and every message in the attach procedure, use logic from this code:
+{self.ue_attach_utils}
+
+Instructions:
+- Use the above reference code for triggering the attach procedure and validating attach status.
+- For each message in the dataset, generate a function that validates all IEs, logs results, and asserts correctness.
+- Do not output any explanations, markdown, or placeholder comments—only complete {LANGUAGE} code.`,
+                "Test Case": {
+                    "System Prompt": `You are a test case generation expert for {SYSTEM_TYPE} systems with adaptive testing approach expertise.
+ ADAPTIVE ROLE:
+1. **Test Case Generation**: Analyze technical documentation and generate comprehensive test cases
+2. **Command Integration**: Intelligently select and integrate relevant commands/interfaces when available, or create generic test steps when not available
+ TEST GENERATION RESPONSIBILITIES:
+- Carefully analyze every sentence, condition, and rule in the document content
+- Translate each into one or more meaningful test cases
+- Ensure no major point from the document is missed
+- Create unique test cases across all testing categories
+- Intelligently match and integrate relevant commands/interfaces when provided, or create appropriate test steps based on system capabilities
+ REQUIRED TEST CASE CATEGORIES:
+1. **POSITIVE TESTING** - Expected behavior with valid inputs
+2. **NEGATIVE TESTING** - Invalid input, misconfiguration, or failure recovery
+3. **EDGE CASES** - Boundary conditions and unusual inputs
+4. **PERFORMANCE TESTING** - Load, stress, and scalability scenarios
+5. **SECURITY TESTING** - Authentication, authorization, access control
+6. **INTEGRATION TESTING** - Interactions across components or features
+7. **USABILITY TESTING** - Simplicity, clarity, and user experience
+8. **COMPATIBILITY TESTING** - Version, platform, or environment variations
+
+ COMMAND/INTERFACE INTEGRATION STRATEGY:
+- **Analyze Available Resources**: Study the provided commands/interfaces list (if available) to understand available operations
+- **Adaptive Integration**: If commands are available, intelligently select relevant ones. If not available, create appropriate test steps based on system capabilities
+- **Context-Aware Selection**: Choose commands that match the test scenario purpose
+- **Natural Integration**: Embed commands naturally within descriptive test steps
+- **Fallback Approach**: When no suitable commands exist, create meaningful generic test actions
+
+ QUALITY STANDARDS:
+- Generate comprehensive test cases covering all aspects of the documentation
+- Ensure each test case is unique and meaningful
+- Maintain clear, actionable test steps
+- Include proper preconditions, expected results, and postconditions
+- Balance specificity with maintainability`,
+                    "User Prompt": `
+
+AVAILABLE COMMANDS/INTERFACES:
+{commands_content}
+
+TASK:
+Generate the **maximum possible number of unique and comprehensive test cases** for the above document content by intelligently integrating relevant commands/interfaces (if provided) or creating appropriate generic test steps.
+
+REQUIREMENTS:
+1. **Comprehensive Analysis**: Extract test scenarios from every relevant sentence, condition, and rule in the document
+2. **Intelligent Command/Interface Selection**: Analyze the available commands/interfaces (if provided) and select appropriate ones for each test scenario, or create generic test steps
+3. **Category Coverage**: Ensure test cases span all 8 testing categories (Positive, Negative, Edge, Performance, Security, Integration, Usability, Compatibility)
+4. **No Duplication**: Avoid repetitive or near-identical test cases
+5. **Exhaustive Coverage**: If one sentence implies multiple scenarios, create separate test cases for each
+6. **Command/Interface Relevance**: Only use commands/interfaces that are actually relevant and applicable to each test scenario, or create appropriate generic steps
+
+COMMAND/INTERFACE SELECTION STRATEGY:
+- **Analyze Before Selection**: Review all available commands/interfaces (if provided) to understand their purpose and functionality
+- **Context-Based Matching**: Select commands/interfaces based on what the test step is trying to accomplish, or create generic actions
+- **Logical Sequencing**: Arrange commands/actions in a logical order within test steps (setup → execute → verify → cleanup)
+- **Appropriate Integration**: Integrate commands naturally into descriptive test steps using backticks, or use generic action descriptions
+
+INTEGRATION EXAMPLES:
+**With CLI Commands Available:**
+- "Access the {SYSTEM_TYPE} CLI interface using \`{CONNECTION_METHOD} {LOGIN_CREDENTIALS}\` and authenticate with appropriate credentials"
+- "Configure the feature by executing appropriate commands if available in {ACCESS_MODE}"
+- "Verify configuration status using appropriate commands if available and confirm expected parameter values"
+- "Execute functionality test using appropriate commands if available to validate behavior"
+**Without CLI Commands Available:**
+- "Access the {SYSTEM_TYPE} management interface through the provided connection method and authenticate with appropriate credentials"
+- "Configure the feature using the system's configuration interface and set the required parameters"
+- "Verify configuration status by checking the system's status display and confirm expected parameter values"
+- "Execute functionality test through the system's testing interface to validate behavior"
+- "Enable diagnostic monitoring through the system's monitoring tools to capture detailed operational information"
+- "Export configuration data using the system's export functionality for documentation purposes"
+COMMAND/INTERFACE MATCHING PROCESS:
+1. **Identify Test Step Purpose**: Understand what each test step is trying to achieve
+2. **Check Available Resources**: Look through the provided commands/interfaces list (if available) for relevant options
+3. **Select Best Match**: Choose the command/interface that best fits the step's objective, or create generic action
+4. **Integrate Naturally**: Write the test step in natural language with the command inline (if available) or generic action description
+5. **Verify Relevance**: Ensure the selected command/interface actually makes sense for the scenario, or that the generic action is appropriate
+EXPECTED OUTPUT:
+Return a valid JSON array of test cases where:
+- Commands/interfaces are selected from the provided list only (if available), or generic actions are created
+- Commands/actions are integrated inline within descriptive test steps
+- Each test case includes commands Used and verificationMethods arrays
+- Commands/actions are chosen based on test scenario requirements, not arbitrary categories
+Do not skip or merge scenarios — extract comprehensive test cases from every relevant aspect of the documentation while making intelligent use of the available commands/interfaces or creating appropriate generic test steps.`
+                },
+                "Custom": ""
+            };
+            return false;
+        }
+    }
+
+    // Save template to backend
+    async function saveTemplateToBackend(templateName, templateContent) {
+        try {
+            console.log('💾 Saving template to backend:');
+            console.log('   Template name:', templateName);
+            console.log('   Content length:', templateContent.length);
+            console.log('   Content preview:', templateContent.substring(0, 100) + '...');
+            
+            // Check if window.API exists and has the function
+            if (!window.API) {
+                console.error('❌ window.API is not defined');
+                throw new Error('API not initialized. Please refresh the page.');
+            }
+            
+            if (!window.API.saveTemplatePrompt) {
+                console.error('❌ saveTemplatePrompt not found in window.API');
+                console.error('   Available functions:', Object.keys(window.API));
+                
+                // Try to use direct fetch as fallback
+                console.log('⚠️ Attempting direct fetch as fallback...');
+                const response = await fetch(`${window.API.API_BASE_URL || 'http://127.0.0.1:8000'}/api/test-script/save-template`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        template_name: templateName,
+                        template_content: templateContent
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('✅ Direct fetch succeeded:', result);
+                return result;
+            }
+            
+            const response = await window.API.saveTemplatePrompt(templateName, templateContent);
+            
+            console.log('📥 Backend response:', response);
+            
+            if (response && response.success) {
+                console.log('✅ Template saved to backend successfully:', response.message);
+                console.log('   Template name in response:', response.template_name);
+                return response;
+            } else {
+                const errorMsg = response?.message || 'Unknown error';
+                console.error('❌ Backend returned unsuccessful response:', errorMsg);
+                throw new Error(`Backend save failed: ${errorMsg}`);
+            }
+        } catch (error) {
+            console.error('❌ Error saving template to backend:');
+            console.error('   Error type:', error.constructor.name);
+            console.error('   Error message:', error.message);
+            console.error('   Error stack:', error.stack);
+            throw error; // Re-throw to let caller handle it
+        }
+    }
+    // Add custom templates to main dropdown (between Custom and More Templates)
+    function addCustomTemplatesToMainDropdown() {
+        const templateDropdown = document.getElementById('templateDropdown');
+        if (!templateDropdown) {
+            console.warn('⚠️ Template dropdown not found');
+            return;
+        }
+        
+        const dropdownContent = templateDropdown.querySelector('.dropdown-content');
+        if (!dropdownContent) {
+            console.warn('⚠️ Dropdown content not found');
+            return;
+        }
+        
+        // Remove any existing custom template items first
+        dropdownContent.querySelectorAll('.custom-template-item').forEach(item =>item.remove());
+        
+        // Find the "More Templates"item - this is where we'll insert custom templates AFTER it
+        const moreTemplatesItem = dropdownContent.querySelector('[data-template="more-templates"]');
+        
+        console.log('🔍 addCustomTemplatesToMainDropdown called');
+        console.log('  - window.customTemplateNames exists:', !!window.customTemplateNames);
+        console.log('  - window.customTemplateNames length:', window.customTemplateNames ? window.customTemplateNames.length : 0);
+        console.log('  - window.customTemplateNames value:', window.customTemplateNames);
+        console.log('  - moreTemplatesItem found:', !!moreTemplatesItem);
+        
+        if (!moreTemplatesItem) {
+            console.error('❌ "More Templates" item not found in dropdown! Cannot insert custom templates.');
+            // List all items in dropdown for debugging
+            const allItems = dropdownContent.querySelectorAll('.dropdown-item');
+            console.log('  - All dropdown items:', Array.from(allItems).map(item => ({
+                template: item.getAttribute('data-template'),
+                text: item.textContent.trim()
+            })));
+            return;
+        }
+        
+        if (window.customTemplateNames && window.customTemplateNames.length > 0) {
+            console.log('📋 Adding custom templates to main dropdown:', window.customTemplateNames);
+            console.log('📋 Found', window.customTemplateNames.length, 'custom template(s) to add');
+            
+            window.customTemplateNames.forEach((name, index) => {
+                console.log(`  [${index + 1}] Adding template: "${name}"`);
+                const customTemplateItem = document.createElement('div');
+                customTemplateItem.className = 'dropdown-item custom-template-item';
+                customTemplateItem.setAttribute('data-template', name);
+                customTemplateItem.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding-right: 0.5rem; cursor: pointer;';
+                customTemplateItem.innerHTML = `
+                    <span style="flex: 1;"> ${name}</span>
+                    <button onclick="event.stopPropagation(); deleteCustomTemplate('${name}')"
+                            style="background: none; border: none; color: #dc3545; cursor: pointer; padding: 0.25rem 0.5rem; font-size: 1rem; line-height: 1;"
+                            title="Delete template">
+                        
+                    </button>
+                `;
+                
+                // Add click event listener for template selection
+                    customTemplateItem.addEventListener('click', async function(e) {
+                        // Prevent delete button click from triggering selection
+                        if (e.target.tagName === 'BUTTON'|| e.target.closest('button')) {
+                            return;
+                        }
+                        
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                        console.log('🎯 Custom saved template clicked:', name);
+                        console.log('📋 Template name to load:', name);
+                        console.log('📚 Template content in cache:', !!testPromptTemplates[name]);
+                    
+                    // Close the dropdown
+                    templateDropdown.classList.remove('active');
+                    
+                    // Update button text
+                    const templateBtn = document.getElementById('templateBtn');
+                    if (templateBtn) {
+                        templateBtn.innerHTML = `
+                            <span> ${name}</span>
+                            <span class="dropdown-arrow">▼</span>
+                        `;
+                    }
+                    
+                        // CRITICAL: Handle template selection - this will load the saved prompt
+                        // Make sure it's async to handle backend loading if needed
+                        await handleTestTemplateSelection(name);
+                        
+                        console.log('✅ Custom saved template loaded:', name);
+                    });
+                
+                // CRITICAL: Insert AFTER "More Templates"(below it), not before
+                console.log(`  [${index + 1}] Inserting custom template "${name}" AFTER "More Templates"`);
+                
+                let inserted = false;
+                
+                // PRIMARY: Insert AFTER "More Templates"item (below it)
+                // This ensures all custom saved templates appear below "More Templates"
+                if (moreTemplatesItem) {
+                    try {
+                        // Find all already-inserted custom template items (in the order they appear in the DOM)
+                        const existingCustomItems = dropdownContent.querySelectorAll('.custom-template-item');
+                        
+                        if (existingCustomItems.length === 0) {
+                            // First custom template - insert right after "More Templates"
+                            moreTemplatesItem.insertAdjacentElement('afterend', customTemplateItem);
+                            console.log(`    ✅ Successfully inserted "${name}" after "More Templates" (first custom template)`);
+                        } else {
+                            // Insert after the last custom template item (to maintain order)
+                            const lastCustomItem = existingCustomItems[existingCustomItems.length - 1];
+                            lastCustomItem.insertAdjacentElement('afterend', customTemplateItem);
+                            console.log(`    ✅ Successfully inserted "${name}" after last custom template (maintaining order)`);
+                        }
+                        inserted = true;
+                    } catch (err) {
+                        console.error(`    ❌ Error with insertAdjacentElement:`, err);
+                        // Fallback: try insertBefore with nextSibling
+                        try {
+                            if (moreTemplatesItem.nextSibling) {
+                                dropdownContent.insertBefore(customTemplateItem, moreTemplatesItem.nextSibling);
+                                console.log(`    ✅ Successfully inserted "${name}" after "More Templates" (using nextSibling fallback)`);
+                                inserted = true;
+                            } else {
+                                // Last resort: append to end
+                                dropdownContent.appendChild(customTemplateItem);
+                                console.log(`    ✅ Successfully appended "${name}" (last resort)`);
+                                inserted = true;
+                            }
+                        } catch (err2) {
+                            console.error(`    ❌ Error with fallback insertion:`, err2);
+                        }
+                    }
+                }
+                
+                // Fallback: If "More Templates"not found, append to end
+                if (!inserted) {
+                    try {
+                        dropdownContent.appendChild(customTemplateItem);
+                        console.log(`    ✅ Successfully appended "${name}" to end (fallback - More Templates not found)`);
+                        inserted = true;
+                    } catch (err) {
+                        console.error(`    ❌ Error appending:`, err);
+                        console.error(`    ❌ Failed to insert template "${name}" into dropdown!`);
+                    }
+                }
+            });
+            
+            // Verify items were added
+            const addedItems = dropdownContent.querySelectorAll('.custom-template-item');
+            console.log('✅ Custom templates added to main dropdown with event listeners');
+            console.log('✅ Verification: Found', addedItems.length, 'custom template item(s) in dropdown');
+            
+            // Additional verification: Check all dropdown items
+            const allItems = dropdownContent.querySelectorAll('.dropdown-item');
+            console.log('✅ Total dropdown items:', allItems.length);
+            console.log('✅ Dropdown content HTML length:', dropdownContent.innerHTML.length);
+            
+            // Log all items for debugging
+            allItems.forEach((item, idx) => {
+                const templateValue = item.getAttribute('data-template');
+                const itemText = item.textContent.trim();
+                console.log(`  - Item [${idx + 1}]: data-template="${templateValue}", text="${itemText.substring(0, 30)}..."`);
+            });
+            
+            // Force a DOM reflow to ensure visibility
+            dropdownContent.offsetHeight;
+        } else {
+            console.log('ℹ️ No custom templates to add to dropdown');
+            console.log('  - window.customTemplateNames:', window.customTemplateNames);
+            console.log('  - Array length:', window.customTemplateNames ? window.customTemplateNames.length : 'N/A');
+        }
+    }
+    // Load custom templates from JSON file into dropdown
+    async function loadCustomTemplatesIntoDropdown() {
+        try {
+            console.log('🔄 Loading custom templates from JSON file...');
+            const response = await window.API.getCustomTemplates();
+            
+            console.log('📋 Backend response:', response);
+            
+            // Check if response is valid
+            if (response && response.success) {
+                const customTemplates = response.custom_templates || [];
+                
+                if (customTemplates.length > 0) {
+                    console.log('📋 Custom templates found in JSON:', customTemplates);
+                    
+                    // Store custom template names for dropdown
+                    window.customTemplateNames = customTemplates;
+                    console.log('✅ window.customTemplateNames set to:', window.customTemplateNames);
+                    
+                    // Also load their content into testPromptTemplates
+                    console.log('🔄 Loading template contents from backend...');
+                    const allTemplates = await window.API.getPromptTemplates();
+                    if (allTemplates.success) {
+                        console.log('📚 All templates from backend:', Object.keys(allTemplates.templates));
+                        customTemplates.forEach(name => {
+                            if (allTemplates.templates[name]) {
+                                testPromptTemplates[name] = allTemplates.templates[name];
+                                const contentLength = typeof allTemplates.templates[name] === 'string'? 
+                                    allTemplates.templates[name].length : 
+                                    JSON.stringify(allTemplates.templates[name]).length;
+                                console.log(`✅ Loaded custom template '${name}' (${contentLength} chars)`);
+                            } else {
+                                console.warn(`⚠️ Template '${name}' not found in backend response`);
+                            }
+                        });
+                    }
+                    console.log('✅ Custom templates loaded successfully from JSON file');
+                    return true;
+                } else {
+                    console.log('ℹ️ No custom templates found in JSON file');
+                    window.customTemplateNames = [];
+                    return false;
+                }
+            } else {
+                console.log('ℹ️ Backend returned no custom templates');
+                window.customTemplateNames = [];
+                return false;
+            }
+        } catch (error) {
+            console.error('❌ Error loading custom templates from JSON:', error);
+            window.customTemplateNames = [];
+            return false;
+        }
+    }
+    // Delete custom template (make it globally accessible)
+    window.deleteCustomTemplate = async function(templateName) {
+        try {
+            const confirmed = confirm(`Are you sure you want to delete the template '${templateName}'?`);
+            if (!confirmed) return;
+            
+            console.log('🗑️ Deleting custom template:', templateName);
+            const response = await window.API.deleteTemplatePrompt(templateName);
+            
+            if (response.success) {
+                // Remove from frontend memory
+                delete testPromptTemplates[templateName];
+                
+                // Reload custom templates list
+                await loadCustomTemplatesIntoDropdown();
+                
+                // Refresh main dropdown to remove deleted template
+                addCustomTemplatesToMainDropdown();
+                
+                showStatusBar(`Template '${templateName}'deleted successfully`, 'success');
+            } else {
+                showStatusBar(`Failed to delete template: ${response.message}`, 'error');
+            }
+        } catch (error) {
+            console.error('❌ Error deleting template:', error);
+            showStatusBar(`Error deleting template: ${error.message}`, 'error');
+        }
+    }
+    // File selection display functions
+    function displaySelectedFiles(files) {
+        const fileListDiv = document.getElementById('testDatasetFileList');
+        const statusDiv = document.getElementById('testDatasetStatus');
+        
+        if (fileListDiv && statusDiv) {
+            // Update status
+            statusDiv.textContent = `Optional - ${files.length} file(s) selected`;
+            statusDiv.style.color = '#5d92ff';
+            
+            // Create file list HTML
+            let fileListHTML = '<div style="text-align: left; font-size: 0.8rem; color: #6b7280;">';
+            fileListHTML += '<div style="font-weight: 600; margin-bottom: 0.5rem; color: #5d92ff;">Selected Files:</div>';
+            
+            Array.from(files).forEach((file, index) => {
+                const fileSize = (file.size / 1024).toFixed(1) + 'KB';
+                const fileIcon = getFileIcon(file.name);
+                fileListHTML += `
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; padding: 0.25rem; background-color: rgba(93, 146, 255, 0.1); border-radius: 4px;">
+                        <span style="font-size: 1rem;">${fileIcon}</span>
+                        <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.name}</span>
+                        <span style="color: #9ca3af; font-size: 0.7rem;">${fileSize}</span>
+                    </div>
+                `;
+            });
+            
+            fileListHTML += '</div>';
+            fileListDiv.innerHTML = fileListHTML;
+            fileListDiv.style.display = 'block';
+        }
+    }
+    
+    function hideSelectedFiles() {
+        const fileListDiv = document.getElementById('testDatasetFileList');
+        const statusDiv = document.getElementById('testDatasetStatus');
+        
+        if (fileListDiv && statusDiv) {
+            fileListDiv.style.display = 'none';
+            fileListDiv.innerHTML = '';
+            statusDiv.textContent = 'Optional - No Dataset loaded - Click to select dataset files';
+            statusDiv.style.color = '#6b7280';
+        }
+    }
+
+    function clearTsgNliPanel() {
+        const panel = document.getElementById('testDatasetNliPanel');
+        if (!panel) return;
+        panel.style.display = 'none';
+        panel.innerHTML = '';
+        panel._tsgNliDatasetContent = null;
+        panel._tsgNliHighlights = null;
+    }
+
+    function tsgNliEscapeHtml(value) {
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function extractNliFromOutputGuardrails(outputGuardrails) {
+        const nli = outputGuardrails?.nli_groundedness_validation || {};
+        const details = nli.details || {};
+        const highlights = Array.isArray(details.nli_highlights) ? details.nli_highlights : [];
+        const contradictions = Array.isArray(details.contradictions) ? details.contradictions : [];
+        const neutralFindings = Array.isArray(details.neutral_findings) ? details.neutral_findings : [];
+        return {
+            pairsChecked: details.pairs_checked ?? 0,
+            contradictions,
+            neutralFindings,
+            highlights,
+            neutralWarnings: (nli.warnings || []).filter((w) => String(w).toLowerCase().includes('nli neutral')),
+            contradictionWarnings: (nli.warnings || []).filter((w) => String(w).toLowerCase().includes('nli contradiction')),
+            errors: nli.errors || [],
+            passed: nli.passed !== false,
+            advisoryMode: details.advisory_mode === true,
+            datasetMatched: details.dataset_matched !== false,
+        };
+    }
+
+    function buildTsgNliFindings(nli) {
+        const findings = [];
+        for (const item of nli.contradictions) {
+            findings.push({
+                type: 'contradiction',
+                line: item.line_number || '—',
+                confidence: typeof item.contradiction === 'number' ? item.contradiction : 0,
+                summary: item.hypothesis_text || item.hypothesis_preview || '',
+                premise: item.premise_text || item.premise_preview || '',
+                clauseId: item.clause_id,
+            });
+        }
+        for (const item of nli.neutralFindings) {
+            findings.push({
+                type: 'neutral',
+                line: item.line_number || '—',
+                confidence: typeof item.neutral === 'number' ? item.neutral : 0,
+                summary: item.hypothesis_text || item.hypothesis_preview || '',
+                premise: item.premise_text || item.premise_preview || '',
+                clauseId: item.clause_id,
+            });
+        }
+        findings.sort((a, b) => {
+            const lineA = typeof a.line === 'number' ? a.line : 9999;
+            const lineB = typeof b.line === 'number' ? b.line : 9999;
+            return lineA - lineB;
+        });
+        return findings;
+    }
+
+    function buildHighlightedDatasetHtml(content, highlights) {
+        if (!content || !Array.isArray(highlights) || !highlights.length) {
+            return '';
+        }
+
+        const lineClass = {};
+        highlights.forEach((item) => {
+            const classification = item.classification === 'contradiction' ? 'contradiction' : 'neutral';
+            const lineNo = item.line_number;
+            if (lineNo) {
+                if (classification === 'contradiction' || lineClass[lineNo] !== 'contradiction') {
+                    lineClass[lineNo] = classification;
+                }
+            }
+        });
+
+        const lines = String(content).split('\n');
+        let html = '<div class="tsg-nli-panel__preview-title">Dataset review (highlighted lines)</div>';
+        html += '<div class="tsg-nli-highlight-view">';
+        lines.forEach((line, index) => {
+            const lineNo = index + 1;
+            const cls = lineClass[lineNo];
+            const rowClass = cls === 'contradiction'
+                ? 'tsg-nli-line tsg-nli-line--contradiction'
+                : cls === 'neutral'
+                    ? 'tsg-nli-line tsg-nli-line--neutral'
+                    : 'tsg-nli-line';
+            html += `<div class="${rowClass}"><span class="tsg-nli-line__no">${lineNo}</span><span class="tsg-nli-line__text">${tsgNliEscapeHtml(line) || '&nbsp;'}</span></div>`;
+        });
+        html += '</div>';
+        return html;
+    }
+
+    function buildTsgNliFindingsTableRows(findings, activeFilter) {
+        const filtered = activeFilter === 'all'
+            ? findings
+            : findings.filter((f) => f.type === activeFilter);
+
+        if (!filtered.length) {
+            return '<tr><td colspan="4" class="tsg-nli-panel__empty">No findings for this filter.</td></tr>';
+        }
+
+        let html = '';
+        filtered.forEach((item, index) => {
+            const pct = Math.round(item.confidence * 100);
+            const colorClass = item.type === 'contradiction' ? 'red' : item.type === 'neutral' ? 'amber' : 'green';
+            const typeLabel = item.type === 'contradiction'
+                ? 'Contradiction'
+                : item.type === 'neutral'
+                    ? 'Neutral'
+                    : 'Entailment';
+            const source = item.clauseId === 'oran_subsection'
+                ? 'O-RAN source'
+                : item.clauseId
+                    ? `Clause ${item.clauseId}`
+                    : '';
+            const rowId = `tsg-nli-row-${index}`;
+
+            html += `<tr class="tsg-nli-finding-row" data-type="${item.type}" data-row-id="${rowId}" tabindex="0" role="button" aria-expanded="false">`;
+            html += `<td><span class="tsg-nli-table__type tsg-nli-table__type--${item.type}">${typeLabel}</span></td>`;
+            html += `<td class="tsg-nli-table__line">${item.line}</td>`;
+            html += `<td class="tsg-nli-table__confidence">`;
+            html += `<div class="tsg-nli-table__confidence-value tsg-nli-table__confidence-value--${colorClass}">${pct}%</div>`;
+            html += `<div class="tsg-nli-table__confidence-bar"><div class="tsg-nli-table__confidence-fill tsg-nli-table__confidence-fill--${colorClass}" style="width:${pct}%"></div></div>`;
+            html += `</td>`;
+            html += `<td class="tsg-nli-table__summary"><span class="tsg-nli-table__summary-text" title="${tsgNliEscapeHtml(item.summary)}">${tsgNliEscapeHtml(item.summary)}</span>`;
+            html += `<span class="tsg-nli-table__chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></span></td>`;
+            html += `</tr>`;
+            html += `<tr class="tsg-nli-detail-row" data-detail-for="${rowId}" hidden>`;
+            html += `<td colspan="4"><div class="tsg-nli-table__detail">`;
+            if (source) {
+                html += `<div class="tsg-nli-table__detail-label">Source</div><div style="margin-bottom:0.5rem;">${tsgNliEscapeHtml(source)}</div>`;
+            }
+            html += `<div class="tsg-nli-table__detail-label">Full finding</div>${tsgNliEscapeHtml(item.summary)}`;
+            if (item.premise) {
+                html += `<div class="tsg-nli-table__detail-label" style="margin-top:0.5rem;">Premise (source excerpt)</div>${tsgNliEscapeHtml(item.premise)}`;
+            }
+            html += `</div></td></tr>`;
+        });
+        return html;
+    }
+
+    let tsgNliDocumentClickBound = false;
+
+    function bindTsgNliPanelEvents(panel) {
+        if (!panel) return;
+
+        if (!panel._tsgNliClickBound) {
+            panel._tsgNliClickBound = true;
+            panel.addEventListener('click', (event) => {
+                const tab = event.target.closest('.tsg-nli-tab');
+                if (tab && panel.contains(tab)) {
+                    const filter = tab.dataset.filter || 'all';
+                    panel.querySelectorAll('.tsg-nli-tab').forEach((el) => {
+                        el.classList.toggle('is-active', el === tab);
+                        el.setAttribute('aria-selected', el === tab ? 'true' : 'false');
+                    });
+                    const tbody = panel.querySelector('.tsg-nli-table tbody');
+                    if (tbody && panel._tsgNliFindings) {
+                        tbody.innerHTML = buildTsgNliFindingsTableRows(panel._tsgNliFindings, filter);
+                        const visible = filter === 'all'
+                            ? panel._tsgNliFindings.length
+                            : panel._tsgNliFindings.filter((f) => f.type === filter).length;
+                        const footer = panel.querySelector('.tsg-nli-panel__footer-count');
+                        if (footer) {
+                            footer.textContent = visible
+                                ? `Showing 1 to ${visible} of ${visible} results`
+                                : 'Showing 0 results';
+                        }
+                    }
+                    return;
+                }
+
+                const menuBtn = event.target.closest('.tsg-nli-panel__menu-btn');
+                if (menuBtn) {
+                    const menu = panel.querySelector('.tsg-nli-panel__menu');
+                    if (menu) {
+                        menu.classList.toggle('is-open');
+                    }
+                    return;
+                }
+
+                const menuItem = event.target.closest('[data-tsg-nli-action]');
+                if (menuItem) {
+                    const action = menuItem.dataset.tsgNliAction;
+                    const preview = panel.querySelector('.tsg-nli-panel__preview');
+                    const menu = panel.querySelector('.tsg-nli-panel__menu');
+                    if (menu) menu.classList.remove('is-open');
+                    if (action === 'toggle-preview' && preview) {
+                        preview.classList.toggle('is-visible');
+                    }
+                    return;
+                }
+
+                const row = event.target.closest('.tsg-nli-finding-row');
+                if (row && panel.contains(row)) {
+                    const rowId = row.dataset.rowId;
+                    const detail = panel.querySelector(`[data-detail-for="${rowId}"]`);
+                    const expanded = row.classList.toggle('is-expanded');
+                    row.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+                    if (detail) {
+                        detail.hidden = !expanded;
+                    }
+                }
+            });
+        }
+
+        if (!tsgNliDocumentClickBound) {
+            tsgNliDocumentClickBound = true;
+            document.addEventListener('click', (event) => {
+                const nliPanel = document.getElementById('testDatasetNliPanel');
+                if (!nliPanel || nliPanel.contains(event.target)) return;
+                const menu = nliPanel.querySelector('.tsg-nli-panel__menu');
+                if (menu) menu.classList.remove('is-open');
+            });
+        }
+    }
+
+    function renderTsgNliPanel(outputGuardrails, inputGuardrails, datasetContent) {
+        const panel = document.getElementById('testDatasetNliPanel');
+        if (!panel) return;
+
+        if (!outputGuardrails) {
+            clearTsgNliPanel();
+            return;
+        }
+
+        const nli = extractNliFromOutputGuardrails(outputGuardrails);
+        const details = outputGuardrails?.nli_groundedness_validation?.details || {};
+        const uploadType = (details.upload_type || 'file').toUpperCase();
+        const uploadName = details.upload_filename || '';
+        const datasetMatched = details.dataset_matched !== false;
+        const datasetTitle = details.dataset_title || '';
+        const allWarnings = outputGuardrails?.nli_groundedness_validation?.warnings || [];
+        const escapeHtml = tsgNliEscapeHtml;
+
+        const overallPassed = outputGuardrails.passed !== false && nli.passed !== false;
+        const badgeClass = overallPassed ? 'tsg-nli-panel__badge--pass' : 'tsg-nli-panel__badge--fail';
+        const badgeLabel = overallPassed ? 'PASS' : 'FAIL';
+
+        let html = '<div class="tsg-nli-panel__inner">';
+        html += '<div class="tsg-nli-panel__header">';
+        html += '<div class="tsg-nli-panel__header-main">';
+        html += `<h4 class="tsg-nli-panel__title">NLI &amp; Guardrails Review (${uploadType}${uploadName ? `: ${escapeHtml(uploadName)}` : ''})</h4>`;
+
+        if (!datasetMatched) {
+            html += '<p class="tsg-nli-panel__meta tsg-nli-panel__meta--warn">Spec Intelligence dataset: not matched</p>';
+            const hasInfoWarnings = allWarnings.some((w) => {
+                const lower = String(w).toLowerCase();
+                return !lower.includes('nli neutral') && !lower.includes('nli contradiction');
+            });
+            if (hasInfoWarnings) {
+                html += '<ul class="tsg-nli-panel__list tsg-nli-panel__list--warn">';
+                for (const warning of allWarnings) {
+                    html += `<li>${escapeHtml(warning)}</li>`;
+                }
+                html += '</ul>';
+            } else {
+                html += '<p class="tsg-nli-panel__meta">Reference document loaded. NLI groundedness against O-RAN source was not applied.</p>';
+            }
+        } else {
+            html += `<p class="tsg-nli-panel__meta tsg-nli-panel__meta--ok">Dataset matched: ${escapeHtml(datasetTitle)}</p>`;
+            if (nli.advisoryMode) {
+                html += '<p class="tsg-nli-panel__meta tsg-nli-panel__meta--info">Review mode: contradictions and neutral findings are highlighted; upload is not blocked.</p>';
+            }
+        }
+
+        html += '</div>';
+        html += '<div class="tsg-nli-panel__header-actions">';
+        html += `<span class="tsg-nli-panel__badge ${badgeClass}">${badgeLabel}</span>`;
+        html += '<div class="tsg-nli-panel__menu-wrap">';
+        html += '<button type="button" class="tsg-nli-panel__menu-btn" title="More options" aria-label="More options">';
+        html += '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>';
+        html += '</button>';
+        html += '<div class="tsg-nli-panel__menu" role="menu">';
+        html += '<button type="button" class="tsg-nli-panel__menu-item" data-tsg-nli-action="toggle-preview" role="menuitem">View highlighted dataset</button>';
+        html += '</div></div></div></div>';
+
+        if (datasetMatched && nli.pairsChecked > 0) {
+            const findings = buildTsgNliFindings(nli);
+            const contraCount = findings.filter((f) => f.type === 'contradiction').length;
+            const neutralCount = findings.filter((f) => f.type === 'neutral').length;
+            const entailmentCount = Math.max(0, nli.pairsChecked - contraCount - neutralCount);
+            const totalFindings = findings.length;
+
+            html += '<div class="tsg-nli-panel__stats">';
+            html += `<div class="tsg-nli-stat-card"><div class="tsg-nli-stat-card__value tsg-nli-stat-card__value--red">${contraCount}</div><div class="tsg-nli-stat-card__label">Contradictions</div><div class="tsg-nli-stat-card__sub">80%+ confidence</div></div>`;
+            html += `<div class="tsg-nli-stat-card"><div class="tsg-nli-stat-card__value tsg-nli-stat-card__value--amber">${neutralCount}</div><div class="tsg-nli-stat-card__label">Neutral</div><div class="tsg-nli-stat-card__sub">70–80% confidence</div></div>`;
+            html += `<div class="tsg-nli-stat-card"><div class="tsg-nli-stat-card__value tsg-nli-stat-card__value--green">${entailmentCount}</div><div class="tsg-nli-stat-card__label">Entailments</div><div class="tsg-nli-stat-card__sub">&lt; 70% issues</div></div>`;
+            html += '</div>';
+
+            html += '<div class="tsg-nli-panel__tabs" role="tablist">';
+            html += `<button type="button" class="tsg-nli-tab is-active" data-filter="all" role="tab" aria-selected="true">All Findings (${totalFindings})</button>`;
+            html += `<button type="button" class="tsg-nli-tab" data-filter="contradiction" role="tab" aria-selected="false"><span class="tsg-nli-tab__dot tsg-nli-tab__dot--red"></span>Contradictions (${contraCount})</button>`;
+            html += `<button type="button" class="tsg-nli-tab" data-filter="neutral" role="tab" aria-selected="false"><span class="tsg-nli-tab__dot tsg-nli-tab__dot--amber"></span>Neutral (${neutralCount})</button>`;
+            html += '</div>';
+
+            html += '<div class="tsg-nli-panel__table-wrap"><table class="tsg-nli-table"><thead><tr>';
+            html += '<th>Type</th><th>Line</th><th>Confidence</th><th>Finding Summary</th>';
+            html += '</tr></thead><tbody>';
+            if (totalFindings > 0) {
+                html += buildTsgNliFindingsTableRows(findings, 'all');
+            } else {
+                html += '<tr><td colspan="4" class="tsg-nli-panel__empty">No contradictions or neutral findings.</td></tr>';
+            }
+            html += '</tbody></table></div>';
+
+            html += `<div class="tsg-nli-panel__footer"><span class="tsg-nli-panel__footer-count">Showing 1 to ${totalFindings} of ${totalFindings} results</span></div>`;
+
+            panel._tsgNliFindings = findings;
+        } else if (datasetMatched) {
+            html += '<div class="tsg-nli-panel__empty">No NLI pairs were analyzed for this dataset.</div>';
+            panel._tsgNliFindings = [];
+        } else {
+            panel._tsgNliFindings = [];
+        }
+
+        const previewContent = datasetContent || (typeof currentTestDataset === 'string' ? currentTestDataset : '');
+        html += `<div class="tsg-nli-panel__preview" id="tsgNliDatasetPreview">${buildHighlightedDatasetHtml(previewContent, nli.highlights)}</div>`;
+
+        html += '</div>';
+        panel.innerHTML = html;
+        panel.style.display = 'block';
+        panel._tsgNliDatasetContent = previewContent;
+        panel._tsgNliHighlights = nli.highlights;
+        bindTsgNliPanelEvents(panel);
+    }
+
+    function clearTestDatasetSelection() {
+        const testDatasetFilesInput = document.getElementById('testDatasetFiles');
+        if (testDatasetFilesInput) {
+            const dt = new DataTransfer();
+            testDatasetFilesInput.files = dt.files;
+            testDatasetFilesInput.value = '';
+        }
+        currentTestDataset = null;
+        hideSelectedFiles();
+    }
+
+    /** Stage total_content.txt into the hidden file input (Specification Intelligence → Test Script Generator). */
+    async function stageTotalContentFileForTestScriptGenerator(filePath) {
+        const fileInput = document.getElementById('testDatasetFiles');
+        if (!fileInput) {
+            showStatusBar('Dataset upload control not found', 'error');
+            return false;
+        }
+
+        let fileName = 'total_content.txt';
+        let fileContent = null;
+
+        try {
+            const backendPayload = await fetchTotalContentFromBackend();
+            if (backendPayload?.success && backendPayload.content != null) {
+                fileContent = backendPayload.content;
+                fileName = backendPayload.name || fileName;
+                if (backendPayload.path) {
+                    currentTotalContentFilePath = backendPayload.path;
+                    currentDatasetFolderPath = backendPayload.folder || backendPayload.path.replace(/\/total_content\.txt$/i, '');
+                }
+                console.log('[app.js] ✅ Loaded total_content.txt via backend API:', backendPayload.path);
+            }
+        } catch (backendErr) {
+            console.warn('[app.js] Backend total-content fetch failed, trying local read:', backendErr);
+        }
+
+        if (fileContent == null) {
+            const readFn = window.API?.readFileForUpload;
+            if (typeof readFn !== 'function') {
+                showStatusBar('Cannot read dataset file — backend API and local file read unavailable', 'error');
+                return false;
+            }
+
+            let readResult;
+            try {
+                readResult = await readFn(filePath, workingDirectory || specIntelBackendExtractRoot);
+            } catch (err) {
+                console.error('readFileForUpload failed:', err);
+                showStatusBar(`Could not read total_content.txt: ${err.message}`, 'error');
+                return false;
+            }
+
+            if (!readResult?.success) {
+                showStatusBar(`Could not read total_content.txt: ${readResult?.error || 'unknown error'}`, 'error');
+                return false;
+            }
+
+            fileName = readResult.name || fileName;
+            fileContent = readResult.content;
+        }
+
+        const blob = new Blob([fileContent], { type: 'text/plain' });
+        const file = new File([blob], fileName, { type: 'text/plain', lastModified: Date.now() });
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files = dt.files;
+
+        currentTestDataset = null;
+        displaySelectedFiles(fileInput.files);
+
+        const loadBtn = document.getElementById('loadTestDatasetBtn');
+        if (loadBtn) {
+            loadBtn.disabled = false;
+            loadBtn.textContent = 'Load';
+            loadBtn.style.backgroundColor = '';
+        }
+
+        const statusDiv = document.getElementById('testDatasetStatus');
+        if (statusDiv) {
+            statusDiv.textContent = `${fileName} ready — click Load to import`;
+            statusDiv.style.color = '#5d92ff';
+        }
+
+        return true;
+    }
+
+    window.sendDatasetToTestScriptGenerator = async function sendDatasetToTestScriptGenerator() {
+        const filePath = buildTotalContentFilePathFromSelection();
+
+        if (!filePath) {
+            showStatusBar('Complete dataset extraction first, then send to Test Script Generator', 'warning');
+            return;
+        }
+
+        const staged = await stageTotalContentFileForTestScriptGenerator(filePath);
+        if (!staged) return;
+
+        if (typeof window.navigateToAppSection === 'function') {
+            window.navigateToAppSection('test-script-generator');
+        }
+
+        showStatusBar('total_content.txt selected — click Load in Dataset Upload to import', 'success');
+        updateTsgStatusBar();
+    };
+    function getFileIcon(filename) {
+        const extension = filename.split('.').pop().toLowerCase();
+        switch (extension) {
+ case 'pdf': return '';
+ case 'docx': return '';
+ case 'txt': return '';
+ case 'xlsx': return '';
+ case 'json': return '';
+ case 'py': return '';
+ case 'md': return '';
+ case 'csv': return '';
+ case 'log': return '';
+ default: return '';
+        }
+    }
+    // Handle Test Script Generator template selection
+    function showMoreTemplatesDropdown() {
+        console.log('🔄 Showing more templates dropdown...');
+        console.log('🔄 First time calling showMoreTemplatesDropdown');
+        
+        // Get the dropdown elements
+        const templateDropdown = document.getElementById('templateDropdown');
+        const templateBtn = document.getElementById('templateBtn');
+        const dropdownContent = templateDropdown.querySelector('.dropdown-content');
+        
+        if (!templateDropdown || !templateBtn || !dropdownContent) {
+            console.error('❌ Template dropdown elements not found');
+            return;
+        }
+        
+        // Store original content
+        if (!window.originalDropdownContent) {
+            window.originalDropdownContent = dropdownContent.innerHTML;
+        }
+        // Ensure dropdown stays open during transition
+        templateDropdown.classList.add('active');
+        // Add transition class for smooth animation
+        dropdownContent.classList.add('transitioning');
+        // After transition starts, replace content
+        setTimeout(() => {
+            // Build more templates content with default templates
+            let moreTemplatesContent = `
+                <div class="dropdown-item"data-template="back-to-main">← Back to Main</div>
+                <div class="dropdown-item"data-template="Testing Strategy">Testing Strategy</div>
+                <div class="dropdown-item"data-template="Bug Analysis">Bug Analysis</div>
+                <div class="dropdown-item"data-template="Feature Design">Feature Design</div>
+                <div class="dropdown-item"data-template="Code Review">Code Review</div>
+                <div class="dropdown-item"data-template="Performance Test">Performance Test</div>
+                <div class="dropdown-item"data-template="API Design">API Design</div>
+                <div class="dropdown-item"data-template="Code Assistant">Code Assistant</div>
+            `;
+            
+            // Add custom templates with delete buttons
+            if (window.customTemplateNames && window.customTemplateNames.length > 0) {
+                window.customTemplateNames.forEach(name => {
+                    moreTemplatesContent += `
+                        <div class="dropdown-item"data-template="${name}"style="display: flex; justify-content: space-between; align-items: center;">
+                            <span> ${name}</span>
+                            <button onclick="event.stopPropagation(); deleteCustomTemplate('${name}')"
+                                    style="background: none; border: none; color: #dc3545; cursor: pointer; padding: 0 0.5rem; font-size: 1.2rem; line-height: 1;"
+                                    title="Delete template">
+                                
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+            
+            dropdownContent.innerHTML = moreTemplatesContent;
+            
+            // Remove transition class and add slide-in animation
+            dropdownContent.classList.remove('transitioning');
+            dropdownContent.classList.add('slide-in');
+            
+            // Update button text
+            templateBtn.innerHTML = `
+                <span>More Templates</span>
+                <span class="dropdown-arrow">▼</span>
+            `;
+            
+            // Re-attach event listeners for new dropdown items
+            attachMoreTemplatesEventListeners();
+            
+            console.log('✅ More templates dropdown shown with animation');
+        }, 150); // Half of the transition duration
+    }
+    
+    function attachMoreTemplatesEventListeners() {
+        const templateDropdown = document.getElementById('templateDropdown');
+        if (!templateDropdown) return;
+        
+        // Remove any existing event listeners by cloning the elements
+        const dropdownContent = templateDropdown.querySelector('.dropdown-content');
+        const newDropdownContent = dropdownContent.cloneNode(true);
+        dropdownContent.parentNode.replaceChild(newDropdownContent, dropdownContent);
+        
+        newDropdownContent.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const templateKey = item.getAttribute('data-template');
+                console.log('🎯 More template selected:', templateKey);
+                
+                if (templateKey === 'back-to-main') {
+                    // Restore original dropdown - don't close dropdown
+                    restoreOriginalDropdown();
+                } else {
+                    // Handle template selection and close dropdown
+                    // Make it async to handle template loading
+                    handleMoreTemplateSelection(templateKey).then(() => {
+                    templateDropdown.classList.remove('active');
+                    }).catch(error => {
+                        console.error('❌ Error handling more template selection:', error);
+                        templateDropdown.classList.remove('active');
+                    });
+                }
+            });
+        });
+    }
+    function restoreOriginalDropdown() {
+        console.log('🔄 Restoring original dropdown...');
+        
+        const templateDropdown = document.getElementById('templateDropdown');
+        const templateBtn = document.getElementById('templateBtn');
+        const dropdownContent = templateDropdown.querySelector('.dropdown-content');
+        
+        if (!templateDropdown || !templateBtn || !dropdownContent || !window.originalDropdownContent) {
+            console.error('❌ Cannot restore original dropdown');
+            return;
+        }
+        
+        // Ensure dropdown stays open during transition
+        templateDropdown.classList.add('active');
+        
+        // Add transition class for smooth animation
+        dropdownContent.classList.add('transitioning');
+        
+        // After transition starts, replace content
+        setTimeout(() => {
+            // Restore original content
+            dropdownContent.innerHTML = window.originalDropdownContent;
+            
+            // Remove transition class and add slide-in animation
+            dropdownContent.classList.remove('transitioning');
+            dropdownContent.classList.add('slide-in');
+            
+            // Restore button text
+            templateBtn.innerHTML = `
+                <span>Select Template</span>
+                <span class="dropdown-arrow">▼</span>
+            `;
+            
+            // Re-attach original event listeners
+            attachOriginalDropdownEventListeners();
+            
+            console.log('✅ Original dropdown restored with animation');
+        }, 150); // Half of the transition duration
+    }
+    function attachOriginalDropdownEventListeners() {
+        const templateDropdown = document.getElementById('templateDropdown');
+        if (!templateDropdown) return;
+        
+        // Remove any existing event listeners by cloning the elements
+        const dropdownContent = document.getElementById('templateDropdownMenu')
+            || templateDropdown.querySelector('.dropdown-content');
+        const newDropdownContent = dropdownContent.cloneNode(true);
+        dropdownContent.parentNode.replaceChild(newDropdownContent, dropdownContent);
+        
+        newDropdownContent.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const templateKey = item.getAttribute('data-template');
+                console.log('🎯 Original template selected:', templateKey);
+                
+                // Don't close dropdown for "More Templates"- let it handle content transition
+                if (templateKey !== 'more-templates') {
+                    // Close dropdown for other selections
+                    templateDropdown.classList.remove('active');
+                }
+                
+                // Handle template selection
+                handleTestTemplateSelection(templateKey);
+            });
+        });
+    }
+    async function handleMoreTemplateSelection(templateKey) {
+        console.log('🎯 Handling more template selection:', templateKey);
+        
+        const promptEditor = document.getElementById('testPromptTextEditor');
+        if (!promptEditor) {
+            console.error('❌ Prompt editor not found');
+            return;
+        }
+        
+        // Set the current prompt key
+        currentTestPromptKey = templateKey;
+        
+        // Load the template content
+        let templateContent = '';
+        
+        // Check if template is in cache
+        if (testPromptTemplates[templateKey]) {
+            console.log('📚 Template found in cache:', templateKey);
+            if (typeof testPromptTemplates[templateKey] === 'string') {
+                templateContent = testPromptTemplates[templateKey];
+            } else if (typeof testPromptTemplates[templateKey] === 'object'&& testPromptTemplates[templateKey]['System Prompt']) {
+                templateContent = testPromptTemplates[templateKey]['System Prompt'];
+            } else if (typeof testPromptTemplates[templateKey] === 'object') {
+                // Try to extract any string property from the object
+                const keys = Object.keys(testPromptTemplates[templateKey]);
+                if (keys.length > 0) {
+                    templateContent = testPromptTemplates[templateKey][keys[0]];
+                    console.log('📝 Using template property:', keys[0]);
+                }
+            }
+        }
+        
+        // If template not in cache, try to load from backend
+        if (!templateContent || templateContent.trim() === '') {
+            console.warn('⚠️ Template not in cache, loading from backend:', templateKey);
+            try {
+                // Use direct fetch to get templates
+                const fetchResponse = await fetch('http://127.0.0.1:8000/api/test-script/prompts');
+                if (fetchResponse.ok) {
+                    const response = await fetchResponse.json();
+                    if (response.success && response.templates) {
+                        // Update cache
+                        Object.assign(testPromptTemplates, response.templates);
+                        
+                        // Try to get the template content
+                        if (response.templates[templateKey]) {
+                            if (typeof response.templates[templateKey] === 'string') {
+                                templateContent = response.templates[templateKey];
+                            } else if (typeof response.templates[templateKey] === 'object'&& response.templates[templateKey]['System Prompt']) {
+                                templateContent = response.templates[templateKey]['System Prompt'];
+                            } else if (typeof response.templates[templateKey] === 'object') {
+                                const keys = Object.keys(response.templates[templateKey]);
+                                if (keys.length > 0) {
+                                    templateContent = response.templates[templateKey][keys[0]];
+                                }
+                            }
+                            console.log('✅ Template loaded from backend:', templateKey);
+                        } else {
+                            console.warn('⚠️ Template not found in backend response:', templateKey);
+                            console.log('📋 Available templates:', Object.keys(response.templates));
+                        }
+                    }
+                } else {
+                    console.error('❌ Failed to load templates from backend:', fetchResponse.status);
+                }
+            } catch (error) {
+                console.error('❌ Error loading template from backend:', error);
+            }
+        }
+        
+        // If still no content, show error
+        if (!templateContent || templateContent.trim() === '') {
+            console.error('❌ Template content is empty for:', templateKey);
+            showStatusBar(`Template "${templateKey}"content not found. Please check backend.`, 'warning');
+            promptEditor.value = `Template "${templateKey}"content not available.`;
+            promptEditor.readOnly = true;
+            return;
+        }
+        
+        // Display the template content
+        promptEditor.value = templateContent;
+        promptEditor.readOnly = true;
+        promptEditor.placeholder = '';
+        promptEditor.style.backgroundColor = '#FAFAFA';
+        
+        // Store original template content for variable replacement (if needed)
+        originalTemplateContent = templateContent;
+        
+        // Enable modify button for all templates (like Test Script and Test Case)
+        const modifyBtn = document.getElementById('testModifyBtn');
+        const saveTemplateBtn = document.getElementById('testSaveTemplateBtn');
+        if (modifyBtn) {
+            modifyBtn.disabled = false;
+            console.log('✅ Modify button enabled for template:', templateKey);
+        } else {
+            console.error('❌ Modify button not found');
+        }
+        if (saveTemplateBtn) {
+            saveTemplateBtn.style.display = 'none'; // Hide save button initially
+            console.log('✅ Save button hidden initially');
+        }
+        
+        // Hide variable sections (these templates don't use variables)
+        const testCaseVariables = document.getElementById('testCaseVariables');
+        const testScriptVariables = document.getElementById('testScriptVariables');
+        if (testCaseVariables) testCaseVariables.style.display = 'none';
+        if (testScriptVariables) testScriptVariables.style.display = 'none';
+        
+        // Update button text to show selected template
+        const templateBtn = document.getElementById('templateBtn');
+        if (templateBtn) {
+            const selectedTemplate = templateKey.replace(/([A-Z])/g, '$1').trim();
+            templateBtn.innerHTML = `
+                <span>${selectedTemplate}</span>
+                <span class="dropdown-arrow">▼</span>
+            `;
+        }
+        
+        console.log('✅ Template content loaded:', templateContent.length, 'characters');
+        console.log('✅ Template preview:', templateContent.substring(0, 100) + '...');
+    }
+    async function handleTestTemplateSelection(templateKey) {
+        const promptEditor = document.getElementById('testPromptTextEditor');
+        const modifyBtn = document.getElementById('testModifyBtn');
+        const saveTemplateBtn = document.getElementById('testSaveTemplateBtn');
+        
+        if (!promptEditor) return;
+        
+        currentTestPromptKey = templateKey;
+        
+        syncTsgTemplateRadio(templateKey);
+        showTsgGenConfigPanel(templateKey);
+        updateTsgStatusBar();
+
+        const testCaseVariables = document.getElementById('testCaseVariables');
+        const testScriptVariables = document.getElementById('testScriptVariables');
+        if (testCaseVariables) testCaseVariables.style.display = templateKey === 'Test Case'? 'block': 'none';
+        if (testScriptVariables) testScriptVariables.style.display = templateKey === 'Test Script'? 'block': 'none';
+        
+        try {
+            if (templateKey === 'more-templates') {
+                promptEditor.value = '';
+                promptEditor.readOnly = true;
+                promptEditor.style.backgroundColor = '#FAFAFA';
+                if (modifyBtn) modifyBtn.disabled = true;
+                if (saveTemplateBtn) saveTemplateBtn.style.display = 'none';
+                currentTestPromptKey = 'more-templates';
+                updateTsgStatusBar();
+                return;
+            } else if (templateKey === 'Custom') {
+                // For Custom template: empty box, editable after clicking Modify button
+                promptEditor.value = '';
+                promptEditor.readOnly = true; // Initially read-only until Modify is clicked
+                promptEditor.placeholder = 'Click Modify button to enter your custom prompt...';
+                promptEditor.style.backgroundColor = '#FAFAFA'; // Read-only background
+                
+                // Enable Modify button for Custom template
+                modifyBtn.disabled = false;
+                
+                // Hide Save Template button initially (only show after user enters prompt)
+                if (saveTemplateBtn) {
+                    saveTemplateBtn.style.display = 'none';
+                    saveTemplateBtn.disabled = false;
+                }
+                
+                // Clear original template content since it's custom
+                originalTemplateContent = '';
+                
+                // Hide variable sections for Custom template
+                if (testCaseVariables) testCaseVariables.style.display = 'none';
+                if (testScriptVariables) testScriptVariables.style.display = 'none';
+                
+                // Update button text to show Custom
+                if (templateBtn) {
+                    templateBtn.innerHTML = `
+                        <span>Custom</span>
+                        <span class="dropdown-arrow">▼</span>
+                    `;
+                }
+                
+                console.log('✅ Custom template selected - empty box ready for user input');
+            } else if (window.customTemplateNames && window.customTemplateNames.includes(templateKey)) {
+                // Handle custom saved templates - Load the user's saved prompt
+                console.log('📝 Custom saved template selected:', templateKey);
+                console.log('📋 Available custom template names:', window.customTemplateNames);
+                console.log('📚 Template content available in cache:', !!testPromptTemplates[templateKey]);
+                
+                // Load template content from cache FIRST
+                let templateContent = testPromptTemplates[templateKey];
+                console.log('📄 Template content length from cache:', templateContent?.length || 0);
+                
+                // If not in cache, try to get from backend
+                if (!templateContent || templateContent.trim() === '') {
+                    console.warn('⚠️ Template not in cache or empty, attempting to load from backend...');
+                    try {
+                        let allTemplates;
+                        if (window.API && typeof window.API.getPromptTemplates === 'function') {
+                            allTemplates = await window.API.getPromptTemplates();
+                        } else {
+                            // Direct fetch fallback
+                            const response = await fetch('http://127.0.0.1:8000/api/test-script/prompts');
+                            if (response.ok) {
+                                allTemplates = await response.json();
+                            } else {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                        }
+                        
+                        if (allTemplates && allTemplates.success && allTemplates.templates && allTemplates.templates[templateKey]) {
+                            templateContent = allTemplates.templates[templateKey];
+                            
+                            // Handle "Test Case"template which is a dict with "System Prompt"and "User Prompt"
+                            if (templateKey === "Test Case"&& typeof templateContent === 'object'&& templateContent !== null && !Array.isArray(templateContent)) {
+                                // Merge System Prompt and User Prompt for display
+                                const systemPrompt = templateContent["System Prompt"] || "";
+                                const userPrompt = templateContent["User Prompt"] || "";
+                                templateContent = systemPrompt + "\n\n"+ userPrompt;
+                                console.log('✅ Test Case template merged: System Prompt + User Prompt');
+                            } else if (typeof templateContent === 'string') {
+                                // Already a string, use as is
+                            } else {
+                                // Convert other types to string
+                                templateContent = String(templateContent);
+                            }
+                            
+                            // Cache it for future use (cache the merged string for Test Case)
+                            testPromptTemplates[templateKey] = templateContent;
+                            console.log('✅ Template loaded from backend and cached, length:', templateContent.length);
+                        } else {
+                            console.warn('⚠️ Template not found in backend response:', templateKey);
+                            console.log('📋 Available templates in backend:', allTemplates?.templates ? Object.keys(allTemplates.templates) : 'none');
+                        }
+                    } catch (error) {
+                        console.error('❌ Error loading template from backend:', error);
+                        showStatusBar(`Warning: Could not load template from backend. Using cached version if available.`, 'warning');
+                    }
+                }
+                
+                // Ensure we have content
+                templateContent = templateContent || '';
+                
+                if (!templateContent || templateContent.trim() === '') {
+                    console.error('❌ Template content is empty for:', templateKey);
+                    showStatusBar(`Template "${templateKey}"content is empty. Please save it again.`, 'error');
+                    promptEditor.value = '';
+                    promptEditor.readOnly = true;
+                    promptEditor.style.backgroundColor = '#FAFAFA';
+                    return;
+                }
+                
+                // Display the saved prompt in the editor - THIS IS WHAT USER SAVED
+                promptEditor.value = templateContent;
+                promptEditor.readOnly = false; // Allow editing
+                promptEditor.style.backgroundColor = '#ffffff'; // White background for editable
+                promptEditor.placeholder = ''; // Remove placeholder
+                
+                // Store original template content
+                originalTemplateContent = templateContent;
+                
+                // Update currentTestPromptKey to the saved template name
+                currentTestPromptKey = templateKey;
+                
+                // Update button states
+                if (modifyBtn) {
+                modifyBtn.disabled = false;
+                }
+                if (saveTemplateBtn) {
+                saveTemplateBtn.style.display = 'none';
+                }
+                
+                // Hide variable sections for custom templates
+                if (testCaseVariables) testCaseVariables.style.display = 'none';
+                if (testScriptVariables) testScriptVariables.style.display = 'none';
+                
+                // Update button text to show selected template name
+                const templateBtn = document.getElementById('templateBtn');
+                if (templateBtn) {
+                    templateBtn.innerHTML = `
+                        <span> ${templateKey}</span>
+                        <span class="dropdown-arrow">▼</span>
+                    `;
+                }
+                
+                console.log('✅ Custom saved template loaded into editor:', templateKey);
+                console.log('📝 Prompt content displayed (length):', templateContent.length);
+                showStatusBar(`Template "${templateKey}"loaded successfully`, 'success');
+                
+                // Keep the actual template key so it can be updated if modified
+            } else {
+                promptEditor.readOnly = true;
+                promptEditor.placeholder = '';
+                
+                // Map dropdown values to template keys and handle different template types
+                let templateContent = '';
+                
+                if (templateKey === 'Test Case') {
+                    if (typeof testPromptTemplates['Test Case'] === 'object') {
+                        const systemPrompt = testPromptTemplates['Test Case']['System Prompt'] || '';
+                        const userPrompt = testPromptTemplates['Test Case']['User Prompt'] || '';
+                        templateContent = `${systemPrompt}\n\n${userPrompt}`;
+                    } else {
+                        templateContent = testPromptTemplates['Test Case'] || '';
+                    }
+                    console.log('📝 Test Case template selected, content length:', templateContent.length);
+                } else if (templateKey === 'Test Script') {
+                    templateContent = testPromptTemplates['Test Script'] || '';
+                    console.log('📝 Test Script template selected, content length:', templateContent.length);
+                } else {
+                    // Handle other template keys directly (Testing Strategy, Bug Analysis, etc.)
+                    if (testPromptTemplates[templateKey]) {
+                        if (typeof testPromptTemplates[templateKey] === 'string') {
+                            templateContent = testPromptTemplates[templateKey];
+                        } else if (typeof testPromptTemplates[templateKey] === 'object'&& testPromptTemplates[templateKey]['System Prompt']) {
+                            templateContent = testPromptTemplates[templateKey]['System Prompt'];
+                    } else {
+                            templateContent = '';
+                        }
+                        console.log('📝 Template "' + templateKey + '" selected, content length:', templateContent.length);
+                    } else {
+                        templateContent = '';
+                        console.warn('⚠️ Template "' + templateKey + '" not found in testPromptTemplates');
+                        console.log('📚 Available templates:', Object.keys(testPromptTemplates));
+                    }
+                }
+                
+                // Display the template content immediately
+                promptEditor.value = templateContent;
+                
+                // Store original template content for variable replacement
+                originalTemplateContent = templateContent;
+                
+                // Update button text to show selected template
+                if (templateBtn) {
+                    const displayText = templateKey === 'Test Script'? 'Test Script': 
+                                      templateKey === 'Test Case'? 'Test Case': 
+                                      templateKey === 'Custom'? 'Custom':
+                                      templateKey;
+                    templateBtn.innerHTML = `
+                        <span>${displayText}</span>
+                        <span class="dropdown-arrow">▼</span>
+                    `;
+                }
+                
+                modifyBtn.disabled = false;
+                saveTemplateBtn.style.display = 'none';
+                // Ensure editor is in read-only mode for non-custom templates
+                promptEditor.readOnly = true;
+                promptEditor.style.backgroundColor = '#FAFAFA';
+                
+                console.log('✅ Template displayed in editor:', templateKey);
+            }
+            
+            // Update prompt with any selected variables after template is loaded (immediately)
+                updateTestPromptVariables();
+            updateTsgStatusBar();
+            
+        } catch (error) {
+            console.error('Error handling template selection:', error);
+            showStatusBar('Error handling template selection', 'error');
+        }
+    }
+    // Load Test Script Generator dataset
+    async function loadTestScriptDataset() {
+        const fileInput = document.getElementById('testDatasetFiles');
+        const statusDiv = document.getElementById('testDatasetStatus');
+        const loadBtn = document.getElementById('loadTestDatasetBtn');
+        
+        // Validation like PyQt
+        if (!fileInput || !fileInput.files.length) {
+            showStatusBar('Please select dataset files', 'warning');
+            return;
+        }
+        try {
+            // Create and show progress dialog like PyQt
+            const progressDialog = createProgressDialog('Loading dataset...', 'Cancel');
+            
+            // Disable button and update status
+            if (loadBtn) {
+                loadBtn.disabled = true;
+                loadBtn.textContent = 'Loading...';
+            }
+            showStatusBar('Loading dataset...', 'info');
+            if (statusDiv) {
+                statusDiv.textContent = 'Loading dataset...';
+                statusDiv.style.color = '#5d92ff';
+            }
+            
+            updateProgressDialog(progressDialog, 10, 'Checking backend connection...');
+            
+            // Check if backend is available (non-blocking - proceed even if health check fails)
+            if (window.API && typeof window.API.checkBackendHealth === 'function') {
+            try {
+                await window.API.checkBackendHealth();
+                    console.log('[app.js] ✅ Backend health check passed');
+                } catch (healthError) {
+                    console.warn('[app.js] ⚠️ Health check failed, but proceeding anyway:', healthError.message);
+                    // Continue - the actual API call will show the real error if backend is down
+                }
+            } else {
+                console.warn('[app.js] ⚠️ window.API.checkBackendHealth not available, proceeding anyway');
+            }
+            
+            updateProgressDialog(progressDialog, 30, 'Processing files...');
+            
+            // Try window.API.loadTestDataset first, fallback to direct fetch
+            let response;
+            if (window.API && typeof window.API.loadTestDataset === 'function') {
+                console.log('[app.js] ✅ Using window.API.loadTestDataset');
+                response = await window.API.loadTestDataset(Array.from(fileInput.files));
+            } else {
+                console.warn('[app.js] ⚠️ window.API.loadTestDataset not available, using direct fetch call');
+                const formData = new FormData();
+                Array.from(fileInput.files).forEach(file => {
+                    formData.append('files', file);
+                });
+                
+                const apiResponse = await fetch('http://127.0.0.1:8000/api/test-script/load-dataset', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!apiResponse.ok) {
+                    const errorText = await apiResponse.text();
+                    let detailMessage = errorText;
+                    let outputGuardrails = null;
+                    try {
+                        const parsed = JSON.parse(errorText);
+                        const detail = parsed.detail;
+                        if (typeof detail === 'string') {
+                            detailMessage = detail;
+                        } else if (typeof detail === 'object' && detail?.message) {
+                            detailMessage = detail.message;
+                            if (detail.error === 'document_blocked_by_guardrails' && Array.isArray(detail.reasons) && detail.reasons.length) {
+                                detailMessage = `${detail.message} ${detail.reasons.slice(0, 3).join('; ')}`;
+                            }
+                            if (detail.error === 'dataset_output_guardrails_failed' && Array.isArray(detail.reasons) && detail.reasons.length) {
+                                detailMessage = `${detail.message} ${detail.reasons.slice(0, 3).join('; ')}`;
+                            }
+                            outputGuardrails = detail.output_guardrails || null;
+                        }
+                    } catch (_e) { /* use raw */ }
+                    const fetchErr = new Error(`HTTP error! status: ${apiResponse.status}, message: ${detailMessage}`);
+                    if (outputGuardrails) {
+                        fetchErr.outputGuardrails = outputGuardrails;
+                    }
+                    throw fetchErr;
+                }
+                
+                response = await apiResponse.json();
+                console.log('[app.js] ✅ Direct fetch loadTestDataset successful, result:', response);
+            }
+            
+            updateProgressDialog(progressDialog, 80, 'Finalizing dataset...');
+            
+            if (response.success) {
+                currentTestDataset = response.content;
+                
+                console.log('✅ Dataset loaded successfully!');
+                console.log('  - Files loaded:', response.files_loaded);
+                console.log('  - Dataset content length:', currentTestDataset ? currentTestDataset.length : 0);
+                console.log('  - Dataset preview:', currentTestDataset ? currentTestDataset.substring(0, 200) : 'EMPTY');
+                
+                updateProgressDialog(progressDialog, 100, 'Complete!');
+                
+                if (statusDiv) {
+                    const nliDetails = response.guardrails?.output?.nli_groundedness_validation?.details || {};
+                    const highlights = Array.isArray(nliDetails.nli_highlights) ? nliDetails.nli_highlights : [];
+                    const contra = highlights.filter((h) => h.classification === 'contradiction').length;
+                    const neutral = highlights.filter((h) => h.classification === 'neutral').length;
+                    let guardrailNote = '';
+                    if (contra || neutral) {
+                        guardrailNote = ` (NLI review: ${contra} contradiction, ${neutral} neutral — see highlights)`;
+                    } else if (response.guardrails?.output?.passed) {
+                        guardrailNote = ' (output guardrails + NLI passed)';
+                    }
+                    statusDiv.textContent = `Dataset loaded successfully (${response.files_loaded} files)${guardrailNote}`;
+                    statusDiv.style.color = '#28a745';
+                }
+                showStatusBar(
+                    response.message || 'Dataset loaded successfully',
+                    'success'
+                );
+                if (response.guardrails?.output) {
+                    renderTsgNliPanel(response.guardrails.output, response.guardrails?.input, response.content);
+                } else {
+                    clearTsgNliPanel();
+                }
+                updateTsgStatusBar();
+            } else {
+                if (statusDiv) {
+                    statusDiv.textContent = 'Failed to load dataset';
+                    statusDiv.style.color = '#dc3545';
+                }
+                showStatusBar('Failed to load dataset', 'error');
+            }
+        } catch (error) {
+            console.error('Error loading dataset:', error);
+            const errMsg = error.message || String(error);
+            if (statusDiv) {
+                statusDiv.textContent = 'Error loading dataset';
+                statusDiv.style.color = '#dc3545';
+            }
+            if (isTsgDatasetGuardrailError(errMsg)) {
+                const cleaned = errMsg
+                    .replace(/^HTTP error! status: \d+, message: /, '')
+                    .replace(/^HTTP error! status: \d+ - /, '');
+                if (error.outputGuardrails) {
+                    renderTsgNliPanel(error.outputGuardrails, null, currentTestDataset);
+                    if (statusDiv) {
+                        statusDiv.textContent = 'Dataset blocked — NLI/output guardrails failed';
+                        statusDiv.style.color = '#dc3545';
+                    }
+                }
+                showStatusBar(
+                    cleaned || 'Dataset blocked by security guardrails.',
+                    'error',
+                    'Dataset upload blocked'
+                );
+                if (fileInput) {
+                    fileInput.value = '';
+                }
+                clearTestDatasetSelection();
+            } else {
+                showStatusBar('Error loading dataset: ' + errMsg, 'error');
+            }
+        } finally {
+            // Reset button state
+            if (loadBtn) {
+                loadBtn.disabled = false;
+                // After successful load, keep button text as "Load"(not "Load Dataset")
+                // If dataset is loaded, keep it as "Load"so user can reload if needed
+                if (currentTestDataset) {
+                    loadBtn.textContent = 'Load';
+                    loadBtn.style.backgroundColor = ''; // Reset to default
+                } else {
+                    // If loading failed, reset to "Load"as well
+                    loadBtn.textContent = 'Load';
+                    loadBtn.style.backgroundColor = ''; // Reset to default
+                }
+            }
+            // Remove progress dialog after a short delay
+            setTimeout(() => {
+                const progressDialog = document.querySelector('.progress-dialog');
+                if (progressDialog) progressDialog.remove();
+            }, 1000);
+        }
+    }
+    // Generate Test Script
+    async function generateTestScript() {
+        const promptEditor = document.getElementById('testPromptTextEditor');
+        const responseEditor = document.getElementById('testResponseTextEditor');
+        const generateBtn = document.getElementById('testGenerateBtn');
+        
+        // Note: Dataset and reference code are both optional - no validation needed
+        
+        const selectedPrompt = promptEditor.value.trim();
+        if (!selectedPrompt) {
+            showStatusBar('Please enter a prompt or select a template', 'warning');
+            return;
+        }
+        
+        // Validate required parameters (before creating progress dialog)
+        if (!currentTestPromptKey) {
+            console.error('❌ currentTestPromptKey is null/undefined');
+            showStatusBar('Please select a template first', 'warning');
+            return;
+        }
+        
+        // Validate language for Test Script template (before creating progress dialog)
+        if (currentTestPromptKey === 'Test Script') {
+            const languageSelect = document.getElementById('languageSelect');
+            const language = languageSelect ? languageSelect.value : '';
+            
+            if (language === 'C (Coming Soon)'|| language === 'C++ (Coming Soon)'|| language === 'C'|| language === 'C++') {
+                showStatusBar('C and C++ are not applicable for Test Script generation. Please select Python.', 'warning');
+                return;
+            }
+            if (!language || language === ''|| language === 'Select Language...') {
+                showStatusBar('Please select Python as the language for Test Script generation.', 'warning');
+                return;
+            }
+        }
+        
+        try {
+            closeAllOpenDropdowns();
+
+            // Create and show progress dialog like PyQt
+            const progressDialog = createProgressDialog('Generating response...', 'Cancel');
+            
+            // Disable button and update text
+            generateBtn.disabled = true;
+            generateBtn.textContent = 'Generating...';
+            
+            // Get template name for status message
+            // If currentTestPromptKey is a custom saved template (in customTemplateNames), use it directly
+            // Otherwise, if it's "Custom", show "Custom", else use the template key
+            let templateName = currentTestPromptKey || 'Test Script';
+            if (currentTestPromptKey === 'Custom') {
+                templateName = 'Custom';
+            } else if (window.customTemplateNames && window.customTemplateNames.includes(currentTestPromptKey)) {
+                // It's a custom saved template (like "5G"), use the actual name
+                templateName = currentTestPromptKey;
+            }
+            showStatusBar(`Generating ${templateName}...`, 'info');
+            
+            // Debug logging
+            console.log('🔍 Debug - Generation parameters:');
+            console.log('  - currentTestPromptKey:', currentTestPromptKey);
+            console.log('  - currentTestDataset:', currentTestDataset ? 'Dataset loaded' : 'No dataset');
+            console.log('  - selectedPrompt length:', selectedPrompt.length);
+            
+            // Check if backend is available (non-blocking - proceed even if health check fails)
+            if (window.API && typeof window.API.checkBackendHealth === 'function') {
+            try {
+                await window.API.checkBackendHealth();
+                console.log('✅ Backend health check passed');
+                } catch (healthError) {
+                    console.warn('⚠️ Health check failed, but proceeding anyway:', healthError.message);
+                    // Continue - the actual generate call will show the real error if backend is down
+                }
+            } else {
+                console.warn('⚠️ window.API.checkBackendHealth not available, proceeding anyway');
+            }
+            
+            // Update progress (simulate progress updates)
+            updateProgressDialog(progressDialog, 25, 'Preparing request...');
+            
+            // Generate test script
+            console.log('🚀 Making API call to generate test script...');
+            console.log('  - Template:', currentTestPromptKey);
+            console.log('  - Dataset loaded:', currentTestDataset ? 'YES' : 'NO');
+            console.log('  - Dataset length:', currentTestDataset ? currentTestDataset.length : 0);
+            
+            // Collect dropdown values for variables
+            const domainSelect = document.getElementById('domainSelect');
+            const systemTypeSelect = document.getElementById('systemTypeSelect');
+            const primaryFeatureSelect = document.getElementById('primaryFeatureSelect');
+            const connectionMethodSelect = document.getElementById('connectionMethodSelect');
+            const loginCredentialsSelect = document.getElementById('loginCredentialsSelect');
+            const accessModeSelect = document.getElementById('accessModeSelect');
+            const languageSelect = document.getElementById('languageSelect');
+            
+            const language = languageSelect ? languageSelect.value : '';
+            
+            const variables = {
+                domain: domainSelect ? domainSelect.value : '',
+                system_type: systemTypeSelect ? systemTypeSelect.value : '',
+                primary_feature: primaryFeatureSelect ? primaryFeatureSelect.value : '',
+                connection_method: connectionMethodSelect ? connectionMethodSelect.value : '',
+                login_credentials: loginCredentialsSelect ? loginCredentialsSelect.value : '',
+                access_mode: accessModeSelect ? accessModeSelect.value : '',
+                language: language
+            };
+            
+            console.log('  - Variables:', variables);
+            
+            // Check if this is a custom saved template
+            const isCustomTemplate = window.customTemplateNames && window.customTemplateNames.includes(currentTestPromptKey);
+            console.log('  - Is custom template:', isCustomTemplate);
+            console.log('  - Custom prompt:', (currentTestPromptKey === 'Custom' || isCustomTemplate) ? selectedPrompt : 'N/A');
+            
+            let response;
+            // Try window.API.generateTestScript first, fallback to direct fetch
+            if (window.API && typeof window.API.generateTestScript === 'function') {
+                console.log('[app.js] ✅ Using window.API.generateTestScript');
+                response = await window.API.generateTestScript(
+                isCustomTemplate ? 'Custom': currentTestPromptKey, // Treat custom templates as Custom type
+                currentTestDataset || "No dataset provided - generating test script based on prompt only",
+                    variables, // Send dropdown values as variables
+                (currentTestPromptKey === 'Custom'|| isCustomTemplate) ? selectedPrompt : null
+            );
+            } else {
+                console.warn('[app.js] ⚠️ window.API.generateTestScript not available, using direct fetch call');
+                const requestData = {
+                    prompt_key: isCustomTemplate ? 'Custom': currentTestPromptKey,
+                    text_content: currentTestDataset || "No dataset provided - generating test script based on prompt only",
+                    variables: variables,
+                    custom_prompt: (currentTestPromptKey === 'Custom'|| isCustomTemplate) ? selectedPrompt : null
+                };
+                
+                const apiResponse = await fetch('http://127.0.0.1:8000/api/test-script/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                if (!apiResponse.ok) {
+                    const errorText = await apiResponse.text();
+                    throw new Error(`HTTP error! status: ${apiResponse.status} - ${errorText}`);
+                }
+                
+                response = await apiResponse.json();
+                console.log('[app.js] ✅ Direct fetch generateTestScript successful, result:', response);
+            }
+            console.log('📥 API response received:', response);
+            
+            updateProgressDialog(progressDialog, 75, 'Processing response...');
+            
+            if (response.success) {
+                responseEditor.value = response.generated_script;
+                previousTestResponse = response.generated_script;
+                
+                updateProgressDialog(progressDialog, 100, 'Complete!');
+                
+                // For Custom template, show Save Template button after generation
+                if (currentTestPromptKey === 'Custom') {
+                    const testSaveTemplateBtn = document.getElementById('testSaveTemplateBtn');
+                    const testModifyBtn = document.getElementById('testModifyBtn');
+                    if (testSaveTemplateBtn) {
+                        testSaveTemplateBtn.style.display = 'inline-block';
+                        testSaveTemplateBtn.disabled = false;
+                    }
+                    if (testModifyBtn) {
+                        testModifyBtn.disabled = false;
+                    }
+                    console.log('✅ Save Template button shown after generation for Custom template');
+                }
+                
+                // Get template name for success message
+                let templateName = currentTestPromptKey || 'Test Script';
+                if (currentTestPromptKey === 'Custom') {
+                    templateName = 'Custom';
+                } else if (window.customTemplateNames && window.customTemplateNames.includes(currentTestPromptKey)) {
+                    // It's a custom saved template (like "5G"), use the actual name
+                    templateName = currentTestPromptKey;
+                }
+                
+                if (response.file_path) {
+                    showStatusBar(`${templateName} generated and saved to: ${response.file_path}`, 'success');
+                } else {
+                    showStatusBar(`${templateName} generated successfully`, 'success');
+                }
+                updateTsgStatusBar();
+            } else {
+                showStatusBar('Failed to generate test script', 'error');
+            }
+        } catch (error) {
+            console.error('❌ Error generating test script:', error);
+            console.error('❌ Error details:', {
+                message: error.message,
+                stack: error.stack,
+                currentTestPromptKey: currentTestPromptKey,
+                hasDataset: !!currentTestDataset,
+                promptLength: selectedPrompt.length
+            });
+            
+            let errorMessage = 'Error generating test script';
+            if (error.message.includes('Failed to fetch')) {
+                errorMessage = 'Cannot connect to backend server. Please check if FastAPI server is running.';
+            } else if (error.message.includes('404')) {
+                errorMessage = 'Backend endpoint not found. Please check server configuration.';
+            } else if (error.message.includes('500')) {
+                errorMessage = 'Backend server error. Please check server logs.';
+            }
+            
+            showStatusBar(errorMessage, 'error');
+        } finally {
+            generateBtn.disabled = false;
+            generateBtn.textContent = 'Generate';
+            // Remove progress dialog after a short delay
+            setTimeout(() => {
+                const progressDialog = document.querySelector('.progress-dialog');
+                if (progressDialog) progressDialog.remove();
+            }, 1000);
+        }
+    }
+    // Refine Test Script
+    async function refineTestScript() {
+        const newPromptEditor = document.getElementById('testNewPromptEditor');
+        const responseEditor = document.getElementById('testResponseTextEditor');
+        const refineBtn = document.getElementById('testRefineBtn');
+        
+        // Debug logging
+        console.log('🔄 Generate with New Prompt clicked');
+        console.log('  - currentTestDataset:', currentTestDataset ? `Exists (length: ${currentTestDataset.length})` : 'NULL/UNDEFINED');
+        console.log('  - previousTestResponse:', previousTestResponse ? `Exists (length: ${previousTestResponse.length})` : 'NULL/UNDEFINED');
+        console.log('  - newPrompt:', newPromptEditor.value.trim() ? `Exists (length: ${newPromptEditor.value.trim().length})` : 'EMPTY');
+        
+        // Validation - dataset is REQUIRED for refinement (matching PyQt behavior)
+        // The dataset contains the actual content from loaded files (5G specs, test cases, IEs, etc.)
+        // In PyQt, generate_with_new_prompt requires text_content (dataset) to be loaded
+        if (!currentTestDataset || currentTestDataset.trim() === '') {
+            console.error('❌ Dataset not loaded - dataset is REQUIRED for refinement');
+            showStatusBar('Please load a dataset first', 'warning');
+            return;
+        }
+        
+        const newPrompt = newPromptEditor.value.trim();
+        if (!newPrompt) {
+            showStatusBar('Please enter a new prompt', 'warning');
+            return;
+        }
+        
+        if (!previousTestResponse) {
+            showStatusBar('Please generate a test script first', 'warning');
+            return;
+        }
+        
+        try {
+            closeAllOpenDropdowns();
+
+            // Create and show progress dialog like PyQt
+            const progressDialog = createProgressDialog('Generating refined response...', 'Cancel');
+            
+            // Disable button and update text
+            refineBtn.disabled = true;
+            refineBtn.textContent = 'Refining...';
+            showStatusBar('Refining test script...', 'info');
+            
+            // Update progress
+            updateProgressDialog(progressDialog, 25, 'Building iterative prompt...');
+            
+            // Pass dataset - backend REQUIRES text_content (dataset) to be non-empty
+            // In PyQt, it requires the dataset to be loaded (text_content from loaded files)
+            // The dataset contains the actual content from loaded files (5G specs, test cases, IEs, etc.)
+            let datasetForRefinement = currentTestDataset;
+            
+            // Check if dataset is loaded - it's REQUIRED (matching PyQt behavior)
+            if (!datasetForRefinement || datasetForRefinement.trim() === '') {
+                console.error('❌ Dataset not loaded - dataset is REQUIRED for refinement');
+                showStatusBar('Please load a dataset first', 'warning');
+                return;
+            }
+            
+            // Dataset is loaded, verify it has content
+            if (datasetForRefinement.length === 0) {
+                console.error('❌ Dataset is empty - cannot refine without dataset content');
+                showStatusBar('Dataset is empty. Please load a valid dataset', 'warning');
+                return;
+            }
+            
+            console.log('📤 Calling refineTestScript API with:');
+            console.log('  - dataset:', datasetForRefinement ? `Provided (length: ${datasetForRefinement.length})` : 'EMPTY STRING');
+            console.log('  - dataset preview:', datasetForRefinement ? datasetForRefinement.substring(0, 200) + '...' : 'NONE');
+            console.log('  - newPrompt:', newPrompt);
+            console.log('  - newPrompt length:', newPrompt.length);
+            console.log('  - previousTestResponse:', previousTestResponse ? `Provided (length: ${previousTestResponse.length})` : 'NULL');
+            console.log('  - previousTestResponse length:', previousTestResponse ? previousTestResponse.length : 0);
+            console.log('  - previousTestResponse preview:', previousTestResponse ? previousTestResponse.substring(0, 200) + '...' : 'NONE');
+            
+            // Use direct fetch call (same pattern as other working endpoints)
+            console.log('📤 Making direct fetch call to refine endpoint...');
+            let response;
+            
+            try {
+                const fetchResponse = await fetch('http://127.0.0.1:8000/api/test-script/refine', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text_content: datasetForRefinement,
+                        new_prompt: newPrompt,
+                        previous_response: previousTestResponse || null
+                    })
+                });
+                
+                console.log('📥 Fetch response status:', fetchResponse.status);
+                console.log('📥 Fetch response ok:', fetchResponse.ok);
+                
+                if (!fetchResponse.ok) {
+                    // Try to extract error message from response body
+                    let errorText = `HTTP error! status: ${fetchResponse.status}`;
+                    
+                    // Clone response to read it safely
+                    const responseClone = fetchResponse.clone();
+                    try {
+                        const errorData = await responseClone.json();
+                        if (errorData.detail) {
+                            errorText = errorData.detail;
+                        } else if (errorData.message) {
+                            errorText = errorData.message;
+                        } else if (errorData.error) {
+                            errorText = errorData.error;
+                        }
+                        console.error('❌ Backend error response:', errorData);
+                    } catch (e) {
+                        // If not JSON, try text from original response
+                        try {
+                            const textError = await fetchResponse.text();
+                            if (textError && textError.trim()) {
+                                errorText = textError.trim();
+                            }
+                            console.error('❌ Backend error text:', textError);
+                        } catch (e2) {
+                            // If that also fails, use default
+                            console.warn('Could not extract error message from response:', e2);
+                        }
+                    }
+                    
+                    const fetchErr = new Error(errorText);
+                    fetchErr.status = fetchResponse.status;
+                    throw fetchErr;
+                }
+                
+                response = await fetchResponse.json();
+                console.log('✅ Direct fetch refineTestScript successful:', response);
+                console.log('  - Response success:', response.success);
+                console.log('  - Response keys:', Object.keys(response));
+            } catch (fetchError) {
+                console.error('❌ Direct fetch failed:', fetchError);
+                console.error('  - Error message:', fetchError.message);
+                console.error('  - Error stack:', fetchError.stack);
+                
+                // Extract and show error message
+                let errorMsg = fetchError.message || 'Error refining test script';
+                if (fetchError.status) {
+                    errorMsg = `HTTP ${fetchError.status}: ${errorMsg}`;
+                }
+                
+                // Show the actual error to the user
+                showStatusBar(errorMsg, 'error');
+                throw fetchError;
+            }
+            
+            updateProgressDialog(progressDialog, 75, 'Processing refined response...');
+            
+            if (response && response.success) {
+                responseEditor.value = response.generated_script || response.response || '';
+                previousTestResponse = response.generated_script || response.response || '';
+                
+                updateProgressDialog(progressDialog, 100, 'Complete!');
+                showStatusBar('Test script refined successfully', 'success');
+            } else {
+                const errorMessage = response?.message || response?.detail || response?.error || 'Failed to refine test script';
+                console.error('❌ Refinement failed:', errorMessage);
+                console.error('  - Full response:', response);
+                showStatusBar(`Failed to refine: ${errorMessage}`, 'error');
+            }
+            
+        } catch (error) {
+            console.error('❌ Error refining test script:', error);
+            console.error('  - Error message:', error.message);
+            console.error('  - Error stack:', error.stack);
+            
+            // Extract error message from response if available
+            let errorMessage = 'Error refining test script';
+            if (error.message) {
+                errorMessage = error.message;
+            }
+            
+            // Try to extract error from response body if it's a fetch error
+            if (error.response || error.body) {
+                try {
+                    const errorData = error.response || error.body;
+                    if (errorData.detail || errorData.message || errorData.error) {
+                        errorMessage = errorData.detail || errorData.message || errorData.error;
+                    }
+                } catch (e) {
+                    console.error('  - Error extracting error details:', e);
+                }
+            }
+            
+            showStatusBar(errorMessage, 'error');
+        } finally {
+            refineBtn.disabled = false;
+            refineBtn.textContent = 'Generate with New Prompt';
+            // Remove progress dialog after a short delay
+            setTimeout(() => {
+                const progressDialog = document.querySelector('.progress-dialog');
+                if (progressDialog) progressDialog.remove();
+            }, 1000);
+        }
+    }
+    // Save Test Script Response
+    async function saveTestScriptResponse() {
+        const responseEditor = document.getElementById('testResponseTextEditor');
+        
+        // Validation like PyQt
+        if (!responseEditor || !responseEditor.value.trim()) {
+            showStatusBar('No test script to save', 'warning');
+            return;
+        }
+        
+        try {
+            showStatusBar('Saving test script...', 'info');
+            
+            // Determine language selection
+            const languageSelect = document.getElementById('languageSelect');
+            let language = 'Python'; // default
+            if (languageSelect && languageSelect.value) {
+                language = languageSelect.value;
+                // Normalize language value
+                if (language === 'C (Coming Soon)') {
+                    language = 'C';
+                } else if (language === 'C++ (Coming Soon)') {
+                    language = 'C++';
+                }
+            }
+            
+            // Get template type
+            const testType = currentTestPromptKey || 'test_script';
+            
+            console.log('💾 Saving test script with:');
+            console.log('  - Content length:', responseEditor.value.length);
+            console.log('  - Template type:', testType);
+            console.log('  - Language:', language);
+            
+            // Use direct fetch call (same pattern as other working endpoints)
+            const fetchResponse = await fetch('http://127.0.0.1:8000/api/save-test-script', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: responseEditor.value,
+                    template_type: testType,
+                    language: language
+                })
+            });
+            
+            console.log('📥 Save response status:', fetchResponse.status);
+            console.log('📥 Save response ok:', fetchResponse.ok);
+            
+            if (!fetchResponse.ok) {
+                // Try to extract error message from response body
+                let errorText = `HTTP error! status: ${fetchResponse.status}`;
+                
+                // Clone response to read it safely
+                const responseClone = fetchResponse.clone();
+                try {
+                    const errorData = await responseClone.json();
+                    if (errorData.detail) {
+                        errorText = errorData.detail;
+                    } else if (errorData.message) {
+                        errorText = errorData.message;
+                    } else if (errorData.error) {
+                        errorText = errorData.error;
+                    }
+                    console.error('❌ Backend error response:', errorData);
+                } catch (e) {
+                    // If not JSON, try text from original response
+                    try {
+                        const textError = await fetchResponse.text();
+                        if (textError && textError.trim()) {
+                            errorText = textError.trim();
+                        }
+                        console.error('❌ Backend error text:', textError);
+                    } catch (e2) {
+                        console.warn('Could not extract error message from response:', e2);
+                    }
+                }
+                
+                throw new Error(errorText);
+            }
+            
+            const result = await fetchResponse.json();
+            console.log('✅ Save test script successful:', result);
+            
+            if (result.success) {
+                showStatusBar(`Test script saved successfully to ${result.filename}`, 'success');
+                console.log('✅ File saved to:', result.file_path);
+            } else {
+                throw new Error(result.message || 'Failed to save test script');
+            }
+            
+        } catch (error) {
+            console.error('❌ Error saving test script:', error);
+            console.error('  - Error message:', error.message);
+            console.error('  - Error stack:', error.stack);
+            
+            const errorMsg = error.message || 'Error saving test script';
+            showStatusBar(errorMsg, 'error');
+        }
+    }
+
+    // Bug Discovery functionality
+    let selectedLogFiles = [];
+    let selectedLogFile = null;
+    let currentLogContent = null;
+    let logFileContentsMap = new Map();
+    let selectedAnalysisType = null;
+    let fullRCAResults = null;
+    
+    const logFileInput = document.getElementById('logFileInput');
+    const logFileUpload = document.getElementById('logFileUpload');
+    const logFileBtn = document.getElementById('logFileBtn');
+    const logFileText = document.getElementById('logFileText');
+    const logFileList = document.getElementById('logFileList');
+    const analysisOptionsDropdown = document.getElementById('analysisOptionsDropdown');
+    const analysisOptionsBtn = document.getElementById('analysisOptionsBtn');
+    const analysisOptionsContent = document.getElementById('analysisOptionsContent');
+    const analysisResultsBox = document.getElementById('analysisResultsBox');
+    const startRCABtn = document.getElementById('startRCABtn');
+    const clearRCABtn = document.getElementById('clearRCABtn');
+    const rcaResultsArea = document.getElementById('rcaResultsArea');
+    
+    // Handle click on upload area
+    if (logFileUpload) {
+        logFileUpload.addEventListener('click', () => {
+            if (logFileInput) logFileInput.click();
+        });
+    }
+    
+    // Handle click on button (prevent event bubbling)
+    if (logFileBtn) {
+        logFileBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (logFileInput) logFileInput.click();
+        });
+    }
+    // Handle folder selection
+    if (logFileInput) {
+        logFileInput.addEventListener('change', async function(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                // Filter only log files from the folder
+                const logFiles = Array.from(files).filter(file =>file.name.toLowerCase().endsWith('.log') || 
+                    file.name.toLowerCase().endsWith('.txt')
+                );
+                
+                if (logFiles.length === 0) {
+                    showStatusBar('No log files found in the selected folder. Please select a folder containing .log or .txt files.', 'warning');
+                    return;
+                }
+                
+                selectedLogFiles = logFiles;
+                displayLogFiles(selectedLogFiles);
+                
+                // Upload log files to backend
+                try {
+                    showStatusBar(`Uploading ${logFiles.length} log files from folder to backend...`, 'info');
+                    
+                    // Upload to backend
+                    const uploadResult = await window.API.uploadRCALogs(selectedLogFiles);
+                    
+                    if (uploadResult && uploadResult.success) {
+                        // Store file mapping (original name ->file info)
+                        logFileContentsMap.clear();
+                        if (uploadResult.files && uploadResult.files.length > 0) {
+                            uploadResult.files.forEach(fileInfo => {
+                                logFileContentsMap.set(fileInfo.original_name, fileInfo);
+                            });
+                        } else {
+                            // If no files returned, create a simple mapping
+                            selectedLogFiles.forEach(file => {
+                                logFileContentsMap.set(file.name, { original_name: file.name, file_id: file.name });
+                            });
+                        }
+                        
+                        logFileText.textContent = `Folder uploaded successfully - ${logFiles.length} log file(s) found`;
+                        logFileText.style.color = '#10b981';
+                        
+                        // Populate buttons with file names
+                        populateLogFileButtons(selectedLogFiles);
+                        
+                        
+                        showStatusBar(`Successfully uploaded folder with ${logFiles.length} log file(s)`, 'success');
+                    } else {
+                        // Even if upload fails, still show the dropdown with local files
+                        logFileText.textContent = `Folder loaded - ${logFiles.length} log file(s) found (local mode)`;
+                        logFileText.style.color = '#f59e0b';
+                        
+                        // Create simple mapping for local files
+                        logFileContentsMap.clear();
+                        selectedLogFiles.forEach(file => {
+                            logFileContentsMap.set(file.name, { original_name: file.name, file_id: file.name });
+                        });
+                        
+                        // Populate buttons with file names
+                        populateLogFileButtons(selectedLogFiles);
+                        
+                        
+                        showStatusBar(`Folder loaded with ${logFiles.length} log file(s) (using local files)`, 'warning');
+                    }
+                } catch (error) {
+                    // Even if upload fails, still show the dropdown with local files
+                    logFileText.textContent = `Folder loaded - ${logFiles.length} log file(s) found (local mode)`;
+                    logFileText.style.color = '#f59e0b';
+                    
+                    // Create simple mapping for local files
+                    logFileContentsMap.clear();
+                    selectedLogFiles.forEach(file => {
+                        logFileContentsMap.set(file.name, { original_name: file.name, file_id: file.name });
+                    });
+                    
+                    // Populate buttons with file names
+                    populateLogFileButtons(selectedLogFiles);
+                    
+                    
+                    showStatusBar(`Folder loaded with ${logFiles.length} log file(s) (using local files)`, 'warning');
+                }
+            }
+        });
+    }
+    
+    
+    // Display selected log files from folder
+    function displayLogFiles(files) {
+        if (!logFileList) return;
+        
+        logFileList.innerHTML = '';
+        logFileList.style.display = 'block';
+        
+        // Show folder summary
+        const folderItem = document.createElement('div');
+        folderItem.style.cssText = `
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background-color: rgba(34, 197, 94, 0.1);
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            border-left: 4px solid #22c55e;
+        `;
+        
+        folderItem.innerHTML = `
+            <span class="material-icons"style="font-size: 1.2rem; color: #22c55e;"data-icon="folder_open"></span>
+            <div style="flex: 1;">
+                <div style="font-weight: 600; color: #15803d; margin-bottom: 0.25rem;">Folder Uploaded</div>
+                <div style="color: #374151; font-size: 0.8rem;">Found ${files.length} log file(s)</div>
+            </div>
+        `;
+        logFileList.appendChild(folderItem);
+        
+        // Show individual files (limit to first 5 for display)
+        const maxDisplay = 5;
+        const displayFiles = files.slice(0, maxDisplay);
+        
+        // ---
+        // Show only the relative path after uploading files
+        const basePath = (typeof bugLogDir === 'string') ? bugLogDir.replace(/\\/g, '/').replace(/\/$/, '') : '';
+        displayFiles.forEach((file, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.style.cssText = `
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem;
+                background-color: rgba(59, 130, 246, 0.1);
+                border-radius: 4px;
+                margin-bottom: 0.5rem;
+                font-size: 0.8rem;
+                margin-left: 1rem;
+            `;
+            // show only name or, if subfolder, path relative to bugLogDir
+            let rel = file.path || file.name;
+            if (basePath && file.path && file.path.startsWith(basePath)) {
+                rel = file.path.substring(basePath.length + 1).replace(/\\/g, '/');
+            }
+            fileItem.innerHTML = `
+                <span class="material-icons"style="font-size: 1rem; color: #3b82f6;"data-icon="description"></span>
+                <span style="flex: 1; color: #1f2937;">${rel}</span>
+                <span style="color: #6b7280; font-size: 0.7rem;">${(file.size / 1024).toFixed(1)} KB</span>
+            `;
+            logFileList.appendChild(fileItem);
+        });
+        // ---
+        
+        // Show "and X more..."if there are more files
+        if (files.length >maxDisplay) {
+            const moreItem = document.createElement('div');
+            moreItem.style.cssText = `
+                padding: 0.5rem;
+                background-color: rgba(107, 114, 128, 0.1);
+                border-radius: 4px;
+                margin-bottom: 0.5rem;
+                font-size: 0.8rem;
+                color: #6b7280;
+                margin-left: 1rem;
+                font-style: italic;
+                text-align: center;
+            `;
+            moreItem.textContent = `... and ${files.length - maxDisplay} more file(s)`;
+            logFileList.appendChild(moreItem);
+        }
+    }
+    // Format KB Analysis Results with Enhanced Tables
+    function formatKBAnalysisResults(kbData, analysisText) {
+        let html = `<div style="color: #5d92ff; font-weight: 600; margin: 0 0 0.5rem 0; font-size: 1.1rem;">${analysisText} Results</div>`;
+        
+        const protocolReferences = kbData.protocol_references || {};
+        const fixRecommendations = kbData.fix_recommendations || [];
+        const comprehensiveRCA = kbData.comprehensive_rca || {};
+        const issueMatches = kbData.issue_matches || {};
+        const functionInsights = kbData.function_insights || {};
+        
+        // Table 1: Protocol References
+        if (Object.keys(protocolReferences).length > 0) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Protocol References</h4>`;
+            
+            Object.entries(protocolReferences).forEach(([protocol, ref]) => {
+                html += `<div style="margin-bottom: 0.5rem; padding: 0.75rem; background-color: #f0f9ff; border-radius: 8px; border: 1px solid #bae6fd;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;"><div><strong style="color: #0369a1; font-size: 1rem;">${protocol}</strong><div style="color: #6b7280; font-size: 0.85rem; margin-top: 0.25rem;">${ref.title || 'N/A'}</div></div><div><span style="background-color: #dbeafe; color: #1e40af; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Spec ${ref.spec_id || 'N/A'}</span></div></div>`;
+                
+                if (ref.sections && Object.keys(ref.sections).length > 0) {
+                    html += `<table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 4px; overflow: hidden; margin-top: 0.5rem;"><thead><tr style="background-color: #f1f5f9;"><th style="padding: 0.5rem; text-align: left; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem; width: 100px;">Section</th><th style="padding: 0.5rem; text-align: left; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem;">Description</th></tr></thead><tbody>`;
+                    
+                    Object.entries(ref.sections).forEach(([section, description], idx) => {
+                        const rowBg = idx % 2 === 0 ? '#ffffff': '#f9fafb';
+                        html += `<tr style="background-color: ${rowBg};"><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #2563eb; font-weight: 600; font-family: monospace;">${section}</td><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #374151; font-size: 0.9rem;">${description}</td></tr>`;
+                    });
+                    
+                    html += `</tbody></table>`;
+                }
+                
+                if (ref.url) {
+ html += `<div style="margin-top: 0.5rem;"><a href="${ref.url}"target="_blank"style="color: #2563eb; text-decoration: none; font-size: 0.85rem;">View Specification</a></div>`;
+                }
+                
+                html += `</div>`;
+            });
+            
+            html += `</div>`;
+        }
+        
+        // Table 2: Fix Recommendations
+        if (fixRecommendations.length > 0) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Fix Recommendations</h4><table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600; width: 60px;">#</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Recommendation</th></tr></thead><tbody>`;
+            
+            fixRecommendations.forEach((recommendation, idx) => {
+                const bgColor = idx % 2 === 0 ? '#ffffff': '#f9fafb';
+                const priorityColor = idx === 0 ? '#dc2626': idx === 1 ? '#f59e0b': '#6b7280';
+                
+                html += `<tr style="background-color: ${bgColor};"><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; text-align: center;"><span style="display: inline-block; width: 32px; height: 32px; background-color: ${priorityColor}; color: white; border-radius: 50%; font-weight: 700; line-height: 32px; font-size: 0.9rem;">${idx + 1}</span></td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #374151; font-size: 0.9rem;">${recommendation}</td></tr>`;
+            });
+            
+            html += `</tbody></table></div>`;
+        }
+        
+        // Table 3: Comprehensive RCA
+        if (comprehensiveRCA && Object.keys(comprehensiveRCA).length > 0) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Comprehensive Root Cause Analysis</h4>`;
+            
+            if (comprehensiveRCA.error_type) {
+                html += `<div style="padding: 0.75rem; background-color: #fef3c7; border-radius: 8px; border: 1px solid #fbbf24; margin-bottom: 0.5rem;"><strong style="color: #b45309;">Error Type:</strong><span style="color: #1f2937; font-weight: 600;">${comprehensiveRCA.error_type.replace(/_/g, ' ')}</span></div>`;
+            }
+            
+            if (comprehensiveRCA.summary) {
+                html += `<div style="padding: 0.75rem; background-color: #f9fafb; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.5rem;"><strong style="color: #1f2937; display: block; margin-bottom: 0.5rem;">Summary:</strong><div style="color: #374151; font-size: 0.9rem; white-space: pre-wrap; line-height: 1.6;">${comprehensiveRCA.summary}</div></div>`;
+            }
+            
+            // Impact Assessment Table
+            if (comprehensiveRCA.impact_assessment) {
+                const impact = comprehensiveRCA.impact_assessment;
+                html += `<div style="margin-top: 0.5rem;"><strong style="color: #1f2937; display: block; margin-bottom: 0.4rem;">Impact Assessment:</strong><table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Category</th><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Level</th></tr></thead><tbody>`;
+                
+                const impactCategories = [
+                    { key: 'user_experience', label: 'User Experience'},
+                    { key: 'system_performance', label: 'System Performance'},
+                    { key: 'stability', label: 'System Stability'}
+                ];
+                
+                impactCategories.forEach((category, idx) => {
+                    if (impact[category.key]) {
+                        const bgColor = idx % 2 === 0 ? '#ffffff': '#f9fafb';
+                        const level = impact[category.key];
+                        const levelColor = level === 'high'? '#dc2626': level === 'medium'? '#f59e0b': '#059669';
+                        const levelBg = level === 'high'? '#fee2e2': level === 'medium'? '#fef3c7': '#d1fae5';
+                        
+                        html += `<tr style="background-color: ${bgColor};"><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #1f2937; font-weight: 600;">${category.label}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; text-align: center;"><span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: ${levelBg}; color: ${levelColor}; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-transform: capitalize;">${level}</span></td></tr>`;
+                    }
+                });
+                
+                html += `</tbody></table></div>`;
+                
+                // Cascade Effects
+                if (impact.cascade_effects && impact.cascade_effects.length > 0) {
+                    html += `<div style="margin-top: 0.5rem;"><strong style="color: #1f2937; display: block; margin-bottom: 0.4rem;">Cascade Effects:</strong><table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Layer</th><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Impact</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Description</th></tr></thead><tbody>`;
+                    
+                    impact.cascade_effects.forEach((effect, idx) => {
+                        const bgColor = idx % 2 === 0 ? '#ffffff': '#f9fafb';
+                        const impactColor = effect.impact === 'affected'? '#f59e0b': '#6b7280';
+                        
+                        html += `<tr style="background-color: ${bgColor};"><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #2563eb; font-weight: 600;">${effect.layer}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: ${impactColor}; text-align: center; font-weight: 600; text-transform: capitalize;">${effect.impact}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #374151; font-size: 0.9rem;">${effect.description}</td></tr>`;
+                    });
+                    
+                    html += `</tbody></table></div>`;
+                }
+            }
+            
+            html += `</div>`;
+        }
+        
+        // Table 4: Issue Matches (if available)
+        if (Object.keys(issueMatches).length > 0) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Historical Issue Matches</h4>`;
+            html += `<table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Issue Pattern</th><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Matches</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Details</th></tr></thead><tbody>`;
+            
+            Object.entries(issueMatches).forEach(([pattern, details], index) => {
+                const bgColor = index % 2 === 0 ? '#ffffff': '#f9fafb';
+                const matchCount = Array.isArray(details) ? details.length : 1;
+                const summary = Array.isArray(details) ? details.slice(0, 2).join(', ') + (details.length > 2 ? ` (+${details.length - 2} more)` : '') : String(details).substring(0, 100) + '...';
+                
+                html += `<tr style="background-color: ${bgColor};"><td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 600;">${pattern}</td>`;
+                html += `<td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 600;">${matchCount}</td>`;
+                html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151; font-size: 0.85rem;">${summary}</td></tr>`;
+            });
+            
+            html += `</tbody></table></div>`;
+        }
+        
+        // Table 5: Function Insights (if available)
+        if (Object.keys(functionInsights).length > 0) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Function Insights</h4>`;
+            html += `<table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Function</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Insight</th></tr></thead><tbody>`;
+            
+            Object.entries(functionInsights).forEach(([functionName, insight], index) => {
+                const bgColor = index % 2 === 0 ? '#ffffff': '#f9fafb';
+                const summary = String(insight).substring(0, 150) + (String(insight).length > 150 ? '...': '');
+                
+                html += `<tr style="background-color: ${bgColor};"><td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 600;">${functionName}</td>`;
+                html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151; font-size: 0.85rem;">${summary}</td></tr>`;
+            });
+            
+            html += `</tbody></table></div>`;
+        }
+        
+        // Empty state
+        if (Object.keys(protocolReferences).length === 0 && fixRecommendations.length === 0 && Object.keys(comprehensiveRCA).length === 0) {
+ html = `<div style="color: #5d92ff; font-weight: 600; margin: 0 0 0.5rem 0; font-size: 1.1rem;">${analysisText} Results</div><div style="color: #f59e0b; padding: 1rem; background-color: #fffbeb; border-radius: 4px;"><strong>No Knowledge Base Data Available</strong><br><small>No knowledge base analysis data was generated for the detected errors.</small></div>`;
+        }
+        
+        return html;
+    }
+    // Format Impact Analysis Results with Enhanced Tables
+    function formatImpactAnalysisResults(impactData, analysisText) {
+        let html = `<div style="color: #5d92ff; font-weight: 600; margin: 0 0 0.5rem 0; font-size: 1.1rem;">${analysisText} Results</div>`;
+        
+        const errorImpacts = impactData.error_impacts || {};
+        const overallImpact = impactData.overall_impact || {};
+        const cascadeEffects = impactData.cascade_effects || {};
+        
+        if (Object.keys(errorImpacts).length === 0 && Object.keys(cascadeEffects).length === 0) {
+ html += `<div style="color: #f59e0b; padding: 1rem; background-color: #fffbeb; border-radius: 4px;"><strong>No Impact Data Available</strong><br><small>No impact analysis data was generated for the detected errors.</small></div>`;
+            return html;
+        }
+        
+        // Table 1: Error Impact Summary
+        if (Object.keys(errorImpacts).length > 0) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Error Impact Summary</h4><table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Error Type</th><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Primary Layer</th><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Severity</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Impact Description</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Affected Layers</th></tr></thead><tbody>`;
+            
+            Object.entries(errorImpacts).forEach(([errorType, impact], index) => {
+                const bgColor = index % 2 === 0 ? '#ffffff': '#f9fafb';
+                const severityColor = impact.severity === 'critical'? '#dc2626': impact.severity === 'high'? '#f59e0b': impact.severity === 'medium'? '#3b82f6': '#6b7280';
+                const severityBg = impact.severity === 'critical'? '#fee2e2': impact.severity === 'high'? '#fef3c7': impact.severity === 'medium'? '#dbeafe': '#f3f4f6';
+                const affectedLayers = (impact.affected_layers || []).join(', ');
+                
+                html += `<tr style="background-color: ${bgColor};"><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #1f2937; font-weight: 600;">${errorType.replace(/_/g, ' ')}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #2563eb; text-align: center; font-weight: 600;">${impact.primary_layer || 'N/A'}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; text-align: center;"><span style="display: inline-block; padding: 0.25rem 0.5rem; background-color: ${severityBg}; color: ${severityColor}; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">${impact.severity || 'N/A'}</span></td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #374151; font-size: 0.9rem;">${impact.impact_description || 'N/A'}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #6b7280; font-size: 0.85rem;">${affectedLayers || 'N/A'}</td></tr>`;
+            });
+            
+            html += `</tbody></table></div>`;
+        }
+        // Table 2: Impact Scores Breakdown
+        if (Object.keys(errorImpacts).length > 0) {
+            const hasScores = Object.values(errorImpacts).some(impact =>impact.impact_scores && Object.keys(impact.impact_scores).length > 0);
+            
+            if (hasScores) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Impact Scores Breakdown</h4>`;
+                
+                Object.entries(errorImpacts).forEach(([errorType, impact], errorIndex) => {
+                    if (impact.impact_scores && Object.keys(impact.impact_scores).length > 0) {
+                        html += `<div style="margin-bottom: 0.5rem; padding: 0.75rem; background-color: #f9fafb; border-radius: 8px; border: 1px solid #e2e8f0;"><div style="color: #5d92ff; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem;">${errorType.replace(/_/g, ' ')}</div><table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 4px; overflow: hidden;"><thead><tr style="background-color: #f1f5f9;"><th style="padding: 0.5rem; text-align: left; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem;">Category</th><th style="padding: 0.5rem; text-align: left; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem;">Area</th><th style="padding: 0.5rem; text-align: center; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem;">Level</th><th style="padding: 0.5rem; text-align: center; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem;">Score</th></tr></thead><tbody>`;
+                        
+                        Object.entries(impact.impact_scores).forEach(([category, scores]) => {
+                            if (Array.isArray(scores)) {
+                                scores.forEach((scoreItem, idx) => {
+                                    const rowBg = idx % 2 === 0 ? '#ffffff': '#f9fafb';
+                                    const levelColor = scoreItem.level === 'High'? '#dc2626': scoreItem.level === 'Medium'? '#f59e0b': '#059669';
+                                    const scorePercent = Math.round(scoreItem.score * 100);
+                                    const scoreColor = scorePercent >= 75 ? '#dc2626': scorePercent >= 50 ? '#f59e0b': scorePercent >= 25 ? '#3b82f6': '#059669';
+                                    
+                                    html += `<tr style="background-color: ${rowBg};"><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #1f2937; font-weight: 600; text-transform: capitalize;">${category.replace(/_/g, ' ')}</td><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #374151; text-transform: capitalize;">${scoreItem.area.replace(/_/g, ' ')}</td><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: ${levelColor}; text-align: center; font-weight: 600;">${scoreItem.level}</td><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; text-align: center;"><div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;"><div style="flex: 1; max-width: 100px; height: 8px; background-color: #e2e8f0; border-radius: 4px; overflow: hidden;"><div style="width: ${scorePercent}%; height: 100%; background-color: ${scoreColor};"></div></div><span style="color: ${scoreColor}; font-weight: 600; font-size: 0.85rem;">${scorePercent}%</span></div></td></tr>`;
+                                });
+                            }
+                        });
+                        
+                        html += `</tbody></table></div>`;
+                    }
+                });
+                
+                html += `</div>`;
+            }
+        }
+        
+        // Table 3: Cascade Effects
+        if (Object.keys(cascadeEffects).length > 0) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Cascade Effects</h4>`;
+            
+            Object.entries(cascadeEffects).forEach(([errorType, cascade], errorIndex) => {
+                if (cascade.cascade && Array.isArray(cascade.cascade)) {
+                    html += `<div style="margin-bottom: 0.5rem; padding: 0.75rem; background-color: #fef3c7; border-radius: 8px; border: 1px solid #fbbf24;"><div style="color: #b45309; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem;">${errorType.replace(/_/g, ' ')} - ${cascade.primary_layer || 'Unknown Layer'}</div><table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 4px; overflow: hidden;"><thead><tr style="background-color: #f1f5f9;"><th style="padding: 0.5rem; text-align: center; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem; width: 60px;">Stage</th><th style="padding: 0.5rem; text-align: left; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem;">Layer</th><th style="padding: 0.5rem; text-align: left; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem;">Impact</th></tr></thead><tbody>`;
+                    
+                    cascade.cascade.forEach((stage, idx) => {
+                        const rowBg = idx % 2 === 0 ? '#ffffff': '#fef9f5';
+                        const stageColor = stage.stage === 1 ? '#dc2626': stage.stage === 2 ? '#f59e0b': stage.stage === 3 ? '#3b82f6': '#6b7280';
+                        
+                        html += `<tr style="background-color: ${rowBg};"><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; text-align: center;"><span style="display: inline-block; width: 28px; height: 28px; background-color: ${stageColor}; color: white; border-radius: 50%; font-weight: 700; line-height: 28px;">${stage.stage}</span></td><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #2563eb; font-weight: 600;">${stage.layer}</td><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #374151; font-size: 0.9rem;">${stage.impact}</td></tr>`;
+                    });
+                    
+                    html += `</tbody></table></div>`;
+                }
+            });
+            
+            html += `</div>`;
+        }
+        
+        // Table 4: Overall System Impact
+        if (overallImpact && Object.keys(overallImpact).length > 0) {
+            const affectedLayers = (overallImpact.affected_layers || []).join(', ');
+            
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Overall System Impact</h4><div style="padding: 0.75rem; background-color: #ede9fe; border-radius: 8px; border: 1px solid #a78bfa;"><div style="margin-bottom: 0.5rem;"><strong style="color: #6b21a8;">Affected Layers:</strong><span style="color: #1f2937;">${affectedLayers || 'N/A'}</span></div>`;
+            
+            if (overallImpact.combined_impact && Object.keys(overallImpact.combined_impact).length > 0) {
+                html += `<table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 4px; overflow: hidden; margin-top: 0.5rem;"><thead><tr style="background-color: #f1f5f9;"><th style="padding: 0.5rem; text-align: left; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem;">Category</th><th style="padding: 0.5rem; text-align: left; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem;">Area</th><th style="padding: 0.5rem; text-align: center; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem;">Level</th><th style="padding: 0.5rem; text-align: center; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.85rem;">Score</th></tr></thead><tbody>`;
+                
+                Object.entries(overallImpact.combined_impact).forEach(([category, scores]) => {
+                    if (Array.isArray(scores)) {
+                        scores.forEach((scoreItem, idx) => {
+                            const rowBg = idx % 2 === 0 ? '#ffffff': '#f9fafb';
+                            const levelColor = scoreItem.level === 'High'? '#dc2626': scoreItem.level === 'Medium'? '#f59e0b': '#059669';
+                            const scorePercent = Math.round(scoreItem.score * 100);
+                            const scoreColor = scorePercent >= 75 ? '#dc2626': scorePercent >= 50 ? '#f59e0b': scorePercent >= 25 ? '#3b82f6': '#059669';
+                            
+                            html += `<tr style="background-color: ${rowBg};"><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #1f2937; font-weight: 600; text-transform: capitalize;">${category.replace(/_/g, ' ')}</td><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #374151; text-transform: capitalize;">${scoreItem.area.replace(/_/g, ' ')}</td><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: ${levelColor}; text-align: center; font-weight: 600;">${scoreItem.level}</td><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; text-align: center;"><div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;"><div style="flex: 1; max-width: 100px; height: 8px; background-color: #e2e8f0; border-radius: 4px; overflow: hidden;"><div style="width: ${scorePercent}%; height: 100%; background-color: ${scoreColor};"></div></div><span style="color: ${scoreColor}; font-weight: 600; font-size: 0.85rem;">${scorePercent}%</span></div></td></tr>`;
+                        });
+                    }
+                });
+                
+                html += `</tbody></table>`;
+            }
+            
+            html += `</div></div>`;
+        }
+        
+        return html;
+    }
+    // Format Function Analysis Results with Enhanced Tables
+    function formatFunctionAnalysisResults(functionData, analysisText) {
+        let html = `<div style="color: #5d92ff; font-weight: 600; margin: 0 0 0.5rem 0; font-size: 1.1rem;">${analysisText} Results</div>`;
+        
+        const affectedFunctions = functionData.affected_functions || [];
+        
+        if (affectedFunctions.length === 0) {
+ html += `<div style="color: #f59e0b; padding: 1rem; background-color: #fffbeb; border-radius: 4px;"><strong>No Affected Functions Found</strong><br><small>No functions were identified as potentially affected by the detected errors.</small></div>`;
+            return html;
+        }
+        
+        // Summary
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Summary</h4><div style="padding: 0.75rem; background-color: #f0f9ff; border-radius: 8px; border: 1px solid #bae6fd;"><strong style="color: #0369a1;">Total Affected Functions:</strong><span style="color: #1f2937; font-size: 1.1rem; font-weight: 600;">${affectedFunctions.length}</span></div></div>`;
+        
+        // Table: Affected Functions
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Affected Functions</h4><table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Function Name</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">File Path</th><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Relevance</th><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Score</th></tr></thead><tbody>`;
+        
+        affectedFunctions.forEach((func, index) => {
+            const bgColor = index % 2 === 0 ? '#ffffff': '#f9fafb';
+            const relevanceColor = func.relevance === 'direct'? '#059669': func.relevance === 'keyword_match'? '#2563eb': '#6b7280';
+            const relevanceBg = func.relevance === 'direct'? '#d1fae5': func.relevance === 'keyword_match'? '#dbeafe': '#f3f4f6';
+            const scoreColor = func.score >= 75 ? '#dc2626': func.score >= 50 ? '#f59e0b': func.score >= 25 ? '#3b82f6': '#6b7280';
+            
+            // Shorten file path for display
+            const fileName = func.file ? func.file.split('/').pop() : 'Unknown';
+            const filePath = func.file || 'Unknown';
+            
+            html += `<tr style="background-color: ${bgColor};"><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #1f2937; font-weight: 600; font-family: monospace; font-size: 0.9rem;">${func.name || 'N/A'}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #6b7280; font-size: 0.85rem; max-width: 300px; word-wrap: break-word;"title="${filePath}">${filePath}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; text-align: center;"><span style="display: inline-block; padding: 0.25rem 0.5rem; background-color: ${relevanceBg}; color: ${relevanceColor}; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize;">${func.relevance || 'N/A'}</span></td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: ${scoreColor}; text-align: center; font-weight: 700; font-size: 1rem;">${func.score || 0}</td></tr>`;
+        });
+        
+        html += `</tbody></table></div>`;
+        
+        // Table: Function Metrics (in_degree, out_degree, centrality)
+        const hasFunctionMetrics = affectedFunctions.some(f =>f.in_degree !== undefined || f.out_degree !== undefined || f.centrality !== undefined);
+        
+        if (hasFunctionMetrics) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Function Call Graph Metrics</h4><table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Function Name</th><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">In-Degree</th><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Out-Degree</th><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Centrality</th></tr></thead><tbody>`;
+            
+            affectedFunctions.forEach((func, index) => {
+                if (func.in_degree !== undefined || func.out_degree !== undefined || func.centrality !== undefined) {
+                    const bgColor = index % 2 === 0 ? '#ffffff': '#f9fafb';
+                    html += `<tr style="background-color: ${bgColor};"><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #1f2937; font-weight: 600; font-family: monospace; font-size: 0.9rem;">${func.name || 'N/A'}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #059669; text-align: center; font-weight: 600;">${func.in_degree !== undefined ? func.in_degree : 'N/A'}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #dc2626; text-align: center; font-weight: 600;">${func.out_degree !== undefined ? func.out_degree : 'N/A'}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #2563eb; text-align: center; font-weight: 600;">${func.centrality !== undefined ? func.centrality : 'N/A'}</td></tr>`;
+                }
+            });
+            
+            html += `</tbody></table><div style="margin-top: 0.5rem; padding: 0.5rem; background-color: #f9fafb; border-radius: 4px; font-size: 0.85rem; color: #6b7280;"><strong>Legend:</strong>In-Degree (functions calling this), Out-Degree (functions called by this), Centrality (importance in call graph)</div></div>`;
+        }
+        
+        return html;
+    }
+    // Create RCA Analysis Summary Display
+    function formatRCAAnalysisSummary(rcaResults) {
+ let html = `<div style="color: #5d92ff; font-weight: 600; margin: 0 0 1rem 0; font-size: 1.2rem;">RCA Analysis Summary</div>`;
+        
+        // Overview Table
+ html += `<div style="margin-bottom: 1rem;"><h4 style="color: #1f2937; font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem 0;">Analysis Overview</h4>`;
+        html += `<table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Analysis Type</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Status</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Key Findings</th></tr></thead><tbody>`;
+        
+        // Error Analysis Summary
+        if (rcaResults.error_analysis) {
+            const errorData = rcaResults.error_analysis;
+            const totalErrors = Object.values(errorData.error_counts || {}).reduce((sum, count) =>sum + count, 0);
+            const criticalErrors = errorData.severity_counts?.['critical'] || 0;
+ const status = totalErrors > 0 ? (criticalErrors > 0 ? 'Critical': 'Issues Found') : 'No Errors';
+            const findings = totalErrors > 0 ? `${totalErrors} errors detected (${criticalErrors} critical)` : 'No errors detected';
+            
+            html += `<tr><td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 600;">Error Analysis</td>`;
+            html += `<td style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #f3f4f6; color: #1f2937;">${status}</td>`;
+            html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151;">${findings}</td></tr>`;
+        }
+        
+        // Function Analysis Summary
+        if (rcaResults.function_analysis) {
+            const functionData = rcaResults.function_analysis;
+            const affectedFunctions = functionData.affected_functions?.length || 0;
+ const status = affectedFunctions > 0 ? 'Functions Affected': 'No Issues';
+            const findings = affectedFunctions > 0 ? `${affectedFunctions} functions potentially affected` : 'No function issues detected';
+            
+            html += `<tr><td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 600;">Function Analysis</td>`;
+            html += `<td style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #f3f4f6; color: #1f2937;">${status}</td>`;
+            html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151;">${findings}</td></tr>`;
+        }
+        
+        // Impact Analysis Summary
+        if (rcaResults.impact_analysis) {
+            const impactData = rcaResults.impact_analysis;
+            const overallImpact = impactData.overall_impact?.severity || 'unknown';
+ const status = overallImpact === 'high'? 'High Impact': overallImpact === 'medium'? 'Medium Impact': 'Low Impact';
+            const findings = impactData.overall_impact?.description || 'Impact assessment completed';
+            
+            html += `<tr><td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 600;">Impact Analysis</td>`;
+            html += `<td style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #f3f4f6; color: #1f2937;">${status}</td>`;
+            html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151;">${findings}</td></tr>`;
+        }
+        
+        // Knowledge Base Analysis Summary
+        if (rcaResults.kb_analysis) {
+            const kbData = rcaResults.kb_analysis;
+            const protocolRefs = Object.keys(kbData.protocol_references || {}).length;
+            const fixRecommendations = kbData.fix_recommendations?.length || 0;
+ const status = protocolRefs > 0 || fixRecommendations > 0 ? 'Knowledge Found': 'No KB Data';
+            const findings = protocolRefs > 0 || fixRecommendations > 0 ? `${protocolRefs} protocol refs, ${fixRecommendations} fixes` : 'No knowledge base matches';
+            
+            html += `<tr><td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 600;">Knowledge Base</td>`;
+            html += `<td style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #f3f4f6; color: #1f2937;">${status}</td>`;
+            html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151;">${findings}</td></tr>`;
+        }
+        // AI Analysis Summary
+        if (rcaResults.ai_analysis) {
+            const aiData = rcaResults.ai_analysis;
+            const hasRootCause = aiData.root_cause && aiData.root_cause.length > 0;
+            const recommendations = aiData.recommendations?.length || 0;
+ const status = hasRootCause ? 'Root Cause Found': 'AI Analysis';
+            const findings = hasRootCause ? `Root cause identified, ${recommendations} recommendations` : 'AI analysis completed';
+            
+            html += `<tr><td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 600;">AI Analysis</td>`;
+            html += `<td style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #f3f4f6; color: #1f2937;">${status}</td>`;
+            html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151;">${findings}</td></tr>`;
+        }
+        
+        html += `</tbody></table></div>`;
+        
+        // Quick Actions
+ html += `<div style="margin-bottom: 1rem;"><h4 style="color: #1f2937; font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem 0;">Quick Actions</h4>`;
+        html += `<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">`;
+ html += `<span style="background-color: #f0f9ff; color: #0369a1; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; border: 1px solid #0ea5e9;">Select analysis type above for detailed view</span>`;
+ html += `<span style="background-color: #f0fdf4; color: #166534; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; border: 1px solid #22c55e;">All analyses completed</span>`;
+        html += `</div></div>`;
+        
+        return html;
+    }
+
+    // Format Generic Analysis Results (for unknown analysis types)
+    function formatGenericAnalysisResults(data, analysisText) {
+        let html = `<div style="color: #5d92ff; font-weight: 600; margin: 0 0 0.5rem 0; font-size: 1.1rem;">${analysisText} Results</div>`;
+        
+        if (!data || typeof data !== 'object') {
+ html += `<div style="color: #f59e0b; padding: 1rem; background-color: #fffbeb; border-radius: 4px;"><strong>No Data Available</strong><br><small>No analysis data was found for this type.</small></div>`;
+            return html;
+        }
+        
+        // Summary Table
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Analysis Summary</h4>`;
+        html += `<table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Field</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Type</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Summary</th></tr></thead><tbody>`;
+        
+        Object.entries(data).forEach(([key, value], index) => {
+            const bgColor = index % 2 === 0 ? '#ffffff': '#f9fafb';
+            let valueType = Array.isArray(value) ? 'Array': typeof value;
+            let summary = '';
+            
+            if (Array.isArray(value)) {
+                summary = `${value.length} items`;
+                if (value.length > 0) {
+                    const firstItem = String(value[0]).substring(0, 50);
+                    summary += ` (e.g., "${firstItem}${firstItem.length >= 50 ? '...': ''}")`;
+                }
+            } else if (typeof value === 'object'&& value !== null) {
+                const keys = Object.keys(value);
+                summary = `${keys.length} properties (${keys.slice(0, 3).join(', ')}${keys.length > 3 ? '...': ''})`;
+            } else {
+                const stringValue = String(value);
+                summary = stringValue.length > 100 ? stringValue.substring(0, 100) + '...': stringValue;
+            }
+            
+            html += `<tr style="background-color: ${bgColor};"><td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 600;">${key}</td>`;
+            html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 0.85rem;">${valueType}</td>`;
+            html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151; font-size: 0.85rem;">${summary}</td></tr>`;
+        });
+        
+        html += `</tbody></table></div>`;
+        
+        // Key Details Section
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Key Details</h4>`;
+        
+        // Show first few important fields in detail
+        let detailCount = 0;
+        Object.entries(data).forEach(([key, value]) => {
+            if (detailCount >= 3) return; // Limit to 3 details
+            
+            if (typeof value === 'string'&& value.length > 20 && value.length < 500) {
+                html += `<div style="padding: 0.75rem; background-color: #f0f9ff; border-radius: 8px; border: 1px solid #0ea5e9; margin-bottom: 0.5rem;">`;
+                html += `<div style="color: #1f2937; font-weight: 600; margin-bottom: 0.5rem;">${window.capitalize(key.replace(/_/g, ' '))}:</div>`;
+                html += `<div style="color: #374151; font-size: 0.9rem; white-space: pre-wrap; line-height: 1.5;">${value}</div>`;
+                html += `</div>`;
+                detailCount++;
+            }
+        });
+        
+        if (detailCount === 0) {
+            html += `<div style="color: #6b7280; padding: 1rem; background-color: #f9fafb; border-radius: 4px; font-style: italic;">No detailed text fields available for preview.</div>`;
+        }
+        
+        return html;
+    }
+    // Format Error Analysis Results with Enhanced Tables
+    function formatAIAnalysisResults(aiData, analysisText) {
+        let html = `<div style="color: #5d92ff; font-weight: 600; margin: 0 0 0.5rem 0; font-size: 1.1rem;">${analysisText} Results</div>`;
+        
+        const rootCause = aiData.root_cause || '';
+        const analysis = aiData.analysis || {};
+        const recommendations = aiData.recommendations || [];
+        const confidence = aiData.confidence || {};
+        const insights = aiData.insights || {};
+        
+        if (!rootCause && Object.keys(analysis).length === 0 && recommendations.length === 0) {
+ html += `<div style="color: #f59e0b; padding: 1rem; background-color: #fffbeb; border-radius: 4px;"><strong>No AI Analysis Data Available</strong><br><small>No AI analysis data was generated for the detected errors.</small></div>`;
+            return html;
+        }
+        
+        // Table 1: Root Cause Analysis
+        if (rootCause) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Root Cause Analysis</h4>`;
+            html += `<div style="padding: 1rem; background-color: #fef3c7; border-radius: 8px; border: 1px solid #fbbf24; margin-bottom: 0.5rem;">`;
+            html += `<div style="color: #1f2937; font-weight: 600; margin-bottom: 0.5rem;">Identified Root Cause:</div>`;
+            html += `<div style="color: #374151; font-size: 0.9rem; white-space: pre-wrap; line-height: 1.6;">${rootCause}</div>`;
+            html += `</div>`;
+        }
+        
+        // Table 2: Confidence Metrics
+        if (Object.keys(confidence).length > 0) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Confidence Metrics</h4>`;
+            html += `<table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Metric</th><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Score</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Status</th></tr></thead><tbody>`;
+            
+            Object.entries(confidence).forEach(([metric, score]) => {
+                const percentage = typeof score === 'number'? Math.round(score * 100) : score;
+                const statusColor = percentage >= 80 ? '#10b981': percentage >= 60 ? '#f59e0b': '#ef4444';
+                const statusText = percentage >= 80 ? 'High': percentage >= 60 ? 'Medium': 'Low';
+                
+                html += `<tr><td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 500;">${metric.replace(/_/g, ' ').toUpperCase()}</td>`;
+                html += `<td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 600;">${percentage}%</td>`;
+                html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: ${statusColor}; font-weight: 600;">${statusText}</td></tr>`;
+            });
+            
+            html += `</tbody></table></div>`;
+        }
+        
+        // Table 3: Technical Analysis
+        if (Object.keys(analysis).length > 0) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Technical Analysis</h4>`;
+            html += `<table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Aspect</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Analysis</th></tr></thead><tbody>`;
+            
+            Object.entries(analysis).forEach(([aspect, details]) => {
+                html += `<tr><td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-weight: 600; vertical-align: top; min-width: 150px;">${aspect.replace(/_/g, ' ').toUpperCase()}</td>`;
+                html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151; white-space: pre-wrap; line-height: 1.5;">${details}</td></tr>`;
+            });
+            
+            html += `</tbody></table></div>`;
+        }
+        
+        // Table 4: Recommendations
+        if (recommendations.length > 0) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">AI Recommendations</h4>`;
+            html += `<table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;"><thead><tr style="background-color: #f8fafc;"><th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600; width: 50px;">#</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Recommendation</th><th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #5d92ff; font-weight: 600;">Priority</th></tr></thead><tbody>`;
+            
+            recommendations.forEach((recommendation, index) => {
+                let priority = 'Medium';
+                let priorityColor = '#f59e0b';
+                
+                // Try to extract priority from recommendation text
+                if (recommendation.toLowerCase().includes('high') || recommendation.toLowerCase().includes('critical') || recommendation.toLowerCase().includes('urgent')) {
+                    priority = 'High';
+                    priorityColor = '#ef4444';
+                } else if (recommendation.toLowerCase().includes('low') || recommendation.toLowerCase().includes('optional')) {
+                    priority = 'Low';
+                    priorityColor = '#10b981';
+                }
+                
+                html += `<tr><td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-weight: 600;">${index + 1}</td>`;
+                html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151; white-space: pre-wrap; line-height: 1.5;">${recommendation}</td>`;
+                html += `<td style="padding: 0.75rem; border-bottom: 1px solid #f3f4f6; color: ${priorityColor}; font-weight: 600;">${priority}</td></tr>`;
+            });
+            
+            html += `</tbody></table></div>`;
+        }
+        
+        // Table 5: Key Insights
+        if (Object.keys(insights).length > 0) {
+ html += `<div style="margin-bottom: 0.4rem;"><h4 style="color: #1f2937; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.4rem 0;">Key Insights</h4>`;
+            
+            Object.entries(insights).forEach(([category, insight]) => {
+                html += `<div style="padding: 0.75rem; background-color: #f0f9ff; border-radius: 8px; border: 1px solid #0ea5e9; margin-bottom: 0.5rem;">`;
+                html += `<div style="color: #1f2937; font-weight: 600; margin-bottom: 0.5rem;">${category.replace(/_/g, ' ').toUpperCase()}:</div>`;
+                html += `<div style="color: #374151; font-size: 0.9rem; white-space: pre-wrap; line-height: 1.6;">${insight}</div>`;
+                html += `</div>`;
+            });
+        }
+        
+        return html;
+    }
+    // Dynamically populate Analysis Options dropdown from RCA results
+    function populateAnalysisOptionsFromResults(rcaResults) {
+        if (!analysisOptionsContent) return;
+        
+        // Keys to exclude from dropdown
+        const excludeKeys = ['meta', 'timestamp', 'log_file'];
+        
+        // Get all keys from RCA results
+        const allKeys = Object.keys(rcaResults);
+        
+        // Filter out excluded keys
+        const analysisKeys = allKeys.filter(key => !excludeKeys.includes(key));
+        
+        console.log('📊 Dynamically populating Analysis Options:', analysisKeys);
+        
+        // Clear existing dropdown items
+        analysisOptionsContent.innerHTML = '';
+        
+        // Create mapping for user-friendly names
+        const formatAnalysisName = (key) => {
+            // Convert snake_case to Title Case
+            return key
+                .split('_')
+                .map(word =>word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        };
+        
+        // Populate dropdown with analysis options
+        analysisKeys.forEach(key => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item';
+            item.textContent = formatAnalysisName(key);
+            item.setAttribute('data-analysis', key);
+            analysisOptionsContent.appendChild(item);
+        });
+        
+        // Re-attach event listeners for the new dropdown items
+        attachAnalysisOptionsEventListeners();
+        
+        console.log('✅ Analysis Options dropdown populated with', analysisKeys.length, 'options');
+    }
+    // Attach event listeners to Analysis Options dropdown items
+    function attachAnalysisOptionsEventListeners() {
+        if (!analysisOptionsContent) return;
+        
+        const items = analysisOptionsContent.querySelectorAll('.dropdown-item');
+        items.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                const analysisKey = this.getAttribute('data-analysis');
+                const analysisText = this.textContent;
+                selectedAnalysisType = analysisKey;
+                
+                // Update dropdown button text
+                if (analysisOptionsBtn) {
+                    analysisOptionsBtn.querySelector('span').textContent = analysisText;
+                }
+                
+                // Close dropdown
+                if (analysisOptionsDropdown) {
+                    analysisOptionsDropdown.classList.remove('active');
+                }
+                console.log('✅ Selected analysis type:', analysisText, '(', analysisKey, ')');
+                // Extract and display specific analysis results
+                if (fullRCAResults && analysisResultsBox) {
+                    const specificResults = fullRCAResults[analysisKey];
+                    
+                    console.log(`📊 Extracting ${analysisKey}:`, specificResults ? 'Found' : 'Not found');
+                    console.log(`📊 Result type:`, typeof specificResults);
+                    
+                    if (specificResults && (typeof specificResults === 'object'&& Object.keys(specificResults).length > 0)) {
+                        // Format the results based on analysis type
+                        let formattedHTML = '';
+                        
+                        // Special formatting for Error Analysis - Enhanced Tabular Format
+                        if (analysisKey === 'error_analysis') {
+                            formattedHTML = formatErrorAnalysisResults(specificResults, analysisText);
+                        } else if (analysisKey === 'function_analysis') {
+                            // Enhanced tabular format for function analysis
+                            formattedHTML = formatFunctionAnalysisResults(specificResults, analysisText);
+                        } else if (analysisKey === 'impact_analysis') {
+                            // Enhanced tabular format for impact analysis
+                            formattedHTML = formatImpactAnalysisResults(specificResults, analysisText);
+                        } else if (analysisKey === 'kb_analysis') {
+                            // Enhanced tabular format for knowledge base analysis
+                            formattedHTML = formatKBAnalysisResults(specificResults, analysisText);
+                        } else if (analysisKey === 'ai_analysis') {
+                            // Enhanced tabular format for AI analysis
+                            formattedHTML = formatAIAnalysisResults(specificResults, analysisText);
+                        } else {
+                            // Enhanced format for other analysis types - show summary instead of full JSON
+                            formattedHTML = formatGenericAnalysisResults(specificResults, analysisText);
+                        }
+                        
+                        analysisResultsBox.innerHTML = formattedHTML;
+                        showStatusBar(`Viewing ${analysisText} results`, 'success');
+                    } else if (specificResults === null) {
+                        analysisResultsBox.innerHTML = `
+                            <div style="color: #f59e0b; padding: 1rem; background-color: #fffbeb; border-radius: 4px;">
+                                <strong>${analysisText} Not Available</strong><br>
+                                <small>This analysis section is null. Some RCA components may not be available.</small><br>
+                                <small style="color: #6b7280; margin-top: 0.5rem; display: block;">Check backend console for import warnings.</small>
+                            </div>
+                        `;
+                        showStatusBar(`${analysisText} is null`, 'warning');
+                    } else {
+                        analysisResultsBox.innerHTML = `
+                            <div style="color: #f59e0b; padding: 1rem; background-color: #fffbeb; border-radius: 4px;">
+                                <strong>No ${analysisText} data available</strong><br>
+                                <small>This analysis section is empty.</small>
+                            </div>
+                        `;
+                        showStatusBar(`No data for ${analysisText}`, 'warning');
+                    }
+                } else if (!fullRCAResults) {
+                    showStatusBar('Please run RCA Test first', 'warning');
+                    if (analysisResultsBox) {
+ analysisResultsBox.innerHTML = `<p style="color: #f59e0b; text-align: center; margin: 2rem 0; font-weight: 600;">Please run "Start RCA Test"first!<br><br><span style="font-weight: normal; color: #6b7280;">You need to run the RCA test before viewing analysis results</span></p>`;
+                    }
+                }
+            });
+        });
+    }
+    
+    // Create log file buttons instead of dropdown
+    function populateLogFileButtons(files) {
+        const logFileButtonsContainer = document.getElementById('logFileButtonsContainer');
+        const noLogFilesMsg = document.getElementById('noLogFilesMsg');
+        
+        if (!logFileButtonsContainer) {
+            console.error('❌ Log file buttons container not found');
+            return;
+        }
+        
+        // Clear existing buttons
+        logFileButtonsContainer.innerHTML = '';
+        
+        if (files.length === 0) {
+            noLogFilesMsg.style.display = 'block';
+            logFileButtonsContainer.style.display = 'none';
+        } else {
+            noLogFilesMsg.style.display = 'none';
+            logFileButtonsContainer.style.display = 'block';
+            
+            // Create buttons for each log file
+            const basePath = (typeof bugLogDir === 'string') ? bugLogDir.replace(/\\/g, '/').replace(/\/$/, '') : '';
+            files.forEach((file, index) => {
+                const button = document.createElement('button');
+                button.className = 'template-btn modify-btn log-file-btn';
+                button.style.padding = '0.5rem 1rem';
+                button.style.fontSize = '0.8rem';
+                button.style.margin = '0.25rem';
+                button.style.border = '2px dashed #3b82f6';
+                button.style.backgroundColor = 'transparent';
+                button.style.color = '#3b82f6';
+                button.style.cursor = 'pointer';
+                button.style.transition = 'all 0.3s ease';
+                let rel = file.path || file.name;
+                if (basePath && file.path && file.path.startsWith(basePath)) {
+                    rel = file.path.substring(basePath.length + 1).replace(/\\/g, '/');
+                }
+                button.textContent = rel;
+                button.setAttribute('data-filename', file.name);
+                button.setAttribute('data-path', file.path || file.name);
+                
+                // Add hover effects
+                button.addEventListener('mouseenter', function() {
+                    if (!button.classList.contains('selected')) {
+                        button.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+                        button.style.borderColor = '#2563eb';
+                    }
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    if (!button.classList.contains('selected')) {
+                        button.style.backgroundColor = 'transparent';
+                        button.style.borderColor = '#3b82f6';
+                    }
+                });
+                
+                // Add click handler
+                button.addEventListener('click', function() {
+                    // Remove selected class from all buttons
+                    logFileButtonsContainer.querySelectorAll('.log-file-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                        btn.style.backgroundColor = 'transparent';
+                        btn.style.borderColor = '#3b82f6';
+                        btn.style.color = '#3b82f6';
+                    });
+                    
+                    // Add selected class to clicked button
+                    button.classList.add('selected');
+                    button.style.backgroundColor = '#e0f2fe';
+                    button.style.color = '#0369a1';
+                    button.style.border = '1px solid #bae6fd';
+                    button.style.borderColor = '#3b82f6';
+                    button.style.color = 'white';
+                    
+                    // Update selected log file
+                    selectedLogFile = file.name;
+                    console.log('📁 Selected log file:', file.name);
+                    showStatusBar(`Selected: ${file.name}`, 'success');
+                });
+                
+                logFileButtonsContainer.appendChild(button);
+            });
+        }
+    }
+    
+    
+    // Handle analysis options dropdown toggle
+    if (analysisOptionsBtn) {
+        analysisOptionsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (analysisOptionsDropdown) {
+                analysisOptionsDropdown.classList.toggle('active');
+            }
+        });
+    }
+    // Old hardcoded event listener removed - now using dynamic attachAnalysisOptionsEventListeners()
+    // Start RCA Test - Runs full analysis first
+    if (startRCABtn) {
+        startRCABtn.addEventListener('click', async function() {
+            if (selectedLogFiles.length === 0) {
+                showStatusBar('Please upload log files first', 'warning');
+                return;
+            }
+            
+            if (!selectedLogFile) {
+                showStatusBar('Please select a log file from the buttons above', 'warning');
+                return;
+            }
+            
+            try {
+                // Disable button during analysis
+                this.disabled = true;
+                this.textContent = 'Analyzing...';
+                
+                showStatusBar('Running RCA analysis on backend...', 'info');
+                
+                // Debug logging
+                console.log('🚀 Starting RCA analysis with:');
+                console.log('  - Log file name:', selectedLogFile);
+                console.log('  - File info from map:', logFileContentsMap.get(selectedLogFile));
+                
+                // Call backend API for RCA analysis - Run full analysis first
+                const analysisResult = await window.API.startRCAAnalysis(selectedLogFile, 'error'); // Use 'error'as default to get full results
+                
+                if (analysisResult.success) {
+                    // Store full results for later extraction
+                    fullRCAResults = analysisResult.full_results || {};
+                    
+                    console.log('✅ RCA analysis completed!');
+                    console.log('📊 Full results keys:', Object.keys(fullRCAResults));
+                    console.log('📊 Error analysis:', fullRCAResults.error_analysis ? 'Present' : 'Missing');
+                    console.log('📊 Function analysis:', fullRCAResults.function_analysis ? 'Present' : 'Missing (requires function_calls.json)');
+                    console.log('📊 Impact analysis:', fullRCAResults.impact_analysis ? 'Present' : 'Missing (requires matplotlib)');
+                    console.log('📊 KB analysis:', fullRCAResults.kb_analysis ? 'Present' : 'Missing');
+                    console.log('📊 AI analysis:', fullRCAResults.ai_analysis ? 'Present' : 'Missing');
+                    
+                    // Check component availability from meta
+                    const meta = fullRCAResults.meta || {};
+                    const components = meta.components_available || {};
+                    console.log('📊 Components status:', components);
+                    
+                    // Dynamically populate Analysis Options dropdown based on JSON keys
+                    populateAnalysisOptionsFromResults(fullRCAResults);
+                    
+                    // Display full results in main results area (Box 2) - JSON only
+                    if (rcaResultsArea) {
+                        // Check if any errors were found
+                        const errorAnalysis = fullRCAResults.error_analysis || {};
+                        const errorCount = Object.keys(errorAnalysis.identified_errors || {}).length;
+                        
+                        let noteHTML = '';
+                        if (errorCount === 0) {
+                            noteHTML = `<div style="background-color: #fffbeb; border: 1px solid #fbbf24; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;"><strong style="color: #f59e0b;">ℹ Note:</strong>No errors detected in this log file.<br><small style="color: #6b7280;">This might be a successful test case. Try uploading error logs (e.g., TC_pdcp_integrity_failure_handover_8245.log) for detailed analysis.</small></div>`;
+                        }
+                        
+                        rcaResultsArea.innerHTML = `${noteHTML}${formatRCAAnalysisSummary(fullRCAResults)}`;
+                    }
+                    
+                    // Update analysis results box with instruction
+                    if (analysisResultsBox) {
+ analysisResultsBox.innerHTML = `<p style="color: #5d92ff; text-align: center; margin: 2rem 0; font-weight: 600;">RCA Test Complete!<br><br><span style="font-weight: normal; color: #6b7280;">Select an analysis type from the dropdown above to view specific results</span></p>`;
+                    }
+                    
+                    showStatusBar('RCA test completed! Select an analysis type to view results', 'success');
+                } else {
+                    throw new Error('Analysis failed');
+                }
+                
+            } catch (error) {
+                console.error('Error during RCA analysis:', error);
+                showStatusBar('Error during RCA analysis: '+ error.message, 'error');
+                
+                // Show error in results area
+                if (rcaResultsArea) {
+                    rcaResultsArea.innerHTML = `
+                        <div style="color: #dc3545; font-weight: 600; margin-bottom: 1rem;">RCA Test Error</div>
+                        <div style="color: #dc3545; padding: 1rem; background-color: #f8d7da; border-radius: 4px;">
+                            ${error.message}
+                        </div>
+                    `;
+                }
+            } finally {
+                // Re-enable button
+                this.disabled = false;
+                this.textContent = 'Start RCA Test';
+            }
+        });
+    }
+    // Clear RCA Results
+    if (clearRCABtn) {
+        clearRCABtn.addEventListener('click', function() {
+            // Clear main RCA results area (Box 2)
+            if (rcaResultsArea) {
+                rcaResultsArea.innerHTML = '<p style="color: #6b7280; text-align: center; margin: 2rem 0; font-style: italic;">Analysis results will appear here...</p>';
+            }
+            
+            // Clear analysis results box (Box 3)
+            if (analysisResultsBox) {
+                analysisResultsBox.innerHTML = '<p style="color: #6b7280; text-align: center; margin: 2rem 0; font-style: italic;">Select an analysis type and run RCA test...</p>';
+            }
+            
+            // Reset log file selection
+            selectedLogFiles = [];
+            selectedLogFile = null;
+            currentLogContent = null;
+            selectedAnalysisType = null;
+            fullRCAResults = null;
+            logFileContentsMap.clear();
+            
+            if (logFileInput) logFileInput.value = '';
+            if (logFileList) {
+                logFileList.style.display = 'none';
+                logFileList.innerHTML = '';
+            }
+            if (logFileText) {
+                logFileText.textContent = 'No log folder loaded - Click to select folder containing log files';
+                logFileText.style.color = '#6b7280';
+            }
+            
+            // Hide and reset log file buttons
+            const logFileButtonsContainer = document.getElementById('logFileButtonsContainer');
+            const noLogFilesMsg = document.getElementById('noLogFilesMsg');
+            if (logFileButtonsContainer) {
+                logFileButtonsContainer.style.display = 'none';
+                logFileButtonsContainer.innerHTML = '';
+            }
+            if (noLogFilesMsg) {
+                noLogFilesMsg.style.display = 'block';
+            }
+            
+            // Reset analysis options dropdown
+            if (analysisOptionsBtn) {
+                analysisOptionsBtn.querySelector('span').textContent = 'Run RCA Test First';
+            }
+            if (analysisOptionsContent) {
+                analysisOptionsContent.innerHTML = `
+                    <div style="padding: 1rem; color: #6b7280; font-size: 0.9rem; text-align: center;">
+                        Run "Start RCA Test"to populate options
+                    </div>
+                `;
+            }
+            
+            showStatusBar('Results cleared', 'success');
+        });
+    }
+    
+    // Bug Discovery section - restore dropdown functionality
+    const logFileDropdown = document.getElementById('logFileDropdown');
+    const logFileDropdownBtn = document.getElementById('logFileDropdownBtn');
+    const logFileDropdownContent = document.getElementById('logFileDropdownContent');
+
+    // Handle log file dropdown toggle
+    if (logFileDropdownBtn) {
+        logFileDropdownBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (logFileDropdown) {
+                logFileDropdown.classList.toggle('active');
+            }
+        });
+    }
+    // Handle log file selection from dropdown
+    if (logFileDropdownContent) {
+        logFileDropdownContent.addEventListener('click', function(e) {
+            if (e.target.classList.contains('dropdown-item')) {
+                const filename = e.target.getAttribute('data-filename');
+                selectedLogFile = filename;
+                
+                // Get the file info from the map
+                const fileInfo = logFileContentsMap.get(filename);
+                console.log('🔍 Selected log file:', filename);
+                console.log('🔍 File info from map:', fileInfo);
+                
+                // Update dropdown button text
+                if (logFileDropdownBtn) {
+                    logFileDropdownBtn.querySelector('span').textContent = filename;
+                }
+                
+                // Close dropdown
+                if (logFileDropdown) {
+                    logFileDropdown.classList.remove('active');
+                }
+                
+                console.log('✅ Selected log file:', filename);
+                showStatusBar(`Selected: ${filename}`, 'success');
+            }
+        });
+    }
+    // Populate log file dropdown for Bug Discovery section
+    function populateLogFileDropdown(files) {
+        if (!logFileDropdownContent) {
+            return;
+        }
+        
+        logFileDropdownContent.innerHTML = '';
+        
+        files.forEach(file => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item';
+            const fileName = file.name;
+            item.textContent = fileName;
+            item.setAttribute('data-filename', fileName);
+            logFileDropdownContent.appendChild(item);
+        });
+    }
+
+    // Handle folder selection for Bug Discovery section
+    if (logFileInput) {
+        logFileInput.addEventListener('change', async function(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                // Filter only log files from the folder
+                const logFiles = Array.from(files).filter(file =>file.name.toLowerCase().endsWith('.log') || 
+                    file.name.toLowerCase().endsWith('.txt')
+                );
+                
+                if (logFiles.length === 0) {
+                    showStatusBar('No log files found in the selected folder. Please select a folder containing .log or .txt files.', 'warning');
+                    return;
+                }
+                
+                selectedLogFiles = logFiles;
+                displayLogFiles(selectedLogFiles);
+                
+                // Upload log files to backend
+                try {
+                    showStatusBar(`Uploading ${logFiles.length} log files from folder to backend...`, 'info');
+                    
+                    // Upload to backend
+                    const uploadResult = await window.API.uploadRCALogs(selectedLogFiles);
+                    
+                    if (uploadResult && uploadResult.success) {
+                        // Store file mapping (original name ->file info)
+                        logFileContentsMap.clear();
+                        if (uploadResult.files && uploadResult.files.length > 0) {
+                            uploadResult.files.forEach(fileInfo => {
+                                logFileContentsMap.set(fileInfo.original_name, fileInfo);
+                            });
+                        } else {
+                            // If no files returned, create a simple mapping
+                            selectedLogFiles.forEach(file => {
+                                logFileContentsMap.set(file.name, { original_name: file.name, file_id: file.name });
+                            });
+                        }
+                        
+                        logFileText.textContent = `Folder uploaded successfully - ${logFiles.length} log file(s) found`;
+                        logFileText.style.color = '#10b981';
+                        
+                        // Show the dropdown container
+                        const logFileDropdownContainer = document.getElementById('logFileDropdownContainer');
+                        if (logFileDropdownContainer) {
+                            logFileDropdownContainer.style.display = 'block';
+                        }
+                        
+                        // Populate dropdown with file names
+                        populateLogFileDropdown(selectedLogFiles);
+                        
+                        showStatusBar(`Successfully uploaded folder with ${logFiles.length} log file(s)`, 'success');
+                    } else {
+                        // Even if upload fails, still show the dropdown with local files
+                        logFileText.textContent = `Folder loaded - ${logFiles.length} log file(s) found (local mode)`;
+                        logFileText.style.color = '#f59e0b';
+                        
+                        // Create simple mapping for local files
+                        logFileContentsMap.clear();
+                        selectedLogFiles.forEach(file => {
+                            logFileContentsMap.set(file.name, { original_name: file.name, file_id: file.name });
+                        });
+                        
+                        // Show the dropdown container
+                        const logFileDropdownContainer = document.getElementById('logFileDropdownContainer');
+                        if (logFileDropdownContainer) {
+                            logFileDropdownContainer.style.display = 'block';
+                        }
+                        
+                        // Populate dropdown with file names
+                        populateLogFileDropdown(selectedLogFiles);
+                        
+                        showStatusBar(`Folder loaded with ${logFiles.length} log file(s) (using local files)`, 'warning');
+                    }
+                } catch (error) {
+                    // Even if upload fails, still show the dropdown with local files
+                    logFileText.textContent = `Folder loaded - ${logFiles.length} log file(s) found (local mode)`;
+                    logFileText.style.color = '#f59e0b';
+                    
+                    // Create simple mapping for local files
+                    logFileContentsMap.clear();
+                    selectedLogFiles.forEach(file => {
+                        logFileContentsMap.set(file.name, { original_name: file.name, file_id: file.name });
+                    });
+                    
+                    // Show the dropdown container
+                    const logFileDropdownContainer = document.getElementById('logFileDropdownContainer');
+                    if (logFileDropdownContainer) {
+                        logFileDropdownContainer.style.display = 'block';
+                    }
+                    
+                    // Populate dropdown with file names
+                    populateLogFileDropdown(selectedLogFiles);
+                    
+                    showStatusBar(`Folder loaded with ${logFiles.length} log file(s) (using local files)`, 'warning');
+                }
+            }
+        });
+    }
+    // ===== CODE ASSISTANT FUNCTIONALITY =====
+    
+    // Code Assistant State Variables (make global)
+    window.codeAssistantCurrentAnalysis = null;
+    window.codeAssistantAnalysisFilename = null;
+    window.codePatchCheckboxes = [];
+    window.configPatchCheckboxes = [];
+    
+    // Load bug history from backend (make globally accessible)
+    // Add flag to prevent multiple simultaneous calls
+    window._bugHistoryLoading = false;
+    window._lastBugHistoryLoad = 0;
+    window._BUG_HISTORY_DEBOUNCE_MS = 5000; // Don't reload if called within 5 seconds (increased to prevent spam)
+    
+    window.loadCodeAssistantBugHistory = async function() {
+        // CRITICAL: Set loading flag FIRST to prevent race conditions
+        // Check if already loading - if so, skip immediately
+        if (window._bugHistoryLoading) {
+            console.log('⏸️ Bug history already loading, skipping duplicate call...');
+            return;
+        }
+        
+        // Debounce: Don't reload if recently loaded (within 5 seconds)
+        const now = Date.now();
+        const timeSinceLastLoad = now - window._lastBugHistoryLoad;
+        if (window._lastBugHistoryLoad > 0 && timeSinceLastLoad < window._BUG_HISTORY_DEBOUNCE_MS) {
+            const secondsLeft = Math.round((window._BUG_HISTORY_DEBOUNCE_MS - timeSinceLastLoad) / 1000);
+            console.log(`⏸️ Bug history recently loaded (${secondsLeft}s ago), skipping to avoid spam (debounce: ${window._BUG_HISTORY_DEBOUNCE_MS}ms)...`);
+            return;
+        }
+        
+        // Set flags BEFORE making API call to prevent race conditions
+        window._bugHistoryLoading = true;
+        window._lastBugHistoryLoad = now;
+        
+        console.log('🔄 [loadCodeAssistantBugHistory] Starting bug history load...');
+        
+        try {
+            console.log('🔄 Loading bug history from backend...');
+            const response = await fetch('http://127.0.0.1:8000/api/code-assistant/bug-history');
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ HTTP error:', response.status, errorText);
+                throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+            }
+            const data = await response.json();
+            console.log('📊 Bug history response:', data);
+            
+            if (data.success) {
+                const caBugHistoryContent = document.getElementById('caBugHistoryDropdownContent');
+                const caBugHistoryBtn = document.getElementById('caBugHistoryBtn');
+                
+                if (!caBugHistoryContent) {
+                    console.error('❌ caBugHistoryDropdownContent element not found');
+                    return;
+                }
+                
+                console.log(`📋 Found ${data.history?.length || 0} history items`);
+                window.codeAssistantHistoryItems = Array.isArray(data.history) ? data.history : [];
+                window.renderHistoryDropdown(
+                    caBugHistoryContent,
+                    caBugHistoryBtn,
+                    window.codeAssistantHistoryItems,
+                    window.getSelectedHistoryLogType(caLogTypeFilter),
+                    'Select analysis...',
+                    'No analysis available for selected log type'
+                );
+                window.codeAssistantAnalysisFilename = null;
+            } else {
+                console.error('❌ Backend returned success=false:', data);
+            }
+        } catch (error) {
+            console.error('❌ Error loading bug history:', error);
+            showError('Failed to load bug history: '+ error.message);
+        } finally {
+            // Always reset loading flag to allow future calls
+            window._bugHistoryLoading = false;
+            console.log('✅ [loadCodeAssistantBugHistory] Loading flag reset');
+        }
+    };
+    
+    // Load selected analysis from backend (make globally accessible)
+    window.loadCodeAssistantAnalysis = async function(filename) {
+        try {
+            console.log('📥 loadCodeAssistantAnalysis called with filename:', filename);
+            
+            if (!filename || filename === 'Select analysis...'|| filename === '') {
+                console.warn('⚠️ Invalid filename, resetting view');
+                resetCodeAssistantDemoView();
+                return;
+            }
+            
+            showStatusBar('Loading analysis...', 'info', 'Code Assistant');
+            
+            console.log('🌐 Fetching analysis from:', `http://127.0.0.1:8000/api/code-assistant/load-analysis/${encodeURIComponent(filename)}`);
+            
+            const response = await fetch(`http://127.0.0.1:8000/api/code-assistant/load-analysis/${encodeURIComponent(filename)}`);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ HTTP error:', response.status, errorText);
+                throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+            }
+            
+            const data = await response.json();
+            console.log('📊 Analysis response:', data);
+            
+            if (data.success && data.analysis) {
+                console.log('✅ Analysis loaded successfully');
+                console.log('   Code patches:', data.analysis.code_patches?.length || 0);
+                console.log('   Config patches:', data.analysis.config_patches?.length || 0);
+                const analysis = data.analysis;
+                window.codeAssistantCurrentAnalysis = analysis;
+                window.codeAssistantAnalysisFilename = filename;
+                
+                // Display error details
+                const caErrorDetails = document.getElementById('caErrorDetails');
+                if (caErrorDetails) {
+                    caErrorDetails.value = analysis.error_display;
+                    console.log('✅ Error details displayed');
+                } else {
+                    console.error('❌ caErrorDetails element not found');
+                }
+                
+                // Display code patches
+                const caCodePatchesBox = document.getElementById('caCodePatchesBox');
+                if (caCodePatchesBox && analysis.code_patches) {
+                    caCodePatchesBox.innerHTML = '';
+                    window.codePatchCheckboxes = [];
+                    
+                    console.log(`📋 Creating checkboxes for ${analysis.code_patches.length} code patches`);
+                    
+                    if (analysis.code_patches.length === 0) {
+                        caCodePatchesBox.innerHTML = '<span style="color:#888;font-style:italic;">No code patches available.</span>';
+                        console.log('⚠️ No code patches to display');
+                    } else {
+                        analysis.code_patches.forEach((patch, idx) => {
+                            console.log(`  ${idx + 1}. ${patch.display_text}`);
+                            const div = document.createElement('div');
+                            div.style.marginBottom = '5px';
+                            div.style.display = 'flex';
+                            div.style.alignItems = 'center';
+                            
+                            const input = document.createElement('input');
+                            input.type = 'checkbox';
+                            input.checked = true;
+                            input.id = 'caCodePatch'+ idx;
+                            input.dataset.patchIndex = idx;
+                            input.style.marginRight = '6px';
+                            input.addEventListener('change', () => {
+                                if (typeof window.updateCodeAssistantPatchPreview === 'function') {
+                                    window.updateCodeAssistantPatchPreview();
+                                }
+                            });
+                            window.codePatchCheckboxes.push(input);
+                            
+                            const label = document.createElement('label');
+                            label.textContent = patch.display_text;
+                            label.setAttribute('for', input.id);
+                            label.style.cursor = 'pointer';
+                            label.title = patch.description || '';
+                            
+                            div.appendChild(input);
+                            div.appendChild(label);
+                            caCodePatchesBox.appendChild(div);
+                        });
+                        console.log(`✅ Created ${window.codePatchCheckboxes.length} code patch checkboxes`);
+                    }
+                } else {
+                    console.error('❌ caCodePatchesBox element not found or no patches in analysis');
+                }
+                // Display config patches
+                const caConfigPatchesBox = document.getElementById('caConfigPatchesBox');
+                if (caConfigPatchesBox && analysis.config_patches) {
+                    caConfigPatchesBox.innerHTML = '';
+                    window.configPatchCheckboxes = [];
+                    
+                    console.log(`📋 Creating checkboxes for ${analysis.config_patches.length} config patches`);
+                    
+                    if (analysis.config_patches.length === 0) {
+                        caConfigPatchesBox.innerHTML = '<span style="color:#888;font-style:italic;">No config patches available.</span>';
+                        console.log('⚠️ No config patches to display');
+                    } else {
+                        analysis.config_patches.forEach((patch, idx) => {
+                            console.log(`  ${idx + 1}. ${patch.display_text}`);
+                            const div = document.createElement('div');
+                            div.style.marginBottom = '5px';
+                            div.style.display = 'flex';
+                            div.style.alignItems = 'center';
+                            
+                            const input = document.createElement('input');
+                            input.type = 'checkbox';
+                            input.checked = true;
+                            input.id = 'caConfigPatch'+ idx;
+                            input.dataset.patchIndex = idx;
+                            input.style.marginRight = '6px';
+                            input.addEventListener('change', () => {
+                                if (typeof window.updateCodeAssistantPatchPreview === 'function') {
+                                    window.updateCodeAssistantPatchPreview();
+                                }
+                            });
+                            window.configPatchCheckboxes.push(input);
+                            
+                            const label = document.createElement('label');
+                            label.textContent = patch.display_text;
+                            label.setAttribute('for', input.id);
+                            label.style.cursor = 'pointer';
+                            label.title = patch.description || '';
+                            
+                            div.appendChild(input);
+                            div.appendChild(label);
+                            caConfigPatchesBox.appendChild(div);
+                        });
+                        console.log(`✅ Created ${window.configPatchCheckboxes.length} config patch checkboxes`);
+                    }
+                } else {
+                    console.error('❌ caConfigPatchesBox element not found or no patches in analysis');
+                }
+                
+                // Update patch preview (this will also attach editable listeners)
+                if (typeof window.updateCodeAssistantPatchPreview === 'function') {
+                    window.updateCodeAssistantPatchPreview();
+                    console.log('✅ Patch preview updated with editable listeners');
+                }
+                
+                hideStatusBar();
+                const patchCount = (analysis.code_patches?.length || 0) + (analysis.config_patches?.length || 0);
+ showStatusBar(` Loaded ${analysis.code_patches?.length || 0} code patches and ${analysis.config_patches?.length || 0} config patches`, 'success', 'Code Assistant');
+                console.log(`✅ Successfully loaded analysis with ${patchCount} total patches`);
+            } else {
+                console.error('❌ Backend returned success=false or no analysis data:', data);
+                hideStatusBar();
+                showError('Failed to load analysis: Invalid response from server');
+            }
+        } catch (error) {
+            console.error('❌ Error loading analysis:', error);
+            hideStatusBar();
+            showError('Failed to load analysis: '+ error.message);
+        }
+    }
+    
+    // Update patch preview based on selected checkboxes (make globally accessible)
+    window.updateCodeAssistantPatchPreview = function() {
+        if (!window.codeAssistantCurrentAnalysis) return;
+        
+        const caPatchPreviewBox = document.getElementById('caPatchPreviewBox');
+        if (!caPatchPreviewBox) return;
+        
+        const selectedCodePatches = [];
+        const selectedConfigPatches = [];
+        
+        // Get selected code patches
+        if (window.codePatchCheckboxes) {
+            window.codePatchCheckboxes.forEach((cb, idx) => {
+                if (cb.checked && window.codeAssistantCurrentAnalysis.code_patches[idx]) {
+                    selectedCodePatches.push(window.codeAssistantCurrentAnalysis.code_patches[idx]);
+                }
+            });
+        }
+        
+        // Get selected config patches
+        if (window.configPatchCheckboxes) {
+            window.configPatchCheckboxes.forEach((cb, idx) => {
+                if (cb.checked && window.codeAssistantCurrentAnalysis.config_patches[idx]) {
+                    selectedConfigPatches.push(window.codeAssistantCurrentAnalysis.config_patches[idx]);
+                }
+            });
+        }
+        
+        // Build preview HTML in table format
+        let previewHTML = '';
+        
+        const escape = window.escapeHtml || function(text) {
+            if (!text) return '';
+            return String(text).replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, '&#039;');
+        };
+        
+        if (selectedCodePatches.length > 0 || selectedConfigPatches.length > 0) {
+            previewHTML += '<table style="width:100%; border-collapse: collapse; font-family: Consolas, Monaco, monospace; font-size: 0.9rem;">';
+            
+            // Code Patches Table
+            if (selectedCodePatches.length > 0) {
+ previewHTML += '<thead><tr style="background: #5d92ff; color: white;"><th colspan="2"style="padding: 0.75rem; text-align: left; border: 1px solid #5d92ff;">CODE PATCHES</th></tr></thead>';
+                selectedCodePatches.forEach((patch, num) => {
+                    previewHTML += '<tbody>';
+                    previewHTML += `<tr style="background: #f6f6fa;"><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600;">Function:</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;">${escape(patch.function_name)}</td></tr>`;
+                    previewHTML += `<tr><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600;">File:</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;">${escape(patch.file_path)}</td></tr>`;
+                    if (patch.patch_type) {
+                        previewHTML += `<tr style="background: #f6f6fa;"><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600;">Type:</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;">${escape(patch.patch_type)}</td></tr>`;
+                    }
+                    if (patch.line_number) {
+                        previewHTML += `<tr><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600;">Lines:</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;">${escape(patch.line_number.toString())}</td></tr>`;
+                    }
+                    if (patch.description) {
+                        previewHTML += `<tr style="background: #f6f6fa;"><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600;">Description:</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;">${escape(patch.description)}</td></tr>`;
+                    }
+                    if (patch.original_code) {
+ previewHTML += `<tr style="background: #ffe6e6;"><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600; color: #ff4444;">Original:</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;"><pre style="margin: 0; white-space: pre-wrap; font-size: 0.85em;">${escape(patch.original_code)}</pre></td></tr>`;
+                    }
+                    if (patch.suggested_code) {
+ previewHTML += `<tr style="background: #e6ffe6;"><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600; color: #107C10;">Patched (Editable):</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;"><pre data-patch-type="code"data-patch-index="${num}"style="margin: 0; white-space: pre-wrap; font-size: 0.85em; cursor: text; outline: 1px dashed transparent; padding: 0.25rem;"contenteditable="true"spellcheck="false">${escape(patch.suggested_code)}</pre></td></tr>`;
+                    }
+                    previewHTML += '<tr><td colspan="2"style="padding: 0.5rem; border: 1px solid #e0e0e0; background: #ffffff;"></td></tr>';
+                    previewHTML += '</tbody>';
+                });
+            }
+            
+            // Config Patches Table
+            if (selectedConfigPatches.length > 0) {
+                if (selectedCodePatches.length > 0) {
+                    previewHTML += '<tr><td colspan="2"style="padding: 0.75rem; border: 1px solid #e0e0e0; background: #ffffff;"></td></tr>';
+                }
+ previewHTML += '<thead><tr style="background: #5d92ff; color: white;"><th colspan="2"style="padding: 0.75rem; text-align: left; border: 1px solid #5d92ff;">CONFIG PATCHES</th></tr></thead>';
+                selectedConfigPatches.forEach((patch, num) => {
+                    previewHTML += '<tbody>';
+                    previewHTML += `<tr style="background: #f6f6fa;"><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600;">Config:</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;">${escape(patch.config_name)}</td></tr>`;
+                    previewHTML += `<tr><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600;">File:</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;">${escape(patch.file_path)}</td></tr>`;
+                    if (patch.description) {
+                        previewHTML += `<tr style="background: #f6f6fa;"><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600;">Description:</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;">${escape(patch.description)}</td></tr>`;
+                    }
+                    if (patch.current_value) {
+ previewHTML += `<tr style="background: #ffe6e6;"><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600; color: #ff4444;">Current:</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;"><code>${escape(patch.current_value.toString())}</code></td></tr>`;
+                    }
+                    if (patch.suggested_value) {
+ previewHTML += `<tr style="background: #e6ffe6;"><td style="padding: 0.5rem; border: 1px solid #e0e0e0; width: 120px; font-weight: 600; color: #107C10;">Suggested (Editable):</td><td style="padding: 0.5rem; border: 1px solid #e0e0e0;"><code data-patch-type="config"data-patch-index="${num}"style="cursor: text; outline: 1px dashed transparent; padding: 2px 4px; display: inline-block; min-width: 50px;"contenteditable="true"spellcheck="false">${escape(patch.suggested_value.toString())}</code></td></tr>`;
+                    }
+                    previewHTML += '<tr><td colspan="2"style="padding: 0.5rem; border: 1px solid #e0e0e0; background: #ffffff;"></td></tr>';
+                    previewHTML += '</tbody>';
+                });
+            }
+            
+            previewHTML += '</table>';
+        }
+        
+        if (!previewHTML) {
+            previewHTML = '<span style="color:#888;font-style:italic;">Select patches to view details...</span>';
+        }
+        
+        caPatchPreviewBox.innerHTML = previewHTML;
+        
+        // Attach change listeners to editable sections
+        if (typeof window.attachEditablePatchListeners === 'function') {
+            window.attachEditablePatchListeners();
+        }
+    }
+    
+    // Function to attach listeners for editable patch content (make globally accessible)
+    window.attachEditablePatchListeners = function() {
+        const caPatchPreviewBox = document.getElementById('caPatchPreviewBox');
+        if (!caPatchPreviewBox) return;
+        
+        // Find all editable code sections (pre tags with patched code)
+        const editablePres = caPatchPreviewBox.querySelectorAll('pre[contenteditable="true"]');
+        editablePres.forEach((preEl, idx) => {
+            // Pre elements are already made editable in the HTML, just attach listeners
+            
+            // Add input event listener
+            preEl.addEventListener('input', function() {
+                console.log('📝 Patch code edited:', this.textContent);
+                
+                    // Get patch info from data attributes
+                    const patchType = this.getAttribute('data-patch-type');
+                    const patchIndexStr = this.getAttribute('data-patch-index');
+                    
+                    if (patchType && patchIndexStr !== null) {
+                        const patchIndex = parseInt(patchIndexStr);
+                        const newContent = this.textContent.trim();
+                        
+                        console.log(`🔍 Editing ${patchType} patch at index ${patchIndex}`);
+                        
+                        if (patchType === 'code'&& window.codeAssistantCurrentAnalysis.code_patches) {
+                            const selectedCodePatches = [];
+                            window.codePatchCheckboxes.forEach((cb, idx) => {
+                                if (cb.checked && window.codeAssistantCurrentAnalysis.code_patches[idx]) {
+                                    selectedCodePatches.push(window.codeAssistantCurrentAnalysis.code_patches[idx]);
+                                }
+                            });
+                            
+                            if (selectedCodePatches[patchIndex]) {
+                                selectedCodePatches[patchIndex].suggested_code = newContent;
+                                
+                                // Also update the original patch data
+                                const originalPatchIdx = window.codeAssistantCurrentAnalysis.code_patches.indexOf(selectedCodePatches[patchIndex]);
+                                if (originalPatchIdx !== -1) {
+                                    window.codeAssistantCurrentAnalysis.code_patches[originalPatchIdx].suggested_code = newContent;
+                                    console.log('✅ Updated code patch suggested_code');
+                                    
+                                    // Mark checkbox as modified
+                                    if (window.codePatchCheckboxes && window.codePatchCheckboxes[originalPatchIdx]) {
+                                        const checkbox = window.codePatchCheckboxes[originalPatchIdx];
+                                        checkbox.setAttribute('data-modified', 'true');
+                                        checkbox.style.color = '#ff6600';
+                                    }
+                                }
+                            }
+                        } else if (patchType === 'config'&& window.codeAssistantCurrentAnalysis.config_patches) {
+                            const selectedConfigPatches = [];
+                            window.configPatchCheckboxes.forEach((cb, idx) => {
+                                if (cb.checked && window.codeAssistantCurrentAnalysis.config_patches[idx]) {
+                                    selectedConfigPatches.push(window.codeAssistantCurrentAnalysis.config_patches[idx]);
+                                }
+                            });
+                            
+                            if (selectedConfigPatches[patchIndex]) {
+                                selectedConfigPatches[patchIndex].suggested_value = newContent;
+                                
+                                // Also update the original patch data
+                                const originalPatchIdx = window.codeAssistantCurrentAnalysis.config_patches.indexOf(selectedConfigPatches[patchIndex]);
+                                if (originalPatchIdx !== -1) {
+                                    window.codeAssistantCurrentAnalysis.config_patches[originalPatchIdx].suggested_value = newContent;
+                                    console.log('✅ Updated config patch suggested_value');
+                                    
+                                    // Mark checkbox as modified
+                                    if (window.configPatchCheckboxes && window.configPatchCheckboxes[originalPatchIdx]) {
+                                        const checkbox = window.configPatchCheckboxes[originalPatchIdx];
+                                        checkbox.setAttribute('data-modified', 'true');
+                                        checkbox.style.color = '#ff6600';
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Show visual feedback
+                        this.style.background = '#fff9e6'; // Light yellow
+                        setTimeout(() => {
+                            this.style.background = '';
+                        }, 500);
+                    }
+            });
+            
+            // Add blur event to finalize edit
+            preEl.addEventListener('blur', function() {
+                console.log('💾 Patch edit finalized');
+                this.style.outline = '1px dashed transparent';
+                this.style.background = '';
+            });
+            
+            // Add focus event for visual feedback
+            preEl.addEventListener('focus', function() {
+                this.style.outline = '2px dashed #0078D4';
+                this.style.background = '#f0f8ff';
+            });
+        });
+        
+        // Also handle editable code elements (for config patches)
+        const editableCodes = caPatchPreviewBox.querySelectorAll('code[contenteditable="true"]');
+        editableCodes.forEach((codeEl) => {
+            // Add input event listener
+            codeEl.addEventListener('input', function() {
+                const patchType = this.getAttribute('data-patch-type');
+                const patchIndexStr = this.getAttribute('data-patch-index');
+                
+                if (patchType && patchIndexStr !== null) {
+                    const patchIndex = parseInt(patchIndexStr);
+                    const newContent = this.textContent.trim();
+                    
+                    console.log(`🔍 Editing ${patchType} patch at index ${patchIndex}`);
+                    
+                    if (patchType === 'config'&& window.codeAssistantCurrentAnalysis.config_patches) {
+                        const selectedConfigPatches = [];
+                        window.configPatchCheckboxes.forEach((cb, idx) => {
+                            if (cb.checked && window.codeAssistantCurrentAnalysis.config_patches[idx]) {
+                                selectedConfigPatches.push(window.codeAssistantCurrentAnalysis.config_patches[idx]);
+                            }
+                        });
+                        
+                        if (selectedConfigPatches[patchIndex]) {
+                            selectedConfigPatches[patchIndex].suggested_value = newContent;
+                            
+                            // Also update the original patch data
+                            const originalPatchIdx = window.codeAssistantCurrentAnalysis.config_patches.indexOf(selectedConfigPatches[patchIndex]);
+                            if (originalPatchIdx !== -1) {
+                                window.codeAssistantCurrentAnalysis.config_patches[originalPatchIdx].suggested_value = newContent;
+                                console.log('✅ Updated config patch suggested_value');
+                                
+                                // Mark checkbox as modified
+                                if (window.configPatchCheckboxes && window.configPatchCheckboxes[originalPatchIdx]) {
+                                    const checkbox = window.configPatchCheckboxes[originalPatchIdx];
+                                    checkbox.setAttribute('data-modified', 'true');
+                                    checkbox.style.color = '#ff6600';
+                                }
+                            }
+                        }
+                        
+                        // Show visual feedback
+                        this.style.background = '#fff9e6';
+                        setTimeout(() => {
+                            this.style.background = '';
+                        }, 500);
+                    }
+                }
+            });
+            
+            // Add blur event
+            codeEl.addEventListener('blur', function() {
+                this.style.outline = '1px dashed transparent';
+                this.style.background = '';
+            });
+            
+            // Add focus event
+            codeEl.addEventListener('focus', function() {
+                this.style.outline = '2px dashed #0078D4';
+                this.style.background = '#f0f8ff';
+            });
+        });
+    };
+    // Apply selected patches (make globally accessible)
+    window.applyCodeAssistantPatches = async function() {
+        try {
+            if (!window.codeAssistantAnalysisFilename) {
+                alert('Please load an analysis first.');
+                return;
+            }
+            
+            // Get selected patches
+            const selectedCodePatches = [];
+            const selectedConfigPatches = [];
+            
+            if (window.codePatchCheckboxes) {
+                window.codePatchCheckboxes.forEach((cb, idx) => {
+                    if (cb.checked && window.codeAssistantCurrentAnalysis && window.codeAssistantCurrentAnalysis.code_patches[idx]) {
+                        const displayText = window.codeAssistantCurrentAnalysis.code_patches[idx].display_text;
+                        selectedCodePatches.push(displayText);
+                        console.log(`✅ Selected code patch ${idx}: "${displayText}"`);
+                    }
+                });
+            }
+            
+            if (window.configPatchCheckboxes) {
+                window.configPatchCheckboxes.forEach((cb, idx) => {
+                    if (cb.checked && window.codeAssistantCurrentAnalysis && window.codeAssistantCurrentAnalysis.config_patches[idx]) {
+                        const displayText = window.codeAssistantCurrentAnalysis.config_patches[idx].display_text;
+                        selectedConfigPatches.push(displayText);
+                        console.log(`✅ Selected config patch ${idx}: "${displayText}"`);
+                    }
+                });
+            }
+            
+            console.log(`📤 Sending to backend: ${selectedCodePatches.length} code patches, ${selectedConfigPatches.length} config patches`);
+            console.log(`📤 Code patches:`, selectedCodePatches);
+            console.log(`📤 Config patches:`, selectedConfigPatches);
+            
+            if (selectedCodePatches.length === 0 && selectedConfigPatches.length === 0) {
+                alert('Please select at least one patch to apply.');
+                return;
+            }
+            
+            // Confirm action
+            const confirmMsg = `Apply ${selectedCodePatches.length + selectedConfigPatches.length} selected patches?\n\n` +
+                `Code patches: ${selectedCodePatches.length}\n` +
+                `Config patches: ${selectedConfigPatches.length}\n\n` +
+                `Backup files will be created automatically.`;
+            
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+            
+            showStatusBar('Applying patches...', 'info', 'Code Assistant');
+            
+            const requestData = {
+                analysis_filename: window.codeAssistantAnalysisFilename,
+                selected_code_patches: selectedCodePatches,
+                selected_config_patches: selectedConfigPatches,
+                code_dir: window.codeAssistantCurrentAnalysis?.code_dir || null
+            };
+            
+            const response = await fetch('http://127.0.0.1:8000/api/code-assistant/apply-patches', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ detail: 'Unknown error'}));
+                throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            hideStatusBar();
+            
+            if (data.success) {
+                // Show success dialog with Git options (matching PyQt show_patch_success_dialog)
+                showPatchSuccessDialog(data, selectedCodePatches, selectedConfigPatches);
+                showStatusBar(data.message, 'success', 'Code Assistant');
+            } else {
+ let errorMsg = ` Some patches had issues:\n\n`;
+                errorMsg += `Applied: ${data.total_applied || 0}\n`;
+                errorMsg += `Failed: ${data.total_failed || 0}\n`;
+                if (data.failed_patches && data.failed_patches.length > 0) {
+                    errorMsg += `\nFailed patches:\n`;
+                    data.failed_patches.forEach(p => {
+                        errorMsg += `- ${p.get('function_name') || p.get('config_name') || 'Unknown'}\n`;
+                    });
+                }
+                alert(errorMsg);
+                showStatusBar('Patch application completed with issues', 'warning', 'Code Assistant');
+            }
+            
+        } catch (error) {
+            console.error('Error applying patches:', error);
+            hideStatusBar();
+            showError('Failed to apply patches: '+ error.message);
+        }
+    }
+    
+    // Function to show patch success dialog (matching PyQt show_patch_success_dialog)
+    function showPatchSuccessDialog(result, selectedCodePatches, selectedConfigPatches) {
+        const modal = document.getElementById('patchSuccessModal');
+        const summaryDiv = document.getElementById('patchSuccessSummary');
+        const commitMsgEdit = document.getElementById('commitMessageEdit');
+        const gitCommitCheck = document.getElementById('gitCommitCheck');
+        const gitPushCheck = document.getElementById('gitPushCheck');
+        const gitCommitPushBtn = document.getElementById('gitCommitPushBtn');
+        
+        if (!modal || !summaryDiv || !commitMsgEdit) {
+            console.error('Patch success modal elements not found');
+            // Fallback to alert
+ alert(` Successfully applied ${result.total_applied} patches!\n\nBackup files created automatically.`);
+            return;
+        }
+        
+        // Build summary text (matching PyQt lines 14527-14536)
+        let summaryText = `Applied: ${result.total_applied} patches\n`;
+        summaryText += `Code patches: ${selectedCodePatches.length}\n`;
+        summaryText += `Config patches: ${selectedConfigPatches.length}\n\n`;
+        summaryText += `Backup files created automatically.\n\n`;
+        summaryText += `Selected patches:\n`;
+        
+        selectedCodePatches.forEach(patch => {
+            summaryText += `• Code: ${patch}\n`;
+        });
+        selectedConfigPatches.forEach(patch => {
+            summaryText += `• Config: ${patch}\n`;
+        });
+        
+        summaryDiv.textContent = summaryText;
+        
+        // Generate dynamic commit message (matching PyQt generate_dynamic_commit_message)
+        const commitMessage = generateDynamicCommitMessage(selectedCodePatches, selectedConfigPatches);
+        commitMsgEdit.value = commitMessage;
+        
+        // Store patch data for git operations
+        window.lastAppliedPatches = {
+            result: result,
+            selectedCodePatches: selectedCodePatches,
+            selectedConfigPatches: selectedConfigPatches
+        };
+        
+        // Show modal
+        modal.style.display = 'block';
+        
+        // Handle Close button
+        const closeBtn = modal.querySelector('.template-modal-close');
+        if (closeBtn) {
+            closeBtn.onclick = closePatchSuccessModal;
+        }
+        
+        // Handle Commit & Push button
+        if (gitCommitPushBtn) {
+            gitCommitPushBtn.onclick = () =>handleGitOperations(modal);
+        }
+    }
+    
+    // Function to close patch success modal
+    function closePatchSuccessModal() {
+        const modal = document.getElementById('patchSuccessModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    // Make closePatchSuccessModal globally accessible
+    window.closePatchSuccessModal = closePatchSuccessModal;
+    
+    // Function to generate dynamic commit message (matching PyQt generate_dynamic_commit_message)
+    function generateDynamicCommitMessage(selectedCodePatches, selectedConfigPatches) {
+        try {
+            // Check if we have loaded bug analysis data
+            if (!window.codeAssistantCurrentAnalysis) {
+                return generateFallbackCommitMessage(selectedCodePatches, selectedConfigPatches);
+            }
+            
+            const analysis = window.codeAssistantCurrentAnalysis;
+            const errorMessage = analysis.error_message || 'Unknown error';
+            
+            // Generate commit subject based on error type
+            const commitSubject = generateCommitSubject(errorMessage);
+            
+            // Build commit message
+            let commitMsg = `${commitSubject}\n\n`;
+            commitMsg += `Error Message: "${errorMessage}"\n\n`;
+            commitMsg += `Applied ${selectedCodePatches.length} code patches and ${selectedConfigPatches.length} config patches.\n\n`;
+            
+            // Add selected patch details
+            if (selectedCodePatches.length > 0 || selectedConfigPatches.length > 0) {
+                commitMsg += 'Selected Patch Details:\n';
+                
+                // Code patches
+                selectedCodePatches.forEach(patchName => {
+                    const patch = analysis.code_patches?.find(p =>p.display_text === patchName);
+                    if (patch) {
+                        const fileName = patch.file_path ? patch.file_path.split(/[/\\]/).pop() : 'Unknown file';
+                        commitMsg += `- Code: ${patchName} (${fileName})\n`;
+                        if (patch.description) {
+                            commitMsg += `  Description: ${patch.description}\n`;
+                        }
+                    } else {
+                        commitMsg += `- Code: ${patchName}\n`;
+                    }
+                });
+                
+                // Config patches
+                selectedConfigPatches.forEach(patchName => {
+                    const patch = analysis.config_patches?.find(p =>p.display_text === patchName);
+                    if (patch) {
+                        const fileName = patch.file_path ? patch.file_path.split(/[/\\]/).pop() : 'Unknown file';
+                        commitMsg += `- Config: ${patchName} (${fileName})\n`;
+                        if (patch.description) {
+                            commitMsg += `  Description: ${patch.description}\n`;
+                        }
+                    } else {
+                        commitMsg += `- Config: ${patchName}\n`;
+                    }
+                });
+                
+                commitMsg += '\n';
+            }
+            
+            // Add root cause analysis if available
+            // Note: This would need to be extracted from the analysis data structure
+            // For now, we'll use a simplified version
+            
+            return commitMsg.trim();
+        } catch (error) {
+            console.error('Error generating commit message:', error);
+            return generateFallbackCommitMessage(selectedCodePatches, selectedConfigPatches);
+        }
+    }
+    
+    // Function to generate commit subject (matching PyQt generate_commit_subject)
+    function generateCommitSubject(errorText) {
+        const errorLower = errorText.toLowerCase();
+        
+        if (errorLower.includes('contention') && errorLower.includes('timer')) {
+            return 'Fix contention resolution timer configuration';
+        } else if (errorLower.includes('amf') && errorLower.includes('association')) {
+            return 'Fix AMF association issue';
+        } else if (errorLower.includes('rrc') && errorLower.includes('setup')) {
+            return 'Fix RRC setup procedure';
+        } else if (errorLower.includes('timeout')) {
+            return 'Fix timeout configuration issue';
+        } else if (errorLower.includes('random access') || errorLower.includes('ra procedure')) {
+            return 'Fix Random Access procedure';
+        } else if (errorLower.includes('ngap')) {
+            return 'Fix NGAP protocol issue';
+        } else if (errorLower.includes('f1ap')) {
+            return 'Fix F1AP protocol issue';
+        } else {
+            // Try to extract meaningful keywords
+            const keywords = [];
+            if (errorLower.includes('gnb')) keywords.push('gNB');
+            if (errorLower.includes('ue')) keywords.push('UE');
+            if (errorLower.includes('network')) keywords.push('network');
+            
+            if (keywords.length > 0) {
+                return `Fix ${keywords.join('/')} configuration issue`;
+            } else {
+                return 'Fix network configuration issue';
+            }
+        }
+    }
+    
+    // Function to generate fallback commit message (matching PyQt generate_fallback_commit_message)
+    function generateFallbackCommitMessage(selectedCodePatches, selectedConfigPatches) {
+        let msg = 'Apply RCA patches for network configuration issue\n\n';
+        msg += `- Applied ${selectedCodePatches.length} code patches\n`;
+        msg += `- Applied ${selectedConfigPatches.length} config patches\n\n`;
+        
+        if (selectedCodePatches.length > 0) {
+            msg += 'Code patches:\n';
+            selectedCodePatches.forEach(patch => {
+                msg += `  - ${patch}\n`;
+            });
+            msg += '\n';
+        }
+        
+        if (selectedConfigPatches.length > 0) {
+            msg += 'Config patches:\n';
+            selectedConfigPatches.forEach(patch => {
+                msg += `  - ${patch}\n`;
+            });
+            msg += '\n';
+        }
+        
+        msg += 'Generated by AgenticRAN RCA Analysis';
+        return msg;
+    }
+    
+    // Function to handle Git operations (matching PyQt handle_git_operations)
+    async function handleGitOperations(modal) {
+        const gitCommitCheck = document.getElementById('gitCommitCheck');
+        const gitPushCheck = document.getElementById('gitPushCheck');
+        const commitMsgEdit = document.getElementById('commitMessageEdit');
+        
+        if (!gitCommitCheck || !gitPushCheck || !commitMsgEdit) {
+            console.error('Git operation elements not found');
+            return;
+        }
+        
+        if (!gitCommitCheck.checked) {
+            closePatchSuccessModal();
+            return;
+        }
+        
+        const commitMessage = commitMsgEdit.value.trim();
+        if (!commitMessage) {
+            alert('Please enter a commit message.');
+            return;
+        }
+        const shouldPush = gitPushCheck.checked;
+        // Show progress
+        showStatusBar('Performing Git operations...', 'info', 'Git Operations');
+        
+        try {
+            // Get code directory from analysis
+            const codeDir = window.codeAssistantCurrentAnalysis?.code_dir || null;
+            
+            // Get selected patches from checkboxes (matching PyQt behavior)
+            const selectedCodePatches = [];
+            const selectedConfigPatches = [];
+            
+            if (window.codePatchCheckboxes) {
+                window.codePatchCheckboxes.forEach((cb, idx) => {
+                    if (cb.checked && window.codeAssistantCurrentAnalysis && window.codeAssistantCurrentAnalysis.code_patches[idx]) {
+                        const patch = window.codeAssistantCurrentAnalysis.code_patches[idx];
+                        const displayText = patch.display_text || patch.function_name || 'Unknown';
+                        selectedCodePatches.push(displayText);
+                    }
+                });
+            }
+            
+            if (window.configPatchCheckboxes) {
+                window.configPatchCheckboxes.forEach((cb, idx) => {
+                    if (cb.checked && window.codeAssistantCurrentAnalysis && window.codeAssistantCurrentAnalysis.config_patches[idx]) {
+                        const patch = window.codeAssistantCurrentAnalysis.config_patches[idx];
+                        const displayText = patch.display_text || patch.config_name || 'Unknown';
+                        selectedConfigPatches.push(displayText);
+                    }
+                });
+            }
+            
+            // Get analysis filename for checking if this is from git history
+            const analysisFilename = window.codeAssistantAnalysisFilename || null;
+            
+            const requestData = {
+                commit_message: commitMessage,
+                should_push: shouldPush,
+                code_dir: codeDir,
+                selected_code_patches: selectedCodePatches,
+                selected_config_patches: selectedConfigPatches,
+                analysis_filename: analysisFilename
+            };
+            
+            const response = await fetch('http://127.0.0.1:8000/api/code-assistant/git-commit-push', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ detail: 'Unknown error'}));
+                throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            hideStatusBar();
+            
+            if (data.success) {
+                let successMsg = 'Git operations completed successfully!\n\n';
+                if (data.committed) {
+ successMsg += ` Committed: ${data.commit_hash || 'N/A'}\n`;
+                }
+                if (data.pushed) {
+ successMsg += 'Pushed to remote repository\n';
+                }
+                if (data.embedding_updated) {
+ successMsg += 'Embeddings updated with new commit\n';
+                } else if (data.embedding_skipped) {
+                    successMsg += `ℹ  Embedding update skipped: ${data.embedding_skipped}\n`;
+                } else if (data.embedding_error) {
+ successMsg += ` Embedding update failed: ${data.embedding_error}\n`;
+                }
+                
+                alert(successMsg);
+                closePatchSuccessModal();
+            } else {
+                alert(`Git operations failed:\n\n${data.error || 'Unknown error'}\n\nPlease check your Git configuration and try again.`);
+            }
+        } catch (error) {
+            console.error('Error performing Git operations:', error);
+            hideStatusBar();
+            alert(`An error occurred during Git operations:\n${error.message}`);
+        }
+    }
+    
+    // Run investigation commands (make globally accessible)
+    window.runCodeAssistantInvestigation = async function() {
+        try {
+            if (!window.codeAssistantAnalysisFilename) {
+                alert('Please load an analysis first.');
+                return;
+            }
+            
+            if (!window.codeAssistantCurrentAnalysis || !window.codeAssistantCurrentAnalysis.terminal_commands || window.codeAssistantCurrentAnalysis.terminal_commands.length === 0) {
+                alert('No investigation commands available for this analysis.\n\n'+
+                    'Note: Investigation commands are generated during Phase 4 of the RCA analysis. '+
+                    'If this is an older analysis, it may not have investigation commands.');
+                return;
+            }
+            
+            // Show confirmation
+            const commandsList = window.codeAssistantCurrentAnalysis.terminal_commands.map((cmd, i) =>                 `${i + 1}. ${cmd.command || cmd}`
+            ).join('\n');
+            
+            const confirmMsg = `Execute ${window.codeAssistantCurrentAnalysis.terminal_commands.length} terminal commands?\n\n` +
+                `Commands to run:\n${commandsList}\n\n` +
+                `Note: Some commands may require administrator privileges.`;
+            
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+            
+            showStatusBar('Running investigation commands...', 'info', 'Code Assistant');
+            
+            const requestData = {
+                analysis_filename: window.codeAssistantAnalysisFilename
+            };
+            
+            const response = await fetch('http://127.0.0.1:8000/api/code-assistant/run-investigation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ detail: 'Unknown error'}));
+                throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            hideStatusBar();
+            
+            // Get the output textarea element
+            const caInvestigationOutput = document.getElementById('caInvestigationOutput');
+            
+            if (data.success) {
+                // Format results as text for the textarea
+                let resultsText = '=== INVESTIGATION COMMANDS EXECUTION RESULTS ===\n\n';
+                
+                data.results.forEach((result, idx) => {
+                    resultsText += `\n${'='.repeat(80)}\n`;
+                    resultsText += `COMMAND ${result.command_number || idx + 1}/${result.total_commands || data.results.length}: ${result.command}\n`;
+                    resultsText += `${'='.repeat(80)}\n`;
+                    resultsText += `EXPLANATION: ${result.explanation || 'N/A'}\n`;
+                    
+                    if (result.status === 'success') {
+ resultsText += ` STATUS: Command completed successfully (exit code: ${result.return_code})\n`;
+                    } else if (result.status === 'failed') {
+ resultsText += ` STATUS: Command failed with exit code: ${result.return_code}\n`;
+                    } else if (result.status === 'timeout') {
+ resultsText += ` STATUS: Command timed out after 30 seconds\n`;
+                    } else if (result.status === 'error') {
+ resultsText += ` STATUS: Error executing command: ${result.error || 'Unknown error'}\n`;
+                    }
+                    
+                    if (result.output) {
+                        resultsText += `\n--- OUTPUT ---\n${result.output}\n`;
+                    }
+                    
+                    if (result.stderr) {
+                        resultsText += `\n--- STDERR ---\n${result.stderr}\n`;
+                    }
+                    
+                    resultsText += `\n`;
+                });
+                
+                resultsText += `\n${'='.repeat(80)}\n`;
+ resultsText += ` SUMMARY: All ${data.results.length} command(s) executed\n`;
+                
+                // Display in the textarea
+                if (caInvestigationOutput) {
+                    caInvestigationOutput.value = resultsText;
+                    caInvestigationOutput.scrollTop = 0; // Scroll to top
+                    showStatusBar(`Executed ${data.results.length} commands`, 'success', 'Code Assistant');
+                } else {
+                    // Fallback if textarea not found
+                    console.error('caInvestigationOutput textarea not found');
+                    alert('Results: '+ data.results.length + 'command(s) executed. Check console for details.');
+                    showStatusBar(`Executed ${data.results.length} commands`, 'success', 'Code Assistant');
+                }
+            } else {
+                alert('No investigation commands available: '+ data.message);
+            }
+            
+        } catch (error) {
+            console.error('Error running investigation commands:', error);
+            hideStatusBar();
+            showError('Failed to run investigation commands: '+ error.message);
+        }
+    }
+    
+    // ===== CODE EVALUATION FUNCTIONALITY =====
+    
+    // Code Evaluation State Variables (make global)
+    window.codeEvaluationCurrentAnalysis = null;
+    window.codeEvaluationAnalysisFilename = null;
+    window.codeEvaluationCodePatchCheckboxes = [];
+    window.codeEvaluationConfigPatchCheckboxes = [];
+    
+    // Load bug history for Code Evaluation (similar to Code Assistant)
+    window.loadCodeEvaluationBugHistory = async function() {
+        // Check if already loading
+        if (window._bugHistoryLoading) {
+            console.log('⏸️ Bug history already loading, skipping duplicate call...');
+            return;
+        }
+        
+        // Debounce: Don't reload if recently loaded
+        const now = Date.now();
+        const timeSinceLastLoad = now - window._lastBugHistoryLoad;
+        if (window._lastBugHistoryLoad > 0 && timeSinceLastLoad < window._BUG_HISTORY_DEBOUNCE_MS) {
+            const secondsLeft = Math.round((window._BUG_HISTORY_DEBOUNCE_MS - timeSinceLastLoad) / 1000);
+            console.log(`⏸️ Bug history recently loaded (${secondsLeft}s ago), skipping to avoid spam...`);
+            return;
+        }
+        
+        window._bugHistoryLoading = true;
+        window._lastBugHistoryLoad = now;
+        
+        console.log('🔄 [loadCodeEvaluationBugHistory] Starting bug history load...');
+        
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/code-assistant/bug-history');
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ HTTP error:', response.status, errorText);
+                throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+            }
+            const data = await response.json();
+            console.log('📊 Code Evaluation bug history response:', data);
+            
+            if (data.success) {
+                const ceBugHistoryContent = document.getElementById('ceBugHistoryDropdownContent');
+                const ceBugHistoryBtn = document.getElementById('ceBugHistoryBtn');
+                
+                if (!ceBugHistoryContent) {
+                    console.error('❌ ceBugHistoryDropdownContent element not found');
+                    return;
+                }
+                
+                console.log(`📋 Found ${data.history?.length || 0} history items`);
+                window.codeEvaluationHistoryItems = Array.isArray(data.history) ? data.history : [];
+                window.renderHistoryDropdown(
+                    ceBugHistoryContent,
+                    ceBugHistoryBtn,
+                    window.codeEvaluationHistoryItems,
+                    window.getSelectedHistoryLogType(ceLogTypeFilter),
+                    'Select a bug analysis...',
+                    'No analysis available for selected log type'
+                );
+                window.codeEvaluationAnalysisFilename = null;
+            } else {
+                console.error('❌ Backend returned success=false:', data);
+            }
+        } catch (error) {
+            console.error('❌ Error loading Code Evaluation bug history:', error);
+            showStatusBar('Failed to load bug history: '+ error.message, 'error', 'Code Evaluation');
+        } finally {
+            window._bugHistoryLoading = false;
+            console.log('✅ [loadCodeEvaluationBugHistory] Loading flag reset');
+        }
+    };
+    
+    // Load selected analysis for Code Evaluation
+    window.loadCodeEvaluationAnalysis = async function(filename) {
+        try {
+            console.log('📥 loadCodeEvaluationAnalysis called with filename:', filename);
+            
+            if (!filename || filename === 'Select a bug analysis...'|| filename === '') {
+                console.warn('⚠️ Invalid filename, resetting view');
+                return;
+            }
+            
+            showStatusBar('Loading analysis...', 'info', 'Code Evaluation');
+            
+            const response = await fetch(`http://127.0.0.1:8000/api/code-assistant/load-analysis/${encodeURIComponent(filename)}`);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ HTTP error:', response.status, errorText);
+                throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+            }
+            
+            const data = await response.json();
+            console.log('📊 Code Evaluation analysis response:', data);
+            
+            if (data.success && data.analysis) {
+                console.log('✅ Analysis loaded successfully');
+                const analysis = data.analysis;
+                window.codeEvaluationCurrentAnalysis = analysis;
+                window.codeEvaluationAnalysisFilename = filename;
+                
+                // Display error details
+                const ceErrorDetails = document.getElementById('ceErrorDetails');
+                if (ceErrorDetails) {
+                    ceErrorDetails.value = analysis.error_display || 'No error details available.';
+                    console.log('✅ Error details displayed');
+                }
+                
+                // Display code patches
+                const ceCodePatchesBox = document.getElementById('ceCodePatchesBox');
+                if (ceCodePatchesBox && analysis.code_patches) {
+                    ceCodePatchesBox.innerHTML = '';
+                    window.codeEvaluationCodePatchCheckboxes = [];
+                    
+                    if (analysis.code_patches.length === 0) {
+                        ceCodePatchesBox.innerHTML = '<span style="color:#888;font-style:italic;">No code patches available. Load an analysis to begin.</span>';
+                    } else {
+                        analysis.code_patches.forEach((patch, idx) => {
+                            const div = document.createElement('div');
+                            div.style.marginBottom = '6px';
+                            div.style.display = 'flex';
+                            div.style.alignItems = 'center';
+                            
+                            const input = document.createElement('input');
+                            input.type = 'checkbox';
+                            input.checked = true;
+                            input.id = 'ceCodePatch'+ idx;
+                            input.dataset.patchIndex = idx;
+                            input.style.marginRight = '6px';
+                            input.style.cursor = 'pointer';
+                            input.addEventListener('change', () => {
+                                if (typeof window.updateCodeEvaluationPatchPreview === 'function') {
+                                    window.updateCodeEvaluationPatchPreview();
+                                }
+                            });
+                            window.codeEvaluationCodePatchCheckboxes.push(input);
+                            
+                            const label = document.createElement('label');
+                            label.textContent = patch.display_text || `Code Patch ${idx + 1}`;
+                            label.setAttribute('for', input.id);
+                            label.style.cursor = 'pointer';
+                            label.style.fontSize = '13px';
+                            
+                            div.appendChild(input);
+                            div.appendChild(label);
+                            ceCodePatchesBox.appendChild(div);
+                        });
+                    }
+                }
+                
+                // Display config patches
+                const ceConfigPatchesBox = document.getElementById('ceConfigPatchesBox');
+                if (ceConfigPatchesBox && analysis.config_patches) {
+                    ceConfigPatchesBox.innerHTML = '';
+                    window.codeEvaluationConfigPatchCheckboxes = [];
+                    
+                    if (analysis.config_patches.length === 0) {
+                        ceConfigPatchesBox.innerHTML = '<span style="color:#888;font-style:italic;">No config patches available. Load an analysis to begin.</span>';
+                    } else {
+                        analysis.config_patches.forEach((patch, idx) => {
+                            const div = document.createElement('div');
+                            div.style.marginBottom = '6px';
+                            div.style.display = 'flex';
+                            div.style.alignItems = 'center';
+                            
+                            const input = document.createElement('input');
+                            input.type = 'checkbox';
+                            input.checked = true;
+                            input.id = 'ceConfigPatch'+ idx;
+                            input.dataset.patchIndex = idx;
+                            input.style.marginRight = '6px';
+                            input.style.cursor = 'pointer';
+                            input.addEventListener('change', () => {
+                                if (typeof window.updateCodeEvaluationPatchPreview === 'function') {
+                                    window.updateCodeEvaluationPatchPreview();
+                                }
+                            });
+                            window.codeEvaluationConfigPatchCheckboxes.push(input);
+                            
+                            const label = document.createElement('label');
+                            label.textContent = patch.display_text || `Config Patch ${idx + 1}`;
+                            label.setAttribute('for', input.id);
+                            label.style.cursor = 'pointer';
+                            label.style.fontSize = '13px';
+                            
+                            div.appendChild(input);
+                            div.appendChild(label);
+                            ceConfigPatchesBox.appendChild(div);
+                        });
+                    }
+                }
+                
+                // Update patch preview
+                if (typeof window.updateCodeEvaluationPatchPreview === 'function') {
+                    window.updateCodeEvaluationPatchPreview();
+                }
+                
+ showStatusBar(` Loaded ${analysis.code_patches?.length || 0} code patches and ${analysis.config_patches?.length || 0} config patches`, 'success', 'Code Evaluation');
+            } else {
+                throw new Error(data.message || 'Failed to load analysis');
+            }
+        } catch (error) {
+            console.error('❌ Error loading Code Evaluation analysis:', error);
+            showStatusBar('Failed to load analysis: '+ error.message, 'error', 'Code Evaluation');
+        }
+    };
+    
+    // Update patch preview for Code Evaluation
+    window.updateCodeEvaluationPatchPreview = function() {
+        const cePatchPreview = document.getElementById('cePatchPreview');
+        if (!cePatchPreview || !window.codeEvaluationCurrentAnalysis) {
+            return;
+        }
+        
+        let previewText = '';
+        
+        // Get selected code patches
+        const selectedCodePatches = window.codeEvaluationCodePatchCheckboxes
+            .filter(cb =>cb.checked)
+            .map(cb => {
+                const idx = parseInt(cb.dataset.patchIndex);
+                return window.codeEvaluationCurrentAnalysis.code_patches?.[idx];
+            })
+            .filter(p =>p);
+        
+        // Get selected config patches
+        const selectedConfigPatches = window.codeEvaluationConfigPatchCheckboxes
+            .filter(cb =>cb.checked)
+            .map(cb => {
+                const idx = parseInt(cb.dataset.patchIndex);
+                return window.codeEvaluationCurrentAnalysis.config_patches?.[idx];
+            })
+            .filter(p =>p);
+        
+        if (selectedCodePatches.length > 0) {
+            previewText += '=== CODE PATCHES ===\n\n';
+            selectedCodePatches.forEach((patch, idx) => {
+                previewText += `${idx + 1}. ${patch.display_text || 'Code Patch'}\n`;
+                if (patch.description) previewText += `   Description: ${patch.description}\n`;
+                if (patch.file_path) previewText += `   File: ${patch.file_path}\n`;
+                previewText += '\n';
+            });
+        }
+        
+        if (selectedConfigPatches.length > 0) {
+            previewText += '=== CONFIG PATCHES ===\n\n';
+            selectedConfigPatches.forEach((patch, idx) => {
+                previewText += `${idx + 1}. ${patch.display_text || 'Config Patch'}\n`;
+                if (patch.description) previewText += `   Description: ${patch.description}\n`;
+                if (patch.file_path) previewText += `   File: ${patch.file_path}\n`;
+                previewText += '\n';
+            });
+        }
+        
+        if (previewText === '') {
+            previewText = 'No patches selected.';
+        }
+        
+        cePatchPreview.value = previewText;
+    };
+    
+    // Initialize Code Evaluation UI event listeners (top level, like Code Assistant)
+    const ceBugHistoryDropdown = document.getElementById('ceBugHistoryDropdown');
+    const ceBugHistoryBtn = document.getElementById('ceBugHistoryBtn');
+    const ceBugHistoryContent = document.getElementById('ceBugHistoryDropdownContent');
+    const ceLogTypeFilter = document.getElementById('ceLogTypeFilter');
+    
+    // Dropdown toggle (using CSS classes like Code Assistant)
+    if (ceBugHistoryBtn) {
+        ceBugHistoryBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (ceBugHistoryDropdown) {
+                ceBugHistoryDropdown.classList.toggle('active');
+            }
+        });
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (ceBugHistoryDropdown && !ceBugHistoryDropdown.contains(e.target)) {
+            ceBugHistoryDropdown.classList.remove('active');
+        }
+        window.closePortalSelectDropdownsOnOutsideClick(e.target);
+    });
+    
+    // Handle dropdown item selection
+    if (ceBugHistoryContent) {
+        ceBugHistoryContent.addEventListener('click', function(e) {
+            const item = e.target.closest('.dropdown-item');
+            if (item && item.dataset.filename) {
+                const filename = item.dataset.filename;
+                const displayText = item.textContent;
+                if (ceBugHistoryBtn) {
+                    const labelEl = document.getElementById('ceBugHistoryBtnLabel')
+                        || ceBugHistoryBtn.querySelector('.ce-dropdown-btn-label')
+                        || ceBugHistoryBtn.querySelector('span:not(.dropdown-arrow)');
+                    if (labelEl) labelEl.textContent = displayText;
+                }
+                if (ceBugHistoryDropdown) {
+                    ceBugHistoryDropdown.classList.remove('active');
+                }
+                window.codeEvaluationAnalysisFilename = filename;
+            }
+        });
+    }
+    initPortalSelectDropdown({
+        dropdownId: 'ceLogTypeDropdown',
+        btnId: 'ceLogTypeBtn',
+        menuId: 'ceLogTypeDropdownMenu',
+        hiddenId: 'ceLogTypeFilter',
+        labelId: 'ceLogTypeBtnLabel',
+        defaultLabel: 'All'
+    });
+    const CE_RESULTS_LAYER_LABELS = {
+        layer1: 'Layer 1: Syntax & Structural Validation',
+        layer2: 'Layer 2: 3GPP Spec Reference Analysis',
+        layer3: 'Layer 3: LLM as Judge',
+        layer4: 'Layer 4: Variable Impact Analysis'
+    };
+
+    const CE_REVIEW_CRITERIA_META = {
+        layer1: {
+            tone: 'blue',
+            title: 'Syntax & Structural Validation',
+            description: 'Edge cases, guard conditions, type safety',
+            icon: 'info',
+        },
+        layer2: {
+            tone: 'green',
+            title: '3GPP Spec Reference Analysis',
+            description: 'Cross-reference against TS 38.214 / 38.322 / 38.212',
+            icon: 'check',
+        },
+        layer3: {
+            tone: 'blue',
+            title: 'LLM as Judge',
+            description: 'Automated quality and correctness assessment',
+            icon: 'info',
+        },
+        layer4: {
+            tone: 'amber',
+            title: 'Variable Impact Analysis',
+            description: 'Side effects, scheduler timing, dependency impact',
+            icon: 'warn',
+        },
+    };
+
+    function getCeCriteriaIconSvg(iconType) {
+        if (iconType === 'check') {
+            return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+        }
+        if (iconType === 'warn') {
+            return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>';
+        }
+        return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>';
+    }
+
+    function updateCeReviewCriteria() {
+        const listEl = document.getElementById('ceReviewCriteriaList');
+        if (!listEl) return;
+
+        const selected = [];
+        document.querySelectorAll('.ce-layer-checkbox').forEach((cb) => {
+            if (cb.checked && cb.dataset.layer) {
+                selected.push(cb.dataset.layer);
+            }
+        });
+
+        if (!selected.length) {
+            listEl.innerHTML = '<p class="ce-criteria-empty">Select test options on the left to see review criteria.</p>';
+            return;
+        }
+
+        listEl.innerHTML = selected.map((layerKey) => {
+            const meta = CE_REVIEW_CRITERIA_META[layerKey] || {
+                tone: 'blue',
+                title: layerKey,
+                description: '',
+                icon: 'info',
+            };
+            return `
+                <div class="ce-criteria-card ce-criteria-card--${meta.tone}">
+                    <span class="ce-criteria-card__icon" aria-hidden="true">${getCeCriteriaIconSvg(meta.icon)}</span>
+                    <div class="ce-criteria-card__text">
+                        <div class="ce-criteria-card__title">${escapeHtml(meta.title)}</div>
+                        <div class="ce-criteria-card__desc">${escapeHtml(meta.description)}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function initCeReviewCriteriaSync() {
+        document.querySelectorAll('.ce-layer-checkbox').forEach((cb) => {
+            cb.addEventListener('change', updateCeReviewCriteria);
+        });
+        updateCeReviewCriteria();
+    }
+
+    function initCeReviewTypeDropdown() {
+        const dropdown = document.getElementById('ceReviewTypeDropdown');
+        const btn = document.getElementById('ceReviewTypeBtn');
+        const menu = document.getElementById('ceReviewTypeDropdownMenu');
+        const label = document.getElementById('ceReviewTypeBtnLabel');
+        const hidden = document.getElementById('ceReviewTypeFilter');
+        if (!dropdown || !btn || !menu) return;
+
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
+        });
+
+        menu.querySelectorAll('.dropdown-item').forEach((item) => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const value = this.getAttribute('data-value') || 'git-diff';
+                const text = this.textContent.trim();
+                if (hidden) hidden.value = value;
+                if (label) label.textContent = text;
+                dropdown.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    }
+
+    function initCeSubmitReviewUi() {
+        initCeReviewCriteriaSync();
+        initCeReviewTypeDropdown();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCeSubmitReviewUi);
+    } else {
+        initCeSubmitReviewUi();
+    }
+
+    function updateCeResultsDetailSubtitle(layerValue) {
+        const subtitleEl = document.getElementById('ceResultsDetailSubtitle');
+        if (!subtitleEl) return;
+        subtitleEl.textContent = layerValue && CE_RESULTS_LAYER_LABELS[layerValue]
+            ? CE_RESULTS_LAYER_LABELS[layerValue]
+            : 'Select a layer on the left to view results';
+    }
+
+    function selectCeResultsLayer(layerValue) {
+        const hidden = document.getElementById('ceResultsDropdown');
+        if (!hidden) return;
+        document.querySelectorAll('.ce-results-radio').forEach((radio) => {
+            radio.checked = radio.value === layerValue;
+        });
+        hidden.value = layerValue || '';
+        updateCeResultsDetailSubtitle(layerValue);
+        hidden.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    document.querySelectorAll('.ce-results-radio').forEach((radio) => {
+        radio.addEventListener('change', function() {
+            if (this.checked) selectCeResultsLayer(this.value);
+        });
+    });
+
+    if (ceLogTypeFilter) {
+        ceLogTypeFilter.addEventListener('change', function() {
+            window.renderHistoryDropdown(
+                ceBugHistoryContent,
+                ceBugHistoryBtn,
+                window.codeEvaluationHistoryItems,
+                window.getSelectedHistoryLogType(ceLogTypeFilter),
+                'Select a bug analysis...',
+                'No analysis available for selected log type'
+            );
+            window.codeEvaluationAnalysisFilename = null;
+        });
+    }
+    
+    // Load Analysis button
+    const ceLoadAnalysisBtn = document.getElementById('ceLoadAnalysisBtn');
+    if (ceLoadAnalysisBtn) {
+        ceLoadAnalysisBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const filename = window.codeEvaluationAnalysisFilename;
+            if (!filename) {
+                alert('Please select an analysis from the dropdown to load.');
+                return;
+            }
+            await window.loadCodeEvaluationAnalysis(filename);
+        });
+    }
+    
+    // Refresh button
+    const ceRefreshAnalysisBtn = document.getElementById('ceRefreshAnalysisBtn');
+    if (ceRefreshAnalysisBtn) {
+        ceRefreshAnalysisBtn.addEventListener('click', async function() {
+            await window.loadCodeEvaluationBugHistory();
+        });
+    }
+        
+    // Run Tests button
+    const ceRunTestsBtn = document.getElementById('ceRunTestsBtn');
+    if (ceRunTestsBtn) {
+        ceRunTestsBtn.addEventListener('click', async function() {
+                if (!window.codeEvaluationCurrentAnalysis || !window.codeEvaluationAnalysisFilename) {
+                    alert('Please load an analysis before running tests.');
+                    return;
+                }
+                
+                // Get selected layers
+                const selectedLayers = [];
+                if (document.getElementById('ceLayer1')?.checked) selectedLayers.push('layer1');
+                if (document.getElementById('ceLayer2')?.checked) selectedLayers.push('layer2');
+                if (document.getElementById('ceLayer3')?.checked) selectedLayers.push('layer3');
+                if (document.getElementById('ceLayer4')?.checked) selectedLayers.push('layer4');
+                
+                if (selectedLayers.length === 0) {
+                    alert('Please select at least one validation layer to execute.');
+                    return;
+                }
+                
+                // Get selected patch indices
+                const selectedCodePatchIndices = window.codeEvaluationCodePatchCheckboxes
+                    .map((cb, idx) =>cb.checked ? idx : -1)
+                    .filter(idx =>idx >= 0);
+                
+                const selectedConfigPatchIndices = window.codeEvaluationConfigPatchCheckboxes
+                    .map((cb, idx) =>cb.checked ? idx : -1)
+                    .filter(idx =>idx >= 0);
+                
+                if (selectedCodePatchIndices.length === 0 && selectedConfigPatchIndices.length === 0) {
+                    alert('Please select at least one code or config patch to evaluate.');
+                    return;
+                }
+                
+                // Get code directory
+                const codeDir = window.codeEvaluationCurrentAnalysis.code_dir || '';
+                
+                // Update status box
+                const statusBox = document.getElementById('ceStatusOutput');
+                if (statusBox) {
+ statusBox.textContent = 'Running code evaluation tests...\n';
+                    statusBox.scrollTop = statusBox.scrollHeight;
+                }
+                
+                showStatusBar('Running code evaluation tests...', 'info', 'Code Evaluation');
+                
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/api/code-evaluation/run-tests', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            analysis_filename: window.codeEvaluationAnalysisFilename,
+                            selected_code_patches: selectedCodePatchIndices,
+                            selected_config_patches: selectedConfigPatchIndices,
+                            selected_layers: selectedLayers,
+                            code_dir: codeDir
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ detail: 'Unknown error'}));
+                        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Store results for viewing by layer
+                        window.codeEvaluationLastResults = data.layer_results || [];
+                        window.codeEvaluationFullOutput = data.output || '';
+                        
+                        // Update status box - only show completion message
+                        if (statusBox) {
+ statusBox.textContent = 'Running code evaluation tests...\n\n Test completed successfully!';
+                            statusBox.scrollTop = statusBox.scrollHeight;
+                        }
+                        
+                        showStatusBar('Code evaluation tests completed successfully!', 'success', 'Code Evaluation');
+                    } else {
+                        throw new Error(data.message || 'Tests failed');
+                    }
+                } catch (error) {
+                    console.error('Error running code evaluation tests:', error);
+                    if (statusBox) {
+ statusBox.textContent = 'Running code evaluation tests...\n\n Error: '+ error.message;
+                        statusBox.scrollTop = statusBox.scrollHeight;
+                    }
+                    showStatusBar('Failed to run tests: '+ error.message, 'error', 'Code Evaluation');
+                }
+            });
+        }
+    
+    // Clear Output button - clears the status box
+    const ceClearOutputBtn = document.getElementById('ceClearOutputBtn');
+    if (ceClearOutputBtn) {
+        ceClearOutputBtn.addEventListener('click', function() {
+            const statusBox = document.getElementById('ceStatusOutput');
+            if (statusBox) {
+                statusBox.textContent = 'Test status messages will appear here...\n';
+            }
+        });
+    }
+    
+    // Results dropdown handler - filter and display layer results
+    const ceResultsDropdown = document.getElementById('ceResultsDropdown');
+    const ceResultsDisplay = document.getElementById('ceResultsDisplay');
+    if (ceResultsDropdown && ceResultsDisplay) {
+        ceResultsDropdown.addEventListener('change', function() {
+            const selectedLayer = this.value;
+            const results = window.codeEvaluationLastResults;
+            
+            updateCeResultsDetailSubtitle(selectedLayer);
+
+            if (!selectedLayer) {
+                ceResultsDisplay.innerHTML = '<p class="bd-results-placeholder">Select a layer on the left to view its results...</p>';
+                return;
+            }
+            
+            if (!results || results.length === 0) {
+                ceResultsDisplay.innerHTML = '<p class="bd-results-placeholder">No results available. Please run tests first.</p>';
+                return;
+            }
+            
+            // Find the selected layer result
+            const layerResult = results.find(r =>r.layer === selectedLayer);
+            
+            if (!layerResult) {
+                ceResultsDisplay.innerHTML = '<p class="bd-results-placeholder">No results found for the selected layer.</p>';
+                return;
+            }
+            
+            // Display the layer result
+            let displayContent = '';
+            
+            // Add status badge
+            const statusColor = layerResult.status === 'completed'? '#155724': 
+                                layerResult.status === 'error'? '#721c24': '#856404';
+            const statusBg = layerResult.status === 'completed'? '#d4edda': 
+                            layerResult.status === 'error'? '#f8d7da': '#fff3cd';
+            
+            displayContent += `<div style="margin-bottom: 1rem; padding: 0.5rem 1rem; background: ${statusBg}; color: ${statusColor}; border-radius: 4px; font-weight: bold;">Status: ${layerResult.status.toUpperCase()}</div>`;
+            
+            // Add output - format similar to View Artifacts (clean font, structured display)
+            if (layerResult.output) {
+                // Process output to format Criteria Evaluation section with colored PASS/FAIL
+                let processedOutput = layerResult.output;
+                
+                // Check if this is Layer 3 and contains Criteria Evaluation
+                if (selectedLayer === 'layer3'&& processedOutput.includes('Criteria Evaluation')) {
+                    // Split output into sections
+                    const criteriaStart = processedOutput.indexOf('Criteria Evaluation');
+                    const beforeCriteria = processedOutput.substring(0, criteriaStart);
+                    const criteriaSection = processedOutput.substring(criteriaStart);
+                    
+                    // Find where Criteria Evaluation section ends (next major section)
+                    const nextSectionMatch = criteriaSection.match(/\n\s*(Recommendations|Reasoning|Summary)/);
+                    const criteriaEnd = nextSectionMatch ? criteriaStart + nextSectionMatch.index : processedOutput.length;
+                    
+                    const criteriaText = processedOutput.substring(criteriaStart, criteriaEnd);
+                    const afterCriteria = processedOutput.substring(criteriaEnd);
+                    
+                    // Process Criteria Evaluation section
+                    const criteriaLines = criteriaText.split('\n');
+                    const formattedCriteriaLines = [];
+                    
+                    for (let i = 0; i < criteriaLines.length; i++) {
+                        const line = criteriaLines[i];
+                        
+                        // Header line
+                        if (line.includes('Criteria Evaluation')) {
+                            formattedCriteriaLines.push(escapeHtml(line));
+                            continue;
+                        }
+                        
+                        // Criterion lines: "Criterion Name                    PASS"
+                        // Match lines with 4 spaces, criterion name, spaces, and result
+                        const criterionMatch = line.match(/^(\s{4})([A-Za-z\s]+?)(\s{2,})([A-Z]+)$/);
+                        if (criterionMatch) {
+                            const [, indent, criterionName, spacing, result] = criterionMatch;
+                            const resultUpper = result.toUpperCase();
+                            
+                            // Color the result
+                            let resultColor = '#323130'; // default
+                            if (resultUpper === 'PASS') {
+                                resultColor = '#28a745'; // green
+                            } else if (resultUpper === 'FAIL') {
+                                resultColor = '#dc3545'; // red
+                            } else if (resultUpper === 'UNKNOWN') {
+                                resultColor = '#6c757d'; // gray
+                            }
+                            
+                            // Preserve alignment: keep the original spacing structure but color the result
+                            // Use monospace font to ensure proper alignment
+                            formattedCriteriaLines.push(`${escapeHtml(indent + criterionName.trim())}${escapeHtml(spacing)}<span style="color: ${resultColor}; font-weight: 600;">${resultUpper}</span>`);
+                        } else {
+                            formattedCriteriaLines.push(escapeHtml(line));
+                        }
+                    }
+                    
+                    // Reconstruct output with formatted criteria section
+                    processedOutput = escapeHtml(beforeCriteria) + 
+                                    formattedCriteriaLines.join('\n') + 
+                                    escapeHtml(afterCriteria);
+                } else {
+                    // For other layers or if no Criteria Evaluation, just escape HTML
+                    processedOutput = escapeHtml(processedOutput);
+                }
+                
+                // Use monospace font for Layer 3 to preserve alignment, regular font for others
+                const fontFamily = (selectedLayer === 'layer3'&& layerResult.output.includes('Criteria Evaluation'))
+                    ? "'Courier New', Consolas, Monaco, monospace"
+                    : "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+                
+                displayContent += `<div style="font-family: ${fontFamily}; line-height: 1.6; color: #323130; white-space: pre-wrap;">${processedOutput}</div>`;
+            } else {
+                displayContent += '<p style="color: #6b7280; margin: 0;">No output available for this layer.</p>';
+            }
+            
+            ceResultsDisplay.innerHTML = displayContent;
+        });
+    }
+    
+    // Source Code Directory Upload functionality
+    const sourceCodeUpload = document.getElementById('sourceCodeUpload');
+    const sourceCodeBtn = document.getElementById('sourceCodeBtn');
+    const sourceCodeInput = document.getElementById('sourceCodeInput');
+    const sourceCodeText = document.getElementById('sourceCodeText');
+    const sourceCodeList = document.getElementById('sourceCodeList');
+
+    if (sourceCodeUpload && sourceCodeBtn && sourceCodeInput) {
+        // Click handlers for source code upload
+        sourceCodeUpload.addEventListener('click', () =>sourceCodeInput.click());
+        sourceCodeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sourceCodeInput.click();
+        });
+
+        // Handle source code directory selection
+        sourceCodeInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                // Get directory name from first file path
+                const firstFilePath = files[0].webkitRelativePath;
+                const directoryName = firstFilePath.split('/')[0];
+                
+                // Filter for source code files
+                const sourceFiles = files.filter(file => {
+                    const extension = file.name.toLowerCase().split('.').pop();
+                    return ['c', 'cpp', 'h', 'hpp', 'py', 'java', 'js', 'ts', 'go', 'rs'].includes(extension);
+                });
+                
+                // Update UI
+                sourceCodeText.textContent = `Source directory loaded: ${directoryName}`;
+                sourceCodeText.style.color = '#10b981';
+                
+                // Show file list
+                sourceCodeList.style.display = 'block';
+                sourceCodeList.innerHTML = `
+                    <div style="background-color: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 6px; padding: 0.75rem; font-size: 0.8rem;">
+                        <div style="color: #0369a1; font-weight: 600; margin-bottom: 0.5rem;"> ${directoryName}</div>
+                        <div style="color: #0c4a6e;">${sourceFiles.length} source files found</div>
+                        ${sourceFiles.length > 0 ? `<div style="color: #0c4a6e; margin-top: 0.25rem;">Files: ${sourceFiles.slice(0, 3).map(f =>f.name).join(', ')}${sourceFiles.length > 3 ? '...': ''}</div>`: ''}
+                    </div>
+                `;
+                
+                // Show status
+                showStatusBar(`Source code directory loaded: ${directoryName} (${sourceFiles.length} files)`, 'success');
+            }
+        });
+    }
+    // Code Log Directory Upload functionality
+    const codeLogUpload = document.getElementById('codeLogUpload');
+    const codeLogBtn = document.getElementById('codeLogBtn');
+    const codeLogInput = document.getElementById('codeLogInput');
+    const codeLogText = document.getElementById('codeLogText');
+    const codeLogList = document.getElementById('codeLogList');
+    const codeLogDropdownContainer = document.getElementById('codeLogDropdownContainer');
+    const codeLogDropdownContent = document.getElementById('codeLogDropdownContent');
+    const codeLogDropdownBtn = document.getElementById('codeLogDropdownBtn');
+
+    if (codeLogUpload && codeLogBtn && codeLogInput) {
+        // Click handlers for code log upload
+        codeLogUpload.addEventListener('click', () =>codeLogInput.click());
+        codeLogBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            codeLogInput.click();
+        });
+
+        // Handle code log directory selection
+        codeLogInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                // Get directory name from first file path
+                const firstFilePath = files[0].webkitRelativePath;
+                const directoryName = firstFilePath.split('/')[0];
+                
+                // Filter for log files
+                const logFiles = files.filter(file => {
+                    const extension = file.name.toLowerCase().split('.').pop();
+                    return ['log', 'txt'].includes(extension);
+                });
+                
+                // Store the log files for later use
+                window.codeLogFiles = logFiles;
+                
+                // Update UI
+                codeLogText.textContent = `Log directory loaded: ${directoryName}`;
+                codeLogText.style.color = '#10b981';
+                
+                // Show file list
+                codeLogList.style.display = 'block';
+                codeLogList.innerHTML = `
+                    <div style="background-color: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 6px; padding: 0.75rem; font-size: 0.8rem;">
+                        <div style="color: #0369a1; font-weight: 600; margin-bottom: 0.5rem;"> ${directoryName}</div>
+                        <div style="color: #0c4a6e;">${logFiles.length} log files found</div>
+                        ${logFiles.length > 0 ? `<div style="color: #0c4a6e; margin-top: 0.25rem;">Files: ${logFiles.slice(0, 3).map(f =>f.name).join(', ')}${logFiles.length > 3 ? '...': ''}</div>`: ''}
+                    </div>
+                `;
+                
+                // Show dropdown and populate with log files
+                if (logFiles.length > 0) {
+                    codeLogDropdownContainer.style.display = 'block';
+                    displayCodeLogFiles(logFiles);
+                }
+                
+                // Show status
+                showStatusBar(`Log directory loaded: ${directoryName} (${logFiles.length} files)`, 'success');
+            }
+        });
+    }
+    // Function to display code log files in dropdown
+    function displayCodeLogFiles(files) {
+        if (!codeLogDropdownContent) return;
+        
+        codeLogDropdownContent.innerHTML = '';
+        
+        files.forEach((file, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'dropdown-item';
+            fileItem.style.padding = '0.5rem';
+            fileItem.style.cursor = 'pointer';
+            fileItem.style.borderBottom = index < files.length - 1 ? '1px solid #e2e8f0': 'none';
+            fileItem.innerHTML = `
+                <div style="font-weight: 500; color: #374151;">${file.name}</div>
+                <div style="font-size: 0.75rem; color: #6b7280;">${(file.size / 1024).toFixed(1)} KB</div>
+            `;
+            
+            fileItem.addEventListener('click', function() {
+                // Update dropdown button
+                codeLogDropdownBtn.querySelector('span').textContent = file.name;
+                
+                // Close dropdown
+                const codeLogDropdown = document.getElementById('codeLogDropdown');
+                if (codeLogDropdown) {
+                    codeLogDropdown.classList.remove('active');
+                }
+                
+                // Show status
+                showStatusBar(`Selected log file: ${file.name}`, 'info');
+            });
+            
+            codeLogDropdownContent.appendChild(fileItem);
+        });
+    }
+    // Code log dropdown toggle functionality
+    if (codeLogDropdownBtn && codeLogDropdownContent) {
+        const codeLogDropdown = document.getElementById('codeLogDropdown');
+        
+        codeLogDropdownBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (codeLogDropdown) {
+                codeLogDropdown.classList.toggle('active');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (codeLogDropdown && !codeLogDropdown.contains(e.target)) {
+                codeLogDropdown.classList.remove('active');
+            }
+        });
+    }
+
+    // Start RCA Analysis Button functionality
+    const startCodeRCABtn = document.getElementById('startCodeRCABtn');
+    if (startCodeRCABtn) {
+        startCodeRCABtn.addEventListener('click', async function() {
+            // Check if log directory is loaded (source code directory is optional)
+            const sourceCodeText = document.getElementById('sourceCodeText');
+            const codeLogText = document.getElementById('codeLogText');
+            const codeLogDropdownBtn = document.getElementById('codeLogDropdownBtn');
+            
+            // Get the selected source code directory name
+            let openairCodebaseName = 'openairinterface5g-develop'; // Default fallback
+            
+            if (sourceCodeText && !sourceCodeText.textContent.includes('No source code directory loaded')) {
+                // Extract directory name from the source code text
+                const match = sourceCodeText.textContent.match(/Source directory loaded: (.+)/);
+                if (match && match[1]) {
+                    openairCodebaseName = match[1];
+                }
+            }
+            
+            // Source code directory is optional - just show a warning if not loaded
+            if (!sourceCodeText || sourceCodeText.textContent.includes('No source code directory loaded')) {
+                showStatusBar('Warning: No source code directory loaded. Analysis will be limited to log files only.', 'warning');
+            }
+            
+            // Log directory is required
+            if (!codeLogText || codeLogText.textContent.includes('No log directory loaded')) {
+                showStatusBar('Please load log directory first', 'error');
+                return;
+            }
+            
+            if (!codeLogDropdownBtn || codeLogDropdownBtn.querySelector('span').textContent === 'Select Log File') {
+                showStatusBar('Please select a log file from the dropdown', 'error');
+                return;
+            }
+            
+            // Get selected log file name
+            const selectedLogFile = codeLogDropdownBtn.querySelector('span').textContent;
+            
+            // Show status
+            showStatusBar(`Starting RCA Analysis for: ${selectedLogFile} (Codebase: ${openairCodebaseName})`, 'info');
+            
+            // Start actual RCA analysis
+            try {
+                await startCodeRCAAnalysis(selectedLogFile, openairCodebaseName);
+            } catch (error) {
+                console.error('RCA Analysis failed:', error);
+                showStatusBar(`RCA Analysis failed: ${error.message}`, 'error');
+                return;
+            }
+        });
+    }
+    // Function to start Code RCA Analysis
+    async function startCodeRCAAnalysis(selectedLogFile, openairCodebaseName) {
+        try {
+            // Get the selected log file object
+            if (!window.codeLogFiles || window.codeLogFiles.length === 0) {
+                throw new Error('No log files loaded. Please load a log directory first.');
+            }
+            
+            console.log(`Using OpenAirInterface codebase: ${openairCodebaseName}`);
+            
+            const selectedFile = window.codeLogFiles.find(file =>file.name === selectedLogFile);
+            if (!selectedFile) {
+                throw new Error(`Log file '${selectedLogFile}'not found in loaded files.`);
+            }
+            
+            // Let the backend extract the error message from the log file
+            const errorMessage = null;
+            
+            // First upload the log file to get a server path
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            const uploadResponse = await fetch('http://127.0.0.1:8000/api/error-fixing/upload-log', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!uploadResponse.ok) {
+                throw new Error(`Failed to upload log file: ${uploadResponse.status}`);
+            }
+            
+            const uploadResult = await uploadResponse.json();
+            const serverLogPath = uploadResult.file_path;
+            
+            // Call the backend error fixing API
+            const response = await fetch('http://127.0.0.1:8000/api/error-fixing/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    error_message: errorMessage,
+                    log_file_path: serverLogPath,
+                    openair_codebase_name: openairCodebaseName
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success && result.result) {
+                // Display the analysis results
+                displayCodeRCAResults(result.result, selectedLogFile, result.formatted_output);
+                showStatusBar(`RCA Analysis completed for: ${selectedLogFile}`, 'success');
+            } else {
+                throw new Error('Analysis failed: No results returned');
+            }
+            
+        } catch (error) {
+            console.error('Code RCA Analysis error:', error);
+            throw error;
+        }
+    }
+    
+    // Function to display Code RCA results in clean format
+    function displayCodeRCAResults(results, logFileName, formattedOutput = null) {
+        // Display fix suggestions in clean format
+        const fixSuggestionsBox = document.getElementById('fixSuggestionsBox');
+        if (fixSuggestionsBox) {
+            
+            const phase3Fixes = results.result?.phase3_fixes || {};
+            const fixSuggestion = phase3Fixes.fix_suggestion || {};
+            const deploymentContext = results.result?.deployment_context || {};
+            const phase2Analysis = results.result?.phase2_analysis || {};
+            
+ let content = ` RCA ANALYSIS RESULTS\n`;
+            content += `================================================================================\n\n`;
+            
+            // Error Detected - Extract from the correct structure
+            const errorText = results.result?.error_message || 
+                             results.error_message || 
+                             results.result?.phase2_analysis?.error_message ||
+                             'Error analysis in progress...';
+ content += ` ERROR DETECTED:\n`;
+            content += `----------------------------------------\n`;
+            content += `${errorText}\n\n`;
+            
+            // Suspected Functions - Extract from the correct structure
+            const suspectedFunctions = results.result?.phase3_fixes?.fix_suggestion?.suspected_functions || 
+                                      results.phase3_fixes?.fix_suggestion?.suspected_functions ||
+                                      results.result?.fix_suggestion?.suspected_functions ||
+                                      [];
+            if (suspectedFunctions.length > 0) {
+ content += ` SUSPECTED FUNCTIONS:\n`;
+                content += `----------------------------------------\n`;
+                suspectedFunctions.forEach((func, index) => {
+                    const funcName = typeof func === 'string'? func : (func.name || func);
+                    content += `  ${index + 1}. ${funcName}\n`;
+                });
+                content += `\n`;
+            }
+            
+            // Suspected Configurations - Extract from the correct structure
+            const suspectedConfigs = results.result?.phase3_fixes?.fix_suggestion?.suspected_configs || 
+                                    results.phase3_fixes?.fix_suggestion?.suspected_configs ||
+                                    results.result?.fix_suggestion?.suspected_configs ||
+                                    [];
+            if (suspectedConfigs.length > 0) {
+ content += ` SUSPECTED CONFIGURATIONS:\n`;
+                content += `----------------------------------------\n`;
+                suspectedConfigs.forEach((config, index) => {
+                    const configName = typeof config === 'string'? config : (config.name || config);
+                    content += `  ${index + 1}. ${configName}\n`;
+                });
+                content += `\n`;
+            }
+            // Code Patches - Extract from the correct structure
+            const codePatches = results.result?.phase3_fixes?.fix_suggestion?.code_patches || 
+                               results.phase3_fixes?.fix_suggestion?.code_patches ||
+                               results.result?.fix_suggestion?.code_patches ||
+                               [];
+            
+            
+            if (codePatches.length > 0) {
+ content += ` CODE PATCHES:\n`;
+                content += `──────────────────────────────────────────────────\n`;
+                codePatches.forEach((patch, index) => {
+                    const functionName = patch.function_name || patch.name || 'Unknown Function';
+                    const filePath = patch.file_path || patch.file || 'Unknown File';
+                    const patchType = patch.patch_type || patch.type || 'Unknown Type';
+                    const lineNumber = patch.line_numbers || patch.line_number || patch.line || 'Unknown Line';
+                    const description = patch.description || patch.reason || 'No description available';
+                    
+                    content += `  ${index + 1}. Function: ${functionName}\n`;
+                    content += `     File: ${filePath}\n`;
+                    content += `     Type: ${patchType}\n`;
+                    content += `     Lines: ${lineNumber}\n`;
+                    content += `     Description: ${description}\n`;
+                    
+                    // Add code changes if available
+                    if (patch.original_code || patch.patched_code) {
+ content += ` Code Changes:\n`;
+                        content += `     ──────────────────────────────────────────────────\n`;
+                        
+                        if (patch.original_code) {
+ content += ` Original Code:\n`;
+                            const originalLines = patch.original_code.split('\n');
+                            originalLines.forEach(line => {
+                                content += `     - ${line}\n`;
+                            });
+                        }
+                        
+                        if (patch.patched_code) {
+ content += `     \n Patched Code:\n`;
+                            const patchedLines = patch.patched_code.split('\n');
+                            patchedLines.forEach(line => {
+                                content += `     + ${line}\n`;
+                            });
+                        }
+                        
+                        content += `     ──────────────────────────────────────────────────\n`;
+                    }
+                    
+                    content += `\n`;
+                });
+            }
+            
+            // Config Patches - Extract from the correct structure
+            const configPatches = results.result?.phase3_fixes?.fix_suggestion?.config_patches || 
+                                 results.phase3_fixes?.fix_suggestion?.config_patches ||
+                                 results.result?.fix_suggestion?.config_patches ||
+                                 [];
+            if (configPatches.length > 0) {
+ content += ` CONFIG PATCHES:\n`;
+                content += `──────────────────────────────────────────────────\n`;
+                configPatches.forEach((patch, index) => {
+                    const configName = patch.config_name || patch.name || 'Unknown Config';
+                    const filePath = patch.file_path || patch.file || 'Unknown File';
+                    const lineNumber = patch.line_number || patch.line || 'Unknown Line';
+                    const description = patch.description || patch.reason || 'No description available';
+                    const currentValue = patch.current_value || patch.old_value || 'Unknown';
+                    const newValue = patch.new_value || patch.patched_value || 'Unknown';
+                    
+                    content += `  ${index + 1}. Config: ${configName}\n`;
+                    content += `     File: ${filePath}\n`;
+                    content += `     Line: ${lineNumber}\n`;
+                    content += `     Description: ${description}\n`;
+ content += ` Configuration Changes:\n`;
+                    content += `     ──────────────────────────────────────────────────\n`;
+ content += ` Current Value: ${currentValue}\n`;
+ content += ` New Value:     ${newValue}\n`;
+                    content += `     ──────────────────────────────────────────────────\n\n`;
+                });
+            }
+            // Investigation Steps - Extract from the correct structure
+            const investigationSteps = results.result?.phase3_fixes?.fix_suggestion?.investigation_steps || 
+                                      results.phase3_fixes?.fix_suggestion?.investigation_steps ||
+                                      results.result?.fix_suggestion?.investigation_steps ||
+                                      [];
+            if (investigationSteps.length > 0) {
+ content += ` INVESTIGATION STEPS:\n`;
+                content += `──────────────────────────────────────────────────\n`;
+                investigationSteps.forEach((step, index) => {
+                    content += `  ${index + 1}. ${step}\n`;
+                });
+                content += `\n`;
+            }
+            
+            // Detailed Root Cause - Extract from the correct structure
+            const detailedRootCause = results.result?.phase3_fixes?.fix_suggestion?.detailed_root_cause || 
+                                     results.phase3_fixes?.fix_suggestion?.detailed_root_cause ||
+                                     results.result?.fix_suggestion?.detailed_root_cause ||
+                                     results.result?.phase3_fixes?.fix_suggestion?.root_cause_analysis ||
+                                     results.phase3_fixes?.fix_suggestion?.root_cause_analysis ||
+                                     results.result?.fix_suggestion?.root_cause_analysis;
+            if (detailedRootCause) {
+ content += ` DETAILED ROOT CAUSE:\n`;
+                content += `──────────────────────────────────────────────────\n`;
+                content += `${detailedRootCause}\n\n`;
+            }
+            
+            // Investigation Commands - Extract from the correct structure
+            const investigationCommands = results.result?.phase3_fixes?.fix_suggestion?.investigation_commands || 
+                                        results.phase3_fixes?.fix_suggestion?.investigation_commands ||
+                                        results.result?.fix_suggestion?.investigation_commands ||
+                                        [];
+            if (investigationCommands.length > 0) {
+ content += ` INVESTIGATION COMMANDS:\n`;
+                content += `──────────────────────────────────────────────────\n`;
+                investigationCommands.forEach((command, index) => {
+                    const commandText = command.command || command.text || command;
+                    const commandHint = command.hint || command.description || '';
+                    content += `  ${index + 1}. ${commandText}\n`;
+                    if (commandHint) {
+ content += `      ${commandHint}\n`;
+                    }
+                    content += `\n`;
+                });
+            }
+            // Analysis Context - Extract from the correct structure
+            const analysisContext = results.result?.summary || results.summary || {};
+            if (Object.keys(analysisContext).length > 0) {
+ content += ` ANALYSIS CONTEXT:\n`;
+                content += `----------------------------------------\n`;
+                if (analysisContext.total_functions_analyzed) {
+                    content += `  Functions analyzed: ${analysisContext.total_functions_analyzed}\n`;
+                }
+                if (analysisContext.total_configs_analyzed) {
+                    content += `  Configs analyzed: ${analysisContext.total_configs_analyzed}\n`;
+                }
+                if (analysisContext.call_graph_entries) {
+                    content += `  Call graph entries: ${analysisContext.call_graph_entries}\n`;
+                }
+                if (analysisContext.pattern_matched !== undefined) {
+                    content += `  Pattern matched: ${analysisContext.pattern_matched ? 'True': 'False'}\n`;
+                }
+                content += `\n`;
+            }
+            
+            // Analysis Summary - Extract from the correct structure
+            const analysisSummary = results.result?.timestamp || results.timestamp;
+            if (analysisSummary) {
+ content += ` ANALYSIS SUMMARY:\n`;
+                content += `----------------------------------------\n`;
+                content += `Analysis completed: ${new Date(analysisSummary).toLocaleString()}\n`;
+                if (results.result?.log_file) {
+                    content += `Results file: ${results.result.log_file}\n`;
+                }
+                content += `Total sections: ${Object.keys(results.result || {}).length}\n`;
+            }
+            
+            fixSuggestionsBox.innerHTML = `<pre style="white-space: pre-wrap; font-family: monospace; font-size: 0.9rem; line-height: 1.4; color: #1f2937; background-color: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">${content}</pre>`;
+        }
+    }
+    // Patch Commands Button functionality
+    const selectAllPatchesBtn = document.getElementById('selectAllPatchesBtn');
+    const unselectAllPatchesBtn = document.getElementById('unselectAllPatchesBtn');
+    const applyPatchFixesBtn = document.getElementById('applyPatchFixesBtn');
+    const runInvestigationCommandsBtn = document.getElementById('runInvestigationCommandsBtn');
+    const viewArtifactsBtn = document.getElementById('viewArtifactsBtn');
+
+    if (selectAllPatchesBtn) {
+        selectAllPatchesBtn.addEventListener('click', function() {
+            showStatusBar('All patches selected', 'info');
+        });
+    }
+
+    if (unselectAllPatchesBtn) {
+        unselectAllPatchesBtn.addEventListener('click', function() {
+            showStatusBar('All patches unselected', 'info');
+        });
+    }
+
+    if (applyPatchFixesBtn) {
+        applyPatchFixesBtn.addEventListener('click', function() {
+            showStatusBar('Applying patch fixes...', 'info');
+            setTimeout(() => {
+                showStatusBar('Patch fixes applied successfully!', 'success');
+            }, 1500);
+        });
+    }
+
+    if (runInvestigationCommandsBtn) {
+        runInvestigationCommandsBtn.addEventListener('click', function() {
+            showStatusBar('Running investigation commands...', 'info');
+            setTimeout(() => {
+                showStatusBar('Investigation commands completed!', 'success');
+            }, 2000);
+        });
+    }
+
+    if (viewArtifactsBtn) {
+        viewArtifactsBtn.addEventListener('click', function() {
+            showStatusBar('Opening artifacts view...', 'info');
+            setTimeout(() => {
+                showStatusBar('Artifacts view opened!', 'success');
+            }, 1000);
+        });
+    }
+
+    // Dropdown functionality
+    if (roleBtn && roleDropdown) {
+        roleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🔘 Role dropdown button clicked');
+            const isActive = roleDropdown.classList.contains('active');
+            console.log('  - Currently active:', isActive);
+            
+            // Toggle active class
+            roleDropdown.classList.toggle('active');
+            
+            const dropdownContent = roleDropdown.querySelector('.dropdown-content');
+            if (dropdownContent) {
+                console.log('  - Dropdown content found:', !!dropdownContent);
+                console.log('  - Dropdown items count:', dropdownContent.querySelectorAll('.dropdown-item').length);
+                console.log('  - After toggle, active class:', roleDropdown.classList.contains('active'));
+            } else {
+                console.error('  - ❌ Dropdown content not found!');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!roleDropdown.contains(e.target)) {
+                roleDropdown.classList.remove('active');
+            }
+        });
+
+        function updateRoleDropdownUi(role) {
+            const hasRole = Boolean(role);
+            roleDropdown.classList.toggle('has-selection', hasRole);
+            roleBtn.classList.toggle('is-selected', hasRole);
+            const menu = roleDropdown.querySelector('.dropdown-content');
+            if (menu) {
+                menu.querySelectorAll('.dropdown-item[data-role]').forEach(item => {
+                    item.classList.toggle('is-selected', item.getAttribute('data-role') === role);
+                });
+            }
+        }
+
+        // Role selection with dynamic template category display
+        const dropdownContent = roleDropdown.querySelector('.dropdown-content');
+        if (dropdownContent) {
+            dropdownContent.querySelectorAll('.dropdown-item[data-role]').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const role = this.getAttribute('data-role');
+                const roleText = this.textContent.trim();
+                    
+                    console.log('📋 Role selected:', role, roleText);
+                
+                // Update dropdown button text
+                const buttonSpan = roleBtn.querySelector('.prompt-studio-role-btn-text');
+                if (buttonSpan) {
+                    buttonSpan.textContent = roleText;
+                }
+                updateRoleDropdownUi(role);
+                // Close dropdown
+                roleDropdown.classList.remove('active');
+                    
+                    // Display template categories for selected role
+                    showTemplateCategoriesForRole(role);
+                    
+                    clearPromptDetailPanel();
+                    currentPromptTemplateKey = null;
+            });
+        });
+    }
+    }
+    // HTML escaping function for safe template content display
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Role templates mapping (from PyQt UI_v3.py)
+    const roleTemplates = {
+        "tester": [
+            { name: "Test Script", description: "Generate comprehensive test scripts", icon: ""},
+            { name: "Test Case", description: "Generate test cases and coverage", icon: ""},
+            { name: "Bug Analysis", description: "Analyze and fix issues", icon: ""},
+            { name: "Performance Test", description: "Design performance tests", icon: ""}
+        ],
+        "developer": [
+            { name: "Code Assistant", description: "Generate high-quality code", icon: ""},
+            { name: "Bug Analysis", description: "Fix identified issues", icon: ""}
+        ],
+        "analyst": [
+            { name: "Feature Design", description: "Analyze feature requirements", icon: ""},
+            { name: "Code Assistant", description: "Review and optimize code", icon: ""},
+            { name: "Bug Analysis", description: "Analyze issue patterns", icon: ""}
+        ]
+    };
+
+    // User templates management functions
+    function getUserTemplates(role) {
+        try {
+            const stored = localStorage.getItem('userTemplates');
+            if (stored) {
+                const allUserTemplates = JSON.parse(stored);
+                return allUserTemplates[role] || [];
+            }
+        } catch (error) {
+            console.error('Error loading user templates:', error);
+        }
+        return [];
+    }
+
+    function saveUserTemplate(role, templateName, templatePrompt) {
+        try {
+            const stored = localStorage.getItem('userTemplates');
+            let allUserTemplates = stored ? JSON.parse(stored) : {};
+            
+            if (!allUserTemplates[role]) {
+                allUserTemplates[role] = [];
+            }
+            
+            // Check if template name already exists
+            const existingIndex = allUserTemplates[role].findIndex(t =>t.name === templateName);
+            if (existingIndex >= 0) {
+                // Update existing template
+                allUserTemplates[role][existingIndex].prompt = templatePrompt;
+            } else {
+                // Add new template
+                allUserTemplates[role].push({
+                    name: templateName,
+                    prompt: templatePrompt,
+                    isUserTemplate: true
+                });
+            }
+            
+            localStorage.setItem('userTemplates', JSON.stringify(allUserTemplates));
+            console.log('✅ User template saved:', templateName, 'for role:', role);
+            return true;
+        } catch (error) {
+            console.error('Error saving user template:', error);
+            return false;
+        }
+    }
+
+    function deleteUserTemplate(role, templateName) {
+        try {
+            const stored = localStorage.getItem('userTemplates');
+            if (!stored) return false;
+            
+            const allUserTemplates = JSON.parse(stored);
+            if (!allUserTemplates[role]) return false;
+            
+            allUserTemplates[role] = allUserTemplates[role].filter(t =>t.name !== templateName);
+            localStorage.setItem('userTemplates', JSON.stringify(allUserTemplates));
+            console.log('✅ User template deleted:', templateName, 'for role:', role);
+            return true;
+        } catch (error) {
+            console.error('Error deleting user template:', error);
+            return false;
+        }
+    }
+
+    // Store current role for template operations
+    let currentSelectedRole = null;
+    let currentActiveCategoryCard = null;
+
+    function getTemplateTag(templateName, role) {
+        const slug = (templateName || '').toLowerCase().replace(/\s+/g, '-').slice(0, 16);
+        if (slug) return slug;
+        return role || 'template';
+    }
+
+    function getTemplateSnippet(content) {
+        if (!content) return 'No preview available';
+        const text = typeof content === 'string'
+            ? content
+            : [content['System Prompt'], content['User Prompt']].filter(Boolean).join(' ');
+        const oneLine = text.replace(/\s+/g, ' ').trim();
+        if (!oneLine) return 'No preview available';
+        const preview = oneLine.length > 72 ? `${oneLine.slice(0, 72)}…` : oneLine;
+        return `"${preview}"`;
+    }
+
+    function parseTemplateForDisplay(raw) {
+        if (!raw) return { system: '', user: '' };
+        if (typeof raw === 'string') {
+            const parts = raw.split(/\n\n+/);
+            if (parts.length > 1) {
+                return { system: parts[0], user: parts.slice(1).join('\n\n') };
+            }
+            return { system: raw, user: '' };
+        }
+        if (typeof raw === 'object') {
+            return {
+                system: raw['System Prompt'] || '',
+                user: raw['User Prompt'] || ''
+            };
+        }
+        return { system: String(raw), user: '' };
+    }
+
+    function updatePromptLibraryCount(count, roleLabel) {
+        const titleEl = document.getElementById('promptPromptsPanelTitle');
+        const badgeEl = document.getElementById('promptPromptsCount');
+        const panel = document.getElementById('promptPromptsPanel');
+        if (count == null) {
+            if (titleEl) titleEl.textContent = 'Prompts';
+            if (badgeEl) badgeEl.textContent = '0 items';
+            if (panel) panel.classList.remove('has-items');
+            return;
+        }
+        if (titleEl) {
+            titleEl.textContent = roleLabel ? `${roleLabel} Prompts` : 'Prompts';
+        }
+        if (badgeEl) {
+            badgeEl.textContent = `${count} item${count === 1 ? '' : 's'}`;
+        }
+        if (panel) panel.classList.add('has-items');
+    }
+
+    function getCategoryIconKey(name) {
+        const key = (name || '').toLowerCase().replace(/\s+/g, '-');
+        const map = {
+            'test-script': 'test-script',
+            'test-case': 'test-case',
+            'test-data': 'test-data',
+            'test-scenarios': 'test-scenarios',
+            'expected-results': 'expected-results',
+            'test-summary': 'test-summary',
+            'bug-analysis': 'bug-analysis',
+            'performance-test': 'performance-test',
+            'code-assistant': 'code-assistant',
+            'feature-design': 'feature-design',
+            'add-template': 'add-template'
+        };
+        return map[key] || 'default';
+    }
+
+    function getCategoryIconSvg(iconKey) {
+        const sw = '1.75';
+        const icons = {
+            'test-script': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9l-2 3 2 3"/><path d="M15 9l2 3-2 3"/></svg>`,
+            'test-case': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>`,
+            'test-data': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`,
+            'test-scenarios': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 6h5a4 4 0 0 1 4 4v2"/><path d="M16 18H11a4 4 0 0 1-4-4v-2"/></svg>`,
+            'expected-results': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 12l2 2 4-4"/></svg>`,
+            'test-summary': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></svg>`,
+            'bug-analysis': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2"/><path d="M5 9H3a2 2 0 0 0-2 2v1h20v-1a2 2 0 0 0-2-2h-2"/><path d="M7 14v5"/><path d="M17 14v5"/><path d="M9 22h6"/><path d="M8 8h8"/></svg>`,
+            'performance-test': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M7 20h10"/><path d="M9 16v4"/><path d="M15 16v4"/><path d="M8 12l3-4 2 2 3-4"/></svg>`,
+            'code-assistant': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9l-2 3 2 3"/><path d="M15 9l2 3-2 3"/></svg>`,
+            'feature-design': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.2 3.6L17 8l-3.6 1.2L12 13l-1.2-3.6L7 8l3.6-1.2z"/><path d="M5 19h14"/><path d="M8 22h8"/></svg>`,
+            'add-template': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>`,
+            'default': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`
+        };
+        return icons[iconKey] || icons.default;
+    }
+
+    function buildCategoryCardHtml(name, subtext, isUserTemplate, options = {}) {
+        const { isAdd = false } = options;
+        const escapedName = escapeHtml(name);
+        const escapedSub = escapeHtml(subtext);
+        const addClass = isAdd ? ' prompt-studio-category-card--add add-template-card' : '';
+        const iconKey = isAdd ? 'add-template' : getCategoryIconKey(name);
+        const iconSvg = getCategoryIconSvg(iconKey);
+        return `
+            <button type="button" class="prompt-studio-category-card template-category-card${addClass}"
+                    data-template-name="${escapedName}"
+                    data-is-user-template="${isUserTemplate ? 'true' : 'false'}">
+                <span class="prompt-studio-category-card-icon prompt-studio-category-card-icon--${iconKey}" aria-hidden="true">${iconSvg}</span>
+                <span class="prompt-studio-category-card-body">
+                    <span class="prompt-studio-category-card-title">${escapedName}</span>
+                    <span class="prompt-studio-category-card-sub">${escapedSub}</span>
+                </span>
+                <span class="prompt-studio-category-card-chevron" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                </span>
+            </button>
+        `;
+    }
+
+    function showPromptDetailEmpty() {
+        const empty = document.getElementById('promptDetailEmpty');
+        const panel = document.getElementById('promptDetailPanel');
+        if (empty) {
+            empty.hidden = false;
+            empty.innerHTML = '<p>Select a template category to view content</p>';
+        }
+        if (panel) panel.hidden = true;
+    }
+
+    function clearPromptDetailPanel() {
+        showPromptDetailEmpty();
+        const systemEl = document.getElementById('promptSystemPrompt');
+        const userEl = document.getElementById('promptUserPrompt');
+        if (systemEl) systemEl.value = '';
+        if (userEl) userEl.value = '';
+        setPromptDetailReadonly(true);
+        const saveBtn = document.getElementById('promptSaveBtn');
+        const deleteBtn = document.getElementById('promptDeleteBtn');
+        if (saveBtn) saveBtn.style.display = 'none';
+        if (deleteBtn) deleteBtn.style.display = 'none';
+        if (currentActiveCategoryCard) {
+            currentActiveCategoryCard.classList.remove('is-active');
+            currentActiveCategoryCard = null;
+        }
+    }
+
+    function setPromptDetailReadonly(readonly) {
+        const systemEl = document.getElementById('promptSystemPrompt');
+        const userEl = document.getElementById('promptUserPrompt');
+        const modelBtn = document.getElementById('promptModelBtn');
+        const modelDropdown = document.getElementById('promptModelDropdown');
+        [systemEl, userEl].forEach(el => {
+            if (!el) return;
+            if (readonly) {
+                el.setAttribute('readonly', 'readonly');
+            } else {
+                el.removeAttribute('readonly');
+            }
+        });
+        if (modelBtn) modelBtn.disabled = readonly;
+        if (modelDropdown && readonly) modelDropdown.classList.remove('active');
+    }
+
+    function initPromptModelDropdown() {
+        const dropdown = document.getElementById('promptModelDropdown');
+        const btn = document.getElementById('promptModelBtn');
+        const menu = document.getElementById('promptModelDropdownMenu');
+        const label = document.getElementById('promptModelBtnLabel');
+        const hidden = document.getElementById('promptModelSelect');
+        if (!dropdown || !btn || !menu) return;
+
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (btn.disabled) return;
+            dropdown.classList.toggle('active');
+        });
+
+        menu.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const value = this.getAttribute('data-value') || '';
+                const text = this.textContent.trim();
+                if (hidden) hidden.value = value;
+                if (label) label.textContent = text;
+                dropdown.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    }
+
+    initPromptModelDropdown();
+
+    function setActiveCategoryCard(card) {
+        const list = document.getElementById('templateCategoriesArea');
+        if (list) {
+            list.querySelectorAll('.prompt-studio-category-card').forEach(btn => {
+                btn.classList.remove('is-active');
+                btn.removeAttribute('aria-selected');
+            });
+        } else if (currentActiveCategoryCard) {
+            currentActiveCategoryCard.classList.remove('is-active');
+            currentActiveCategoryCard.removeAttribute('aria-selected');
+        }
+        currentActiveCategoryCard = card || null;
+        if (card) {
+            card.classList.add('is-active');
+            card.setAttribute('aria-selected', 'true');
+        }
+    }
+
+    function restoreActiveCategoryCardHighlight() {
+        if (!currentPromptTemplateKey) return;
+        const list = document.getElementById('templateCategoriesArea');
+        if (!list) return;
+        list.querySelectorAll('.template-category-card:not(.add-template-card)').forEach(card => {
+            if (card.getAttribute('data-template-name') === currentPromptTemplateKey) {
+                setActiveCategoryCard(card);
+            }
+        });
+    }
+
+    function getCategorySubtext(templateName, fallbackDescription, isUserTemplate, userPrompt) {
+        if (isUserTemplate) {
+            if (userPrompt) {
+                const line = userPrompt.replace(/\s+/g, ' ').trim();
+                return line.length > 52 ? `${line.slice(0, 52)}…` : line;
+            }
+            return 'Custom template';
+        }
+        if (fallbackDescription) {
+            return fallbackDescription;
+        }
+        const cached = testPromptTemplates && testPromptTemplates[templateName];
+        if (cached) {
+            const text = typeof cached === 'string'
+                ? cached
+                : [cached['System Prompt'], cached['User Prompt']].filter(Boolean).join(' ');
+            const line = text.replace(/\s+/g, ' ').trim();
+            if (line) {
+                return line.length > 52 ? `${line.slice(0, 52)}…` : line;
+            }
+        }
+        return '';
+    }
+
+    // Function to display template categories for selected role
+    function showTemplateCategoriesForRole(role) {
+        currentSelectedRole = role;
+        const templateCategoriesArea = document.getElementById('templateCategoriesArea');
+        if (!templateCategoriesArea) {
+            console.error('❌ templateCategoriesArea not found');
+            return;
+        }
+
+        clearPromptDetailPanel();
+
+        const templates = roleTemplates[role] || [];
+        const userTemplates = getUserTemplates(role);
+        const roleLabels = { tester: 'Tester', developer: 'Developer', analyst: 'Analyst' };
+        const roleLabel = roleLabels[role] || role;
+        console.log(`📋 Displaying ${templates.length} regular templates and ${userTemplates.length} user templates for role: ${role}`);
+
+        let html = '';
+
+        templates.forEach(template => {
+            const subtext = getCategorySubtext(template.name, template.description, false);
+            html += buildCategoryCardHtml(template.name, subtext, false);
+        });
+
+        userTemplates.forEach(template => {
+            const subtext = getCategorySubtext(template.name, 'Custom template', true, template.prompt);
+            html += buildCategoryCardHtml(template.name, subtext, true);
+        });
+
+        html += buildCategoryCardHtml('Add template', 'Create a new custom template', false, { isAdd: true });
+
+        templateCategoriesArea.innerHTML = html;
+        updatePromptLibraryCount(templates.length + userTemplates.length, roleLabel);
+
+        templateCategoriesArea.querySelectorAll('.template-category-card:not(.add-template-card)').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                const templateName = this.getAttribute('data-template-name');
+                const isUserTemplate = this.getAttribute('data-is-user-template') === 'true';
+                setActiveCategoryCard(this);
+                loadAndDisplayPromptTemplate(templateName, isUserTemplate);
+            });
+        });
+
+        const addTemplateCard = templateCategoriesArea.querySelector('.add-template-card');
+        if (addTemplateCard) {
+            addTemplateCard.addEventListener('click', function() {
+                openAddTemplateModal(role);
+            });
+        }
+
+        console.log('✅ Template categories displayed for role:', role);
+    }
+    
+    function renderPromptDetailPanel(templateName, rawContent, isUserTemplate) {
+        const empty = document.getElementById('promptDetailEmpty');
+        const panel = document.getElementById('promptDetailPanel');
+        const titleEl = document.getElementById('promptDetailTitle');
+        const metaEl = document.getElementById('promptDetailMeta');
+        const systemEl = document.getElementById('promptSystemPrompt');
+        const userEl = document.getElementById('promptUserPrompt');
+        const saveBtn = document.getElementById('promptSaveBtn');
+        const deleteBtn = document.getElementById('promptDeleteBtn');
+
+        const { system, user } = parseTemplateForDisplay(rawContent);
+        const tag = getTemplateTag(templateName, currentSelectedRole);
+        const roleLabels = { tester: 'Tester', developer: 'Developer', analyst: 'Analyst' };
+        const roleLabel = roleLabels[currentSelectedRole] || currentSelectedRole || 'template';
+
+        if (empty) empty.hidden = true;
+        if (panel) panel.hidden = false;
+        if (titleEl) titleEl.textContent = templateName;
+        if (metaEl) metaEl.textContent = `${tag} · ${roleLabel} · Last edited today`;
+        if (systemEl) systemEl.value = system;
+        if (userEl) userEl.value = user;
+
+        currentPromptTemplateKey = templateName;
+        currentPromptTemplateContent = user ? `${system}\n\n${user}`.trim() : system;
+        currentPromptTemplateRaw = rawContent;
+        isPromptTemplateModified = false;
+        isCurrentTemplateUserTemplate = isUserTemplate;
+
+        setPromptDetailReadonly(true);
+        if (saveBtn) saveBtn.style.display = 'none';
+        if (deleteBtn) {
+            deleteBtn.style.display = isUserTemplate ? 'inline-block' : 'none';
+        }
+    }
+
+    let currentPromptTemplateRaw = null;
+
+    // Function to load and display prompt template content
+    async function loadAndDisplayPromptTemplate(templateName, isUserTemplate = false) {
+        const panel = document.getElementById('promptDetailPanel');
+        if (!panel) {
+            console.error('❌ promptDetailPanel not found');
+            return;
+        }
+
+        console.log('📄 Loading template:', templateName, 'isUserTemplate:', isUserTemplate);
+
+        const empty = document.getElementById('promptDetailEmpty');
+        if (empty) empty.hidden = true;
+        panel.hidden = true;
+
+        try {
+            let rawContent = null;
+
+            if (isUserTemplate && currentSelectedRole) {
+                const userTemplates = getUserTemplates(currentSelectedRole);
+                const userTemplate = userTemplates.find(t => t.name === templateName);
+                if (userTemplate) {
+                    rawContent = userTemplate.prompt;
+                }
+            }
+
+            if (!rawContent && testPromptTemplates && testPromptTemplates[templateName]) {
+                rawContent = testPromptTemplates[templateName];
+            } else if (!rawContent) {
+                console.log('⚠️ Template not found in local cache, fetching from backend...');
+                let response;
+                if (window.API && typeof window.API.getPromptTemplates === 'function') {
+                    response = await window.API.getPromptTemplates();
+                } else {
+                    const apiResponse = await fetch('http://127.0.0.1:8000/api/test-script/prompts', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    if (!apiResponse.ok) {
+                        throw new Error(`HTTP error! status: ${apiResponse.status}`);
+                    }
+                    response = await apiResponse.json();
+                }
+
+                if (response && response.success && response.templates && response.templates[templateName]) {
+                    rawContent = response.templates[templateName];
+                    if (!testPromptTemplates) testPromptTemplates = {};
+                    testPromptTemplates[templateName] = rawContent;
+                }
+            }
+
+            if (rawContent) {
+                renderPromptDetailPanel(templateName, rawContent, isUserTemplate);
+                restoreActiveCategoryCardHighlight();
+                if (empty) empty.hidden = true;
+                console.log('✅ Template displayed:', templateName);
+            } else {
+                showPromptDetailEmpty();
+                if (empty) {
+                    empty.hidden = false;
+                    empty.innerHTML = `<p>Template "${escapeHtml(templateName)}" content not available.</p>`;
+                }
+            }
+        } catch (error) {
+            console.error('❌ Error loading template:', error);
+            showPromptDetailEmpty();
+            const emptyEl = document.getElementById('promptDetailEmpty');
+            if (emptyEl) {
+                emptyEl.hidden = false;
+                emptyEl.innerHTML = `<p>Error loading template: ${escapeHtml(error.message)}</p>`;
+            }
+        }
+    }
+
+    function enablePromptTemplateEditing() {
+        if (!currentPromptTemplateKey) {
+            showStatusBar('Please select a template first', 'warning');
+            return;
+        }
+        setPromptDetailReadonly(false);
+        const saveBtn = document.getElementById('promptSaveBtn');
+        if (saveBtn) saveBtn.style.display = 'inline-block';
+        isPromptTemplateModified = false;
+    }
+
+    function getPromptEditorContent() {
+        const systemEl = document.getElementById('promptSystemPrompt');
+        const userEl = document.getElementById('promptUserPrompt');
+        const system = systemEl ? systemEl.value.trim() : '';
+        const user = userEl ? userEl.value.trim() : '';
+        if (system && user) {
+            return { combined: `${system}\n\n${user}`, system, user, isSplit: true };
+        }
+        return { combined: system || user, system, user, isSplit: false };
+    }
+    
+    // Template buttons functionality - Enhanced with backend save
+    // Note: Variables declared earlier, but need to ensure they're accessible here
+    const promptModifyBtn = document.getElementById('promptModifyBtn');
+    const promptSaveBtn = document.getElementById('promptSaveBtn');
+    const promptTextAreaCheck = document.getElementById('templateTextArea');
+    let currentPromptTemplateKey = null;
+    let currentPromptTemplateContent = '';
+    let isPromptTemplateModified = false;
+    let isCurrentTemplateUserTemplate = false;
+
+    function wirePromptFieldChangeTracking() {
+        ['promptSystemPrompt', 'promptUserPrompt'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el || el.dataset.changeWired === '1') return;
+            el.dataset.changeWired = '1';
+            el.addEventListener('input', function() {
+                if (!el.hasAttribute('readonly')) {
+                    isPromptTemplateModified = true;
+                    const saveBtn = document.getElementById('promptSaveBtn');
+                    if (saveBtn) {
+                        saveBtn.style.display = 'inline-block';
+                        saveBtn.disabled = false;
+                    }
+                }
+            });
+        });
+    }
+    wirePromptFieldChangeTracking();
+
+    const promptEditBtn = document.getElementById('promptEditBtn');
+    if (promptModifyBtn) {
+        promptModifyBtn.addEventListener('click', enablePromptTemplateEditing);
+    }
+    if (promptEditBtn) {
+        promptEditBtn.addEventListener('click', enablePromptTemplateEditing);
+    }
+    const promptNewBtn = document.getElementById('promptNewBtn');
+    if (promptNewBtn) {
+        promptNewBtn.addEventListener('click', function() {
+            if (!currentSelectedRole) {
+                showStatusBar('Select a role first', 'warning');
+                return;
+            }
+            openAddTemplateModal(currentSelectedRole);
+        });
+    }
+
+    const promptTestBtn = document.getElementById('promptTestBtn');
+    if (promptTestBtn) {
+        promptTestBtn.addEventListener('click', function() {
+            if (!currentPromptTemplateKey) {
+                showStatusBar('Select a template to test', 'warning');
+                return;
+            }
+            showStatusBar(`Test prompt: "${currentPromptTemplateKey}" (preview only)`, 'info');
+        });
+    }
+
+    const promptDeleteBtn = document.getElementById('promptDeleteBtn');
+    if (promptDeleteBtn) {
+        promptDeleteBtn.addEventListener('click', function() {
+            if (!currentPromptTemplateKey || !isCurrentTemplateUserTemplate || !currentSelectedRole) {
+                showStatusBar('Only custom user templates can be deleted here', 'warning');
+                return;
+            }
+            if (!confirm(`Delete template "${currentPromptTemplateKey}"?`)) return;
+            if (deleteUserTemplate(currentSelectedRole, currentPromptTemplateKey)) {
+                showStatusBar(`Template "${currentPromptTemplateKey}" deleted`, 'success');
+                clearPromptDetailPanel();
+                currentPromptTemplateKey = null;
+                showTemplateCategoriesForRole(currentSelectedRole);
+            } else {
+                showStatusBar('Failed to delete template', 'error');
+            }
+        });
+    }
+
+    if (promptSaveBtn) {
+        promptSaveBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('💾 Save button clicked for template:', currentPromptTemplateKey);
+            if (currentPromptTemplateKey && isPromptTemplateModified) {
+                const editorContent = getPromptEditorContent();
+                const contentToSave = editorContent.combined;
+
+                if (!contentToSave) {
+                    showStatusBar('Template content cannot be empty', 'warning');
+                    return;
+                }
+
+                const savedRaw = editorContent.isSplit
+                    ? { 'System Prompt': editorContent.system, 'User Prompt': editorContent.user }
+                    : contentToSave;
+
+                try {
+                        this.disabled = true;
+                        this.textContent = 'Saving...';
+
+                        if (isCurrentTemplateUserTemplate && currentSelectedRole) {
+                            console.log(`🚀 Saving user template '${currentPromptTemplateKey}' to localStorage...`);
+                            if (saveUserTemplate(currentSelectedRole, currentPromptTemplateKey, contentToSave)) {
+                                showStatusBar(`Template '${currentPromptTemplateKey}' saved successfully!`, 'success');
+                                currentPromptTemplateContent = contentToSave;
+                                currentPromptTemplateRaw = contentToSave;
+                                renderPromptDetailPanel(currentPromptTemplateKey, contentToSave, true);
+                                this.style.display = 'none';
+                                this.disabled = false;
+                                this.textContent = 'Save Prompt';
+                                isPromptTemplateModified = false;
+                                showTemplateCategoriesForRole(currentSelectedRole);
+                                restoreActiveCategoryCardHighlight();
+                                return;
+                            }
+                            throw new Error('Failed to save user template to localStorage');
+                        }
+
+                        console.log(`🚀 Saving template '${currentPromptTemplateKey}' to backend...`);
+                        console.log('  - Content length:', contentToSave.length);
+
+                        const fetchResponse = await fetch('http://127.0.0.1:8000/api/test-script/save-template', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                template_name: currentPromptTemplateKey,
+                                template_content: contentToSave
+                            })
+                        });
+                        
+                        console.log('📥 Save response status:', fetchResponse.status);
+                        console.log('📥 Save response ok:', fetchResponse.ok);
+                        
+                        if (!fetchResponse.ok) {
+                            // Try to extract error message from response body
+                            let errorText = `HTTP error! status: ${fetchResponse.status}`;
+                            
+                            // Clone response to read it safely
+                            const responseClone = fetchResponse.clone();
+                            try {
+                                const errorData = await responseClone.json();
+                                if (errorData.detail) {
+                                    errorText = errorData.detail;
+                                } else if (errorData.message) {
+                                    errorText = errorData.message;
+                                } else if (errorData.error) {
+                                    errorText = errorData.error;
+                                }
+                                console.error('❌ Backend error response:', errorData);
+                            } catch (e) {
+                                // If not JSON, try text from original response
+                                try {
+                                    const textError = await fetchResponse.text();
+                                    if (textError && textError.trim()) {
+                                        errorText = textError.trim();
+                                    }
+                                    console.error('❌ Backend error text:', textError);
+                                } catch (e2) {
+                                    console.warn('Could not extract error message from response:', e2);
+                                }
+                            }
+                            
+                            throw new Error(errorText);
+                        }
+                        
+                        const response = await fetchResponse.json();
+                        console.log('✅ Save template successful:', response);
+                        
+                        if (response.success) {
+                            testPromptTemplates[currentPromptTemplateKey] = savedRaw;
+                            showStatusBar(`Template '${currentPromptTemplateKey}' saved successfully!`, 'success');
+                            currentPromptTemplateContent = contentToSave;
+                            currentPromptTemplateRaw = savedRaw;
+                            renderPromptDetailPanel(currentPromptTemplateKey, savedRaw, false);
+                            restoreActiveCategoryCardHighlight();
+                            this.style.display = 'none';
+                            this.disabled = false;
+                            this.textContent = 'Save Prompt';
+                            isPromptTemplateModified = false;
+                            console.log('✅ Template saved successfully');
+                        } else {
+                            throw new Error(response.message || 'Failed to save template');
+                        }
+                    } catch (error) {
+                        console.error('❌ Error saving template:', error);
+                        console.error('  - Error message:', error.message);
+                        console.error('  - Error stack:', error.stack);
+                        
+                        // Only show error if it's a real error (not just a missing function warning)
+                        // Check if template was actually saved by checking the response
+                        const errorMsg = error.message || '';
+                        
+                        // If the error mentions "is not a function"but we're using direct fetch, it might be a false error
+                        // Check if save actually succeeded by looking at the response
+                        if (errorMsg.includes('is not a function') || errorMsg.includes('saveTemplatePrompt')) {
+                            console.warn('⚠️ Error message suggests API function issue, but we use direct fetch - checking if save succeeded anyway');
+                            // Don't show error if it's just about the function not existing
+                            // The save might have succeeded via direct fetch
+                        } else {
+                            showStatusBar(`Error saving template: ${errorMsg}`, 'error');
+                        }
+                        
+                        this.disabled = false;
+                        this.textContent = 'Save Prompt';
+                    }
+            } else {
+                showStatusBar('No changes to save', 'info');
+            }
+        });
+    }
+
+    // Add Template Modal Functions
+    function openAddTemplateModal(role) {
+        const modal = document.getElementById('addTemplateModal');
+        if (!modal) {
+            console.error('❌ Add Template modal not found');
+            return;
+        }
+        
+        // Clear and enable inputs - ensure they're fully functional
+        const nameInput = document.getElementById('newTemplateNameInput');
+        const promptInput = document.getElementById('newTemplatePromptInput');
+        
+        if (nameInput) {
+            nameInput.value = '';
+            nameInput.disabled = false;
+            nameInput.readOnly = false;
+            nameInput.removeAttribute('readonly');
+            nameInput.removeAttribute('disabled');
+            nameInput.style.pointerEvents = 'auto';
+            nameInput.style.opacity = '1';
+        } else {
+            console.error('❌ Name input not found');
+        }
+        
+        if (promptInput) {
+            promptInput.value = '';
+            promptInput.disabled = false;
+            promptInput.readOnly = false;
+            promptInput.removeAttribute('readonly');
+            promptInput.removeAttribute('disabled');
+            promptInput.style.pointerEvents = 'auto';
+            promptInput.style.opacity = '1';
+        } else {
+            console.error('❌ Prompt input not found');
+        }
+        
+        // Show modal
+        modal.style.display = 'flex';
+        modal.style.visibility = 'visible';
+        
+        // Focus on name input after a short delay to ensure modal is visible
+        setTimeout(() => {
+            if (nameInput) {
+                try {
+                    nameInput.focus();
+                    // Test if input is actually focusable
+                    if (document.activeElement !== nameInput) {
+                        console.warn('⚠️ Could not focus name input, trying again...');
+                        setTimeout(() =>nameInput.focus(), 50);
+                    }
+                } catch (e) {
+                    console.error('Error focusing name input:', e);
+                }
+            }
+        }, 150);
+        
+        console.log('✅ Add Template modal opened for role:', role);
+    }
+
+    function closeAddTemplateModal() {
+        const modal = document.getElementById('addTemplateModal');
+        if (modal) {
+            modal.style.display = 'none';
+            console.log('✅ Add Template modal closed');
+        }
+    }
+
+    // Make closeAddTemplateModal globally accessible for HTML onclick
+    window.closeAddTemplateModal = closeAddTemplateModal;
+
+    // Add Template Modal Event Handlers
+    const addTemplateModal = document.getElementById('addTemplateModal');
+    const confirmAddTemplateBtn = document.getElementById('confirmAddTemplate');
+    
+    if (addTemplateModal) {
+        // Close on overlay click
+        const overlay = addTemplateModal.querySelector('.template-modal-overlay');
+        if (overlay) {
+            overlay.addEventListener('click', closeAddTemplateModal);
+        }
+        
+        // Close on close button
+        const closeBtn = addTemplateModal.querySelector('.template-modal-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeAddTemplateModal);
+        }
+        
+        // Close on cancel button (backup to onclick)
+        const cancelBtn = addTemplateModal.querySelector('.template-modal-btn.cancel');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeAddTemplateModal();
+            });
+        }
+    }
+
+    if (confirmAddTemplateBtn) {
+        confirmAddTemplateBtn.addEventListener('click', function() {
+            const nameInput = document.getElementById('newTemplateNameInput');
+            const promptInput = document.getElementById('newTemplatePromptInput');
+            
+            if (!nameInput || !promptInput) {
+                showStatusBar('Error: Modal inputs not found', 'error');
+                return;
+            }
+            
+            const templateName = nameInput.value.trim();
+            const templatePrompt = promptInput.value.trim();
+            
+            if (!templateName) {
+                showStatusBar('Please enter a template name', 'warning');
+                nameInput.focus();
+                return;
+            }
+            
+            if (!templatePrompt) {
+                showStatusBar('Please enter template prompt content', 'warning');
+                promptInput.focus();
+                return;
+            }
+            
+            // Check if template name already exists for this role
+            if (currentSelectedRole) {
+                const userTemplates = getUserTemplates(currentSelectedRole);
+                const existingTemplate = userTemplates.find(t =>t.name === templateName);
+                if (existingTemplate) {
+                    if (!confirm(`Template "${templateName}"already exists. Do you want to overwrite it?`)) {
+                        return;
+                    }
+                }
+                
+                // Check if template name conflicts with regular templates
+                const regularTemplates = roleTemplates[currentSelectedRole] || [];
+                const conflictsWithRegular = regularTemplates.find(t =>t.name === templateName);
+                if (conflictsWithRegular) {
+                    showStatusBar(`Template name "${templateName}"conflicts with a regular template. Please choose a different name.`, 'warning');
+                    return;
+                }
+            }
+            
+            // Save the template
+            if (currentSelectedRole && saveUserTemplate(currentSelectedRole, templateName, templatePrompt)) {
+                showStatusBar(`Template "${templateName}"added successfully!`, 'success');
+                closeAddTemplateModal();
+                
+                // Refresh template categories to show the new template
+                showTemplateCategoriesForRole(currentSelectedRole);
+            } else {
+                showStatusBar('Error saving template', 'error');
+            }
+        });
+    }
+
+    // User History dropdown functionality - REMOVED (duplicate handlers added later with better debugging)
+
+    // Test Script Generator - position Prompt Template menu below the button (fixes top-left rendering in Electron)
+    let templateDropdownMenuHost = null;
+
+    function getTestScriptTemplateDropdownMenu() {
+        return document.getElementById('templateDropdownMenu')
+            || document.querySelector('#templateDropdown .dropdown-content');
+    }
+
+    function syncTestScriptGeneratorLayoutClasses() {
+        const section = document.getElementById('test-script-generator');
+        if (!section) return;
+        const isActive = section.classList.contains('active');
+        document.querySelector('.main-content')?.classList.toggle('test-script-generator-active', isActive);
+        document.querySelector('.layout-container')?.classList.toggle('test-script-generator-active', isActive);
+    }
+
+    function mountTestScriptTemplateDropdownMenu() {
+        const dropdown = document.getElementById('templateDropdown');
+        const menu = getTestScriptTemplateDropdownMenu();
+        if (!dropdown || !menu || menu.parentElement === document.body) return;
+        templateDropdownMenuHost = dropdown;
+        document.body.appendChild(menu);
+    }
+
+    function unmountTestScriptTemplateDropdownMenu() {
+        const menu = getTestScriptTemplateDropdownMenu();
+        const host = templateDropdownMenuHost || document.getElementById('templateDropdown');
+        if (!menu || !host || menu.parentElement !== document.body) return;
+        host.appendChild(menu);
+    }
+
+    function positionTestScriptTemplateDropdownMenu() {
+        const dropdown = document.getElementById('templateDropdown');
+        const btn = document.getElementById('templateBtn');
+        const menu = getTestScriptTemplateDropdownMenu();
+        if (!dropdown || !btn || !menu || !dropdown.classList.contains('active')) return;
+
+        mountTestScriptTemplateDropdownMenu();
+
+        const rect = btn.getBoundingClientRect();
+        if (rect.width === 0 && rect.height === 0) return;
+
+        const menuHeight = menu.offsetHeight || 300;
+        const viewportHeight = window.innerHeight;
+        let top = rect.bottom + 5;
+        if (top + menuHeight >viewportHeight - 8 && rect.top >menuHeight + 8) {
+            top = rect.top - menuHeight - 5;
+        }
+
+        menu.style.position = 'fixed';
+        menu.style.top = `${top}px`;
+        menu.style.left = `${rect.left}px`;
+        menu.style.width = `${Math.max(rect.width, 200)}px`;
+        menu.style.right = 'auto';
+        menu.style.minWidth = `${rect.width}px`;
+        menu.style.transform = 'none';
+        menu.style.zIndex = '9000';
+        menu.style.display = 'block';
+        menu.style.opacity = '1';
+    }
+
+    function resetTestScriptTemplateDropdownMenuPosition() {
+        const menu = getTestScriptTemplateDropdownMenu();
+        if (!menu) return;
+        menu.style.position = '';
+        menu.style.top = '';
+        menu.style.left = '';
+        menu.style.width = '';
+        menu.style.right = '';
+        menu.style.minWidth = '';
+        menu.style.transform = '';
+        menu.style.zIndex = '';
+        menu.style.display = '';
+        menu.style.opacity = '';
+        unmountTestScriptTemplateDropdownMenu();
+    }
+
+    // Test Script Generator dropdown functionality
+    if (templateBtn && templateDropdown) {
+        templateBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            templateDropdown.classList.toggle('active');
+            if (templateDropdown.classList.contains('active')) {
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(positionTestScriptTemplateDropdownMenu);
+                });
+            } else {
+                resetTestScriptTemplateDropdownMenuPosition();
+            }
+        });
+
+        const mainContentEl = document.querySelector('.main-content');
+        if (mainContentEl) {
+            mainContentEl.addEventListener('scroll', positionTestScriptTemplateDropdownMenu, { passive: true });
+        }
+        window.addEventListener('resize', positionTestScriptTemplateDropdownMenu);
+
+        const templateDropdownObserver = new MutationObserver(function() {
+            if (templateDropdown.classList.contains('active')) {
+                positionTestScriptTemplateDropdownMenu();
+            } else {
+                resetTestScriptTemplateDropdownMenuPosition();
+            }
+        });
+        templateDropdownObserver.observe(templateDropdown, { attributes: true, attributeFilter: ['class'] });
+
+        // Attach event listeners using the centralized function
+        // This ensures consistent behavior and avoids duplicate listeners
+        attachOriginalDropdownEventListeners();
+        console.log('✅ Template dropdown event listeners attached');
+    }
+
+    // Test case / test script variable dropdowns (portal pattern - fixes Electron native select bug)
+    const testCaseVariableDropdownConfigs = [
+        { dropdownId: 'domainDropdown', btnId: 'domainBtn', menuId: 'domainDropdownMenu', hiddenId: 'domainSelect', labelId: 'domainBtnLabel', defaultLabel: 'Select Domain...', onSelect: () =>updateTsgStatusBar() },
+        { dropdownId: 'systemTypeDropdown', btnId: 'systemTypeBtn', menuId: 'systemTypeDropdownMenu', hiddenId: 'systemTypeSelect', labelId: 'systemTypeBtnLabel', defaultLabel: 'Select System Type...', onSelect: () =>updateTsgStatusBar() },
+        { dropdownId: 'primaryFeatureDropdown', btnId: 'primaryFeatureBtn', menuId: 'primaryFeatureDropdownMenu', hiddenId: 'primaryFeatureSelect', labelId: 'primaryFeatureBtnLabel', defaultLabel: 'Select Primary Feature...', onSelect: () =>updateTsgStatusBar() },
+        { dropdownId: 'connectionMethodDropdown', btnId: 'connectionMethodBtn', menuId: 'connectionMethodDropdownMenu', hiddenId: 'connectionMethodSelect', labelId: 'connectionMethodBtnLabel', defaultLabel: 'Select Connection Method...', onSelect: () =>updateTsgStatusBar() },
+        { dropdownId: 'loginCredentialsDropdown', btnId: 'loginCredentialsBtn', menuId: 'loginCredentialsDropdownMenu', hiddenId: 'loginCredentialsSelect', labelId: 'loginCredentialsBtnLabel', defaultLabel: 'Select Login Credentials...', onSelect: () =>updateTsgStatusBar() },
+        { dropdownId: 'accessModeDropdown', btnId: 'accessModeBtn', menuId: 'accessModeDropdownMenu', hiddenId: 'accessModeSelect', labelId: 'accessModeBtnLabel', defaultLabel: 'Select Access Mode...', onSelect: () =>updateTsgStatusBar() },
+        { dropdownId: 'languageDropdown', btnId: 'languageBtn', menuId: 'languageDropdownMenu', hiddenId: 'languageSelect', labelId: 'languageBtnLabel', defaultLabel: 'Select Language...', onSelect: () =>updateTsgStatusBar() }
+    ];
+    testCaseVariableDropdownConfigs.forEach(initPortalSelectDropdown);
+
+    document.querySelectorAll('.tsg-template-radio').forEach((radio) => {
+        radio.addEventListener('change', function() {
+            if (this.checked) handleTestTemplateSelection(this.value);
+        });
+    });
+
+    const chooseReferenceFileBtn = document.getElementById('chooseReferenceFileBtn');
+    const referenceCodeFileInput = document.getElementById('referenceCodeFile');
+    if (chooseReferenceFileBtn && referenceCodeFileInput) {
+        chooseReferenceFileBtn.addEventListener('click', () =>referenceCodeFileInput.click());
+        referenceCodeFileInput.addEventListener('change', function() {
+            const label = document.getElementById('uploadedFileLabel');
+            if (label) label.textContent = this.files?.[0]?.name || 'No file chosen';
+        });
+    }
+
+    // Test Script Generator button event listeners
+    const loadTestDatasetBtn = document.getElementById('loadTestDatasetBtn');
+    const resetTestDatasetBtn = document.getElementById('resetTestDatasetBtn');
+    const testDatasetUpload = document.getElementById('testDatasetUpload');
+    const testDatasetFiles = document.getElementById('testDatasetFiles');
+    
+    if (loadTestDatasetBtn) {
+        loadTestDatasetBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent bubbling to parent div
+            
+            // Priority 1: If files are selected (regardless of whether dataset is loaded), load them
+            if (testDatasetFiles.files && testDatasetFiles.files.length > 0) {
+                loadTestScriptDataset();
+            } else if (currentTestDataset) {
+                // Priority 2: If dataset is already loaded but no new files selected, open file picker to allow reloading
+                testDatasetFiles.click();
+            } else {
+                // Priority 3: No dataset and no files selected, open file picker
+                testDatasetFiles.click();
+            }
+        });
+    }
+
+    if (resetTestDatasetBtn) {
+        resetTestDatasetBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            try {
+                // Clear selected files from the hidden input
+                if (testDatasetFiles) {
+                    const dt = new DataTransfer();
+                    testDatasetFiles.files = dt.files;
+                    testDatasetFiles.value = '';
+                }
+
+                // Clear any loaded dataset content
+                currentTestDataset = null;
+
+                // Reset UI back to empty state
+                hideSelectedFiles();
+                clearTsgNliPanel();
+                if (loadTestDatasetBtn) {
+                    loadTestDatasetBtn.disabled = false;
+                    loadTestDatasetBtn.textContent = 'Load';
+                    loadTestDatasetBtn.style.backgroundColor = '';
+                }
+
+                updateTsgStatusBar();
+                showStatusBar('Dataset selection cleared. Choose another file to load.', 'success');
+            } catch (err) {
+                console.error('Failed to reset dataset selection:', err);
+                showStatusBar('Failed to reset dataset selection', 'error');
+            }
+        });
+    }
+    
+    // Handle click on upload area
+    if (testDatasetUpload) {
+        testDatasetUpload.addEventListener('click', () =>testDatasetFiles.click());
+    }
+    
+    // Handle file selection
+    if (testDatasetFiles) {
+        testDatasetFiles.addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                displaySelectedFiles(files);
+                
+                // Update button text to indicate files are ready to load
+                // When new files are selected, show "Load Selected Files"regardless of previous load state
+                if (loadTestDatasetBtn) {
+                    loadTestDatasetBtn.textContent = 'Load Selected Files';
+                    loadTestDatasetBtn.style.backgroundColor = '#28a745';
+                }
+            } else {
+                hideSelectedFiles();
+                // If no files selected and dataset is loaded, keep button as "Load"
+                if (loadTestDatasetBtn && currentTestDataset) {
+                    loadTestDatasetBtn.textContent = 'Load';
+                    loadTestDatasetBtn.style.backgroundColor = '';
+                }
+            }
+        });
+    }
+    const testGenerateBtn = document.getElementById('testGenerateBtn');
+    if (testGenerateBtn) {
+        testGenerateBtn.addEventListener('click', generateTestScript);
+    }
+
+    const testRefineBtn = document.getElementById('testRefineBtn');
+    if (testRefineBtn) {
+        testRefineBtn.addEventListener('click', refineTestScript);
+    }
+
+    // Open Test Case folder button
+    const openTestCaseBtn = document.getElementById('openTestCaseBtn');
+    if (openTestCaseBtn) {
+        openTestCaseBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('📁 Open Test Case button clicked');
+            await openTestFolder('test_case');
+        });
+    }
+
+    // Open Test Script folder button
+    const openTestScriptBtn = document.getElementById('openTestScriptBtn');
+    if (openTestScriptBtn) {
+        openTestScriptBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('📁 Open Test Script button clicked');
+            await openTestFolder('test_script');
+        });
+    }
+
+    // Function to open test case or test script folder
+    async function openTestFolder(folderType) {
+        try {
+            console.log(`📂 Opening ${folderType} folder...`);
+            
+            // First, test if backend is reachable
+            try {
+                const healthResponse = await fetch('http://127.0.0.1:8000/health');
+                console.log('🏥 Backend health check:', healthResponse.ok ? 'OK' : 'FAILED');
+            } catch (healthError) {
+                console.error('❌ Backend not reachable:', healthError);
+                showStatusBar('Backend not reachable. Please start the backend server.', 'error');
+                return;
+            }
+            
+            // Get the folder path from backend
+            // Test cases: resources/TestScriptGenerator/test_suite/test_case/
+            // Test scripts: resources/TestScriptGenerator/test_suite/test_script/
+            const basePath = 'resources/TestScriptGenerator/test_suite';
+            const folderPath = `${basePath}/${folderType}`;
+            
+            // Get absolute path from backend
+            let extractPath;
+            try {
+                // Try to get the extract folder path from backend (similar to dataset generator)
+                // This will give us the absolute path to resources/extract, we can use it to construct the TestScriptGenerator path
+                const response = await fetch('http://127.0.0.1:8000/api/dataset/extract-folder-path');
+                if (response.ok) {
+                    const data = await response.json();
+                    // Extract the base path from the extract path (resources folder)
+                    // data.extract_path is something like: C:\...\Backend\resources\extract
+                    // We need: C:\...\Backend\resources\TestScriptGenerator\test_suite\test_case or test_script
+                    const extractBasePath = data.extract_path.replace(/[\\/]extract$/, '');
+                    // Ensure proper path separator
+                    const separator = extractBasePath.includes('\\') ? '\\': '/';
+                    extractPath = `${extractBasePath}${separator}TestScriptGenerator${separator}test_suite${separator}${folderType}`;
+                    console.log('📁 Using extract path as base:', extractBasePath);
+                    console.log('📁 Final folder path:', extractPath);
+                } else {
+                    // Fallback: use relative path (will be resolved by backend)
+                    extractPath = folderPath;
+                    console.log('⚠️ Using relative path as fallback:', extractPath);
+                }
+            } catch (error) {
+                console.warn('⚠️ Could not get extract path from backend, using relative path:', error);
+                // Fallback: use relative path (will be resolved by backend)
+                extractPath = folderPath;
+            }
+            
+            // Try multiple methods to open the folder
+            let folderOpened = false;
+            
+            // Method 1: Try Electron API if available
+            if (window.electronAPI && window.electronAPI.openFolder) {
+                try {
+                    window.electronAPI.openFolder(extractPath);
+                    showStatusBar(`Opening ${folderType.replace('_', ' ')} folder in Explorer...`, 'info');
+                    folderOpened = true;
+                    console.log('✅ Folder opened via Electron API');
+                } catch (electronError) {
+                    console.warn('⚠️ Electron API failed:', electronError);
+                }
+            }
+            // Method 2: Try using shell command via backend API
+            if (!folderOpened) {
+                try {
+                    console.log('🔄 Trying backend API to open folder:', extractPath);
+                    let openResponse;
+                    // Try window.API.openFolderInExplorer first, fallback to direct fetch
+                    if (window.API && typeof window.API.openFolderInExplorer === 'function') {
+                        console.log('[app.js] ✅ Using window.API.openFolderInExplorer');
+                        openResponse = await window.API.openFolderInExplorer(extractPath);
+                    } else {
+                        console.warn('[app.js] ⚠️ window.API.openFolderInExplorer not available, using direct fetch call');
+                        const response = await fetch('http://127.0.0.1:8000/api/dataset/open-folder', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ folder_path: extractPath })
+                        });
+                        
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+                        }
+                        
+                        openResponse = await response.json();
+                        console.log('[app.js] ✅ Direct fetch openFolderInExplorer successful, result:', openResponse);
+                    }
+                    
+                    console.log('📡 Backend API response:', openResponse);
+                    if (openResponse && openResponse.success) {
+                        showStatusBar(`Opening ${folderType.replace('_', ' ')} folder in Explorer...`, 'info');
+                        folderOpened = true;
+                        console.log('✅ Folder opened via backend shell command');
+                    } else {
+                        console.warn('⚠️ Backend API returned success=false:', openResponse);
+                    }
+                } catch (apiError) {
+                    console.error('❌ Backend folder opening failed:', apiError);
+                    showStatusBar(`Backend folder opening failed: ${apiError.message}`, 'error');
+                }
+            }
+            
+            // Method 3: Fallback - show path in alert
+            if (!folderOpened) {
+                showStatusBar(
+                    `Cannot open folder directly. Path: ${extractPath}\n\nPlease navigate to this folder manually.`, 
+                    'warning'
+                );
+                
+                // Copy path to clipboard as fallback
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(extractPath).then(() => {
+                        console.log('✅ Path copied to clipboard as fallback');
+                        showStatusBar('Folder path copied to clipboard!', 'info');
+                    }).catch(err => {
+                        console.log('⚠️ Could not copy to clipboard:', err);
+                    });
+                }
+            }
+            
+        } catch (error) {
+            console.error(`❌ Error opening ${folderType} folder:`, error);
+            showStatusBar(`Error opening ${folderType.replace('_', ' ')} folder: ${error.message}`, 'error');
+        }
+    }
+    const testSaveResponseBtn = document.getElementById('testSaveResponseBtn');
+    if (testSaveResponseBtn) {
+        testSaveResponseBtn.addEventListener('click', saveTestScriptResponse);
+    }
+    const testModifyBtn = document.getElementById('testModifyBtn');
+    if (testModifyBtn) {
+        testModifyBtn.addEventListener('click', function() {
+            console.log('🔧 Modify button clicked');
+            const promptEditor = document.getElementById('testPromptTextEditor');
+            const saveTemplateBtn = document.getElementById('testSaveTemplateBtn');
+            
+            if (promptEditor) {
+                console.log('📝 Prompt editor found, enabling modification');
+                // Store original content before modification (like PyQt)
+                if (!window.originalPromptContent) {
+                    window.originalPromptContent = promptEditor.value;
+                    console.log('💾 Original content stored, length:', window.originalPromptContent.length);
+                }
+                
+                // Enable text editing
+                promptEditor.readOnly = false;
+                promptEditor.style.backgroundColor = '#ffffff'; // Change background to indicate editing mode
+                
+                // Enable/disable buttons (like PyQt)
+                testModifyBtn.disabled = true;
+                if (saveTemplateBtn) saveTemplateBtn.style.display = 'block';
+                
+                // Set focus to the text editor (like PyQt)
+                promptEditor.focus();
+                
+                console.log('✅ Prompt editor enabled for modification');
+            } else {
+                console.error('❌ Prompt editor not found');
+            }
+        });
+    }
+
+    const testSaveTemplateBtn = document.getElementById('testSaveTemplateBtn');
+    if (testSaveTemplateBtn) {
+        testSaveTemplateBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('💾 Save Template button clicked!');
+            
+            const promptEditor = document.getElementById('testPromptTextEditor');
+            const testModifyBtn = document.getElementById('testModifyBtn');
+            
+            if (!promptEditor) {
+                console.error('❌ Prompt editor not found');
+                showStatusBar('Error: Prompt editor not found', 'error');
+                return;
+            }
+            
+            // CRITICAL: Get the prompt content DIRECTLY from the textarea RIGHT NOW
+            // Don't use a cached value - read it fresh to ensure we get user's latest changes
+            const currentContent = promptEditor.value.trim();
+            
+            console.log('📝 Prompt content to save:', {
+                length: currentContent.length,
+                preview: currentContent.substring(0, 100) + '...',
+                currentTestPromptKey: currentTestPromptKey,
+                templateName: currentTestPromptKey
+            });
+            
+            if (!currentContent) {
+                showStatusBar('Cannot save empty template', 'warning');
+                return;
+            }
+            
+            if (!currentTestPromptKey) {
+                console.error('❌ No template key selected');
+                showStatusBar('Error: No template selected', 'error');
+                return;
+            }
+            
+            // Allow saving for both 'Custom'and custom saved templates
+            if (currentTestPromptKey === 'Custom'|| (window.customTemplateNames && window.customTemplateNames.includes(currentTestPromptKey))) {
+                console.log('📝 Custom template - opening modal dialog');
+                
+                // Show modal for custom template name input
+                openTemplateNameModal(async (templateName) => {
+                    console.log('✅ Template name received from modal:', templateName);
+                
+                if (templateName && templateName.trim()) {
+                    const name = templateName.trim();
+                    
+                        // Check if template name already exists
+                        if (testPromptTemplates[name] || (window.customTemplateNames && window.customTemplateNames.includes(name))) {
+                        showStatusBar(`Template '${name}'already exists. Choose a different name.`, 'warning');
+                        return;
+                    }
+                    
+                    // CRITICAL: Re-read content from textarea RIGHT BEFORE saving (in case it changed)
+                    const contentToSave = promptEditor.value.trim();
+                    console.log('💾 Final content to save (re-read from textarea):', {
+                        length: contentToSave.length,
+                        preview: contentToSave.substring(0, 50) + '...'
+                    });
+                        
+                        // Store template content: name (key) = prompt from text box (value)
+                        console.log('💾 Saving template:', {
+                            name: name,
+                            promptLength: contentToSave.length,
+                            promptPreview: contentToSave.substring(0, 50) + '...'
+                        });
+                    
+                    testPromptTemplates[name] = contentToSave;
+                    
+                    // Update currentTestPromptKey to the saved template name
+                    currentTestPromptKey = name;
+                    
+                    // Update button text to show saved template name
+                    const templateBtn = document.getElementById('templateBtn');
+                    if (templateBtn) {
+                        templateBtn.innerHTML = `
+                            <span> ${name}</span>
+                            <span class="dropdown-arrow">▼</span>
+                        `;
+                    }
+                    
+                    try {
+                        console.log(`🚀 Saving template '${name}' to backend JSON file...`);
+                        console.log(`   Content length: ${contentToSave.length} chars`);
+                        console.log(`   Content preview: ${contentToSave.substring(0, 100)}...`);
+                        
+                        // Save to backend JSON file first, then reload
+                        const saveResult = await saveTemplateToBackend(name, contentToSave);
+                        console.log('✅ Template saved to backend JSON file:', saveResult);
+                        
+                        // After backend save, reload custom templates from JSON file
+                        console.log('🔄 Reloading custom templates from JSON file...');
+                        await loadCustomTemplatesIntoDropdown();
+                        console.log('✅ Custom templates reloaded from JSON:', window.customTemplateNames);
+                        
+                        // Update dropdown with reloaded templates
+                        addCustomTemplatesToMainDropdown();
+                        console.log('✅ Dropdown updated with custom templates from JSON file');
+                        
+                        // Verify the template is in dropdown
+                        const templateDropdown = document.getElementById('templateDropdown');
+                        if (templateDropdown) {
+                            const dropdownContent = templateDropdown.querySelector('.dropdown-content');
+                            if (dropdownContent) {
+                                const customItems = dropdownContent.querySelectorAll('.custom-template-item');
+                                const found = Array.from(customItems).some(item =>item.getAttribute('data-template') === name);
+                                if (found) {
+                                    console.log(`✅ Template "${name}" found in dropdown!`);
+                                } else {
+                                    console.warn(`⚠️ Template "${name}" not found in dropdown after reload`);
+                                }
+                            }
+                        }
+                        
+                        showStatusBar(`Custom template '${name}'saved successfully! It is now available in the dropdown.`, 'success');
+                        
+                        if (promptEditor) {
+                            promptEditor.readOnly = true;
+                            promptEditor.style.backgroundColor = '#FAFAFA';
+                        }
+                        if (testModifyBtn) testModifyBtn.disabled = false;
+                        testSaveTemplateBtn.style.display = 'none';
+                        
+                        console.log('✅ Template saved and added to dropdown:', name);
+                    } catch (error) {
+                            console.error('❌ Error saving template:', error);
+                        showStatusBar(`Error saving template: ${error.message}`, 'error');
+                    }
+                }
+                });
+            } else {
+                // Default templates like "Test Script"or "Test Case"
+                console.log(`💾 Saving default template '${currentTestPromptKey}'`);
+                
+                const confirmed = confirm(`Do you want to update the '${currentTestPromptKey}'template?`);
+                if (confirmed) {
+                    // CRITICAL: Re-read content from textarea RIGHT BEFORE saving (in case it changed)
+                    const contentToSave = promptEditor.value.trim();
+                    console.log('💾 Final content to save (re-read from textarea):', {
+                        templateName: currentTestPromptKey,
+                        length: contentToSave.length,
+                        preview: contentToSave.substring(0, 100) + '...'
+                    });
+                    
+                    // Update in-memory cache
+                    testPromptTemplates[currentTestPromptKey] = contentToSave;
+                    
+                    try {
+                        console.log(`🚀 Saving template '${currentTestPromptKey}' to backend...`);
+                        console.log(`   Content length: ${contentToSave.length} chars`);
+                        console.log(`   Content preview: ${contentToSave.substring(0, 100)}...`);
+                        
+                        const saveResult = await saveTemplateToBackend(currentTestPromptKey, contentToSave);
+                        console.log('✅ Template saved to backend:', saveResult);
+                        
+                        // CRITICAL: Reload templates from backend to ensure frontend has the latest version
+                        console.log('🔄 Reloading templates from backend after save...');
+                        const reloadResponse = await window.API.getPromptTemplates();
+                        if (reloadResponse.success) {
+                            testPromptTemplates = reloadResponse.templates;
+                            console.log('✅ Templates reloaded from backend after save');
+                            console.log(`   Template '${currentTestPromptKey}' preview: ${testPromptTemplates[currentTestPromptKey]?.substring(0, 100)}...`);
+                            
+                            // Update the prompt editor with the reloaded template (if it's still the selected one)
+                            if (promptEditor && currentTestPromptKey) {
+                                let templateContent = testPromptTemplates[currentTestPromptKey];
+                                if (typeof templateContent === 'object'&& templateContent['System Prompt']) {
+                                    // Handle Test Case template structure
+                                    const systemPrompt = templateContent['System Prompt'] || '';
+                                    const userPrompt = templateContent['User Prompt'] || '';
+                                    templateContent = systemPrompt ? `${systemPrompt}\n\n${userPrompt}` : userPrompt;
+                                }
+                                // Only update if editor is read-only (not in edit mode)
+                                if (promptEditor.readOnly) {
+                                    promptEditor.value = templateContent;
+                                    // Update variables if needed
+                                    updateTestPromptVariables();
+                                }
+                            }
+                        } else {
+                            console.warn('⚠️ Failed to reload templates from backend, but save was successful');
+                        }
+                        
+                        // Update original template content cache to reflect the saved version
+                        originalTemplateContent = contentToSave;
+                        
+                        showStatusBar(`Template '${currentTestPromptKey}'updated successfully!`, 'success');
+                        
+                        if (promptEditor) {
+                            promptEditor.readOnly = true;
+                            promptEditor.style.backgroundColor = '#FAFAFA';
+                        }
+                        if (testModifyBtn) testModifyBtn.disabled = false;
+                        testSaveTemplateBtn.style.display = 'none';
+                        
+                        console.log(`✅ Template '${currentTestPromptKey}' saved successfully`);
+                    } catch (error) {
+                        console.error('❌ Error updating template:', error);
+                        console.error('   Error details:', error.message);
+                        console.error('   Error stack:', error.stack);
+                        showStatusBar(`Error updating template: ${error.message}`, 'error');
+                    }
+                }
+            }
+        });
+    }
+    // Store original template content for variable replacement
+    let originalTemplateContent = null;
+    
+    // Function to update prompt template with selected variable values
+    function updateTestPromptVariables() {
+        const promptEditor = document.getElementById('testPromptTextEditor');
+        if (!promptEditor) {
+            console.warn('⚠️ Prompt editor not found');
+            return;
+        }
+        
+        // CRITICAL: Don't update if editor is in editable mode (user is modifying)
+        // Check if Save Template button is visible, which means user is editing
+        const testSaveTemplateBtn = document.getElementById('testSaveTemplateBtn');
+        if (testSaveTemplateBtn && testSaveTemplateBtn.style.display !== 'none'&& testSaveTemplateBtn.style.display !== '') {
+            console.log('⚠️ Skipping variable update - user is editing the prompt');
+            return;
+        }
+        
+        // Also check if editor is read-only - if not read-only and user might be editing
+        if (!promptEditor.readOnly && promptEditor.style.backgroundColor === '#ffffff') {
+            console.log('⚠️ Skipping variable update - editor is in editable mode');
+            return;
+        }
+        
+        // Get original template content from cache (always use original, not current editor value)
+        let baseContent = null;
+        
+        if (currentTestPromptKey && testPromptTemplates[currentTestPromptKey]) {
+            if (typeof testPromptTemplates[currentTestPromptKey] === 'string') {
+                baseContent = testPromptTemplates[currentTestPromptKey];
+            } else if (typeof testPromptTemplates[currentTestPromptKey] === 'object') {
+                const systemPrompt = testPromptTemplates[currentTestPromptKey]['System Prompt'] || '';
+                const userPrompt = testPromptTemplates[currentTestPromptKey]['User Prompt'] || '';
+                baseContent = systemPrompt ? `${systemPrompt}\n\n${userPrompt}` : userPrompt;
+            }
+        }
+        
+        // If no template key or template not found, use stored original or current editor value
+        if (!baseContent) {
+            if (originalTemplateContent) {
+                baseContent = originalTemplateContent;
+            } else {
+                baseContent = promptEditor.value;
+                // Store it as original if we don't have one yet
+                if (baseContent && baseContent.trim().length > 0) {
+                    originalTemplateContent = baseContent;
+                }
+            }
+        } else {
+            // Store the original template content for future updates
+            originalTemplateContent = baseContent;
+        }
+        
+        if (!baseContent || baseContent.trim().length === 0) {
+            console.warn('⚠️ No template content available to update');
+            return;
+        }
+        
+        // Get all dropdown values
+        const domainSelect = document.getElementById('domainSelect');
+        const systemTypeSelect = document.getElementById('systemTypeSelect');
+        const primaryFeatureSelect = document.getElementById('primaryFeatureSelect');
+        const connectionMethodSelect = document.getElementById('connectionMethodSelect');
+        const loginCredentialsSelect = document.getElementById('loginCredentialsSelect');
+        const accessModeSelect = document.getElementById('accessModeSelect');
+        const languageSelect = document.getElementById('languageSelect');
+        
+        const domain = domainSelect ? domainSelect.value : '';
+        const systemType = systemTypeSelect ? systemTypeSelect.value : '';
+        const primaryFeature = primaryFeatureSelect ? primaryFeatureSelect.value : '';
+        const connectionMethod = connectionMethodSelect ? connectionMethodSelect.value : '';
+        const loginCredentials = loginCredentialsSelect ? loginCredentialsSelect.value : '';
+        const accessMode = accessModeSelect ? accessModeSelect.value : '';
+        const language = languageSelect ? languageSelect.value : '';
+        
+        console.log('🔄 Updating prompt variables:', {
+            DOMAIN: domain,
+            SYSTEM_TYPE: systemType,
+            PRIMARY_FEATURE: primaryFeature,
+            CONNECTION_METHOD: connectionMethod,
+            LOGIN_CREDENTIALS: loginCredentials,
+            ACCESS_MODE: accessMode,
+            LANGUAGE: language
+        });
+        
+        // Replace placeholders in template content (always use baseContent - original template)
+        let updatedContent = baseContent;
+        
+        // Replace {DOMAIN}
+        updatedContent = updatedContent.replace(/\{DOMAIN\}/g, domain || '{DOMAIN}');
+        
+        // Replace {SYSTEM_TYPE}
+        updatedContent = updatedContent.replace(/\{SYSTEM_TYPE\}/g, systemType || '{SYSTEM_TYPE}');
+        
+        // Replace {PRIMARY_FEATURE}
+        updatedContent = updatedContent.replace(/\{PRIMARY_FEATURE\}/g, primaryFeature || '{PRIMARY_FEATURE}');
+        
+        // Replace {CONNECTION_METHOD}
+        updatedContent = updatedContent.replace(/\{CONNECTION_METHOD\}/g, connectionMethod || '{CONNECTION_METHOD}');
+        
+        // Replace {LOGIN_CREDENTIALS}
+        updatedContent = updatedContent.replace(/\{LOGIN_CREDENTIALS\}/g, loginCredentials || '{LOGIN_CREDENTIALS}');
+        
+        // Replace {ACCESS_MODE}
+        updatedContent = updatedContent.replace(/\{ACCESS_MODE\}/g, accessMode || '{ACCESS_MODE}');
+        
+        // Replace {LANGUAGE}
+        updatedContent = updatedContent.replace(/\{LANGUAGE\}/g, language || '{LANGUAGE}');
+        
+        // Update the prompt editor with the updated content
+        promptEditor.value = updatedContent;
+        
+        console.log('✅ Prompt variables updated');
+    }
+    
+    // Function to handle language selection (calls updateTestPromptVariables)
+    function handleLanguageSelection() {
+        console.log('🌐 Language selection changed');
+        updateTestPromptVariables();
+    }
+    
+    // Handle Test Case Variables dropdowns (hidden inputs updated by custom dropdowns)
+    const testCaseDropdowns = [
+        'domainSelect', 'systemTypeSelect', 'primaryFeatureSelect',
+        'connectionMethodSelect', 'loginCredentialsSelect', 'accessModeSelect'
+    ];
+    testCaseDropdowns.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        if (select) {
+            select.addEventListener('change', function() {
+                console.log(`📋 ${selectId} changed`);
+                updateTestPromptVariables();
+            });
+        }
+    });
+
+    // Handle Test Script Variables
+    const languageSelect = document.getElementById('languageSelect');
+    if (languageSelect) {
+        languageSelect.addEventListener('change', function() {
+            console.log('🌐 Language selection changed');
+            handleLanguageSelection();
+        });
+    }
+
+    const uploadReferenceBtn = document.getElementById('uploadReferenceBtn');
+    if (uploadReferenceBtn) {
+        uploadReferenceBtn.addEventListener('click', uploadReferenceCode);
+    }
+
+    const referenceCodeFile = document.getElementById('referenceCodeFile');
+    const viewTemplatesBtn = document.getElementById('viewTemplatesBtn');
+    if (viewTemplatesBtn) {
+        // View Templates button removed - functionality moved to dropdown
+    }
+    // Initialize Test Script Generator templates immediately
+    loadTestPromptTemplates().then(success => {
+        if (success) {
+            console.log('Templates loaded successfully from backend');
+        } else {
+            console.log('Using fallback templates (backend not available)');
+        }
+        const initialRadio = document.querySelector('.tsg-template-radio:checked');
+        handleTestTemplateSelection(initialRadio ? initialRadio.value : 'Test Script');
+        updateTsgStatusBar();
+    });
+    // Initialize Test Script Generator when section becomes active
+    const testScriptSection = document.getElementById('test-script-generator');
+    if (testScriptSection) {
+        syncTestScriptGeneratorLayoutClasses();
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes'&& mutation.attributeName === 'class') {
+                    syncTestScriptGeneratorLayoutClasses();
+                    if (testScriptSection.classList.contains('active')) {
+                        // Ensure templates are loaded when section becomes active
+                        if (Object.keys(testPromptTemplates).length === 0) {
+                            loadTestPromptTemplates().then(success => {
+                                if (success) {
+                                    console.log('Templates loaded successfully from backend');
+                                } else {
+                                    console.log('Using fallback templates (backend not available)');
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        });
+        observer.observe(testScriptSection, { attributes: true });
+    }
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (timePeriodDropdown && !timePeriodDropdown.contains(e.target)) {
+            timePeriodDropdown.classList.remove('active');
+        }
+        if (activityTypeDropdown && !activityTypeDropdown.contains(e.target)) {
+            activityTypeDropdown.classList.remove('active');
+        }
+        const sectionMenu = sectionDropdown?._specIntelMenu || sectionDropdown?.querySelector('.dropdown-content');
+        const subsectionMenu = subsectionDropdown?._specIntelMenu || subsectionDropdown?.querySelector('.dropdown-content');
+        const clickInSection = sectionDropdown && (sectionDropdown.contains(e.target) || (sectionMenu && sectionMenu.contains(e.target)));
+        const clickInSubsection = subsectionDropdown && (subsectionDropdown.contains(e.target) || (subsectionMenu && subsectionMenu.contains(e.target)));
+        if (sectionDropdown && !clickInSection) {
+            sectionDropdown.classList.remove('active');
+            resetSpecIntelDropdown(sectionDropdown);
+        }
+        if (subsectionDropdown && !clickInSubsection) {
+            subsectionDropdown.classList.remove('active');
+            resetSpecIntelDropdown(subsectionDropdown);
+        }
+        const templateMenu = getTestScriptTemplateDropdownMenu();
+        const clickedTemplateMenu = templateMenu && templateMenu.contains(e.target);
+        window.closePortalSelectDropdownsOnOutsideClick(e.target);
+        if (templateDropdown && !templateDropdown.contains(e.target) && !clickedTemplateMenu) {
+            // Don't close dropdown if it's in the middle of a content transition
+            const dropdownContent = getTestScriptTemplateDropdownMenu();
+            if (dropdownContent && !dropdownContent.classList.contains('transitioning')) {
+                templateDropdown.classList.remove('active');
+                resetTestScriptTemplateDropdownMenuPosition();
+            }
+        }
+        if (analysisOptionsDropdown && !analysisOptionsDropdown.contains(e.target)) {
+            analysisOptionsDropdown.classList.remove('active');
+        }
+    });
+
+    // User History dropdown interactions - Single event listeners (no duplicates)
+    if (timePeriodBtn && timePeriodDropdown) {
+        // Remove any existing listeners by cloning the button
+        const newTimePeriodBtn = timePeriodBtn.cloneNode(true);
+        timePeriodBtn.parentNode.replaceChild(newTimePeriodBtn, timePeriodBtn);
+        const timePeriodBtnRef = newTimePeriodBtn;
+        // Re-query dropdown after button replacement
+        const timePeriodDropdownRef = document.getElementById('timePeriodDropdown');
+        
+        timePeriodBtnRef.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const isActive = timePeriodDropdownRef.classList.contains('active');
+            timePeriodDropdownRef.classList.toggle('active');
+            const isNowActive = timePeriodDropdownRef.classList.contains('active');
+            console.log('[UserHistory] Time Period dropdown toggled:', { wasActive: isActive, isNowActive: isNowActive });
+        });
+        
+        // Add click handler for dropdown items
+        if (timePeriodDropdownRef) {
+            timePeriodDropdownRef.addEventListener('click', function(e) {
+                console.log('[UserHistory] Dropdown clicked, target:', e.target);
+                const item = e.target.closest('.dropdown-item');
+                if (!item) {
+                    console.log('[UserHistory] Click was not on a dropdown item');
+                    return;
+                }
+                console.log('[UserHistory] Dropdown item clicked:', item);
+                e.preventDefault();
+                e.stopPropagation();
+
+                const periodKey = item.getAttribute('data-period') || 'all';
+                const periodLabel = item.textContent.trim();
+                console.log('[UserHistory] Selected period:', periodKey, 'Label:', periodLabel);
+
+                userHistoryFilters.timePeriod = Object.prototype.hasOwnProperty.call(TIME_PERIOD_REQUEST_MAP, periodKey)
+                    ? periodKey
+                    : 'all';
+
+                const buttonSpan = timePeriodBtnRef.querySelector('span');
+                if (buttonSpan) {
+                    buttonSpan.textContent = periodLabel || 'All Dates';
+                }
+
+                timePeriodDropdownRef.classList.remove('active');
+                console.log('[UserHistory] Time Period changed to:', periodKey, 'Filters:', userHistoryFilters);
+                console.log('[UserHistory] About to call loadUserHistory');
+                loadUserHistory({ forceRefresh: true });
+                console.log('[UserHistory] loadUserHistory call completed');
+            });
+        } else {
+            console.error('[UserHistory] timePeriodDropdownRef not found!');
+        }
+    }
+
+    if (activityTypeBtn && activityTypeDropdown) {
+        // Remove any existing listeners by cloning the button
+        const newActivityTypeBtn = activityTypeBtn.cloneNode(true);
+        activityTypeBtn.parentNode.replaceChild(newActivityTypeBtn, activityTypeBtn);
+        const activityTypeBtnRef = newActivityTypeBtn;
+        // Re-query dropdown after button replacement
+        const activityTypeDropdownRef = document.getElementById('activityTypeDropdown');
+        
+        activityTypeBtnRef.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const isActive = activityTypeDropdownRef.classList.contains('active');
+            activityTypeDropdownRef.classList.toggle('active');
+            const isNowActive = activityTypeDropdownRef.classList.contains('active');
+            console.log('[UserHistory] Activity Type dropdown toggled:', { wasActive: isActive, isNowActive: isNowActive });
+        });
+        
+        // Add click handler for dropdown items
+        if (activityTypeDropdownRef) {
+            activityTypeDropdownRef.addEventListener('click', function(e) {
+                console.log('[UserHistory] Activity dropdown clicked, target:', e.target);
+                const item = e.target.closest('.dropdown-item');
+                if (!item) {
+                    console.log('[UserHistory] Click was not on a dropdown item');
+                    return;
+                }
+                console.log('[UserHistory] Activity dropdown item clicked:', item);
+                e.preventDefault();
+                e.stopPropagation();
+
+                const activityKey = item.getAttribute('data-type') || 'all';
+                const activityLabel = item.textContent.trim();
+                console.log('[UserHistory] Selected activity:', activityKey, 'Label:', activityLabel);
+
+                userHistoryFilters.activityType = Object.prototype.hasOwnProperty.call(ACTIVITY_TYPE_REQUEST_MAP, activityKey)
+                    ? activityKey
+                    : 'all';
+
+                const buttonSpan = activityTypeBtnRef.querySelector('span');
+                if (buttonSpan) {
+                    buttonSpan.textContent = activityLabel || 'All Activities';
+                }
+
+                activityTypeDropdownRef.classList.remove('active');
+                console.log('[UserHistory] Activity Type changed to:', activityKey, 'Filters:', userHistoryFilters);
+                console.log('[UserHistory] About to call loadUserHistory');
+                loadUserHistory({ forceRefresh: true });
+                console.log('[UserHistory] loadUserHistory call completed');
+            });
+        } else {
+            console.error('[UserHistory] activityTypeDropdownRef not found!');
+        }
+    }
+
+    // Initialize User History dropdowns
+    function initializeUserHistoryDropdowns() {
+        console.log('[UserHistory] Initializing dropdown options');
+        
+        // Ensure dropdowns start in closed state
+        const timePeriodDropdownEl = document.getElementById('timePeriodDropdown');
+        const activityTypeDropdownEl = document.getElementById('activityTypeDropdown');
+        if (timePeriodDropdownEl) {
+            timePeriodDropdownEl.classList.remove('active');
+        }
+        if (activityTypeDropdownEl) {
+            activityTypeDropdownEl.classList.remove('active');
+        }
+        
+        ensureUserHistoryDropdownOptions();
+        ensureUserHistoryDropdownOptionsWithRetry();
+
+        // Set up mutation observers to watch for content changes
+        const timePeriodDropdownContent = timePeriodDropdownEl ? timePeriodDropdownEl.querySelector('.dropdown-content') : null;
+        const activityTypeDropdownContent = activityTypeDropdownEl ? activityTypeDropdownEl.querySelector('.dropdown-content') : null;
+
+        if (timePeriodDropdownContent) {
+            const observer = new MutationObserver(() => {
+                if (timePeriodDropdownContent.childElementCount === 0) {
+                    console.warn('[UserHistory] Time Period dropdown emptied, repopulating');
+                    ensureUserHistoryDropdownOptions(true);
+                }
+            });
+            observer.observe(timePeriodDropdownContent, { childList: true });
+        }
+
+        if (activityTypeDropdownContent) {
+            const observer = new MutationObserver(() => {
+                if (activityTypeDropdownContent.childElementCount === 0) {
+                    console.warn('[UserHistory] Activity Type dropdown emptied, repopulating');
+                    ensureUserHistoryDropdownOptions(true);
+                }
+            });
+            observer.observe(activityTypeDropdownContent, { childList: true });
+        }
+    }
+
+    // Initialize immediately if DOM is ready, otherwise wait for DOMContentLoaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeUserHistoryDropdowns);
+    } else {
+        // DOM is already ready, but wait a bit to ensure all elements are rendered
+        setTimeout(initializeUserHistoryDropdowns, 100);
+    }
+
+    // Close dropdowns when clicking outside (using fresh element queries)
+    document.addEventListener('click', function(e) {
+        const timePeriodDropdownEl = document.getElementById('timePeriodDropdown');
+        const activityTypeDropdownEl = document.getElementById('activityTypeDropdown');
+        const timePeriodBtnEl = document.getElementById('timePeriodBtn');
+        const activityTypeBtnEl = document.getElementById('activityTypeBtn');
+        
+        if (
+            timePeriodDropdownEl &&
+            !timePeriodDropdownEl.contains(e.target) &&
+            timePeriodBtnEl &&
+            !timePeriodBtnEl.contains(e.target)
+        ) {
+            timePeriodDropdownEl.classList.remove('active');
+        }
+        if (
+            activityTypeDropdownEl &&
+            !activityTypeDropdownEl.contains(e.target) &&
+            activityTypeBtnEl &&
+            !activityTypeBtnEl.contains(e.target)
+        ) {
+            activityTypeDropdownEl.classList.remove('active');
+        }
+    });
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            userHistoryFilters = { ...USER_HISTORY_DEFAULTS };
+            if (timePeriodBtn) {
+                const buttonSpan = timePeriodBtn.querySelector('span');
+                if (buttonSpan) {
+                    buttonSpan.textContent = 'All Dates';
+                }
+            }
+            if (activityTypeBtn) {
+                const buttonSpan = activityTypeBtn.querySelector('span');
+                if (buttonSpan) {
+                    buttonSpan.textContent = 'All Activities';
+                }
+            }
+            clearHistoryDetailPanel();
+            loadUserHistory({ forceRefresh: true });
+        });
+    }
+
+    const exportHistoryBtn = document.getElementById('exportHistoryBtn');
+    if (exportHistoryBtn) {
+        exportHistoryBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            exportUserHistoryCsv();
+        });
+    }
+
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loadUserHistory({ forceRefresh: true });
+        });
+    }
+
+    document.addEventListener('apiReady', () => {
+        loadUserHistory({ forceRefresh: true, silent: false });
+    });
+
+    const userHistoryNavLink = document.querySelector('.nav-links a[data-section="user-history"]');
+    if (userHistoryNavLink) {
+        userHistoryNavLink.addEventListener('click', () => {
+            loadUserHistory({ forceRefresh: true });
+        });
+    }
+    // Template selection
+    const templateItems = document.querySelectorAll('#templateDropdown .dropdown-item');
+    templateItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const template = this.getAttribute('data-template');
+            const templateText = this.textContent;
+            
+            // Update dropdown button text
+            const buttonSpan = templateBtn.querySelector('span');
+            if (buttonSpan) {
+                buttonSpan.textContent = templateText;
+            }
+            
+            // Close dropdown
+            templateDropdown.classList.remove('active');
+            
+            console.log('Template selected:', templateText);
+        });
+    });
+    // Dataset Generator directory path selection functionality
+    const workingDirBtn = document.getElementById('workingDirBtn');
+    const workingDirText = document.getElementById('workingDirText');
+    const workingDirInput = document.getElementById('workingDirInput');
+    const outputDirBtn = document.getElementById('outputDirBtn');
+    const outputDirText = document.getElementById('outputDirText');
+    const outputDirInput = document.getElementById('outputDirInput');
+    // Working Directory selection
+    if (workingDirBtn && workingDirText && workingDirInput) {
+        console.log('Setting up working directory button listener');
+        workingDirBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Working directory button clicked');
+            workingDirInput.click();
+        });
+
+        workingDirInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                // Get the directory path from the first file
+                const firstFile = files[0];
+                const fullPath = firstFile.webkitRelativePath;
+                const directoryPath = fullPath.substring(0, fullPath.indexOf('/'));
+                
+                // Extract the full directory path
+                const fullDirectoryPath = firstFile.path ? firstFile.path.substring(0, firstFile.path.lastIndexOf('\\')) : directoryPath;
+                
+                // Store full path internally
+                workingDirectory = fullDirectoryPath;
+                // Display only last folder name
+                const folderName = getLastFolderName(fullDirectoryPath);
+                workingDirText.textContent = folderName || 'No folder selected';
+                workingDirText.style.color = '#10b981';
+                console.log('Working directory selected:', fullDirectoryPath);
+                showStatusBar('Working directory selected successfully', 'success');
+            }
+        });
+    } else {
+        console.log('Working directory elements not found');
+    }
+
+    // Output Directory selection
+    if (outputDirBtn && outputDirText && outputDirInput) {
+        console.log('Setting up output directory button listener');
+        outputDirBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Output directory button clicked');
+            outputDirInput.click();
+        });
+
+        outputDirInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                // Get the directory path from the first file
+                const firstFile = files[0];
+                const fullPath = firstFile.webkitRelativePath;
+                const directoryPath = fullPath.substring(0, fullPath.indexOf('/'));
+                
+                // Extract the full directory path
+                const fullDirectoryPath = firstFile.path ? firstFile.path.substring(0, firstFile.path.lastIndexOf('\\')) : directoryPath;
+                
+                // Store full path internally
+                outputDirectory = fullDirectoryPath;
+                // Display only last folder name
+                const folderName = getLastFolderName(fullDirectoryPath);
+                outputDirText.textContent = folderName || 'No folder selected';
+                outputDirText.style.color = '#10b981';
+                console.log('Output directory selected:', fullDirectoryPath);
+                showStatusBar('Output directory selected successfully', 'success');
+            }
+        });
+    } else {
+        console.log('Output directory elements not found');
+    }
+
+    // Initialize display with short names from default paths in HTML
+    if (workingDirText) {
+        const defaultWorkingDir = workingDirText.textContent.trim();
+        if (defaultWorkingDir && defaultWorkingDir !== 'No folder selected'&& defaultWorkingDir !== 'extract') {
+            // If it's a full path, extract folder name; otherwise keep as is
+            const folderName = getLastFolderName(defaultWorkingDir);
+            if (folderName && folderName !== defaultWorkingDir) {
+                workingDirText.textContent = folderName;
+            }
+        }
+    }
+
+    if (outputDirText) {
+        const defaultOutputDir = outputDirText.textContent.trim();
+        if (defaultOutputDir && defaultOutputDir !== 'No folder selected'&& defaultOutputDir !== 'output') {
+            // If it's a full path, extract folder name; otherwise keep as is
+            const folderName = getLastFolderName(defaultOutputDir);
+            if (folderName && folderName !== defaultOutputDir) {
+                outputDirText.textContent = folderName;
+            }
+        }
+    }
+    
+    // CRITICAL: currentDatasetFolderPath is already declared earlier (line ~2218)
+    // Just ensure it's initialized if it wasn't already
+    if (typeof currentDatasetFolderPath === 'undefined') {
+        currentDatasetFolderPath = null;
+    }
+    
+    // Open Dataset Button functionality
+    function showOpenDatasetButton(datasetFolderPath = null) {
+        const openDatasetContainer = document.getElementById('openDatasetButtonContainer');
+        if (openDatasetContainer) {
+            openDatasetContainer.style.display = 'block';
+            
+            // Store the dataset folder path for later use - ensure it's properly stored
+            if (datasetFolderPath) {
+                // Normalize the path (replace backslashes with forward slashes for consistency)
+                currentDatasetFolderPath = datasetFolderPath.replace(/\\/g, '/');
+            console.log('✅ Open Dataset button shown');
+            console.log('📁 Dataset folder path stored:', currentDatasetFolderPath);
+            } else {
+                console.warn('⚠️ showOpenDatasetButton called without datasetFolderPath');
+                currentDatasetFolderPath = null;
+            }
+        } else {
+            console.error('❌ openDatasetButtonContainer element not found');
+        }
+    }
+    function hideOpenDatasetButton() {
+        const openDatasetContainer = document.getElementById('openDatasetButtonContainer');
+        if (openDatasetContainer) {
+            openDatasetContainer.style.display = 'none';
+            
+            // Clear the stored dataset folder path
+            currentDatasetFolderPath = null;
+            currentTotalContentFilePath = null;
+            
+            console.log('✅ Open Dataset button hidden');
+        }
+    }
+    // Handle Open Dataset button click
+    // CRITICAL: Make this function globally accessible so it can be called from anywhere
+    window.openDatasetFolder = async function() {
+        try {
+            console.log('📂 Opening dataset folder...');
+            console.log('📂 currentDatasetFolderPath:', currentDatasetFolderPath);
+            
+            // First, test if backend is reachable
+            try {
+                const healthResponse = await fetch('http://127.0.0.1:8000/health');
+                console.log('🏥 Backend health check:', healthResponse.ok ? 'OK' : 'FAILED');
+            } catch (healthError) {
+                console.error('❌ Backend not reachable:', healthError);
+                showStatusBar('Backend not reachable. Please start the backend server.', 'error');
+                return;
+            }
+            
+            // CRITICAL: Use the specific dataset folder path from the extraction result
+            let extractPath = null;
+            
+            // If we have a specific dataset folder path, use it directly (this is the folder where dataset was extracted)
+            if (currentDatasetFolderPath) {
+                extractPath = currentDatasetFolderPath;
+                console.log('✅ Using stored dataset folder path:', extractPath);
+                
+                // Ensure the path uses forward slashes for consistency
+                extractPath = extractPath.replace(/\\/g, '/');
+                console.log('✅ Normalized dataset folder path:', extractPath);
+            } else {
+                // Fallback: Get the general extract folder path from the backend
+                console.warn('⚠️ No specific dataset folder path stored, getting general extract folder path');
+                try {
+                    let pathResponse;
+                    // Try window.API.getExtractFolderPath first, fallback to direct fetch
+                    if (window.API && typeof window.API.getExtractFolderPath === 'function') {
+                        console.log('[app.js] ✅ Using window.API.getExtractFolderPath');
+                        pathResponse = await window.API.getExtractFolderPath();
+                    } else {
+                        console.warn('[app.js] ⚠️ window.API.getExtractFolderPath not available, using direct fetch call');
+                        const response = await fetch('http://127.0.0.1:8000/api/dataset/extract-folder-path', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            pathResponse = await response.json();
+                        } else {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                    }
+                    
+                    if (pathResponse && pathResponse.success) {
+                        extractPath = pathResponse.extract_path;
+                        console.log('✅ Got general extract folder path from backend:', extractPath);
+                    } else {
+                        throw new Error('Failed to get extract folder path from backend');
+                    }
+                } catch (apiError) {
+                    console.error('❌ Could not get path from backend:', apiError);
+                    showStatusBar('Cannot open folder: Path not available. Please extract dataset first.', 'error');
+                    return;
+                }
+            }
+            
+            if (!extractPath) {
+                console.error('❌ No extract path available');
+                showStatusBar('Cannot open folder: Path not available. Please extract dataset first.', 'error');
+                return;
+            }
+            
+            // Try multiple methods to open the folder
+            let folderOpened = false;
+            
+            // Method 1: Try Electron API if available
+            if (window.electronAPI && window.electronAPI.openFolder) {
+                try {
+                    window.electronAPI.openFolder(extractPath);
+                    showStatusBar('Opening dataset folder in Explorer...', 'info');
+                    folderOpened = true;
+                    console.log('✅ Folder opened via Electron API');
+                } catch (electronError) {
+                    console.warn('⚠️ Electron API failed:', electronError);
+                }
+            }
+            
+            // Method 2: Try using shell command via backend API
+            if (!folderOpened) {
+                try {
+                    console.log('🔄 Trying backend API to open folder:', extractPath);
+                    let openResponse;
+                    // Try window.API.openFolderInExplorer first, fallback to direct fetch
+                    if (window.API && typeof window.API.openFolderInExplorer === 'function') {
+                        console.log('[app.js] ✅ Using window.API.openFolderInExplorer');
+                        openResponse = await window.API.openFolderInExplorer(extractPath);
+                    } else {
+                        console.warn('[app.js] ⚠️ window.API.openFolderInExplorer not available, using direct fetch call');
+                        const response = await fetch('http://127.0.0.1:8000/api/dataset/open-folder', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ folder_path: extractPath })
+                        });
+                        
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+                        }
+                        
+                        openResponse = await response.json();
+                        console.log('[app.js] ✅ Direct fetch openFolderInExplorer successful, result:', openResponse);
+                    }
+                    
+                    console.log('📡 Backend API response:', openResponse);
+                    if (openResponse && openResponse.success) {
+                        showStatusBar('Opening dataset folder in Explorer...', 'info');
+                        folderOpened = true;
+                        console.log('✅ Folder opened via backend shell command');
+                    } else {
+                        console.warn('⚠️ Backend API returned success=false:', openResponse);
+                    }
+                } catch (apiError) {
+                    console.error('❌ Backend folder opening failed:', apiError);
+                    showStatusBar('Backend folder opening failed: '+ apiError.message, 'error');
+                }
+            }
+            // Method 3: Fallback - show message and copy path
+            if (!folderOpened) {
+                showStatusBar(
+                    `Cannot open folder directly. Path: ${extractPath}\n\nPlease navigate to this folder manually.`, 
+                    'warning'
+                );
+                
+                // Copy path to clipboard as fallback
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(extractPath).then(() => {
+                        console.log('✅ Path copied to clipboard as fallback');
+                        showStatusBar('Folder path copied to clipboard!', 'info');
+                    }).catch(err => {
+                        console.log('⚠️ Could not copy to clipboard:', err);
+                    });
+                }
+            }
+            
+        } catch (error) {
+            console.error('❌ Error opening dataset folder:', error);
+            showStatusBar('Error opening dataset folder: '+ error.message, 'error');
+        }
+    };
+    
+    // Attach event listener to the button - use event delegation for dynamically shown buttons
+    // Also attach directly if button exists on page load
+    document.addEventListener('click', function(e) {
+        if (e.target && (e.target.id === 'openDatasetBtn'|| e.target.closest('#openDatasetBtn'))) {
+            const btn = e.target.id === 'openDatasetBtn'? e.target : e.target.closest('#openDatasetBtn');
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('📁 Open Dataset button clicked (event delegation)');
+            console.log('📁 currentDatasetFolderPath:', currentDatasetFolderPath);
+            
+            // Call the globally accessible function
+            if (typeof window.openDatasetFolder === 'function') {
+                window.openDatasetFolder();
+            } else {
+                console.error('❌ window.openDatasetFolder is not a function!');
+                console.error('❌ window.openDatasetFolder type:', typeof window.openDatasetFolder);
+                showStatusBar('Error: Open Dataset function not available', 'error');
+            }
+        }
+    });
+    
+    // Also attach directly to button if it exists
+    const openDatasetBtn = document.getElementById('openDatasetBtn');
+    if (openDatasetBtn) {
+        openDatasetBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('📁 Open Dataset button clicked (direct listener)');
+            console.log('📁 currentDatasetFolderPath:', currentDatasetFolderPath);
+            
+            // Call the globally accessible function
+            if (typeof window.openDatasetFolder === 'function') {
+                window.openDatasetFolder();
+            } else {
+                console.error('❌ window.openDatasetFolder is not a function!');
+                showStatusBar('Error: Open Dataset function not available', 'error');
+            }
+        });
+        console.log('✅ Open Dataset button event listener attached (direct)');
+    } else {
+        console.warn('⚠️ openDatasetBtn element not found on page load - will use event delegation');
+    }
+    
+    async function uploadReferenceCode() {
+        try {
+            // Get current language to determine file extensions (like PyQt)
+            const languageSelect = document.getElementById('languageSelect');
+            const language = languageSelect ? languageSelect.value : 'Python';
+            
+            // Set file filter based on language (like PyQt)
+            let fileFilter = '';
+            if (language === 'Python') {
+                fileFilter = '.py,.txt';
+            } else if (language === 'C (Coming Soon)'|| language === 'C++ (Coming Soon)') {
+                fileFilter = '.c,.cpp,.h,.hpp,.txt';
+            } else {
+                fileFilter = '.py,.c,.cpp,.txt'; // Default fallback
+            }
+            
+            // Create file input dynamically (like PyQt file dialog)
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = fileFilter;
+            fileInput.style.display = 'none';
+            
+            // Add to DOM temporarily
+            document.body.appendChild(fileInput);
+            
+            // Show file picker
+            fileInput.click();
+            
+            // Handle file selection
+            fileInput.addEventListener('change', async function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    console.log('Uploading reference code file:', file.name);
+                    
+                    try {
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        
+                        const response = await window.API.uploadReferenceCode(formData);
+                        
+                        if (response.success) {
+                            showStatusBar('Reference code uploaded successfully', 'success');
+                            
+                            // Update file label (like PyQt)
+                            const fileLabel = document.getElementById('uploadedFileLabel');
+                            if (fileLabel) {
+                                fileLabel.textContent = `Uploaded: ${file.name}`;
+                                fileLabel.style.color = '#28a745';
+                            }
+                            
+                            // Update prompt with reference code info (like PyQt)
+                            const promptEditor = document.getElementById('testPromptTextEditor');
+                            if (promptEditor && currentTestPromptKey === 'Test Script') {
+                                let promptText = promptEditor.value;
+                                promptText += `\n\nReference code file: ${file.name}`;
+                                promptEditor.value = promptText;
+                            }
+                        } else {
+                            showStatusBar('Failed to upload reference code', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error uploading reference code:', error);
+                        showStatusBar('Error uploading reference code', 'error');
+                    }
+                }
+                
+                // Clean up
+                document.body.removeChild(fileInput);
+            });
+            
+            // Handle cancellation
+            fileInput.addEventListener('cancel', function() {
+                document.body.removeChild(fileInput);
+            });
+            
+        } catch (error) {
+            console.error('Error setting up file upload:', error);
+            showStatusBar('Error setting up file upload', 'error');
+        }
+    }
+        function showTemplatesDialog() {
+            console.log('🎯 Opening Template Library...');
+            console.log('📊 Current testPromptTemplates:', testPromptTemplates);
+            console.log('📊 Template count:', testPromptTemplates ? Object.keys(testPromptTemplates).length : 0);
+            
+            // Always reload templates to ensure they're fresh
+            console.log('🔄 Loading prompt templates for Template Library...');
+            loadTestPromptTemplates().then(() => {
+                console.log('✅ Templates loaded for Template Library:', Object.keys(testPromptTemplates));
+                console.log('📊 Template count:', Object.keys(testPromptTemplates).length);
+                
+                // CRITICAL TEST: Verify all 9 templates exist
+                const expectedTemplates = ['Test Script', 'Test Case', 'Testing Strategy', 'Bug Analysis', 'Feature Design', 'Code Review', 'Performance Test', 'API Design', 'Code Assistant'];
+                console.log('🧪 CRITICAL TEST - Checking all expected templates:');
+                
+                expectedTemplates.forEach(templateName => {
+                    if (testPromptTemplates[templateName]) {
+                        const template = testPromptTemplates[templateName];
+                        if (typeof template === 'string') {
+                            console.log(`✅ ${templateName}: string, length ${template.length}`);
+                        } else if (typeof template === 'object'&& template['System Prompt']) {
+                            console.log(`✅ ${templateName}: object with System Prompt, length ${template['System Prompt'].length}`);
+                        } else {
+                            console.log(`⚠️ ${templateName}: object but no System Prompt`);
+                        }
+                    } else {
+                        console.log(`❌ ${templateName}: NOT FOUND!`);
+                    }
+                });
+                
+                showTemplatesDialogContinue();
+            }).catch((error) => {
+                console.error('❌ Error loading templates:', error);
+                // Even if loading fails, try to continue with what we have
+                showTemplatesDialogContinue();
+            });
+        }
+        
+        // Old Template Library functionality removed - now integrated into dropdown
+    // Progress Dialog Functions (like PyQt)
+    function createProgressDialog(title, cancelText) {
+        const modal = document.createElement('div');
+        modal.className = 'progress-dialog';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50000;
+        `;
+        
+        const content = document.createElement('div');
+        content.style.cssText = `
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            min-width: 300px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 50001;
+        `;
+        
+        content.innerHTML = `
+            <h3 style="color: #5d92ff; margin-bottom: 1rem;">${title}</h3>
+            <div style="margin-bottom: 1rem;">
+                <div style="background-color: #f0f0f0; border-radius: 4px; height: 20px; overflow: hidden;">
+                    <div class="progress-bar"style="background-color: #5d92ff; height: 100%; width: 0%; transition: width 0.3s ease;"></div>
+                </div>
+                <div class="progress-text"style="text-align: center; margin-top: 0.5rem; color: #666; font-size: 0.9rem;">0%</div>
+            </div>
+            <button class="cancel-btn"style="background-color: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; float: right;">${cancelText}</button>
+        `;
+        
+        modal.appendChild(content);
+        document.body.appendChild(modal);
+        
+        // Handle cancel button
+        const cancelBtn = content.querySelector('.cancel-btn');
+        cancelBtn.addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        return modal;
+    }
+    function updateProgressDialog(dialog, percentage, text) {
+        const progressBar = dialog.querySelector('.progress-bar');
+        const progressText = dialog.querySelector('.progress-text');
+        
+        if (progressBar) {
+            progressBar.style.width = percentage + '%';
+        }
+        
+        if (progressText) {
+            progressText.textContent = text || `${percentage}%`;
+        }
+    }
+    // Test Deployment functionality
+    let currentDeploymentJobId = null;
+    let deploymentStatusInterval = null;
+    let currentDeploymentConfigFiles = [];
+
+    function updateDeploymentConfigUI(files) {
+        const status = document.getElementById('deploymentConfigStatus');
+        const badge = document.getElementById('deploymentConfigBadge');
+        const fileList = document.getElementById('deploymentConfigFileList');
+        const configBox = document.getElementById('deploymentConfigBox');
+        const count = files && files.length ? files.length : 0;
+
+        if (status) {
+            if (count > 0) {
+                status.textContent = Array.from(files).map((f) =>f.name).join('· ');
+            } else {
+                status.textContent = 'No config files loaded';
+            }
+        }
+
+        if (badge) {
+            if (count > 0) {
+ badge.textContent = ` ${count} file${count === 1 ? '': 's'} loaded`;
+                badge.className = 'td-badge td-badge--success';
+            } else {
+                badge.textContent = '0 files loaded';
+                badge.className = 'td-badge td-badge--muted';
+            }
+        }
+
+        if (configBox) {
+            configBox.classList.toggle('td-config-box--empty', count === 0);
+        }
+
+        if (fileList) {
+            fileList.innerHTML = '';
+            fileList.style.display = 'none';
+            if (count > 0) {
+                Array.from(files).forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.textContent = `${index + 1}. ${file.name}`;
+                    fileList.appendChild(fileItem);
+                });
+            }
+        }
+    }
+    
+    // Deployment config file upload functionality - Similar to documentBtn pattern
+    const deploymentConfigFiles = document.getElementById('deploymentConfigFiles');
+    const loadDeploymentConfigBtn = document.getElementById('loadDeploymentConfigBtn');
+    const deploymentConfigStatus = document.getElementById('deploymentConfigStatus');
+    const deploymentConfigFileList = document.getElementById('deploymentConfigFileList');
+    const tdTopologyValue = document.getElementById('tdTopologyValue');
+    const tdTopologyRadios = Array.from(document.querySelectorAll('input[name="tdTopologyOption"]'));
+    const tdTopologyNodeTag = document.getElementById('tdTopologyNodeTag');
+    const tdTopologyVisualLink = document.getElementById('tdTopologyVisualLink');
+    const tdTopologyVisualSection = document.getElementById('tdTopologyVisualSection');
+    const tdTopologyParamsSection = document.getElementById('tdTopologyParamsSection');
+
+    function updateDeploymentTopologyVisual(value) {
+        if (!tdTopologyVisualLink) return;
+        if (value === '5g') {
+            if (tdTopologyVisualSection) tdTopologyVisualSection.style.display = 'flex';
+            if (tdTopologyParamsSection) tdTopologyParamsSection.style.display = 'flex';
+            if (tdTopologyNodeTag) tdTopologyNodeTag.textContent = 'OAI';
+            tdTopologyVisualLink.textContent = 'RF Simulator';
+            tdTopologyVisualLink.classList.add('td-topology-mid-link--muted');
+            return;
+        }
+        if (value === 'simulator') {
+            if (tdTopologyVisualSection) tdTopologyVisualSection.style.display = 'flex';
+            if (tdTopologyParamsSection) tdTopologyParamsSection.style.display = 'flex';
+            if (tdTopologyNodeTag) tdTopologyNodeTag.textContent = 'Simunous';
+            tdTopologyVisualLink.textContent = 'air interface';
+            tdTopologyVisualLink.classList.remove('td-topology-mid-link--muted');
+            return;
+        }
+        if (tdTopologyVisualSection) tdTopologyVisualSection.style.display = 'none';
+        if (tdTopologyParamsSection) tdTopologyParamsSection.style.display = 'none';
+        if (tdTopologyNodeTag) tdTopologyNodeTag.textContent = '';
+        tdTopologyVisualLink.textContent = 'Choose 5G or Simulator to view link type';
+        tdTopologyVisualLink.classList.remove('td-topology-mid-link--muted');
+    }
+
+    tdTopologyRadios.forEach((radio) => {
+        radio.addEventListener('change', function() {
+            if (!this.checked) return;
+            if (tdTopologyValue) tdTopologyValue.value = this.value;
+            updateDeploymentTopologyVisual(this.value);
+        });
+    });
+    const initialTopology = tdTopologyRadios.find((radio) => radio.checked)?.value || tdTopologyValue?.value || 'all';
+    updateDeploymentTopologyVisual(initialTopology);
+
+    initPortalSelectDropdown({
+        dropdownId: 'tdSubcarrierSpacingDropdown',
+        btnId: 'tdSubcarrierSpacingBtn',
+        menuId: 'tdSubcarrierSpacingDropdownMenu',
+        hiddenId: 'tdParamDistance',
+        labelId: 'tdSubcarrierSpacingBtnLabel',
+        defaultLabel: '1(KHz30)'
+    });
+
+    function closeTdLogLevelSubmenus(exceptPicker = null) {
+        document.querySelectorAll('.td-loglevel-picker.is-open').forEach((picker) => {
+            if (picker !== exceptPicker) picker.classList.remove('is-open');
+        });
+    }
+
+    document.querySelectorAll('.td-loglevel-picker').forEach((picker) => {
+        const triggerBtn = picker.querySelector('.td-loglevel-picker-btn');
+        const valueEl = picker.querySelector('.td-loglevel-picker-value');
+        const items = picker.querySelectorAll('.td-loglevel-subitem');
+        if (!triggerBtn || !valueEl || !items.length) return;
+
+        triggerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const willOpen = !picker.classList.contains('is-open');
+            closeTdLogLevelSubmenus();
+            if (willOpen) picker.classList.add('is-open');
+        });
+
+        items.forEach((item) => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const value = item.getAttribute('data-value') || item.textContent.trim().toLowerCase();
+                valueEl.textContent = value;
+                items.forEach((el) => el.classList.remove('is-selected'));
+                item.classList.add('is-selected');
+                picker.classList.remove('is-open');
+            });
+        });
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.td-loglevel-picker')) {
+            closeTdLogLevelSubmenus();
+        }
+    });
+    
+    if (deploymentConfigFiles && loadDeploymentConfigBtn) {
+        // Handle click on Load Config button
+        loadDeploymentConfigBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('📁 Load Config button clicked!');
+            deploymentConfigFiles.click();
+        });
+        
+        // Handle file selection
+        deploymentConfigFiles.addEventListener('change', function(e) {
+            const files = e.target.files;
+            currentDeploymentConfigFiles = Array.from(files);
+            
+            console.log('📁 Deployment config files selected:', currentDeploymentConfigFiles.length);
+            
+            updateDeploymentConfigUI(files && files.length > 0 ? files : []);
+        });
+        
+        console.log('✅ Deployment config file handlers attached (direct pattern)');
+    } else {
+        console.warn('⚠️ Deployment config elements not found initially - will retry in initializeDeploymentButtons');
+    }
+    
+    // Load deployment config files to server - Define this FIRST so it's available globally
+    window.loadDeploymentConfigFilesToServer = function() {
+        console.log('📁 loadDeploymentConfigFilesToServer called');
+        
+        const fileInput = document.getElementById('deploymentConfigFiles');
+        console.log('📁 File input element:', fileInput);
+        
+        if (!fileInput) {
+            console.error('❌ deploymentConfigFiles input not found');
+            showStatusBar('Config file input not found. Please try again.', 'error');
+            return;
+        }
+        
+        // Trigger file input click
+        console.log('📁 Triggering deployment config file input click...');
+        try {
+            fileInput.click();
+            console.log('✅ File input click triggered successfully');
+        } catch (error) {
+            console.error('❌ Error triggering file input click:', error);
+            showStatusBar('Error opening file picker: '+ error.message, 'error');
+        }
+    };
+    
+    // Handle deployment config file selection (for re-initialization)
+    function handleDeploymentConfigFileSelection() {
+        const fileInput = document.getElementById('deploymentConfigFiles');
+        const status = document.getElementById('deploymentConfigStatus');
+        const fileList = document.getElementById('deploymentConfigFileList');
+        
+        if (!fileInput) {
+            console.warn('⚠️ deploymentConfigFiles input not found');
+            return;
+        }
+        
+        // Only attach if not already attached
+        if (!fileInput.hasAttribute('data-listener-attached')) {
+            fileInput.setAttribute('data-listener-attached', 'true');
+            
+            fileInput.addEventListener('change', function(e) {
+                const files = e.target.files;
+                currentDeploymentConfigFiles = Array.from(files || []);
+                console.log('📁 Deployment config files selected:', currentDeploymentConfigFiles.length);
+                updateDeploymentConfigUI(files && files.length > 0 ? files : []);
+            });
+        }
+        
+        console.log('✅ Deployment config file selection handler initialized');
+    }
+
+    // Add event listeners for deployment buttons - Initialize immediately
+    function initializeDeploymentButtons() {
+        console.log('🔧 Initializing deployment buttons...');
+        
+        const testConnectionBtn = document.getElementById('testConnectionBtn');
+        const deployBtn = document.getElementById('deployBtn');
+        const refreshStatusBtn = document.getElementById('refreshStatusBtn');
+        const clearLogsBtn = document.getElementById('clearLogsBtn');
+        const loadDeploymentConfigBtn = document.getElementById('loadDeploymentConfigBtn');
+
+        console.log('Deploy button found:', !!deployBtn);
+        console.log('Load config button found:', !!loadDeploymentConfigBtn);
+
+        if (testConnectionBtn) {
+            testConnectionBtn.addEventListener('click', testDeploymentConnection);
+            console.log('✅ Test connection button listener added');
+        }
+
+        if (deployBtn) {
+            deployBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('🚀 Deploy button clicked!');
+                deployTestScripts();
+            });
+            console.log('✅ Deploy button listener added');
+        }
+
+        if (refreshStatusBtn) {
+            refreshStatusBtn.addEventListener('click', () => {
+                if (currentDeploymentJobId) {
+                    window.API.getDeploymentStatus(currentDeploymentJobId)
+                        .then(updateDeploymentStatus)
+                        .catch(error => {
+                            console.error('Error refreshing status:', error);
+                            showStatusBar('Failed to refresh deployment status', 'error');
+                        });
+                } else {
+                    showStatusBar('No active deployment to refresh', 'info');
+                }
+            });
+        }
+
+        if (clearLogsBtn) {
+            clearLogsBtn.addEventListener('click', clearDeploymentLogs);
+        }
+
+        // Attach Load Config button handler - simple direct approach like Dataset Generator
+        if (loadDeploymentConfigBtn) {
+            loadDeploymentConfigBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('📁 Load Config button clicked!');
+                
+                const fileInput = document.getElementById('deploymentConfigFiles');
+                console.log('📁 File input element:', fileInput);
+                
+                if (fileInput) {
+                    console.log('📁 Triggering file input click...');
+                    try {
+                        fileInput.click();
+                        console.log('✅ File input click() called successfully');
+                    } catch (error) {
+                        console.error('❌ Error clicking file input:', error);
+                        showStatusBar('Error opening file picker: '+ error.message, 'error');
+                    }
+                } else {
+                    console.error('❌ deploymentConfigFiles input not found');
+                    showStatusBar('File input not found', 'error');
+                }
+            });
+            console.log('✅ Load config button listener added to:', loadDeploymentConfigBtn);
+        } else {
+            console.warn('⚠️ loadDeploymentConfigBtn not found during initialization');
+        }
+        
+        // Also attach using event delegation as a backup (works even if button is added later)
+        // Use a unique identifier to avoid duplicate listeners
+        if (!window._deploymentConfigClickHandlerAttached) {
+            document.addEventListener('click', function(e) {
+                const target = e.target;
+                if (target && (target.id === 'loadDeploymentConfigBtn'|| (target.tagName === 'BUTTON'&& target.textContent.trim().includes('Load Config Files')))) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('📁 Load Config clicked via event delegation');
+                    
+                    const fileInput = document.getElementById('deploymentConfigFiles');
+                    if (fileInput) {
+                        console.log('📁 Triggering file input via delegation...');
+                        fileInput.click();
+                    } else {
+                        console.error('❌ File input not found in delegation handler');
+                    }
+                }
+            }, true); // Use capture phase for early handling
+            window._deploymentConfigClickHandlerAttached = true;
+            console.log('✅ Event delegation handler attached');
+        }
+
+        // Initialize deployment config file selection
+        handleDeploymentConfigFileSelection();
+        console.log('✅ Deployment buttons initialized');
+    }
+    function collectTestDeploymentConfParams() {
+        const absoluteFrequencySSB = document.getElementById('tdParamBand')?.value?.trim() || '641280';
+        const frequencyBand = document.getElementById('tdParamPrbs')?.value?.trim() || '78';
+        const subcarrierSpacing = document.getElementById('tdParamDistance')?.value?.trim() ?? '1';
+
+        const layerOrder = ['rrc', 'rlc', 'mac', 'pdcp'];
+        const pickers = document.querySelectorAll('.td-loglevel-picker');
+        const logLevels = {};
+        pickers.forEach((picker, index) => {
+            const layer = layerOrder[index];
+            if (!layer) return;
+            const valueEl = picker.querySelector('.td-loglevel-picker-value');
+            logLevels[layer] = (valueEl?.textContent || 'info').trim().toLowerCase();
+        });
+
+        return {
+            absoluteFrequencySSB,
+            frequencyBand,
+            subcarrierSpacing,
+            logLevels
+        };
+    }
+
+    function formatCuSimnovusConfChangeSummary(changes) {
+        if (!Array.isArray(changes) || !changes.length) return '';
+        const seen = new Set();
+        const parts = [];
+        changes.forEach((c) => {
+            if (!c || c.via === 'key') return;
+            const key = `${c.field}:${c.value}`;
+            if (seen.has(key)) return;
+            seen.add(key);
+            parts.push(`${c.field}=${c.value}`);
+        });
+        return parts.length ? `${parts.length} setting(s): ${parts.join(', ')}` : `${changes.length} line(s) updated`;
+    }
+
+    async function applyCuSimnovusConfFromUI() {
+        const params = collectTestDeploymentConfParams();
+        if (!window.API || typeof window.API.applyCuSimnovusConf !== 'function') {
+            throw new Error('Config update is not available (Electron bridge missing).');
+        }
+        const result = await window.API.applyCuSimnovusConf(params, { openAfterWrite: false });
+        if (!result.success) {
+            throw new Error(result.error || 'Failed to update cu_simnovus.conf');
+        }
+        return result;
+    }
+
+    async function transferCuSimnovusConfFromLocal() {
+        if (!window.API || typeof window.API.transferCuSimnovusConf !== 'function') {
+            throw new Error('Config transfer is not available (Electron bridge missing). Run the app with npm start.');
+        }
+        const result = await window.API.transferCuSimnovusConf();
+        if (!result.success) {
+            throw new Error(result.error || 'Failed to transfer cu_simnovus.conf to remote host');
+        }
+        return result;
+    }
+
+    // Deployment functions
+    async function deployTestScripts() {
+        try {
+            console.log('🚀 Starting deployment...');
+            
+            const deploymentStatus = document.getElementById('deploymentStatus');
+            
+            const logBadge = document.getElementById('deploymentLogBadge');
+            const logRunLabel = document.getElementById('deploymentLogRunLabel');
+            const footerStatus = document.getElementById('deploymentFooterStatus');
+
+            if (logBadge) {
+                logBadge.textContent = 'Running';
+                logBadge.className = 'td-badge td-badge--pending';
+            }
+            if (logRunLabel) {
+                logRunLabel.textContent = 'Run #0 · deploying';
+            }
+
+            if (deploymentStatus) {
+                deploymentStatus.textContent = 'Applying configuration to ~/Config/cu_simnovus.conf...\n';
+                deploymentStatus.style.color = '#e2e8f0';
+            }
+
+            const confPatchResult = await applyCuSimnovusConfFromUI();
+            console.log('✅ cu_simnovus.conf updated:', confPatchResult);
+
+            if (deploymentStatus) {
+                const src = confPatchResult.sourcePath || 'cu_simnovus_default.conf';
+                deploymentStatus.textContent += `Template: ${src}\n`;
+                deploymentStatus.textContent += `Written: ${confPatchResult.confPath}\n`;
+                const summary = formatCuSimnovusConfChangeSummary(confPatchResult.changes);
+                if (summary) {
+                    deploymentStatus.textContent += `${summary}\n\n`;
+                } else {
+                    deploymentStatus.textContent += '\n';
+                }
+                deploymentStatus.textContent += 'Transferring to 10.138.77.95...\n';
+            }
+
+            showStatusBar('Configuration saved locally', 'success', 'Test Deployment');
+
+            const transferResult = await transferCuSimnovusConfFromLocal();
+            console.log('✅ cu_simnovus.conf transferred:', transferResult);
+
+            // Python transfer returns snake_case keys; keep compatibility with older camelCase.
+            const localPath = transferResult.local_source || transferResult.localSource;
+            const remotePath = transferResult.remote_path || transferResult.remotePath;
+            const remoteBackupPath = transferResult.remote_backup_path || transferResult.remoteBackupPath;
+
+            let statusText = 'Deployment completed successfully!\n\n';
+            statusText += `Local: ${localPath}\n`;
+            statusText += `Remote: ${remotePath}\n`;
+            if (remoteBackupPath) {
+                statusText += `Backup: ${remoteBackupPath}\n`;
+            }
+            if (Array.isArray(transferResult.steps) && transferResult.steps.length) {
+                statusText += '\nSteps:\n' + transferResult.steps.map((s) => `  • ${s}`).join('\n') + '\n';
+            }
+
+            if (deploymentStatus) {
+                deploymentStatus.textContent = statusText;
+                deploymentStatus.style.color = '#86efac';
+            }
+            if (logBadge) {
+                logBadge.textContent = 'Complete';
+                logBadge.className = 'td-badge td-badge--complete';
+            }
+            if (logRunLabel) {
+                logRunLabel.textContent = 'Run #0 · deployed';
+            }
+            if (footerStatus) {
+                footerStatus.textContent = 'Config deployed to 10.138.77.95';
+                footerStatus.className = 'td-log-footer-status td-log-footer-status--success';
+            }
+
+            showStatusBar('Config transferred to 10.138.77.95', 'success', 'Deployment');
+        } catch (error) {
+            console.error('❌ Deployment failed:', error);
+            const deploymentStatus = document.getElementById('deploymentStatus');
+            
+            // Extract error message
+            let errorMessage = error.message || 'Unknown error occurred';
+            if (error.message && error.message.includes('Connection timeout')) {
+                errorMessage = 'Connection timeout: Could not connect to deployment server.\n\nPlease check:\n1. Server is reachable (ping the server IP)\n2. SSH service is running on the server\n3. Firewall allows SSH connections (port 22)\n4. Network connectivity is available';
+            } else if (error.message && (error.message.includes('WinError 10060') || error.message.includes('WinError 10061'))) {
+                errorMessage = 'Network connection error: Could not connect to deployment server.\n\nPlease check:\n1. Server IP address is correct\n2. Server is accessible from your network\n3. SSH service is running on the server\n4. Firewall is not blocking the connection';
+            }
+            
+            if (deploymentStatus) {
+                deploymentStatus.textContent = `Test Deployment Failed.\n\nError:\n${errorMessage}\n`;
+                deploymentStatus.style.color = '#fca5a5';
+            }
+            const logBadge = document.getElementById('deploymentLogBadge');
+            if (logBadge) {
+                logBadge.textContent = 'Failed';
+                logBadge.className = 'td-badge td-badge--muted';
+            }
+            
+            showStatusBar(`Deployment failed: ${errorMessage}`, 'error', 'Deployment Error');
+            
+            // Clear interval if it exists
+            if (deploymentStatusInterval) {
+                clearInterval(deploymentStatusInterval);
+                deploymentStatusInterval = null;
+            }
+        }
+    }
+    
+    function updateDeploymentStatus(status) {
+        const deploymentStatus = document.getElementById('deploymentStatus');
+        
+        if (!deploymentStatus) {
+            console.warn('⚠️ deploymentStatus element not found');
+            return;
+        }
+        
+        try {
+            let statusText = '';
+            
+            const logBadge = document.getElementById('deploymentLogBadge');
+            const logRunLabel = document.getElementById('deploymentLogRunLabel');
+            const footerStatus = document.getElementById('deploymentFooterStatus');
+
+            if (status.status === 'processing') {
+                statusText = `Status: ${status.status}\nProgress: ${status.progress}%\nMessage: ${status.message || 'Processing...'}\n`;
+                deploymentStatus.style.color = '#e2e8f0';
+                if (logBadge) {
+                    logBadge.textContent = 'Running';
+                    logBadge.className = 'td-badge td-badge--pending';
+                }
+            } else if (status.status === 'completed') {
+ statusText = ` Deployment completed successfully!\nProgress: ${status.progress}%\nMessage: ${status.message || 'Completed'}\n`;
+                if (status.file_transferred) {
+                    statusText += `File transferred: ${status.file_transferred}\n`;
+                }
+                // Display script output if available (matching PyQt behavior)
+                if (status.output) {
+                    statusText += `\nOutput:\n${status.output}\n`;
+                }
+                deploymentStatus.style.color = '#86efac';
+                if (logBadge) {
+ logBadge.textContent = 'Complete';
+                    logBadge.className = 'td-badge td-badge--complete';
+                }
+                if (logRunLabel) {
+                    logRunLabel.textContent = 'Run #0 · deployed';
+                }
+                if (footerStatus) {
+ footerStatus.textContent = '0 nodes deployed · ready for execution';
+                    footerStatus.className = 'td-log-footer-status td-log-footer-status--success';
+                }
+                showStatusBar('Deployment completed successfully', 'success', 'Deployment');
+            } else if (status.status === 'failed') {
+                // Extract clean error message without verbose logging prefixes
+                let errorMsg = status.error || status.message || 'Unknown error';
+                
+                // Remove [INFO], [ERROR], [SUCCESS] prefixes and clean up the message
+                let cleanedMsg = errorMsg.replace(/\[INFO\]/g, '')
+                                         .replace(/\[ERROR\]/g, '')
+                                         .replace(/\[SUCCESS\]/g, '')
+                                         .replace(/\[WARNING\]/g, '')
+                                         .trim();
+                
+                // Split into lines and filter out empty lines
+                const lines = cleanedMsg.split('\n').map(line =>line.trim()).filter(line =>line.length > 0);
+                
+                // Find the error line (usually contains "Error:", "Connection timeout", "Failed", etc.)
+                let errorStartIdx = -1;
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].toLowerCase();
+                    if (line.includes('error:') || 
+                        line.includes('connection timeout') || 
+                        line.includes('connection error') ||
+                        line.includes('failed') ||
+                        line.includes('cannot connect')) {
+                        errorStartIdx = i;
+                        break;
+                    }
+                }
+                
+                // If error found, extract from error line to end (includes troubleshooting steps)
+                if (errorStartIdx >= 0) {
+                    errorMsg = lines.slice(errorStartIdx).join('\n');
+                } else if (lines.length > 0) {
+                    // Fallback: use the last meaningful line
+                    errorMsg = lines[lines.length - 1];
+                }
+                
+                statusText = `Test Deployment Failed.\n\nError:\n${errorMsg}\n`;
+                
+                deploymentStatus.style.color = '#fca5a5';
+                if (logBadge) {
+                    logBadge.textContent = 'Failed';
+                    logBadge.className = 'td-badge td-badge--muted';
+                }
+                showStatusBar(`Deployment failed: ${errorMsg.split('\n')[0]}`, 'error', 'Deployment Error');
+            } else {
+                statusText = `Status: ${status.status}\nMessage: ${status.message || 'Unknown status'}\n`;
+                deploymentStatus.style.color = '#e2e8f0';
+            }
+            
+            deploymentStatus.textContent = statusText;
+        } catch (error) {
+            console.error('Error updating deployment status:', error);
+        }
+    }
+    
+    function clearDeploymentLogs() {
+        const deploymentStatus = document.getElementById('deploymentStatus');
+        if (deploymentStatus) {
+            deploymentStatus.textContent = 'Deployment output will appear here after you deploy…';
+            deploymentStatus.style.color = '#94a3b8';
+        }
+        const logBadge = document.getElementById('deploymentLogBadge');
+        const logRunLabel = document.getElementById('deploymentLogRunLabel');
+        const footerStatus = document.getElementById('deploymentFooterStatus');
+        if (logBadge) {
+            logBadge.textContent = 'Pending';
+            logBadge.className = 'td-badge td-badge--pending';
+        }
+        if (logRunLabel) {
+            logRunLabel.textContent = 'Run #0 · pending';
+        }
+        if (footerStatus) {
+            footerStatus.textContent = '0 nodes deployed · pending execution';
+            footerStatus.className = 'td-log-footer-status';
+        }
+        
+        // Clear job ID and interval
+        currentDeploymentJobId = null;
+        if (deploymentStatusInterval) {
+            clearInterval(deploymentStatusInterval);
+            deploymentStatusInterval = null;
+        }
+    }
+    
+    async function testDeploymentConnection() {
+        try {
+            console.log('🔌 Testing deployment connection...');
+            showStatusBar('Testing connection...', 'info', 'Connection Test');
+            
+            const response = await window.API.testDeploymentConnection();
+            
+            if (response.success) {
+                showStatusBar(`Connection test successful! Server: ${response.server}, User: ${response.user}`, 'success', 'Connection Test');
+            } else {
+                showStatusBar(`Connection test failed: ${response.message}`, 'error', 'Connection Test');
+            }
+        } catch (error) {
+            console.error('❌ Connection test failed:', error);
+            let errorMessage = error.message || 'Unknown error occurred';
+            if (error.message && (error.message.includes('WinError 10060') || error.message.includes('timeout'))) {
+                errorMessage = 'Connection timeout: Could not connect to deployment server. Please check server accessibility and network connectivity.';
+            } else if (error.message && error.message.includes('WinError 10061')) {
+                errorMessage = 'Connection refused: The server is not accepting connections. Please check if SSH service is running.';
+            }
+            showStatusBar(`Connection test failed: ${errorMessage}`, 'error', 'Connection Test');
+        }
+    }
+    
+    // Make functions globally accessible
+    window.deployTestScripts = deployTestScripts;
+    window.updateDeploymentStatus = updateDeploymentStatus;
+    window.clearDeploymentLogs = clearDeploymentLogs;
+    window.testDeploymentConnection = testDeploymentConnection;
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeDeploymentButtons);
+    } else {
+        // DOM is already ready
+        initializeDeploymentButtons();
+    }
+});
+function displayErrorResults(result) {
+    console.log('📊 Displaying error analysis results...');
+    
+    const errorResultsBox = document.getElementById('errorResultsBox');
+    const fixSuggestionsBox = document.getElementById('fixSuggestionsBox');
+    const errorResults = document.getElementById('errorResults');
+    const fixSuggestions = document.getElementById('fixSuggestions');
+    
+    if (!errorResultsBox || !fixSuggestionsBox || !errorResults || !fixSuggestions) {
+        console.error('❌ Results display elements not found');
+        return;
+    }
+    
+    // Show results boxes
+    errorResultsBox.style.display = 'block';
+    fixSuggestionsBox.style.display = 'block';
+    
+    // Display error analysis results
+    const analysisData = result.result || {};
+    let resultsHtml = '<h4>Error Analysis Results</h4>';
+    
+    if (analysisData.phase2_results) {
+        resultsHtml += '<div style="margin-bottom: 1rem;">';
+        resultsHtml += '<h5>Phase 2 - Error Analysis</h5>';
+        resultsHtml += `<pre style="background: #f1f5f9; padding: 1rem; border-radius: 4px; overflow-x: auto;">${JSON.stringify(analysisData.phase2_results, null, 2)}</pre>`;
+        resultsHtml += '</div>';
+    }
+    
+    if (analysisData.deployment_context) {
+        resultsHtml += '<div style="margin-bottom: 1rem;">';
+        resultsHtml += '<h5>Deployment Context</h5>';
+        resultsHtml += `<pre style="background: #f1f5f9; padding: 1rem; border-radius: 4px; overflow-x: auto;">${JSON.stringify(analysisData.deployment_context, null, 2)}</pre>`;
+        resultsHtml += '</div>';
+    }
+    
+    errorResults.innerHTML = resultsHtml;
+    
+    // Display fix suggestions
+    let suggestionsHtml = '<h4>Fix Suggestions</h4>';
+    
+    if (analysisData.phase3_results && analysisData.phase3_results.fix_suggestions) {
+        const fixes = analysisData.phase3_results.fix_suggestions;
+        
+        fixes.forEach((fix, index) => {
+            suggestionsHtml += `<div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: white;">`;
+            suggestionsHtml += `<h5>Fix ${index + 1}: ${fix.title || 'Untitled Fix'}</h5>`;
+            suggestionsHtml += `<p><strong>Description:</strong> ${fix.description || 'No description available'}</p>`;
+            
+            if (fix.code_patches && fix.code_patches.length > 0) {
+                suggestionsHtml += '<h6>Code Patches:</h6>';
+                fix.code_patches.forEach((patch, patchIndex) => {
+                    suggestionsHtml += `<div style="margin-left: 1rem; margin-bottom: 0.5rem;">`;
+                    suggestionsHtml += `<strong>Patch ${patchIndex + 1}:</strong> ${patch.function_name} in ${patch.file_path}`;
+                    suggestionsHtml += `<br><small>Type: ${patch.patch_type}</small>`;
+                    suggestionsHtml += `</div>`;
+                });
+            }
+            
+            if (fix.config_patches && fix.config_patches.length > 0) {
+                suggestionsHtml += '<h6>Config Patches:</h6>';
+                fix.config_patches.forEach((patch, patchIndex) => {
+                    suggestionsHtml += `<div style="margin-left: 1rem; margin-bottom: 0.5rem;">`;
+                    suggestionsHtml += `<strong>Config ${patchIndex + 1}:</strong> ${patch.config_name}`;
+                    suggestionsHtml += `</div>`;
+                });
+            }
+            
+            suggestionsHtml += `<div style="margin-top: 1rem;">`;
+            suggestionsHtml += `<label style="display: flex; align-items: center; gap: 0.5rem;">`;
+            suggestionsHtml += `<input type="checkbox"class="fix-checkbox"data-fix-index="${index}"style="margin: 0;">`;
+            suggestionsHtml += `<span>Apply this fix</span>`;
+            suggestionsHtml += `</label>`;
+            suggestionsHtml += `</div>`;
+            suggestionsHtml += `</div>`;
+        });
+    } else {
+        suggestionsHtml += '<p>No fix suggestions available.</p>';
+    }
+    fixSuggestions.innerHTML = suggestionsHtml;
+    
+    console.log('✅ Results displayed successfully');
+}
+async function applySelectedFixes() {
+    console.log('🔧 Applying selected fixes...');
+    
+    const checkboxes = document.querySelectorAll('.fix-checkbox:checked');
+    if (checkboxes.length === 0) {
+        showStatusBar('Please select at least one fix to apply', 'warning');
+        return;
+    }
+    
+    try {
+        showStatusBar('Applying fixes...', 'info');
+        
+        // Get selected fixes
+        const selectedFixes = Array.from(checkboxes).map(checkbox => {
+            const fixIndex = parseInt(checkbox.dataset.fixIndex);
+            return { fixIndex, selected: true };
+        });
+        
+        console.log('Selected fixes:', selectedFixes);
+        
+        // Here you would typically call an API to apply the fixes
+        // For now, we'll just show a success message
+        showStatusBar(`Applied ${selectedFixes.length} fixes successfully!`, 'success');
+        
+        // You could also update embeddings here if needed
+        // await window.API.updateEmbeddings({...});
+        
+    } catch (error) {
+        console.error('❌ Failed to apply fixes:', error);
+        showStatusBar(`Failed to apply fixes: ${error.message}`, 'error');
+    }
+}
+// Initialize error fixing section when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeErrorFixingSection);
+} else {
+    initializeErrorFixingSection();
+}

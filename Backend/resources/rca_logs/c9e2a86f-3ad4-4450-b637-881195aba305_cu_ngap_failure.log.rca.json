@@ -1,0 +1,140 @@
+{
+  "timestamp": "2025-10-13T15:46:36.998540",
+  "log_file": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\resources\\rca_logs\\c9e2a86f-3ad4-4450-b637-881195aba305_cu_ngap_failure.log",
+  "error_analysis": {
+    "identified_errors": {
+      "amf_association_failure": [
+        {
+          "line_number": 226,
+          "line": "\u001b[0m\u001b[93m[NGAP]   No AMF is associated to the gNB",
+          "context": [
+            "\u001b[0m[NR_RRC]   Received message F1AP_UL_RRC_MESSAGE",
+            "\u001b[0m\u001b[32m[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 9410] [RAPROC] Logical Channel UL-DCCH, processing NR_RRCSetupComplete from UE (SRB1 Active)",
+            "\u001b[0m[NGAP]   registration_request=1",
+            "\u001b[0m[NR_RRC]   [FRAME 00000][gNB][MOD 00][RNTI 9410] UE State = NR_RRC_CONNECTED",
+            "\u001b[0m[NR_RRC]   rrcsetup_complete=1",
+            "\u001b[0m\u001b[93m[NGAP]   No AMF is associated to the gNB",
+            "\u001b[0m[F1AP]   CU Task Received SCTP_DATA_IND for Instance 0",
+            "\u001b[0m[F1AP]   f1ap_decode_initiating_message(): F1AP_ProcedureCode_id_InitialULRRCMessageTransfer",
+            "\u001b[0m[F1AP]   Calling handler with instance 0",
+            "\u001b[0m[F1AP]   Adding a new UE with RNTI 60af and cu/du ue_f1ap_id 24751",
+            "\u001b[0m[NR_RRC]   Received message F1AP_INITIAL_UL_RRC_MESSAGE"
+          ],
+          "pattern": "No AMF is associated to the gNB",
+          "severity": "critical",
+          "layer": "NGAP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.9
+        }
+      ]
+    },
+    "error_counts": {
+      "amf_association_failure": 1
+    },
+    "error_timestamps": {
+      "amf_association_failure": []
+    },
+    "layer_counts": {
+      "NGAP": 1
+    },
+    "severity_counts": {
+      "critical": 1,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "meta": {
+      "file": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\resources\\rca_logs\\c9e2a86f-3ad4-4450-b637-881195aba305_cu_ngap_failure.log",
+      "lines_analyzed": 292,
+      "protocol_filter": null,
+      "timestamp": "2025-10-13T15:46:35.915270"
+    }
+  },
+  "function_analysis": null,
+  "impact_analysis": null,
+  "kb_analysis": {
+    "issue_matches": {},
+    "function_insights": {},
+    "protocol_references": {
+      "NGAP": {
+        "spec_id": "38.413",
+        "title": "NG-RAN; NG Application Protocol (NGAP)",
+        "url": "https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=3224",
+        "sections": {
+          "8.2.1": "PDU Session Resource Setup procedure",
+          "8.3.1": "Initial Context Setup procedure",
+          "8.3.2": "UE Context Release Request",
+          "8.8": "Transport of NAS Messages",
+          "9.2": "Error Indication"
+        }
+      }
+    },
+    "fix_recommendations": [
+      "Add detailed logging around error location",
+      "Validate network configuration and ensure AMF parameters are correctly set in configuration files like AMF IP, port",
+      "Ensure PLMN, TAI, and slices in gNB match those in AMF",
+      "Check if the AMF is reachable from the gNB",
+      "Recheck and correct AMF IP, port, and gNB configuration files: openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+      "Add a static route to the AMF machine if it is running on a different network or interface: ip route add <AMF_IP> via <gNB_IP> dev <interface>"
+    ],
+    "comprehensive_rca": {
+      "error_type": "amf_association_failure",
+      "summary": "Root Cause Analysis for amf_association_failure in NGAP layer\n\nSpecification Context:\nThis functionality is governed by 3GPP 38.413 - NG-RAN; NG Application Protocol (NGAP). \nRecommended Fixes:\n- Recheck and correct AMF IP, port, and gNB configuration files: openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf\n- Validate network configuration and ensure AMF parameters are correctly set in configuration files like AMF IP, port\n- Check if the AMF is reachable from the gNB\n- Ensure PLMN, TAI, and slices in gNB match those in AMF\n- Add a static route to the AMF machine if it is running on a different network or interface: ip route add <AMF_IP> via <gNB_IP> dev <interface>\n- Add detailed logging around error location\n\nImpact Assessment:\n- User Experience: medium impact\n- System Performance: medium impact\n- System Stability: medium impact\n- Cascade Effects: This issue may affect the following layers:\n  * F1AP: Issues in NGAP can propagate to F1AP layer, affecting its functionality\n",
+      "historical_issues": [],
+      "fix_recommendations": [
+        "Recheck and correct AMF IP, port, and gNB configuration files: openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+        "Validate network configuration and ensure AMF parameters are correctly set in configuration files like AMF IP, port",
+        "Check if the AMF is reachable from the gNB",
+        "Ensure PLMN, TAI, and slices in gNB match those in AMF",
+        "Add a static route to the AMF machine if it is running on a different network or interface: ip route add <AMF_IP> via <gNB_IP> dev <interface>",
+        "Add detailed logging around error location"
+      ],
+      "impact_assessment": {
+        "user_experience": "medium",
+        "system_performance": "medium",
+        "stability": "medium",
+        "cascade_effects": [
+          {
+            "layer": "F1AP",
+            "impact": "affected",
+            "description": "Issues in NGAP can propagate to F1AP layer, affecting its functionality"
+          }
+        ]
+      }
+    }
+  },
+  "ai_analysis": {
+    "root_cause": "amf_association_failure detected in NGAP layer with critical severity. This indicates an issue in the NGAP layer functionality, specifically in the association between the gNB and the AMF. In this case, no AMF is associated to the gNB. Common causes include incorrect NGAP message handling, missing or misconfigured AMF parameters, missing routing information or protocol mismatches.",
+    "suggested_fixes": [
+      "1. Recheck and correct AMF IP, port, and gNB configuration files: openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+      "2. Validate network configuration and ensure AMF parameters are correctly set in configuration files like AMF IP, port, ",
+      "3. Check if the AMF is reachable from the gNB",
+      "4. Ensure PLMN, TAI, and slices in gNB match those in AMF.",
+      "5. Add a static route to the AMF machine if it is running on a different network or interface: ip route add <AMF_IP> via <gNB_IP> dev <interface>"
+    ],
+    "specifications": [
+      "3GPP TS 38.413 - NG-RAN; NG Application Protocol (NGAP)",
+      "3GPP TS 38.413 Section 8 - NGAP procedures",
+      "3GPP TS 38.401 - NG-RAN architecture description"
+    ],
+    "function_analysis": [
+      "Check ngap_gNB_handle_nas_first_req() function implementation",
+      "Review error handling and logging in NGAP association setup",
+      "Verify AMF parameters and network configuration",
+      "Check for protocol mismatches or unsupported NGAP messages"
+    ]
+  },
+  "meta": {
+    "offline_mode": true,
+    "oai_repo_dir": "openairinterface5g",
+    "components_available": {
+      "error_analyzer": true,
+      "impact_analyzer": false,
+      "function_graph": false,
+      "kb_connector": true,
+      "clang_analyzer": true,
+      "openai_client": false
+    }
+  }
+}

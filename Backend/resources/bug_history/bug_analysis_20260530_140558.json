@@ -1,0 +1,1886 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[PDCP]   discard NR PDU, integrity failed\"\n\nContext:\nThis error indicates a critical integrity failure in the PDCP layer, which can prevent proper data processing and secure communication. Additionally, the log shows a \"Received PDU Session Establishment Reject\" message shortly after, indicating that the PDU session setup failed, likely due to this integrity failure. There is also a \"[HW]   Lost socket\" warning, which may indicate a hardware or transport layer issue compounding the problem.\n\nNo explicit stack trace or crash information is present, but the integrity failure at PDCP level combined with the PDU session establishment rejection represents a critical failure preventing normal system operation.",
+  "log_file": "new_error.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/new_error.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-05-30T14:05:58.915259",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[PDCP]   discard NR PDU, integrity failed\"\n\nContext:\nThis error indicates a critical integrity failure in the PDCP layer, which can prevent proper data processing and secure communication. Additionally, the log shows a \"Received PDU Session Establishment Reject\" message shortly after, indicating that the PDU session setup failed, likely due to this integrity failure. There is also a \"[HW]   Lost socket\" warning, which may indicate a hardware or transport layer issue compounding the problem.\n\nNo explicit stack trace or crash information is present, but the integrity failure at PDCP level combined with the PDU session establishment rejection represents a critical failure preventing normal system operation.",
+    "extracted_error": false,
+    "error_source": "user_provided",
+    "timestamp": "2026-05-30T14:05:58.587313",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/new_error.log",
+    "deployment_context": {
+      "role": "UE",
+      "active_configs": [
+        "/v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf"
+      ],
+      "network_params": {
+        "gnb_ipv4": null,
+        "amf_ipv4": null,
+        "ngap_port": 4043,
+        "assoc_state": "UNKNOWN"
+      },
+      "log_anchors": [
+        "[PDCP]   discard NR PDU, integrity failed",
+        "[ITTI]   Starting itti queue: TASK_NGAP as task 17",
+        "[ITTI]   Starting itti queue: TASK_SCTP as task 24",
+        "[HW]   rfsimulator: connection established",
+        "<randomValue>",
+        "</randomValue>",
+        "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.16]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+        "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+        "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+        "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+        "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+        "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+        "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+        "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+        "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+        "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+        "[MAC]   In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 220.17 and expiring in 226.5",
+        "[MAC]   [UE 0][RAPROC] Frame 224 : received contention resolution identity: 0x10a6f9170486 Terminating RA procedure",
+        "[MAC]   [UE 0][224.12][RAPROC] RA procedure succeeded. CB-RA: Contention Resolution is successful.",
+        "[NAS]   [UE] Received REGISTRATION ACCEPT message"
+      ],
+      "detailed_log_context": {
+        "total_lines": 924,
+        "error_sequences": [
+          {
+            "error_line": "[NR_MAC]   [UE0] Applying default macMainConfig",
+            "line_number": 52,
+            "context": [
+              "     [ITTI]   Starting itti queue: TASK_RRC_NSA_UE as task 45",
+              "     [ITTI]   Starting itti queue: TASK_RRC_NSA_NRUE as task 46",
+              "     [ITTI]   Starting itti queue: TASK_NAS_NRUE as task 47",
+              "     [OPT]   OPT disabled",
+              "     [HW]   Version: Branch: master Abrev. Hash: ae3d0b7 Date: Tue Nov 1 17:03:55 2022 +0530",
+              " >>> [NR_MAC]   [UE0] Applying default macMainConfig",
+              "     [MAC]   Running without CellGroupConfig",
+              "     [PDCP]   pdcp init,usegtp usenetlink",
+              "     [PDCP]   TUN: Opened socket oaitun_ue1 with fd nas_sock_fd[0]=101",
+              "     [PDCP]   UE pdcp will use tun interface",
+              "     [PHY]   Set UE mode 6, UE_fo_compensation 0, UE_scan_carrier 0, UE_no_timing_correction 0"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+            "line_number": 249,
+            "context": [
+              "     CMDLINE: \"./nr-uesoftmodem\" \"-r\" \"106\" \"--numerology\" \"1\" \"--band\" \"78\" \"-C\" \"3619200000\" \"--rfsim\" \"--sa\" \"-O\" \"/v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf\" \"--nokrnmod\" \"1\"",
+              "     [CONFIG] get parameters from libconfig /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf , debug flags: 0x00000000",
+              "     [LIBCONFIG] Path for include directive set to: /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS",
+              "     [CONFIG] function config_libconfig_init returned 0",
+              "     [CONFIG] config module libconfig loaded",
+              " >>> [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+            "line_number": 250,
+            "context": [
+              "     [CONFIG] get parameters from libconfig /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf , debug flags: 0x00000000",
+              "     [LIBCONFIG] Path for include directive set to: /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS",
+              "     [CONFIG] function config_libconfig_init returned 0",
+              "     [CONFIG] config module libconfig loaded",
+              "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              " >>> [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+            "line_number": 251,
+            "context": [
+              "     [LIBCONFIG] Path for include directive set to: /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS",
+              "     [CONFIG] function config_libconfig_init returned 0",
+              "     [CONFIG] config module libconfig loaded",
+              "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+              " >>> [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+            "line_number": 252,
+            "context": [
+              "     [CONFIG] function config_libconfig_init returned 0",
+              "     [CONFIG] config module libconfig loaded",
+              "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              " >>> [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+              "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+            "line_number": 253,
+            "context": [
+              "     [CONFIG] config module libconfig loaded",
+              "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              " >>> [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+              "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+            "line_number": 254,
+            "context": [
+              "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              " >>> [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+              "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+              "     nokrnmod bit enabled"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+            "line_number": 256,
+            "context": [
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              " >>> [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+              "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+              "     nokrnmod bit enabled",
+              "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+              "     create a thread for core -1"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+            "line_number": 257,
+            "context": [
+              "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+              " >>> [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+              "     nokrnmod bit enabled",
+              "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+              "     create a thread for core -1",
+              "     create a thread for core -1"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+            "line_number": 258,
+            "context": [
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "     log init done",
+              "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+              "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              " >>> [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+              "     nokrnmod bit enabled",
+              "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+              "     create a thread for core -1",
+              "     create a thread for core -1",
+              "     create a thread for core -1"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+            "line_number": 260,
+            "context": [
+              "     log init done",
+              "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+              "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+              "     nokrnmod bit enabled",
+              " >>> [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+              "     create a thread for core -1",
+              "     create a thread for core -1",
+              "     create a thread for core -1",
+              "     create a thread for core -1",
+              "     create a thread for core -1"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+            "line_number": 270,
+            "context": [
+              "     create a thread for core -1",
+              "     create a thread for core -1",
+              "     create a thread for core -1",
+              "     create a thread for core -1",
+              "     CPU Freq is 2.419238",
+              " >>> [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+              "     [LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path libldpc.so",
+              "     [LOADER] library libldpc.so successfully loaded",
+              "     [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+            "line_number": 271,
+            "context": [
+              "     create a thread for core -1",
+              "     create a thread for core -1",
+              "     create a thread for core -1",
+              "     CPU Freq is 2.419238",
+              "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              " >>> [LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+              "     [LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path libldpc.so",
+              "     [LOADER] library libldpc.so successfully loaded",
+              "     [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+            "line_number": 272,
+            "context": [
+              "     create a thread for core -1",
+              "     create a thread for core -1",
+              "     CPU Freq is 2.419238",
+              "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+              " >>> [LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path libldpc.so",
+              "     [LOADER] library libldpc.so successfully loaded",
+              "     [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)",
+              "     DL frequency 3619200000: band 48, UL frequency 3619200000"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+            "line_number": 275,
+            "context": [
+              "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+              "     [LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path libldpc.so",
+              "     [LOADER] library libldpc.so successfully loaded",
+              " >>> [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)",
+              "     DL frequency 3619200000: band 48, UL frequency 3619200000",
+              "     [LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path libdfts.so",
+              "     [LOADER] library libdfts.so successfully loaded"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)",
+            "line_number": 276,
+            "context": [
+              "     [LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+              "     [LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path libldpc.so",
+              "     [LOADER] library libldpc.so successfully loaded",
+              "     [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+              " >>> [LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)",
+              "     DL frequency 3619200000: band 48, UL frequency 3619200000",
+              "     [LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path libdfts.so",
+              "     [LOADER] library libdfts.so successfully loaded",
+              "     [LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+            "line_number": 278,
+            "context": [
+              "     shlib_path libldpc.so",
+              "     [LOADER] library libldpc.so successfully loaded",
+              "     [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+              "     [LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)",
+              "     DL frequency 3619200000: band 48, UL frequency 3619200000",
+              " >>> [LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path libdfts.so",
+              "     [LOADER] library libdfts.so successfully loaded",
+              "     [LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf",
+              "     [LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)",
+              "     [LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)",
+            "line_number": 282,
+            "context": [
+              "     DL frequency 3619200000: band 48, UL frequency 3619200000",
+              "     [LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path libdfts.so",
+              "     [LOADER] library libdfts.so successfully loaded",
+              "     [LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf",
+              " >>> [LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)",
+              "     [LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path librfsimulator.so",
+              "     UE threads created by 2394",
+              "     TYPE <CTRL-C> TO TERMINATE"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)",
+            "line_number": 283,
+            "context": [
+              "     [LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path libdfts.so",
+              "     [LOADER] library libdfts.so successfully loaded",
+              "     [LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf",
+              "     [LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)",
+              " >>> [LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)",
+              "     [LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path librfsimulator.so",
+              "     UE threads created by 2394",
+              "     TYPE <CTRL-C> TO TERMINATE",
+              "     [LOADER] library librfsimulator.so successfully loaded"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)",
+            "line_number": 284,
+            "context": [
+              "     shlib_path libdfts.so",
+              "     [LOADER] library libdfts.so successfully loaded",
+              "     [LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf",
+              "     [LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)",
+              "     [LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)",
+              " >>> [LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path librfsimulator.so",
+              "     UE threads created by 2394",
+              "     TYPE <CTRL-C> TO TERMINATE",
+              "     [LOADER] library librfsimulator.so successfully loaded",
+              "     [LIBCONFIG] rfsimulator: 8/8 parameters successfully set, (7 to default value)"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] rfsimulator: 8/8 parameters successfully set, (7 to default value)",
+            "line_number": 289,
+            "context": [
+              "     [LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)",
+              "     shlib_path librfsimulator.so",
+              "     UE threads created by 2394",
+              "     TYPE <CTRL-C> TO TERMINATE",
+              "     [LOADER] library librfsimulator.so successfully loaded",
+              " >>> [LIBCONFIG] rfsimulator: 8/8 parameters successfully set, (7 to default value)",
+              "     Initializing random number generator, seed 2cf9696",
+              "     PSS execution duration 277117 microseconds",
+              "     PSS execution duration 275230 microseconds",
+              "     Nid2 0 Nid1 0 tot_metric 53026, phase_max 7",
+              "     In UE,Trace ID=b5c36432f8264998bd166f0db8d5806a"
+            ]
+          },
+          {
+            "error_line": "[LIBCONFIG] uicc0: 9/9 parameters successfully set, (1 to default value)",
+            "line_number": 434,
+            "context": [
+              "     [NR_RRC]   [FRAME 00224][RRC_UE][MOD 00][][--- MAC_CONFIG_REQ  (SRB1 gNB 0) --->][MAC_UE][MOD 00][]",
+              "     [NR_RRC]   [UE 0] State = NR_RRC_CONNECTED (gNB 0)",
+              "     [SIM]   UICC simulation: IMSI=208950000000031, Ki=0C0A34601D4F07677303652C0462535B, OPc=63bfa50ee6523365ff14c1f45f88737d, DNN=oai_cn, SST=0x01, SD=0x00000c",
+              "     UE RRCSetup traceid=a4c722967040ba2c9dd756e799d80e6f",
+              "     UE RRCSetup  spanid=c7c6f02f8caf1e46",
+              " >>> [LIBCONFIG] uicc0: 9/9 parameters successfully set, (1 to default value)",
+              "     Received RRCSetupComplete traceid=a4c722967040ba2c9dd756e799d80e6f",
+              "     Received RRCSetupComplete spanid=c7c6f02f8caf1e46",
+              "     In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f",
+              "     In UE,child Span ID=576dc922ee3a94b7",
+              "     UE RRCSetupComplete traceid=a4c722967040ba2c9dd756e799d80e6f"
+            ]
+          },
+          {
+            "error_line": "[PDCP]   discard NR PDU, integrity failed",
+            "line_number": 650,
+            "context": [
+              "     39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66",
+              "     </traceParent>",
+              "     <spanParent>65 66 37 62 32 65 39 34 35 37 35 37 39 38 38 37</spanParent>",
+              "     </traceInfo>",
+              "     </UL-DCCH-Message>",
+              " >>> [PDCP]   discard NR PDU, integrity failed",
+              "     [MAC]   securityModeComplete payload: 2a 08 18 4d 18 cd cc 8c 8e 4d 8d cc 0d 0c 18 98 ",
+              "     DLInfoTransfer (len=58):",
+              "     0000: 34 02 01 20 01 01 34 08 18 4d 18 cd cc 8c 8e 4d",
+              "     0010: 8d cc 0d 0c 18 98 4c 98 ce 59 19 0d cd 4d 99 4d",
+              "     0020: ce 4e 59 0e 0c 19 4d 99 84 0d d9 8c 58 4e 0c 4c"
+            ]
+          },
+          {
+            "error_line": "[PDCP]   discard NR PDU, integrity failed",
+            "line_number": 726,
+            "context": [
+              "     </supportedBandListNR>",
+              "     </rf-Parameters>",
+              "     </UE-NR-Capability>",
+              "     [PHY]   [RRC]UE NR Capability encoded, 10 bytes (86 bits)",
+              "     [NR_RRC]   UECapabilityInformation Encoded 506 bits (64 bytes)",
+              " >>> [PDCP]   discard NR PDU, integrity failed",
+              "     DLInfoTransfer (len=270):",
+              "     0000: 00 0d 04 04 72 e0 15 80 08 8b d7 63 80 83 0f 80",
+              "     0010: 05 80 08 8b d7 63 80 83 0f 80 03 e0 10 23 41 e0",
+              "     0020: 40 08 28 82 41 30 32 a0 10 3f ff e0 00 00 00 20",
+              "     0030: 00 06 e1 08 40 00 11 02 ca 00 00 90 40 00 04 0d"
+            ]
+          },
+          {
+            "error_line": "[PDCP]   discard NR PDU, integrity failed",
+            "line_number": 876,
+            "context": [
+              "     In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f",
+              "     In UE,child Span ID=ca0f31ca5d940fde",
+              "     [NR_PHY]   ============================================",
+              "     [NR_PHY]   Harq round stats for Downlink: 57/0/0/0",
+              "     [NR_PHY]   ============================================",
+              " >>> [PDCP]   discard NR PDU, integrity failed",
+              "     UE ULInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f",
+              "     UE ULInformationTransfer spanid=ca0f31ca5d940fde",
+              "     DLInfoTransfer (len=74):",
+              "     0000: 2a 82 af c0 59 88 62 f3 00 4f c0 0d 00 20 00 c5",
+              "     0010: c1 40 38 63 7e 22 41 44 0c 26 8c 66 e6 46 47 26"
+            ]
+          }
+        ],
+        "debug_values": {
+          "UE_IDs": [
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_PHY_UE as task 30"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_MAC_UE as task 31"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RLC_UE as task 32"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_PDCP_UE as task 33"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RRC_UE as task 34"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RRC_NRUE as task 35"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_NAS_UE as task 36"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RAL_UE as task 37"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RRC_NSA_UE as task 45"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_RRC_NSA_NRUE as task 46"
+            },
+            {
+              "value": "a",
+              "line": "[ITTI]   Starting itti queue: TASK_NAS_NRUE as task 47"
+            },
+            {
+              "value": "f",
+              "line": "[PHY]   prs_config configuration NOT found..!! Skipped configuring UE for the PRS reception"
+            },
+            {
+              "value": "0",
+              "line": "[PHY]   UE 0 Setting N_TA_offset to 800 samples (factor 2.000000, UL Freq 3619200000, N_RB 106, mu 1)"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] : Logical Channel UL-CCCH (SRB0), Generating RRCSetupRequest (bytes 56, gNB 0)"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] : Logical Channel UL-CCCH (SRB0), Generating RRCSetupRequest (bytes 56, gNB 0)"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.16]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+            },
+            {
+              "value": "0",
+              "line": "[PHY]   PRACH [UE 0] in frame.slot 219.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 11, first_nonzero_root_idx 0"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   [UE 0][RAPROC] Got BI RAR subPDU 5 ms"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   [UE 0][RAPROC] Got RAPID RAR subPDU"
+            },
+            {
+              "value": "0",
+              "line": "[NR_MAC]   [UE 0][RAPROC][220.7] Found RAR with the intended RAPID 45"
+            },
+            {
+              "value": "0",
+              "line": "[MAC]   In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 220.17 and expiring in 226.5"
+            },
+            {
+              "value": "0",
+              "line": "[MAC]   [UE 0][RAPROC] Frame 224 : received contention resolution identity: 0x10a6f9170486 Terminating RA procedure"
+            },
+            {
+              "value": "0",
+              "line": "[MAC]   [UE 0][224.12][RAPROC] RA procedure succeeded. CB-RA: Contention Resolution is successful."
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0], CONFIG_SRB1 1 corresponding to gNB_index 0"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] State = NR_RRC_CONNECTED (gNB 0)"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0][RAPROC] Frame 224 : Logical Channel UL-DCCH (SRB1), Generating RRCSetupComplete (bytes92, gNB 0)"
+            },
+            {
+              "value": "0",
+              "line": "[NAS]   [UE 0] Received NAS_DOWNLINK_DATA_IND: UEid 0, length 42 , buffer 0x7fbf1401c2e0"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0"
+            },
+            {
+              "value": "d",
+              "line": "UE dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f"
+            },
+            {
+              "value": "d",
+              "line": "UE dlInformationTransfer  spanid=09ee9bbd3ee58d1b"
+            },
+            {
+              "value": "0",
+              "line": "[NAS]   [UE 0] Received NAS_DOWNLINK_DATA_IND: UEid 0, length 21 , buffer 0x7fbf140046d0"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0"
+            },
+            {
+              "value": "d",
+              "line": "UE dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f"
+            },
+            {
+              "value": "d",
+              "line": "UE dlInformationTransfer  spanid=c3f52f8497155fe0"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] Received securityModeCommand (gNB 0)"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] SFN/SF 0/0: Receiving from SRB1 (DL-DCCH), Processing securityModeCommand (eNB 0)"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] Security algorithm is set to nea0"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] Integrity protection algorithm is set to nia2"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] SFN/SF 0/0: Receiving from SRB1 (DL-DCCH), encoding securityModeComplete (gNB 0), rrc_TransactionIdentifier: 1"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] Received Capability Enquiry (gNB 0)"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] Frame 0: Receiving from SRB1 (DL-DCCH), Processing UECapabilityEnquiry (gNB 0)"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] Frame 0: Receiving from SRB1 (DL-DCCH), Processing RRCReconfiguration (gNB 0)"
+            },
+            {
+              "value": "0",
+              "line": "[NAS]   [UE 0] Received NAS_CONN_ESTABLI_CNF: errCode 1, length 71"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0"
+            },
+            {
+              "value": "0",
+              "line": "[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0"
+            },
+            {
+              "value": "0",
+              "line": "[NAS]   [UE 0] Received NAS_DOWNLINK_DATA_IND: UEid 0, length 21 , buffer 0x7fbf1401ed00"
+            },
+            {
+              "value": "d",
+              "line": "UE dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f"
+            },
+            {
+              "value": "d",
+              "line": "UE dlInformationTransfer  spanid=4cf41c9458b04cd9"
+            }
+          ],
+          "RNTI_values": [
+            {
+              "value": "8baf",
+              "line": "[NR_RRC]   [UE0][RAPROC] Frame 224 : Logical Channel DL-CCCH (SRB0), Received NR_RRCSetup RNTI 8baf"
+            },
+            {
+              "value": "0x8baf",
+              "line": "[RLC]   /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair2/LAYER2/nr_rlc/nr_rlc_oai_api.c:770:add_rlc_srb: added srb 1 to UE with RNTI 0x8baf"
+            },
+            {
+              "value": "8baf",
+              "line": "[NR_RRC]   [FRAME 00000][ UE][MOD 00][RNTI 8baf] Logical Channel UL-DCCH (SRB1), Generating RRCReconfigurationComplete (bytes 52, gNB_index 0)"
+            }
+          ]
+        },
+        "relevant_sections": []
+      },
+      "compiler_ground_truth_errors": [],
+      "cu_ip_address": "10.138.77.131",
+      "du_ip_address": "10.138.77.131",
+      "gnb_ip_address": "10.138.77.131",
+      "amf_ip_address": "192.168.70.132",
+      "core_network_machine_ip": "10.138.77.217",
+      "local_s_portc": "501",
+      "local_s_portd": "2152",
+      "remote_s_portc": "500",
+      "remote_s_portd": "2152",
+      "dnn": "oai",
+      "nssai_sst": "1",
+      "nssai_sd": "0xc",
+      "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+      "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+      "log_error_kind_raw": "runtime",
+      "log_error_kind": "runtime",
+      "build_log_mode": false,
+      "runtime_log_mode": true,
+      "other_log_mode": false,
+      "cmake_build_system_mode": false,
+      "dependency_advice_mode": false
+    },
+    "log_error_kind": "runtime",
+    "ground_truth_errors": [],
+    "phase2_analysis": {
+      "suspected_functions": [
+        {
+          "function_name": "rrc_gNB_generate_RRCReject",
+          "file_path": "openairinterface-5g/openair2/RRC/NR/rrc_gNB.c",
+          "relevance_score": 0.7,
+          "source": "error_handling_pattern",
+          "code_snippet": "",
+          "reason": "CRITICAL RRC REJECTION FUNCTION: This function is essential for handling RRC setup failures. When an RRC setup request fails or encounters errors, this function generates and sends an RRCReject message to the UE, properly handling the rejection scenario. For segmentation faults in rrc_handle_RRCSetupRequest, this function should be called in error handling paths to gracefully reject the connection instead of crashing."
+        },
+        {
+          "function_name": "perror",
+          "file_path": "openairinterface-5g/radio/ETHERNET/ethernet_lib.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "No code or context to evaluate relevance"
+        },
+        {
+          "function_name": "perror",
+          "file_path": "openairinterface-5g/radio/ETHERNET/eth_udp.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "No code or context to evaluate relevance"
+        },
+        {
+          "function_name": "socketError",
+          "file_path": "openairinterface-5g/radio/rfsimulator/simulator.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "No code or context to evaluate relevance"
+        },
+        {
+          "function_name": "AssertError",
+          "file_path": "openairinterface-5g/radio/fhi_72/mplane/subscribe-mplane.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "No code or context to evaluate relevance"
+        },
+        {
+          "function_name": "AssertError",
+          "file_path": "openairinterface-5g/radio/fhi_72/mplane/rpc-send-recv.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "No code or context to evaluate relevance"
+        },
+        {
+          "function_name": "AssertError",
+          "file_path": "openairinterface-5g/radio/fhi_72/mplane/init-mplane.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "No code or context to evaluate relevance"
+        },
+        {
+          "function_name": "brf_error",
+          "file_path": "openairinterface-5g/radio/BLADERF/bladerf_lib.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "No code or context to evaluate relevance"
+        },
+        {
+          "function_name": "packetError",
+          "file_path": "openairinterface-5g/openair1/SCHED/phy_procedures_lte_eNb.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "No code or context to evaluate relevance"
+        },
+        {
+          "function_name": "perror",
+          "file_path": "openairinterface-5g/openair1/PHY/LTE_TRANSPORT/if4_tools.c",
+          "relevance_score": 0,
+          "source": "keyword_match",
+          "code_snippet": "",
+          "reason": "No code or context to evaluate relevance"
+        },
+        {
+          "function_name": "do_RRCReject",
+          "file_path": "openairinterface5g-develop\\openair2\\RRC\\NR\\MESSAGES\\asn1_msg.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "int do_RRCReject(uint8_t *const buffer)\n{\n    asn_enc_rval_t                                   enc_rval;\n    NR_DL_CCCH_Message_t                             dl_ccch_msg;\n    NR_RRCReject_t                                   *rrcReject;\n    memset((void *)&dl_ccch_msg, 0, sizeof(NR_DL_CCCH_Message_t));\n    dl_ccch_msg.message.present = NR_DL_CCCH_MessageType_PR_c1;\n    dl_ccch_msg.message.choice.c1          = CALLOC(1, sizeof(struct NR_DL_CCCH_MessageType__c1));\n    dl_ccch_msg.message.choice.c1->present = NR_DL_CCCH_MessageType__c1_PR_rrcReject;\n    dl_ccch_msg.message.choice.c1->choice.rrcReject = CALLOC(1,sizeof(NR_RRCReject_t));\n    rrcReject = dl_ccch_msg.message.choice.c1->choice.rrcReject;\n    rrcReject->criticalExtensions.choice.rrcReject           = CALLOC(1, sizeof(struct NR_RRCReject_IEs));\n    rrcReject->criticalExtensions.choice.rrcReject->waitTime = CALLOC(1, sizeof(NR_RejectWaitTime_t));\n    *rrcReject->criticalExtensions.choice.rrcReject->waitTime = 10;\n    rrcReject->criticalExtensions.present = NR_RRCReject__criticalExtensions_PR_rrcReject;\n    if ( LOG_DEBUGFLAG(DEBUG_ASN1) ) {\n        xer_fprint(stdout, &asn_DEF_NR_DL_CCCH_Message, (void *)&dl_ccch_msg);\n    }\n    enc_rval = uper_encode_to_buffer(&asn_DEF_NR_DL_CCCH_Message,\n                                    NULL,\n                                    (void *)&dl_ccch_msg,\n                                    buffer,\n                                    100);\n    AssertFatal(enc_rval.encoded > 0, \"ASN1 message encoding failed (%s, %lu)!\\n\",\n                enc_rval.failed_type->name, enc_rval.encoded);\n    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_NR_DL_CCCH_Message, &dl_ccch_msg);\n    LOG_D(NR_RRC,\"RRCReject Encoded %zd bits (%zd bytes)\\n\",\n            enc_rval.encoded,(enc_rval.encoded+7)/8);\n    return (enc_rval.encoded + 7) / 8;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "cu_get_f1_ue_data",
+          "file_path": "openairinterface5g-develop\\openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "f1_ue_data_t cu_get_f1_ue_data(uint32_t ue_id)\n{\n  pthread_mutex_lock(&cu2du_mutex);\n  DevAssert(cu2du_ue_mapping != NULL);\n  f1_ue_data_t ued = *get_hashtable_data(cu2du_ue_mapping, ue_id);\n  pthread_mutex_unlock(&cu2du_mutex);\n  return ued;\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "rrc_remove_ue",
+          "file_path": "openairinterface5g-develop\\openair2\\RRC\\NR\\rrc_gNB.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "void rrc_remove_ue(gNB_RRC_INST *rrc, rrc_gNB_ue_context_t *ue_context_p)\n{\n  gNB_RRC_UE_t *UE = &ue_context_p->ue_context;\n  /* we call nr_pdcp_remove_UE() in the handler of E1 bearer release, but if we\n   * are in E1, we also need to free the UE in the CU-CP, so call it twice to\n   * cover all cases */\n  nr_pdcp_remove_UE(UE->rrc_ue_id);\n  LOG_I(NR_RRC, \"removed UE CU UE ID %u/RNTI %04x \\n\", UE->rrc_ue_id, UE->rnti);\n  rrc_delete_ue_data(UE);\n  rrc_gNB_remove_ue_context(rrc, ue_context_p);\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "dl_rrc_message_transfer",
+          "file_path": "openairinterface5g-develop\\openair2\\LAYER2\\NR_MAC_gNB\\mac_rrc_dl_handler.c",
+          "relevance_score": 0.7,
+          "source": "call_graph_downstream",
+          "code_snippet": "void dl_rrc_message_transfer(const f1ap_dl_rrc_message_t *dl_rrc)\n{\n  LOG_D(NR_MAC,\n        \"DL RRC Message Transfer with %d bytes for RNTI %04x SRB %d\\n\",\n        dl_rrc->rrc_container_length,\n        dl_rrc->gNB_DU_ue_id,\n        dl_rrc->srb_id);\n  gNB_MAC_INST *mac = RC.nrmac[0];\n  pthread_mutex_lock(&mac->sched_lock);\n  /* check first that the scheduler knows such UE */\n  NR_UE_info_t *UE = find_nr_UE(&mac->UE_info, dl_rrc->gNB_DU_ue_id);\n  UE = UE ? UE : find_ra_UE(&mac->UE_info, dl_rrc->gNB_DU_ue_id);\n  if (UE == NULL) {\n    LOG_E(MAC, \"ERROR: unknown UE with RNTI %04x, ignoring DL RRC Message Transfer\\n\", dl_rrc->gNB_DU_ue_id);\n    pthread_mutex_unlock(&mac->sched_lock);\n    return;\n  }\n  pthread_mutex_unlock(&mac->sched_lock);\n  if (!du_exists_f1_ue_data(dl_rrc->gNB_DU_ue_id)) {\n    LOG_D(NR_MAC, \"No CU UE ID stored for UE RNTI %04x, adding CU UE ID %d\\n\", dl_rrc->gNB_DU_ue_id, dl_rrc->gNB_CU_ue_id);\n    f1_ue_data_t new_ue_data = {.secondary_ue = dl_rrc->gNB_CU_ue_id};\n    bool success = du_add_f1_ue_data(dl_rrc->gNB_DU_ue_id, &new_ue_data);\n    DevAssert(success);\n  }\n  /* if we get the old-gNB-DU-UE-ID, this means there is a reestablishment\n   * ongoing. */\n  if (dl_rrc->old_gNB_DU_ue_id != NULL) {\n    AssertFatal(*dl_rrc->old_gNB_DU_ue_id != dl_rrc->gNB_DU_ue_id,\n                \"logic bug: current and old gNB DU UE ID cannot be the same\\n\");\n    /* 38.401 says: \"Find UE context based on old gNB-DU UE F1AP ID, replace\n     * old C-RNTI/PCI with new C-RNTI/PCI\". Below, we do the inverse: we keep\n     * the new UE context (with new C-RNTI), but set up everything to reuse the\n     * old config. */\n    NR_UE_info_t *oldUE = find_nr_UE(&mac->UE_info, *dl_rrc->old_gNB_DU_ue_id);\n    AssertFatal(oldUE, \"CU claims we should know UE %04x, but we don't\\n\", *dl_rrc->old_gNB_DU_ue_id);\n    pthread_mutex_lock(&mac->sched_lock);\n    uid_t temp_uid = UE->uid;\n    UE->uid = oldUE->uid;\n    oldUE->uid = temp_uid;\n    for (int i = 1; i < seq_arr_size(&oldUE->UE_sched_ctrl.lc_config); ++i) {\n      const nr_lc_config_t *c = seq_arr_at(&oldUE->UE_sched_ctrl.lc_config, i);\n      nr_lc_config_t new = *c;\n      new.suspended = true;\n      nr_mac_add_lcid(&UE->UE_sched_ctrl, &new);\n    }\n    ASN_STRUCT_FREE(asn_DEF_NR_CellGroupConfig, UE->CellGroup);\n    UE->CellGroup = oldUE->CellGroup;\n    oldUE->CellGroup = NULL;\n    UE->mac_stats = oldUE->mac_stats;\n    /* 38.331 5.3.7.2 says that the UE releases the spCellConfig, so we drop it\n     * from the current configuration. It will be reapplied when the\n     * reconfiguration has succeeded (indicated by the CU) */\n    UE->reconfigSpCellConfig = UE->CellGroup->spCellConfig;\n    UE->CellGroup->spCellConfig = NULL;\n    mac_remove_nr_ue(mac, *dl_rrc->old_gNB_DU_ue_id);\n    pthread_mutex_unlock(&mac->sched_lock);\n    nr_rlc_remove_ue(dl_rrc->gNB_DU_ue_id);\n    nr_rlc_update_id(*dl_rrc->old_gNB_DU_ue_id, dl_rrc->gNB_DU_ue_id);\n    /* 38.331 clause 5.3.7.4: apply the specified configuration defined in 9.2.1 for SRB1 */\n    nr_rlc_reconfigure_entity(dl_rrc->gNB_DU_ue_id, 1, NULL);\n    instance_t f1inst = get_f1_gtp_instance();\n    if (f1inst >= 0) // we actually use F1-U\n      gtpv1u_update_ue_id(f1inst, *dl_rrc->old_gNB_DU_ue_id, dl_rrc->gNB_DU_ue_id);\n  }\n  /* the DU ue id is the RNTI */\n  nr_rlc_srb_recv_sdu(dl_rrc->gNB_DU_ue_id, dl_rrc->srb_id, dl_rrc->rrc_container, dl_rrc->rrc_container_length);\n}",
+          "reason": "Downstream function called by candidate functions. Important for understanding context initialization and error handling."
+        },
+        {
+          "function_name": "nr_pdcp_remove_UE",
+          "file_path": "openair2\\LAYER2\\nr_pdcp\\nr_pdcp_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_pdcp_remove_UE(ue_id_t ue_id)\n{\n  nr_pdcp_manager_lock(nr_pdcp_ue_manager);\n  nr_pdcp_manager_remove_ue(nr_pdcp_ue_manager, ue_id);\n  nr_pdcp_manager_unlock(nr_pdcp_ue_manager);\n}",
+          "reason": "KG evidence: function calls 'rrc_remove_ue' -> called function expands execution flow."
+        },
+        {
+          "function_name": "rrc_delete_ue_data",
+          "file_path": "openair2\\RRC\\NR\\rrc_gNB.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static void rrc_delete_ue_data(gNB_RRC_UE_t *UE)\n{\n  ASN_STRUCT_FREE(asn_DEF_NR_UE_NR_Capability, UE->UE_Capability_nr);\n  ASN_STRUCT_FREE(asn_DEF_NR_CellGroupConfig, UE->masterCellGroup);\n  ASN_STRUCT_FREE(asn_DEF_NR_MeasResults, UE->measResults);\n  FREE_AND_ZERO_BYTE_ARRAY(UE->ue_cap_buffer);\n  free_MeasConfig(UE->measConfig);\n}",
+          "reason": "KG evidence: function calls 'rrc_remove_ue' -> called function expands execution flow."
+        },
+        {
+          "function_name": "rrc_gNB_remove_ue_context",
+          "file_path": "openair2\\RRC\\NR\\rrc_gNB_UE_context.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void rrc_gNB_remove_ue_context(gNB_RRC_INST *rrc_instance_pP, rrc_gNB_ue_context_t *ue_context_pP)\n//------------------------------------------------------------------------------\n{\n  if (rrc_instance_pP == NULL) {\n    LOG_E(NR_RRC, \" Bad RRC instance\\n\");\n    return;\n  }\n  if (ue_context_pP == NULL) {\n    LOG_E(NR_RRC, \"Trying to free a NULL UE context\\n\");\n    return;\n  }\n  LOG_UE_EVENT(&ue_context_pP->ue_context, \"Remove UE context\\n\");\n  RB_REMOVE(rrc_nr_ue_tree_s, &rrc_instance_pP->rrc_ue_head, ue_context_pP);\n  uid_linear_allocator_free(&rrc_instance_pP->uid_allocator, ue_context_pP->ue_context.rrc_ue_id - 1);\n  cu_remove_f1_ue_data(ue_context_pP->ue_context.rrc_ue_id);\n  rrc_gNB_free_mem_ue_context(ue_context_pP);\n}",
+          "reason": "KG evidence: function calls 'rrc_remove_ue' -> called function expands execution flow."
+        },
+        {
+          "function_name": "get_hashtable_data",
+          "file_path": "openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static f1_ue_data_t *get_hashtable_data(hash_table_t *ht, uint64_t ue_id)\n{\n  void *data = NULL;\n  hashtable_rc_t ret = hashtable_get(ht, ue_id, &data);\n  AssertFatal(ret == HASH_TABLE_OK && data != NULL, \"element for ue_id %ld not found\\n\", ue_id);\n  return data;\n}",
+          "reason": "KG evidence: function calls 'cu_get_f1_ue_data' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_update_id",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool nr_rlc_update_id(int from_id, int to_id)\n{\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_ue_t *ue = nr_rlc_manager_get_ue(nr_rlc_ue_manager, from_id);\n  if (ue == NULL) {\n    nr_rlc_manager_unlock(nr_rlc_ue_manager);\n    LOG_E(RLC, \"Cannot find RLC entity for UE %d\\n\", from_id);\n    return false;\n  }\n  ue->ue_id = to_id;\n  LOG_I(RLC, \"Update old UE ID %d context to ID %d\\n\", from_id, to_id);\n  /* re-establish RLC for SRB1: according to 5.3.7.4 of TS 38.331 */\n  if (ue->srb[0]) {\n    LOG_I(RLC, \"Re-establish RLC for SRB 1\\n\");\n    ue->srb[0]->reestablishment(ue->srb[0]);\n  }\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n  return true;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "du_add_f1_ue_data",
+          "file_path": "openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool du_add_f1_ue_data(uint32_t ue_id, const f1_ue_data_t *data)\n{\n  pthread_mutex_lock(&du2cu_mutex);\n  DevAssert(du2cu_ue_mapping != NULL);\n  uint64_t key = ue_id;\n  if (hashtable_is_key_exists(du2cu_ue_mapping, key) == HASH_TABLE_OK) {\n    pthread_mutex_unlock(&du2cu_mutex);\n    return false;\n  }\n  bool ret = add_hashtable_data(du2cu_ue_mapping, key, data);\n  pthread_mutex_unlock(&du2cu_mutex);\n  return ret;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "find_ra_UE",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "NR_UE_info_t *find_ra_UE(NR_UEs_t *UEs, rnti_t rntiP)\n{\n  UE_iterator(UEs->access_ue_list, UE) {\n    if (UE->rnti == rntiP) {\n      LOG_D(NR_MAC,\"Search and found rnti: %04x\\n\", rntiP);\n      return UE;\n    }\n  }\n  return NULL;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "seq_arr_size",
+          "file_path": "common\\utils\\ds\\seq_arr.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "size_t seq_arr_size(seq_arr_t const* arr)\n{\n  assert(arr != NULL);\n  return arr->size;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "seq_arr_at",
+          "file_path": "common\\utils\\ds\\seq_arr.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void* seq_arr_at(seq_arr_t const* arr, uint32_t pos)\n{\n  assert(arr != NULL);\n  assert(arr->data != NULL);\n  assert(pos < arr->size);\n  return arr->data + pos * arr->elt_size;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_remove_ue",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_rlc_remove_ue(int ue_id)\n{\n  LOG_W(RLC, \"Remove UE %d\\n\", ue_id);\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_manager_remove_ue(nr_rlc_ue_manager, ue_id);\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "find_nr_UE",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "NR_UE_info_t *find_nr_UE(NR_UEs_t *UEs, rnti_t rntiP)\n{\n  UE_iterator(UEs->connected_ue_list, UE) {\n    if (UE->rnti == rntiP) {\n      LOG_D(NR_MAC,\"Search and found rnti: %04x\\n\", rntiP);\n      return UE;\n    }\n  }\n  return NULL;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "mac_remove_nr_ue",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void mac_remove_nr_ue(gNB_MAC_INST *nr_mac, rnti_t rnti)\n{\n  /* already mutex protected */\n  NR_SCHED_ENSURE_LOCKED(&nr_mac->sched_lock);\n  NR_UEs_t *UE_info = &nr_mac->UE_info;\n  NR_SCHED_LOCK(&UE_info->mutex);\n  NR_UE_info_t *UE = remove_UE_from_list(MAX_MOBILES_PER_GNB + 1, UE_info->connected_ue_list, rnti);\n  NR_SCHED_UNLOCK(&UE_info->mutex);\n  if (UE)\n    delete_nr_ue_data(UE, nr_mac->common_channels, &UE_info->uid_allocator);\n  else\n    nr_release_ra_UE(nr_mac, rnti);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_mac_add_lcid",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\gNB_scheduler_primitives.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool nr_mac_add_lcid(NR_UE_sched_ctrl_t* sched_ctrl, const nr_lc_config_t *c)\n{\n  elm_arr_t elm = find_if(&sched_ctrl->lc_config, (void *) c, eq_lcid_config);\n  if (elm.found) {\n    LOG_I(NR_MAC, \"cannot add LCID %d: already present, updating configuration\\n\", c->lcid);\n    nr_lc_config_t *exist = (nr_lc_config_t *)elm.it;\n    *exist = *c;\n  } else {\n    LOG_D(NR_MAC, \"Add LCID %d\\n\", c->lcid);\n    seq_arr_push_back(&sched_ctrl->lc_config, (void*) c, sizeof(*c));\n  }\n  void *base = seq_arr_front(&sched_ctrl->lc_config);\n  size_t nmemb = seq_arr_size(&sched_ctrl->lc_config);\n  size_t size = sizeof(*c);\n  qsort(base, nmemb, size, cmp_lc_config);\n  return true;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_reconfigure_entity",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_rlc_reconfigure_entity(int ue_id, int lc_id, NR_RLC_Config_t *rlc_Config)\n{\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_ue_t *ue = nr_rlc_manager_get_ue(nr_rlc_ue_manager, ue_id);\n  if (ue == NULL)\n    LOG_E(RLC, \"RLC instance for the given UE was not found \\n\");\n  nr_rlc_entity_t *rb = get_rlc_entity_from_lcid(ue, lc_id);\n  if (rlc_Config) {\n    AssertFatal(rb->stats.mode != NR_RLC_TM, \"Cannot reconfigure TM mode\\n\");\n    if (rb->stats.mode == NR_RLC_AM) {\n      AssertFatal(rlc_Config->present == NR_RLC_Config_PR_am, \"Invalid RLC Config type\\n\");\n      struct NR_RLC_Config__am *am = rlc_Config->choice.am;\n      int t_reassembly = decode_t_reassembly(am->dl_AM_RLC.t_Reassembly);\n      int t_status_prohibit = decode_t_status_prohibit(am->dl_AM_RLC.t_StatusProhibit);\n      int t_poll_retransmit = decode_t_poll_retransmit(am->ul_AM_RLC.t_PollRetransmit);\n      int poll_pdu = decode_poll_pdu(am->ul_AM_RLC.pollPDU);\n      int poll_byte = decode_poll_byte(am->ul_AM_RLC.pollByte);\n      int max_retx_threshold = decode_max_retx_threshold(am->ul_AM_RLC.maxRetxThreshold);\n      int _sn_field_length;\n      int *sn_field_length = NULL;\n      if (am->dl_AM_RLC.sn_FieldLength) {\n        AssertFatal(am->ul_AM_RLC.sn_FieldLength != NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n        if (am->ul_AM_RLC.sn_FieldLength) {\n          AssertFatal(*am->dl_AM_RLC.sn_FieldLength == *am->ul_AM_RLC.sn_FieldLength,\n                      \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n          _sn_field_length = decode_sn_field_length_am(*am->dl_AM_RLC.sn_FieldLength);\n          sn_field_length = &_sn_field_length;\n        }\n      } else\n        AssertFatal(am->ul_AM_RLC.sn_FieldLength == NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n      nr_rlc_entity_am_reconfigure(rb,\n                                   t_poll_retransmit,\n                                   t_reassembly,\n                                   t_status_prohibit,\n                                   poll_pdu,\n                                   poll_byte,\n                                   max_retx_threshold,\n                                   sn_field_length);\n    } else { // UM\n      AssertFatal(rlc_Config->present == NR_RLC_Config_PR_um_Bi_Directional, \"Invalid RLC Config type\\n\");\n      struct NR_RLC_Config__um_Bi_Directional *um = rlc_Config->choice.um_Bi_Directional;\n      int t_reassembly = decode_t_reassembly(um->dl_UM_RLC.t_Reassembly);\n      int _sn_field_length;\n      int *sn_field_length = NULL;\n      if (um->dl_UM_RLC.sn_FieldLength) {\n        AssertFatal(um->ul_UM_RLC.sn_FieldLength != NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n        if (um->ul_UM_RLC.sn_FieldLength) {\n          AssertFatal(*um->dl_UM_RLC.sn_FieldLength == *um->ul_UM_RLC.sn_FieldLength,\n                      \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n          _sn_field_length = decode_sn_field_length_um(*um->dl_UM_RLC.sn_FieldLength);\n          sn_field_length = &_sn_field_length;\n        }\n      } else\n        AssertFatal(um->ul_UM_RLC.sn_FieldLength == NULL, \"Cannot handle different sn_FieldLength for DL and UL\\n\");\n      nr_rlc_entity_um_reconfigure(rb, t_reassembly, sn_field_length);\n    }\n  } else {\n    AssertFatal(rb->stats.mode == NR_RLC_AM, \"Invalid RLC mode\\n\");\n    // default values as in 9.2.1 of 38.331\n    int sn_field_length = 12;\n    nr_rlc_entity_am_reconfigure(rb,\n                                 45, //t_poll_retransmit\n                                 35, //t_reassembly\n                                 0, //t_status_prohibit\n                                 -1, //poll_pdu\n                                 -1, //poll_byte\n                                 8, //max_retx_threshold\n                                 &sn_field_length);\n  }\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "get_f1_gtp_instance",
+          "file_path": "openair2\\LAYER2\\NR_MAC_gNB\\mac_rrc_dl_handler.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "static instance_t get_f1_gtp_instance(void)\n{\n  const f1ap_cudu_inst_t *inst = getCxt(0);\n  if (!inst)\n    return -1; // means no F1\n  return inst->gtpInst;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "du_exists_f1_ue_data",
+          "file_path": "openair2\\F1AP\\f1ap_ids.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "bool du_exists_f1_ue_data(uint32_t ue_id)\n{\n  pthread_mutex_lock(&du2cu_mutex);\n  DevAssert(du2cu_ue_mapping != NULL);\n  uint64_t key = ue_id;\n  hashtable_rc_t ret = hashtable_is_key_exists(du2cu_ue_mapping, key);\n  pthread_mutex_unlock(&du2cu_mutex);\n  return ret == HASH_TABLE_OK;\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "nr_rlc_srb_recv_sdu",
+          "file_path": "openair2\\LAYER2\\nr_rlc\\nr_rlc_oai_api.c",
+          "relevance_score": 0.55,
+          "source": "kg_expansion_function_calls",
+          "code_snippet": "void nr_rlc_srb_recv_sdu(const int ue_id, const logical_chan_id_t channel_id, unsigned char *buf, int size)\n{\n  T(T_ENB_RLC_DL, T_INT(0), T_INT(ue_id), T_INT(0), T_INT(size));\n  nr_rlc_manager_lock(nr_rlc_ue_manager);\n  nr_rlc_ue_t *ue = nr_rlc_manager_get_ue(nr_rlc_ue_manager, ue_id);\n  nr_rlc_entity_t *rb = NULL;\n  if (channel_id == 0) {\n    rb = ue->srb0;\n  } else {\n    rb = ue->srb[channel_id - 1];\n  }\n  AssertFatal(rb != NULL, \"SDU sent to unknown RB UE-ID %d SRB %d\\n\", ue_id, channel_id);\n  rb->set_time(rb, get_nr_rlc_current_time());\n  rb->recv_sdu(rb, (char *)buf, size, -1);\n  nr_rlc_manager_unlock(nr_rlc_ue_manager);\n}",
+          "reason": "KG evidence: function calls 'dl_rrc_message_transfer' -> called function expands execution flow."
+        },
+        {
+          "function_name": "get_single_ue_rnti",
+          "file_path": "common\\utils\\telnetsrv\\telnetsrv_bearer.c",
+          "relevance_score": 0.45,
+          "source": "kg_expansion_shared_struct_variable",
+          "code_snippet": "static int get_single_ue_rnti(void)\n{\n  rrc_gNB_ue_context_t *ue_context_p = NULL;\n  RB_FOREACH(ue_context_p, rrc_nr_ue_tree_s, &(RC.nrrrc[0]->rrc_ue_head)) {\n    return ue_context_p->ue_context.rnti;\n  }\n  return -1;\n}",
+          "reason": "KG evidence: shares struct/variable usage with candidate-related code (struct/variable -> other using functions)."
+        },
+        {
+          "function_name": "add_bearer",
+          "file_path": "common\\utils\\telnetsrv\\telnetsrv_bearer.c",
+          "relevance_score": 0.45,
+          "source": "kg_expansion_shared_struct_variable",
+          "code_snippet": "int add_bearer(char *buf, int debug, telnet_printfunc_t prnt)\n{\n  int rnti = -1;\n  if (!buf) {\n    rnti = get_single_ue_rnti();\n    if (rnti < 1)\n      ERROR_MSG_RET(\"no UE found\\n\");\n  } else {\n    rnti = strtol(buf, NULL, 16);\n    if (rnti < 1 || rnti >= 0xfffe)\n      ERROR_MSG_RET(\"RNTI needs to be [1,0xfffe]\\n\");\n  }\n  // verify it exists in RRC as well\n  rrc_gNB_ue_context_t *rrcue = rrc_gNB_get_ue_context_by_rnti_any_du(RC.nrrrc[0], rnti);\n  if (!rrcue)\n    ERROR_MSG_RET(\"could not find UE with RNTI %04x\\n\", rnti);\n  AssertFatal(false, \"not implemented\\n\");\n  //rrc_gNB_trigger_new_bearer(rnti);\n  prnt(\"called rrc_gNB_trigger_new_bearer(%04x)\\n\", rnti);\n  return 0;\n}",
+          "reason": "KG evidence: shares struct/variable usage with candidate-related code (struct/variable -> other using functions)."
+        },
+        {
+          "function_name": "release_bearer",
+          "file_path": "common\\utils\\telnetsrv\\telnetsrv_bearer.c",
+          "relevance_score": 0.45,
+          "source": "kg_expansion_shared_struct_variable",
+          "code_snippet": "int release_bearer(char *buf, int debug, telnet_printfunc_t prnt)\n{\n  int rnti = -1;\n  if (!buf) {\n    rnti = get_single_ue_rnti();\n    if (rnti < 1)\n      ERROR_MSG_RET(\"no UE found\\n\");\n  } else {\n    rnti = strtol(buf, NULL, 16);\n    if (rnti < 1 || rnti >= 0xfffe)\n      ERROR_MSG_RET(\"RNTI needs to be [1,0xfffe]\\n\");\n  }\n  // verify it exists in RRC as well\n  rrc_gNB_ue_context_t *rrcue = rrc_gNB_get_ue_context_by_rnti_any_du(RC.nrrrc[0], rnti);\n  if (!rrcue)\n    ERROR_MSG_RET(\"could not find UE with RNTI %04x\\n\", rnti);\n  AssertFatal(false, \"not implemented\\n\");\n  //rrc_gNB_trigger_release_bearer(rnti);\n  prnt(\"called rrc_gNB_trigger_release_bearer(%04x)\\n\", rnti);\n  return 0;\n}",
+          "reason": "KG evidence: shares struct/variable usage with candidate-related code (struct/variable -> other using functions)."
+        },
+        {
+          "function_name": "get_single_ue_rnti_mac",
+          "file_path": "common\\utils\\telnetsrv\\telnetsrv_ci.c",
+          "relevance_score": 0.45,
+          "source": "kg_expansion_shared_struct_variable",
+          "code_snippet": "static int get_single_ue_rnti_mac(void)\n{\n  NR_UE_info_t *ue = NULL;\n  UE_iterator(RC.nrmac[0]->UE_info.connected_ue_list, it) {\n    if (it && ue)\n      return -1;\n    if (it)\n      ue = it;\n  }\n  if (!ue)\n    return -1;\n  return ue->rnti;\n}",
+          "reason": "KG evidence: shares struct/variable usage with candidate-related code (struct/variable -> other using functions)."
+        },
+        {
+          "function_name": "get_single_rrc_ue",
+          "file_path": "common\\utils\\telnetsrv\\telnetsrv_ci.c",
+          "relevance_score": 0.45,
+          "source": "kg_expansion_shared_struct_variable",
+          "code_snippet": "rrc_gNB_ue_context_t *get_single_rrc_ue(void)\n{\n  rrc_gNB_ue_context_t *ue = NULL;\n  rrc_gNB_ue_context_t *l = NULL;\n  int n = 0;\n  RB_FOREACH (l, rrc_nr_ue_tree_s, &RC.nrrrc[0]->rrc_ue_head) {\n    if (ue == NULL)\n      ue = l;\n    n++;\n  }\n  if (!ue) {\n    printf(\"could not find any UE in RRC\\n\");\n  }\n  if (n > 1) {\n    printf(\"more than one UE in RRC present\\n\");\n    ue = NULL;\n  }\n  return ue;\n}",
+          "reason": "KG evidence: shares struct/variable usage with candidate-related code (struct/variable -> other using functions)."
+        },
+        {
+          "function_name": "get_reestab_count",
+          "file_path": "common\\utils\\telnetsrv\\telnetsrv_ci.c",
+          "relevance_score": 0.45,
+          "source": "kg_expansion_shared_struct_variable",
+          "code_snippet": "int get_reestab_count(char *buf, int debug, telnet_printfunc_t prnt)\n{\n  if (!RC.nrrrc)\n    ERROR_MSG_RET(\"no RRC present, cannot list counts\\n\");\n  rrc_gNB_ue_context_t *ue = NULL;\n  if (!buf) {\n    ue = get_single_rrc_ue();\n    if (!ue)\n      ERROR_MSG_RET(\"no single UE in RRC present\\n\");\n  } else {\n    ue_id_t ue_id = strtol(buf, NULL, 10);\n    ue = rrc_gNB_get_ue_context(RC.nrrrc[0], ue_id);\n    if (!ue)\n      ERROR_MSG_RET(\"could not find UE with ue_id %d in RRC\\n\");\n  }\n  prnt(\"UE RNTI %04x reestab %d reconfig %d\\n\",\n       ue->ue_context.rnti,\n       ue->ue_context.ue_reestablishment_counter,\n       ue->ue_context.ue_reconfiguration_counter);\n  return 0;\n}",
+          "reason": "KG evidence: shares struct/variable usage with candidate-related code (struct/variable -> other using functions)."
+        }
+      ],
+      "suspected_configs": [],
+      "deployment_context": {
+        "role": "UE",
+        "active_configs": [
+          "/v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf"
+        ],
+        "network_params": {
+          "gnb_ipv4": null,
+          "amf_ipv4": null,
+          "ngap_port": 4043,
+          "assoc_state": "UNKNOWN"
+        },
+        "log_anchors": [
+          "[PDCP]   discard NR PDU, integrity failed",
+          "[ITTI]   Starting itti queue: TASK_NGAP as task 17",
+          "[ITTI]   Starting itti queue: TASK_SCTP as task 24",
+          "[HW]   rfsimulator: connection established",
+          "<randomValue>",
+          "</randomValue>",
+          "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.16]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+          "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+          "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+          "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+          "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+          "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+          "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+          "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+          "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+          "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34",
+          "[MAC]   In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 220.17 and expiring in 226.5",
+          "[MAC]   [UE 0][RAPROC] Frame 224 : received contention resolution identity: 0x10a6f9170486 Terminating RA procedure",
+          "[MAC]   [UE 0][224.12][RAPROC] RA procedure succeeded. CB-RA: Contention Resolution is successful.",
+          "[NAS]   [UE] Received REGISTRATION ACCEPT message"
+        ],
+        "detailed_log_context": {
+          "total_lines": 924,
+          "error_sequences": [
+            {
+              "error_line": "[NR_MAC]   [UE0] Applying default macMainConfig",
+              "line_number": 52,
+              "context": [
+                "     [ITTI]   Starting itti queue: TASK_RRC_NSA_UE as task 45",
+                "     [ITTI]   Starting itti queue: TASK_RRC_NSA_NRUE as task 46",
+                "     [ITTI]   Starting itti queue: TASK_NAS_NRUE as task 47",
+                "     [OPT]   OPT disabled",
+                "     [HW]   Version: Branch: master Abrev. Hash: ae3d0b7 Date: Tue Nov 1 17:03:55 2022 +0530",
+                " >>> [NR_MAC]   [UE0] Applying default macMainConfig",
+                "     [MAC]   Running without CellGroupConfig",
+                "     [PDCP]   pdcp init,usegtp usenetlink",
+                "     [PDCP]   TUN: Opened socket oaitun_ue1 with fd nas_sock_fd[0]=101",
+                "     [PDCP]   UE pdcp will use tun interface",
+                "     [PHY]   Set UE mode 6, UE_fo_compensation 0, UE_scan_carrier 0, UE_no_timing_correction 0"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+              "line_number": 249,
+              "context": [
+                "     CMDLINE: \"./nr-uesoftmodem\" \"-r\" \"106\" \"--numerology\" \"1\" \"--band\" \"78\" \"-C\" \"3619200000\" \"--rfsim\" \"--sa\" \"-O\" \"/v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf\" \"--nokrnmod\" \"1\"",
+                "     [CONFIG] get parameters from libconfig /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf , debug flags: 0x00000000",
+                "     [LIBCONFIG] Path for include directive set to: /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS",
+                "     [CONFIG] function config_libconfig_init returned 0",
+                "     [CONFIG] config module libconfig loaded",
+                " >>> [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+              "line_number": 250,
+              "context": [
+                "     [CONFIG] get parameters from libconfig /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf , debug flags: 0x00000000",
+                "     [LIBCONFIG] Path for include directive set to: /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS",
+                "     [CONFIG] function config_libconfig_init returned 0",
+                "     [CONFIG] config module libconfig loaded",
+                "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                " >>> [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "line_number": 251,
+              "context": [
+                "     [LIBCONFIG] Path for include directive set to: /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS",
+                "     [CONFIG] function config_libconfig_init returned 0",
+                "     [CONFIG] config module libconfig loaded",
+                "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+                " >>> [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+              "line_number": 252,
+              "context": [
+                "     [CONFIG] function config_libconfig_init returned 0",
+                "     [CONFIG] config module libconfig loaded",
+                "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                " >>> [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+                "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "line_number": 253,
+              "context": [
+                "     [CONFIG] config module libconfig loaded",
+                "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                " >>> [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+                "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+                "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+              "line_number": 254,
+              "context": [
+                "     [LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                " >>> [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+                "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+                "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+                "     nokrnmod bit enabled"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+              "line_number": 256,
+              "context": [
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                " >>> [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+                "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+                "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+                "     nokrnmod bit enabled",
+                "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+                "     create a thread for core -1"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+              "line_number": 257,
+              "context": [
+                "     [LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+                " >>> [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+                "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+                "     nokrnmod bit enabled",
+                "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+                "     create a thread for core -1",
+                "     create a thread for core -1"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+              "line_number": 258,
+              "context": [
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     [LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)",
+                "     log init done",
+                "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+                "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+                " >>> [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+                "     nokrnmod bit enabled",
+                "     [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+                "     create a thread for core -1",
+                "     create a thread for core -1",
+                "     create a thread for core -1"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+              "line_number": 260,
+              "context": [
+                "     log init done",
+                "     [LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)",
+                "     [LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)",
+                "     [LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)",
+                "     nokrnmod bit enabled",
+                " >>> [LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)",
+                "     create a thread for core -1",
+                "     create a thread for core -1",
+                "     create a thread for core -1",
+                "     create a thread for core -1",
+                "     create a thread for core -1"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+              "line_number": 270,
+              "context": [
+                "     create a thread for core -1",
+                "     create a thread for core -1",
+                "     create a thread for core -1",
+                "     create a thread for core -1",
+                "     CPU Freq is 2.419238",
+                " >>> [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+                "     [LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path libldpc.so",
+                "     [LOADER] library libldpc.so successfully loaded",
+                "     [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+              "line_number": 271,
+              "context": [
+                "     create a thread for core -1",
+                "     create a thread for core -1",
+                "     create a thread for core -1",
+                "     CPU Freq is 2.419238",
+                "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+                " >>> [LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+                "     [LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path libldpc.so",
+                "     [LOADER] library libldpc.so successfully loaded",
+                "     [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+              "line_number": 272,
+              "context": [
+                "     create a thread for core -1",
+                "     create a thread for core -1",
+                "     CPU Freq is 2.419238",
+                "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+                " >>> [LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path libldpc.so",
+                "     [LOADER] library libldpc.so successfully loaded",
+                "     [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)",
+                "     DL frequency 3619200000: band 48, UL frequency 3619200000"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+              "line_number": 275,
+              "context": [
+                "     [LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+                "     [LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path libldpc.so",
+                "     [LOADER] library libldpc.so successfully loaded",
+                " >>> [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)",
+                "     DL frequency 3619200000: band 48, UL frequency 3619200000",
+                "     [LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path libdfts.so",
+                "     [LOADER] library libdfts.so successfully loaded"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)",
+              "line_number": 276,
+              "context": [
+                "     [LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)",
+                "     [LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path libldpc.so",
+                "     [LOADER] library libldpc.so successfully loaded",
+                "     [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+                " >>> [LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)",
+                "     DL frequency 3619200000: band 48, UL frequency 3619200000",
+                "     [LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path libdfts.so",
+                "     [LOADER] library libdfts.so successfully loaded",
+                "     [LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+              "line_number": 278,
+              "context": [
+                "     shlib_path libldpc.so",
+                "     [LOADER] library libldpc.so successfully loaded",
+                "     [LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)",
+                "     [LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)",
+                "     DL frequency 3619200000: band 48, UL frequency 3619200000",
+                " >>> [LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path libdfts.so",
+                "     [LOADER] library libdfts.so successfully loaded",
+                "     [LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf",
+                "     [LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)",
+                "     [LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)",
+              "line_number": 282,
+              "context": [
+                "     DL frequency 3619200000: band 48, UL frequency 3619200000",
+                "     [LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path libdfts.so",
+                "     [LOADER] library libdfts.so successfully loaded",
+                "     [LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf",
+                " >>> [LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)",
+                "     [LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path librfsimulator.so",
+                "     UE threads created by 2394",
+                "     TYPE <CTRL-C> TO TERMINATE"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)",
+              "line_number": 283,
+              "context": [
+                "     [LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path libdfts.so",
+                "     [LOADER] library libdfts.so successfully loaded",
+                "     [LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf",
+                "     [LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)",
+                " >>> [LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)",
+                "     [LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path librfsimulator.so",
+                "     UE threads created by 2394",
+                "     TYPE <CTRL-C> TO TERMINATE",
+                "     [LOADER] library librfsimulator.so successfully loaded"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)",
+              "line_number": 284,
+              "context": [
+                "     shlib_path libdfts.so",
+                "     [LOADER] library libdfts.so successfully loaded",
+                "     [LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf",
+                "     [LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)",
+                "     [LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)",
+                " >>> [LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path librfsimulator.so",
+                "     UE threads created by 2394",
+                "     TYPE <CTRL-C> TO TERMINATE",
+                "     [LOADER] library librfsimulator.so successfully loaded",
+                "     [LIBCONFIG] rfsimulator: 8/8 parameters successfully set, (7 to default value)"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] rfsimulator: 8/8 parameters successfully set, (7 to default value)",
+              "line_number": 289,
+              "context": [
+                "     [LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)",
+                "     shlib_path librfsimulator.so",
+                "     UE threads created by 2394",
+                "     TYPE <CTRL-C> TO TERMINATE",
+                "     [LOADER] library librfsimulator.so successfully loaded",
+                " >>> [LIBCONFIG] rfsimulator: 8/8 parameters successfully set, (7 to default value)",
+                "     Initializing random number generator, seed 2cf9696",
+                "     PSS execution duration 277117 microseconds",
+                "     PSS execution duration 275230 microseconds",
+                "     Nid2 0 Nid1 0 tot_metric 53026, phase_max 7",
+                "     In UE,Trace ID=b5c36432f8264998bd166f0db8d5806a"
+              ]
+            },
+            {
+              "error_line": "[LIBCONFIG] uicc0: 9/9 parameters successfully set, (1 to default value)",
+              "line_number": 434,
+              "context": [
+                "     [NR_RRC]   [FRAME 00224][RRC_UE][MOD 00][][--- MAC_CONFIG_REQ  (SRB1 gNB 0) --->][MAC_UE][MOD 00][]",
+                "     [NR_RRC]   [UE 0] State = NR_RRC_CONNECTED (gNB 0)",
+                "     [SIM]   UICC simulation: IMSI=208950000000031, Ki=0C0A34601D4F07677303652C0462535B, OPc=63bfa50ee6523365ff14c1f45f88737d, DNN=oai_cn, SST=0x01, SD=0x00000c",
+                "     UE RRCSetup traceid=a4c722967040ba2c9dd756e799d80e6f",
+                "     UE RRCSetup  spanid=c7c6f02f8caf1e46",
+                " >>> [LIBCONFIG] uicc0: 9/9 parameters successfully set, (1 to default value)",
+                "     Received RRCSetupComplete traceid=a4c722967040ba2c9dd756e799d80e6f",
+                "     Received RRCSetupComplete spanid=c7c6f02f8caf1e46",
+                "     In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f",
+                "     In UE,child Span ID=576dc922ee3a94b7",
+                "     UE RRCSetupComplete traceid=a4c722967040ba2c9dd756e799d80e6f"
+              ]
+            },
+            {
+              "error_line": "[PDCP]   discard NR PDU, integrity failed",
+              "line_number": 650,
+              "context": [
+                "     39 64 64 37 35 36 65 37 39 39 64 38 30 65 36 66",
+                "     </traceParent>",
+                "     <spanParent>65 66 37 62 32 65 39 34 35 37 35 37 39 38 38 37</spanParent>",
+                "     </traceInfo>",
+                "     </UL-DCCH-Message>",
+                " >>> [PDCP]   discard NR PDU, integrity failed",
+                "     [MAC]   securityModeComplete payload: 2a 08 18 4d 18 cd cc 8c 8e 4d 8d cc 0d 0c 18 98 ",
+                "     DLInfoTransfer (len=58):",
+                "     0000: 34 02 01 20 01 01 34 08 18 4d 18 cd cc 8c 8e 4d",
+                "     0010: 8d cc 0d 0c 18 98 4c 98 ce 59 19 0d cd 4d 99 4d",
+                "     0020: ce 4e 59 0e 0c 19 4d 99 84 0d d9 8c 58 4e 0c 4c"
+              ]
+            },
+            {
+              "error_line": "[PDCP]   discard NR PDU, integrity failed",
+              "line_number": 726,
+              "context": [
+                "     </supportedBandListNR>",
+                "     </rf-Parameters>",
+                "     </UE-NR-Capability>",
+                "     [PHY]   [RRC]UE NR Capability encoded, 10 bytes (86 bits)",
+                "     [NR_RRC]   UECapabilityInformation Encoded 506 bits (64 bytes)",
+                " >>> [PDCP]   discard NR PDU, integrity failed",
+                "     DLInfoTransfer (len=270):",
+                "     0000: 00 0d 04 04 72 e0 15 80 08 8b d7 63 80 83 0f 80",
+                "     0010: 05 80 08 8b d7 63 80 83 0f 80 03 e0 10 23 41 e0",
+                "     0020: 40 08 28 82 41 30 32 a0 10 3f ff e0 00 00 00 20",
+                "     0030: 00 06 e1 08 40 00 11 02 ca 00 00 90 40 00 04 0d"
+              ]
+            },
+            {
+              "error_line": "[PDCP]   discard NR PDU, integrity failed",
+              "line_number": 876,
+              "context": [
+                "     In UE,Trace ID=a4c722967040ba2c9dd756e799d80e6f",
+                "     In UE,child Span ID=ca0f31ca5d940fde",
+                "     [NR_PHY]   ============================================",
+                "     [NR_PHY]   Harq round stats for Downlink: 57/0/0/0",
+                "     [NR_PHY]   ============================================",
+                " >>> [PDCP]   discard NR PDU, integrity failed",
+                "     UE ULInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f",
+                "     UE ULInformationTransfer spanid=ca0f31ca5d940fde",
+                "     DLInfoTransfer (len=74):",
+                "     0000: 2a 82 af c0 59 88 62 f3 00 4f c0 0d 00 20 00 c5",
+                "     0010: c1 40 38 63 7e 22 41 44 0c 26 8c 66 e6 46 47 26"
+              ]
+            }
+          ],
+          "debug_values": {
+            "UE_IDs": [
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_PHY_UE as task 30"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_MAC_UE as task 31"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RLC_UE as task 32"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_PDCP_UE as task 33"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RRC_UE as task 34"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RRC_NRUE as task 35"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_NAS_UE as task 36"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RAL_UE as task 37"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RRC_NSA_UE as task 45"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_RRC_NSA_NRUE as task 46"
+              },
+              {
+                "value": "a",
+                "line": "[ITTI]   Starting itti queue: TASK_NAS_NRUE as task 47"
+              },
+              {
+                "value": "f",
+                "line": "[PHY]   prs_config configuration NOT found..!! Skipped configuring UE for the PRS reception"
+              },
+              {
+                "value": "0",
+                "line": "[PHY]   UE 0 Setting N_TA_offset to 800 samples (factor 2.000000, UL Freq 3619200000, N_RB 106, mu 1)"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] : Logical Channel UL-CCCH (SRB0), Generating RRCSetupRequest (bytes 56, gNB 0)"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] : Logical Channel UL-CCCH (SRB0), Generating RRCSetupRequest (bytes 56, gNB 0)"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.16]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][218.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   In nr_ue_get_rach: [UE 0][219.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34"
+              },
+              {
+                "value": "0",
+                "line": "[PHY]   PRACH [UE 0] in frame.slot 219.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 11, first_nonzero_root_idx 0"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   [UE 0][RAPROC] Got BI RAR subPDU 5 ms"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   [UE 0][RAPROC] Got RAPID RAR subPDU"
+              },
+              {
+                "value": "0",
+                "line": "[NR_MAC]   [UE 0][RAPROC][220.7] Found RAR with the intended RAPID 45"
+              },
+              {
+                "value": "0",
+                "line": "[MAC]   In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 220.17 and expiring in 226.5"
+              },
+              {
+                "value": "0",
+                "line": "[MAC]   [UE 0][RAPROC] Frame 224 : received contention resolution identity: 0x10a6f9170486 Terminating RA procedure"
+              },
+              {
+                "value": "0",
+                "line": "[MAC]   [UE 0][224.12][RAPROC] RA procedure succeeded. CB-RA: Contention Resolution is successful."
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0], CONFIG_SRB1 1 corresponding to gNB_index 0"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] State = NR_RRC_CONNECTED (gNB 0)"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0][RAPROC] Frame 224 : Logical Channel UL-DCCH (SRB1), Generating RRCSetupComplete (bytes92, gNB 0)"
+              },
+              {
+                "value": "0",
+                "line": "[NAS]   [UE 0] Received NAS_DOWNLINK_DATA_IND: UEid 0, length 42 , buffer 0x7fbf1401c2e0"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0"
+              },
+              {
+                "value": "d",
+                "line": "UE dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f"
+              },
+              {
+                "value": "d",
+                "line": "UE dlInformationTransfer  spanid=09ee9bbd3ee58d1b"
+              },
+              {
+                "value": "0",
+                "line": "[NAS]   [UE 0] Received NAS_DOWNLINK_DATA_IND: UEid 0, length 21 , buffer 0x7fbf140046d0"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0"
+              },
+              {
+                "value": "d",
+                "line": "UE dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f"
+              },
+              {
+                "value": "d",
+                "line": "UE dlInformationTransfer  spanid=c3f52f8497155fe0"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] Received securityModeCommand (gNB 0)"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] SFN/SF 0/0: Receiving from SRB1 (DL-DCCH), Processing securityModeCommand (eNB 0)"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] Security algorithm is set to nea0"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] Integrity protection algorithm is set to nia2"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] SFN/SF 0/0: Receiving from SRB1 (DL-DCCH), encoding securityModeComplete (gNB 0), rrc_TransactionIdentifier: 1"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] Received Capability Enquiry (gNB 0)"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] Frame 0: Receiving from SRB1 (DL-DCCH), Processing UECapabilityEnquiry (gNB 0)"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] Frame 0: Receiving from SRB1 (DL-DCCH), Processing RRCReconfiguration (gNB 0)"
+              },
+              {
+                "value": "0",
+                "line": "[NAS]   [UE 0] Received NAS_CONN_ESTABLI_CNF: errCode 1, length 71"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0"
+              },
+              {
+                "value": "0",
+                "line": "[NR_RRC]   [UE 0] Received NAS_UPLINK_DATA_REQ: UEid 0"
+              },
+              {
+                "value": "0",
+                "line": "[NAS]   [UE 0] Received NAS_DOWNLINK_DATA_IND: UEid 0, length 21 , buffer 0x7fbf1401ed00"
+              },
+              {
+                "value": "d",
+                "line": "UE dlInformationTransfer traceid=a4c722967040ba2c9dd756e799d80e6f"
+              },
+              {
+                "value": "d",
+                "line": "UE dlInformationTransfer  spanid=4cf41c9458b04cd9"
+              }
+            ],
+            "RNTI_values": [
+              {
+                "value": "8baf",
+                "line": "[NR_RRC]   [UE0][RAPROC] Frame 224 : Logical Channel DL-CCCH (SRB0), Received NR_RRCSetup RNTI 8baf"
+              },
+              {
+                "value": "0x8baf",
+                "line": "[RLC]   /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair2/LAYER2/nr_rlc/nr_rlc_oai_api.c:770:add_rlc_srb: added srb 1 to UE with RNTI 0x8baf"
+              },
+              {
+                "value": "8baf",
+                "line": "[NR_RRC]   [FRAME 00000][ UE][MOD 00][RNTI 8baf] Logical Channel UL-DCCH (SRB1), Generating RRCReconfigurationComplete (bytes 52, gNB_index 0)"
+              }
+            ]
+          },
+          "relevant_sections": []
+        },
+        "compiler_ground_truth_errors": [],
+        "cu_ip_address": "10.138.77.131",
+        "du_ip_address": "10.138.77.131",
+        "gnb_ip_address": "10.138.77.131",
+        "amf_ip_address": "192.168.70.132",
+        "core_network_machine_ip": "10.138.77.217",
+        "local_s_portc": "501",
+        "local_s_portd": "2152",
+        "remote_s_portc": "500",
+        "remote_s_portd": "2152",
+        "dnn": "oai",
+        "nssai_sst": "1",
+        "nssai_sd": "0xc",
+        "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+        "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+        "log_error_kind_raw": "runtime",
+        "log_error_kind": "runtime",
+        "build_log_mode": false,
+        "runtime_log_mode": true,
+        "other_log_mode": false,
+        "cmake_build_system_mode": false,
+        "dependency_advice_mode": false
+      },
+      "retrieval_method": "context_aware",
+      "ground_truth_errors": [],
+      "compiler_cluster_analysis": {},
+      "build_error_mode": false,
+      "narrow_compiler_phase2": false,
+      "log_error_kind": "runtime",
+      "top_ground_truth_clusters": [],
+      "coverage_stats": {
+        "total_compiler_errors_parsed": 0,
+        "ground_truth_with_function_name": 0,
+        "ground_truth_with_file_path": 0
+      }
+    },
+    "phase3_fixes": {
+      "error_text": "ERROR MESSAGE:\n\"[PDCP]   discard NR PDU, integrity failed\"\n\nContext:\nThis error indicates a critical integrity failure in the PDCP layer, which can prevent proper data processing and secure communication. Additionally, the log shows a \"Received PDU Session Establishment Reject\" message shortly after, indicating that the PDU session setup failed, likely due to this integrity failure. There is also a \"[HW]   Lost socket\" warning, which may indicate a hardware or transport layer issue compounding the problem.\n\nNo explicit stack trace or crash information is present, but the integrity failure at PDCP level combined with the PDU session establishment rejection represents a critical failure preventing normal system operation.",
+      "fix_suggestion": {
+        "suspected_functions": [
+          "rrc_gNB_generate_RRCReject",
+          "rrc_handle_RRCSetupRequest",
+          "dl_rrc_message_transfer",
+          "nr_rlc_srb_recv_sdu"
+        ],
+        "suspected_configs": [],
+        "reason": "The '[PDCP] discard NR PDU, integrity failed' error indicates that the PDCP layer is rejecting incoming PDUs due to failed integrity verification. This is often caused by incorrect or missing AS security activation, improper key derivation, or missing integrity protection configuration during the RRC setup and Security Mode Command procedures. The call graph and logs show that RRC setup failures are handled by rrc_gNB_generate_RRCReject, but incomplete or missing error handling paths in rrc_handle_RRCSetupRequest can cause segmentation faults or improper rejection, leading to UE state inconsistencies and subsequent PDCP integrity failures. Additionally, the DL RRC message transfer function (dl_rrc_message_transfer) must correctly handle UE context and F1 UE data mapping to avoid data misrouting. The missing else branches in identity handling or error paths can cause uninitialized pointers and crashes. The '[HW] Lost socket' warning may be a secondary symptom of transport layer issues but is not the root cause of the PDCP integrity failure.",
+        "config_fix": "",
+        "code_patches": [],
+        "config_patches": [],
+        "root_cause_analysis": "The PDCP integrity failure is caused by improper or missing AS security activation during the RRC setup procedure. The RRC setup request handling function lacks a complete else branch for unrecognized UE identity types, leading to uninitialized UE context pointers and potential segmentation faults. Without proper UE context initialization and rejection handling, the UE state becomes inconsistent, causing PDCP to discard packets due to integrity failures. The missing else branch in the UE identity handling and incomplete error handling paths in rrc_handle_RRCSetupRequest cause the system to fail gracefully. Additionally, the DL RRC message transfer function must ensure that UE context and F1 UE data mappings are consistent to avoid misrouted messages that can trigger integrity failures. The '[HW] Lost socket' warning is likely a secondary symptom and not the root cause.",
+        "investigation_steps": [
+          "Verify that rrc_handle_RRCSetupRequest properly initializes ue_context_p for all ue_Identity.present values, including adding a final else branch.",
+          "Check that rrc_gNB_generate_RRCReject is called on all error paths with a valid ue_context_p pointer to avoid segmentation faults.",
+          "Confirm that dl_rrc_message_transfer correctly finds UE context and F1 UE data mapping before processing messages.",
+          "Trace the AS security activation flow to ensure Security Mode Command is sent and integrity keys are derived correctly.",
+          "Validate network connectivity and SCTP association states to rule out transport layer issues causing '[HW] Lost socket' warnings.",
+          "Review UE capability and DRB configuration to ensure proper PDCP and RLC setup preventing integrity failures."
+        ],
+        "specification_context": "3GPP SPECIFICATION REFERENCE\n================================================================================\n\n**Section: Initial AS security activation (5.3.4) \u2013 Page 90**\nDescribes the Security Mode Command procedure critical for activating AS security upon RRC connection establishment.\nUE derives integrity keys (K keys) as per TS 33.501 and verifies integrity protection of SecurityModeCommand messages using the indicated integrityProtAlgorithm.\nIntegrity protection must be applied immediately to all subsequent messages, including SecurityModeComplete.\nFailure in integrity verification at this stage can cause PDCP integrity failures leading to PDU discard.\nRelevant for fixing \u201c[PDCP] discard NR PDU, integrity failed\u201d by ensuring correct key derivation and integrity algorithm configuration.\nSection reference: 5.3.4.2 and 5.3.4.3, Page 90.\n**Section: DRB and PDU Session Reconfiguration (5.3.5.6.5 and related notes) \u2013 Page 90**\nDetails the release and re-setup of DRBs (Data Radio Bearers) within the AS, which includes new PDCP and logical channel configurations.\nPDU session acts as anchor for associating released and re-setup DRBs.\nIncorrect or incomplete DRB reconfiguration can cause PDCP layer errors including integrity failures.\nEnsures proper synchronization and resource release to avoid session establishment rejection after integrity failure.\nSection reference: Notes in 5.3.4 and 5.3.5.6.5, Page 90.\n**Section: SDAP-Config and PDU Session QoS Mapping \u2013 Page 593 (Section 6.3.1)**\nDefines SDAP-Config parameters including defaultDRB, mappedQoS-FlowsToAdd/Release, and pdu-Session identity.\nProper SDAP configuration is essential for correct QoS flow mapping to DRBs, affecting PDU session establishment and integrity.\nMisconfiguration here can lead to PDU session establishment rejection and PDCP discard due to integrity failures.\nSection reference: 6.3.1, Page 593.\n**Additional Note: Hardware/Transport Layer Considerations**\nThe \u201c[HW] Lost socket\u201d warning suggests possible\n[Content truncated for display]",
+        "investigation_commands": [
+          {
+            "command": "ip link show",
+            "hint": "Verify the status of network interfaces to check for hardware or link issues causing socket loss"
+          },
+          {
+            "command": "ss -s | grep sctp",
+            "hint": "Check SCTP socket states and associations to identify transport layer problems affecting PDCP integrity"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test basic network connectivity to the AMF to rule out transport connectivity issues"
+          }
+        ]
+      },
+      "context_summary": {
+        "candidate_functions_count": 37,
+        "candidate_configs_count": 0,
+        "call_graph_entries": 7,
+        "pattern_matched": false
+      },
+      "phase3_llm": {
+        "max_output_tokens": 8000,
+        "json_mode": true,
+        "build_error_mode": false,
+        "finish_reason": "stop",
+        "parse_ok": true,
+        "attempts": [
+          {
+            "attempt": 1,
+            "finish_reason": "stop",
+            "chars": 8660
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 4,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ip link show",
+            "explanation": "Verify the status of network interfaces to check for hardware or link issues causing socket loss"
+          },
+          {
+            "command": "ss -s | grep sctp",
+            "explanation": "Check SCTP socket states and associations to identify transport layer problems affecting PDCP integrity"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test basic network connectivity to the AMF to rule out transport connectivity issues"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    }
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260530_140558.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

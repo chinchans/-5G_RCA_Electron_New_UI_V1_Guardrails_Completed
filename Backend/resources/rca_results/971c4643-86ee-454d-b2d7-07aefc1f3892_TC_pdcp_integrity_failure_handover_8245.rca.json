@@ -1,0 +1,416 @@
+{
+  "timestamp": "2025-10-10T14:08:14.508632",
+  "log_file": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\resources\\rca_logs\\971c4643-86ee-454d-b2d7-07aefc1f3892_TC_pdcp_integrity_failure_handover_8245.log",
+  "error_analysis": {
+    "identified_errors": {
+      "pdcp_failure": [
+        {
+          "line_number": 45,
+          "line": "frame = 351, slot = 8 : ERROR: PDCP integrity check failed for UE with rnti 7c45 during handover data forwarding",
+          "context": [
+            "",
+            "# PDCP security integrity issue during handover",
+            "frame = 351, slot = 5 : [PDCP] Starting PDCP data forwarding for UE with rnti 7c45",
+            "frame = 351, slot = 6 : Function: pdcp_data_req processing",
+            "frame = 351, slot = 7 : Function: pdcp_apply_integrity processing",
+            "frame = 351, slot = 8 : ERROR: PDCP integrity check failed for UE with rnti 7c45 during handover data forwarding",
+            "frame = 351, slot = 9 : Function: pdcp_apply_integrity returned error code -1",
+            "frame = 352, slot = 0 : [PDCP] Function: pdcp_data_forward_to_target processing",
+            "frame = 352, slot = 1 : WARNING: Data forwarding integrity protection failed, retrying with fallback configuration",
+            "frame = 352, slot = 2 : Function: pdcp_get_security_context processing",
+            "frame = 352, slot = 3 : ERROR: Invalid security parameters detected in PDCP security context"
+          ],
+          "pattern": "PDCP integrity check failed",
+          "severity": "high",
+          "layer": "PDCP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.8
+        },
+        {
+          "line_number": 51,
+          "line": "frame = 352, slot = 4 : [PDCP] PDCP security context verification failed for DRB 1",
+          "context": [
+            "frame = 351, slot = 9 : Function: pdcp_apply_integrity returned error code -1",
+            "frame = 352, slot = 0 : [PDCP] Function: pdcp_data_forward_to_target processing",
+            "frame = 352, slot = 1 : WARNING: Data forwarding integrity protection failed, retrying with fallback configuration",
+            "frame = 352, slot = 2 : Function: pdcp_get_security_context processing",
+            "frame = 352, slot = 3 : ERROR: Invalid security parameters detected in PDCP security context",
+            "frame = 352, slot = 4 : [PDCP] PDCP security context verification failed for DRB 1",
+            "frame = 352, slot = 5 : Function: pdcp_security_context_check returned error code -2",
+            "",
+            "# Handover failure occurs",
+            "frame = 352, slot = 6 : [RRC] Sending Handover Command to UE with rnti 7c45",
+            "frame = 352, slot = 8 : [X2AP] Error in handover data preparation"
+          ],
+          "pattern": "PDCP.*failed",
+          "severity": "high",
+          "layer": "PDCP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.8
+        },
+        {
+          "line_number": 82,
+          "line": "frame = 401, slot = 8 : ERROR: PDCP integrity check failed again for UE with rnti 7c45 during handover",
+          "context": [
+            "frame = 401, slot = 2 : [RRC] Generating Handover Command for UE with rnti 7c45",
+            "frame = 401, slot = 3 : Function: rrc_gNB_generate_HandoverCommand processing",
+            "frame = 401, slot = 5 : [PDCP] Starting PDCP data forwarding for UE with rnti 7c45",
+            "frame = 401, slot = 6 : Function: pdcp_data_req processing",
+            "frame = 401, slot = 7 : Function: pdcp_apply_integrity processing",
+            "frame = 401, slot = 8 : ERROR: PDCP integrity check failed again for UE with rnti 7c45 during handover",
+            "frame = 401, slot = 9 : [RRC] Aborting handover procedure for UE with rnti 7c45",
+            "frame = 402, slot = 0 : [NGAP] Sending Error Indication to AMF for UE with gNB_UE_NGAP_ID 5344",
+            "frame = 402, slot = 2 : [NGAP] Error cause: Radio Network Layer Failure",
+            "frame = 402, slot = 5 : [RRC] Initiating connection re-establishment for UE with rnti 7c45"
+          ],
+          "pattern": "PDCP integrity check failed",
+          "severity": "high",
+          "layer": "PDCP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.8
+        }
+      ],
+      "pdcp_integrity_failure": [
+        {
+          "line_number": 45,
+          "line": "frame = 351, slot = 8 : ERROR: PDCP integrity check failed for UE with rnti 7c45 during handover data forwarding",
+          "context": [
+            "",
+            "# PDCP security integrity issue during handover",
+            "frame = 351, slot = 5 : [PDCP] Starting PDCP data forwarding for UE with rnti 7c45",
+            "frame = 351, slot = 6 : Function: pdcp_data_req processing",
+            "frame = 351, slot = 7 : Function: pdcp_apply_integrity processing",
+            "frame = 351, slot = 8 : ERROR: PDCP integrity check failed for UE with rnti 7c45 during handover data forwarding",
+            "frame = 351, slot = 9 : Function: pdcp_apply_integrity returned error code -1",
+            "frame = 352, slot = 0 : [PDCP] Function: pdcp_data_forward_to_target processing",
+            "frame = 352, slot = 1 : WARNING: Data forwarding integrity protection failed, retrying with fallback configuration",
+            "frame = 352, slot = 2 : Function: pdcp_get_security_context processing",
+            "frame = 352, slot = 3 : ERROR: Invalid security parameters detected in PDCP security context"
+          ],
+          "pattern": "PDCP integrity check failed",
+          "severity": "critical",
+          "layer": "PDCP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.85
+        },
+        {
+          "line_number": 82,
+          "line": "frame = 401, slot = 8 : ERROR: PDCP integrity check failed again for UE with rnti 7c45 during handover",
+          "context": [
+            "frame = 401, slot = 2 : [RRC] Generating Handover Command for UE with rnti 7c45",
+            "frame = 401, slot = 3 : Function: rrc_gNB_generate_HandoverCommand processing",
+            "frame = 401, slot = 5 : [PDCP] Starting PDCP data forwarding for UE with rnti 7c45",
+            "frame = 401, slot = 6 : Function: pdcp_data_req processing",
+            "frame = 401, slot = 7 : Function: pdcp_apply_integrity processing",
+            "frame = 401, slot = 8 : ERROR: PDCP integrity check failed again for UE with rnti 7c45 during handover",
+            "frame = 401, slot = 9 : [RRC] Aborting handover procedure for UE with rnti 7c45",
+            "frame = 402, slot = 0 : [NGAP] Sending Error Indication to AMF for UE with gNB_UE_NGAP_ID 5344",
+            "frame = 402, slot = 2 : [NGAP] Error cause: Radio Network Layer Failure",
+            "frame = 402, slot = 5 : [RRC] Initiating connection re-establishment for UE with rnti 7c45"
+          ],
+          "pattern": "PDCP integrity check failed",
+          "severity": "critical",
+          "layer": "PDCP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.85
+        }
+      ],
+      "security_failure": [
+        {
+          "line_number": 45,
+          "line": "frame = 351, slot = 8 : ERROR: PDCP integrity check failed for UE with rnti 7c45 during handover data forwarding",
+          "context": [
+            "",
+            "# PDCP security integrity issue during handover",
+            "frame = 351, slot = 5 : [PDCP] Starting PDCP data forwarding for UE with rnti 7c45",
+            "frame = 351, slot = 6 : Function: pdcp_data_req processing",
+            "frame = 351, slot = 7 : Function: pdcp_apply_integrity processing",
+            "frame = 351, slot = 8 : ERROR: PDCP integrity check failed for UE with rnti 7c45 during handover data forwarding",
+            "frame = 351, slot = 9 : Function: pdcp_apply_integrity returned error code -1",
+            "frame = 352, slot = 0 : [PDCP] Function: pdcp_data_forward_to_target processing",
+            "frame = 352, slot = 1 : WARNING: Data forwarding integrity protection failed, retrying with fallback configuration",
+            "frame = 352, slot = 2 : Function: pdcp_get_security_context processing",
+            "frame = 352, slot = 3 : ERROR: Invalid security parameters detected in PDCP security context"
+          ],
+          "pattern": "Integrity check failed",
+          "severity": "critical",
+          "layer": "PDCP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.85
+        },
+        {
+          "line_number": 82,
+          "line": "frame = 401, slot = 8 : ERROR: PDCP integrity check failed again for UE with rnti 7c45 during handover",
+          "context": [
+            "frame = 401, slot = 2 : [RRC] Generating Handover Command for UE with rnti 7c45",
+            "frame = 401, slot = 3 : Function: rrc_gNB_generate_HandoverCommand processing",
+            "frame = 401, slot = 5 : [PDCP] Starting PDCP data forwarding for UE with rnti 7c45",
+            "frame = 401, slot = 6 : Function: pdcp_data_req processing",
+            "frame = 401, slot = 7 : Function: pdcp_apply_integrity processing",
+            "frame = 401, slot = 8 : ERROR: PDCP integrity check failed again for UE with rnti 7c45 during handover",
+            "frame = 401, slot = 9 : [RRC] Aborting handover procedure for UE with rnti 7c45",
+            "frame = 402, slot = 0 : [NGAP] Sending Error Indication to AMF for UE with gNB_UE_NGAP_ID 5344",
+            "frame = 402, slot = 2 : [NGAP] Error cause: Radio Network Layer Failure",
+            "frame = 402, slot = 5 : [RRC] Initiating connection re-establishment for UE with rnti 7c45"
+          ],
+          "pattern": "Integrity check failed",
+          "severity": "critical",
+          "layer": "PDCP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.85
+        }
+      ],
+      "error_return_-1": [
+        {
+          "line_number": 46,
+          "line": "frame = 351, slot = 9 : Function: pdcp_apply_integrity returned error code -1",
+          "context": [
+            "# PDCP security integrity issue during handover",
+            "frame = 351, slot = 5 : [PDCP] Starting PDCP data forwarding for UE with rnti 7c45",
+            "frame = 351, slot = 6 : Function: pdcp_data_req processing",
+            "frame = 351, slot = 7 : Function: pdcp_apply_integrity processing",
+            "frame = 351, slot = 8 : ERROR: PDCP integrity check failed for UE with rnti 7c45 during handover data forwarding",
+            "frame = 351, slot = 9 : Function: pdcp_apply_integrity returned error code -1",
+            "frame = 352, slot = 0 : [PDCP] Function: pdcp_data_forward_to_target processing",
+            "frame = 352, slot = 1 : WARNING: Data forwarding integrity protection failed, retrying with fallback configuration",
+            "frame = 352, slot = 2 : Function: pdcp_get_security_context processing",
+            "frame = 352, slot = 3 : ERROR: Invalid security parameters detected in PDCP security context",
+            "frame = 352, slot = 4 : [PDCP] PDCP security context verification failed for DRB 1"
+          ],
+          "pattern": "ERROR.*-1",
+          "severity": "medium",
+          "layer": "Common",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.6
+        }
+      ],
+      "x2ap_handover_failure": [
+        {
+          "line_number": 56,
+          "line": "frame = 352, slot = 8 : [X2AP] Error in handover data preparation",
+          "context": [
+            "frame = 352, slot = 4 : [PDCP] PDCP security context verification failed for DRB 1",
+            "frame = 352, slot = 5 : Function: pdcp_security_context_check returned error code -2",
+            "",
+            "# Handover failure occurs",
+            "frame = 352, slot = 6 : [RRC] Sending Handover Command to UE with rnti 7c45",
+            "frame = 352, slot = 8 : [X2AP] Error in handover data preparation",
+            "frame = 353, slot = 0 : [X2AP] Sending Handover Preparation Failure to target gNB",
+            "frame = 353, slot = 2 : [X2AP] Reason: PDCP Integrity Protection Failure",
+            "frame = 353, slot = 5 : [RRC] Handover cancelled for UE with rnti 7c45",
+            "frame = 353, slot = 7 : Function: rrc_gNB_handover_cancel processing",
+            "frame = 353, slot = 9 : [PDCP] Restoring PDCP entity for UE with rnti 7c45"
+          ],
+          "pattern": "X2AP.*error",
+          "severity": "high",
+          "layer": "X2AP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.8
+        },
+        {
+          "line_number": 57,
+          "line": "frame = 353, slot = 0 : [X2AP] Sending Handover Preparation Failure to target gNB",
+          "context": [
+            "frame = 352, slot = 5 : Function: pdcp_security_context_check returned error code -2",
+            "",
+            "# Handover failure occurs",
+            "frame = 352, slot = 6 : [RRC] Sending Handover Command to UE with rnti 7c45",
+            "frame = 352, slot = 8 : [X2AP] Error in handover data preparation",
+            "frame = 353, slot = 0 : [X2AP] Sending Handover Preparation Failure to target gNB",
+            "frame = 353, slot = 2 : [X2AP] Reason: PDCP Integrity Protection Failure",
+            "frame = 353, slot = 5 : [RRC] Handover cancelled for UE with rnti 7c45",
+            "frame = 353, slot = 7 : Function: rrc_gNB_handover_cancel processing",
+            "frame = 353, slot = 9 : [PDCP] Restoring PDCP entity for UE with rnti 7c45",
+            ""
+          ],
+          "pattern": "x2ap.*handover.*fail",
+          "severity": "high",
+          "layer": "X2AP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.8
+        },
+        {
+          "line_number": 58,
+          "line": "frame = 353, slot = 2 : [X2AP] Reason: PDCP Integrity Protection Failure",
+          "context": [
+            "",
+            "# Handover failure occurs",
+            "frame = 352, slot = 6 : [RRC] Sending Handover Command to UE with rnti 7c45",
+            "frame = 352, slot = 8 : [X2AP] Error in handover data preparation",
+            "frame = 353, slot = 0 : [X2AP] Sending Handover Preparation Failure to target gNB",
+            "frame = 353, slot = 2 : [X2AP] Reason: PDCP Integrity Protection Failure",
+            "frame = 353, slot = 5 : [RRC] Handover cancelled for UE with rnti 7c45",
+            "frame = 353, slot = 7 : Function: rrc_gNB_handover_cancel processing",
+            "frame = 353, slot = 9 : [PDCP] Restoring PDCP entity for UE with rnti 7c45",
+            "",
+            "# Recovery attempt"
+          ],
+          "pattern": "x2ap.*failure",
+          "severity": "high",
+          "layer": "X2AP",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.8
+        }
+      ],
+      "handover_failure": [
+        {
+          "line_number": 83,
+          "line": "frame = 401, slot = 9 : [RRC] Aborting handover procedure for UE with rnti 7c45",
+          "context": [
+            "frame = 401, slot = 3 : Function: rrc_gNB_generate_HandoverCommand processing",
+            "frame = 401, slot = 5 : [PDCP] Starting PDCP data forwarding for UE with rnti 7c45",
+            "frame = 401, slot = 6 : Function: pdcp_data_req processing",
+            "frame = 401, slot = 7 : Function: pdcp_apply_integrity processing",
+            "frame = 401, slot = 8 : ERROR: PDCP integrity check failed again for UE with rnti 7c45 during handover",
+            "frame = 401, slot = 9 : [RRC] Aborting handover procedure for UE with rnti 7c45",
+            "frame = 402, slot = 0 : [NGAP] Sending Error Indication to AMF for UE with gNB_UE_NGAP_ID 5344",
+            "frame = 402, slot = 2 : [NGAP] Error cause: Radio Network Layer Failure",
+            "frame = 402, slot = 5 : [RRC] Initiating connection re-establishment for UE with rnti 7c45"
+          ],
+          "pattern": "Aborting handover",
+          "severity": "high",
+          "layer": "RRC",
+          "timestamp": null,
+          "ue_id": null,
+          "confidence": 0.75
+        }
+      ]
+    },
+    "error_counts": {
+      "pdcp_failure": 3,
+      "pdcp_integrity_failure": 2,
+      "security_failure": 2,
+      "error_return_-1": 1,
+      "x2ap_handover_failure": 3,
+      "handover_failure": 1
+    },
+    "error_timestamps": {
+      "pdcp_failure": [],
+      "pdcp_integrity_failure": [],
+      "security_failure": [],
+      "error_return_-1": [],
+      "x2ap_handover_failure": [],
+      "handover_failure": []
+    },
+    "layer_counts": {
+      "PDCP": 7,
+      "Common": 1,
+      "X2AP": 3,
+      "RRC": 1
+    },
+    "severity_counts": {
+      "critical": 4,
+      "high": 7,
+      "medium": 1,
+      "low": 0
+    },
+    "meta": {
+      "file": "C:\\Users\\JayasviBattu\\Desktop\\RCA_Electron_fastapi_new\\Backend\\resources\\rca_logs\\971c4643-86ee-454d-b2d7-07aefc1f3892_TC_pdcp_integrity_failure_handover_8245.log",
+      "lines_analyzed": 87,
+      "protocol_filter": null,
+      "timestamp": "2025-10-10T14:08:12.428789"
+    }
+  },
+  "function_analysis": null,
+  "impact_analysis": null,
+  "kb_analysis": {
+    "issue_matches": {},
+    "function_insights": {},
+    "protocol_references": {
+      "PDCP": {
+        "spec_id": "38.323",
+        "title": "NR; Packet Data Convergence Protocol (PDCP) specification",
+        "url": "https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=3063",
+        "sections": {
+          "4.2.2": "PDCP entities",
+          "5.1.2": "PDCP entity for SRB",
+          "5.2.1": "PDCP Data PDU",
+          "5.2.2": "PDCP Control PDU",
+          "5.7": "Data transmission",
+          "5.8": "Data reception",
+          "5.9": "SN status transmission",
+          "5.10": "Integrity protection",
+          "5.11": "Ciphering",
+          "5.12": "PDCP re-establishment"
+        }
+      }
+    },
+    "fix_recommendations": [
+      "Review recent code changes in affected components",
+      "Add detailed logging around error location",
+      "Add unit tests to verify correct behavior",
+      "Check input parameters and error handling"
+    ],
+    "comprehensive_rca": {
+      "error_type": "pdcp_failure",
+      "summary": "Root Cause Analysis for pdcp_failure in PDCP layer\n\nSpecification Context:\nThis functionality is governed by 3GPP 38.323 - NR; Packet Data Convergence Protocol (PDCP) specification. \nRecommended Fixes:\n- Add detailed logging around error location\n- Check input parameters and error handling\n- Review recent code changes in affected components\n- Add unit tests to verify correct behavior\n\nImpact Assessment:\n- User Experience: medium impact\n- System Performance: medium impact\n- System Stability: medium impact\n- Cascade Effects: This issue may affect the following layers:\n  * RRC: Issues in PDCP can propagate to RRC layer, affecting its functionality\n  * NGAP: Issues in PDCP can propagate to NGAP layer, affecting its functionality\n  * F1AP: Issues in PDCP can propagate to F1AP layer, affecting its functionality\n",
+      "historical_issues": [],
+      "fix_recommendations": [
+        "Add detailed logging around error location",
+        "Check input parameters and error handling",
+        "Review recent code changes in affected components",
+        "Add unit tests to verify correct behavior"
+      ],
+      "impact_assessment": {
+        "user_experience": "medium",
+        "system_performance": "medium",
+        "stability": "medium",
+        "cascade_effects": [
+          {
+            "layer": "RRC",
+            "impact": "affected",
+            "description": "Issues in PDCP can propagate to RRC layer, affecting its functionality"
+          },
+          {
+            "layer": "NGAP",
+            "impact": "affected",
+            "description": "Issues in PDCP can propagate to NGAP layer, affecting its functionality"
+          },
+          {
+            "layer": "F1AP",
+            "impact": "affected",
+            "description": "Issues in PDCP can propagate to F1AP layer, affecting its functionality"
+          }
+        ]
+      }
+    }
+  },
+  "ai_analysis": {
+    "root_cause": "pdcp_failure detected in PDCP layer with high severity. This indicates an issue in the PDCP layer functionality.",
+    "suggested_fixes": [
+      "1. Review implementation of affected functions",
+      "2. Add debug logging around error points",
+      "3. Check for recent changes in affected components"
+    ],
+    "specifications": [
+      "3GPP specifications related to PDCP layer"
+    ],
+    "function_analysis": [
+      "Review implementation of functions in error context",
+      "Check error handling in related functions"
+    ]
+  },
+  "meta": {
+    "offline_mode": true,
+    "oai_repo_dir": "openairinterface5g",
+    "components_available": {
+      "error_analyzer": true,
+      "impact_analyzer": false,
+      "function_graph": false,
+      "kb_connector": true,
+      "clang_analyzer": true,
+      "openai_client": false
+    }
+  }
+}

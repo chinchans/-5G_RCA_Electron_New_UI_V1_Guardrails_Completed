@@ -1,0 +1,46 @@
+{
+  "validated": true,
+  "pipeline": [
+    "input_guardrails",
+    "extraction",
+    "dataset_files_on_disk",
+    "schema_validation",
+    "hierarchy_validation",
+    "source_traceability_validation",
+    "save_dataset",
+    "ready_for_test_script_generator"
+  ],
+  "output_guardrails": {
+    "passed": true,
+    "blocked": false,
+    "schema_validation": {
+      "step": "schema_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "hierarchy_validation": {
+      "step": "hierarchy_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "source_traceability_validation": {
+      "step": "source_traceability_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": [
+        "Section title not found near start of extracted section text"
+      ]
+    }
+  },
+  "metadata": {
+    "source_file_id": "23dc64a8-478a-4844-9e69-3a381290f0ce.docx",
+    "source_document_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/23dc64a8-478a-4844-9e69-3a381290f0ce.docx",
+    "section": "Performance tests",
+    "subsection": "Downlink peak throughput",
+    "safe_subsection": "Downlink peak throughput",
+    "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/extract/datasets/Downlink peak throughput"
+  },
+  "ready_for_test_script_generator": true
+}

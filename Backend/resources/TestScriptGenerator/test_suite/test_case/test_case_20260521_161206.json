@@ -1,0 +1,379 @@
+[
+    {
+        "testCaseId": "TC_EN-DC_001_POS_MN_Initiated_SN_Release_Success",
+        "title": "Positive Test: MN Initiated Secondary Node Release Procedure Successful Completion",
+        "description": "Verify that the MN can successfully initiate the SN Release procedure and the SN confirms the release, followed by proper UE context release and data forwarding.",
+        "preconditions": [
+            "MN and SN are connected and UE is in EN-DC mode",
+            "SN context is established and data forwarding addresses are configured if applicable"
+        ],
+        "testSteps": [
+            "Access the 5G management interface and authenticate with appropriate credentials",
+            "From MN, send SgNB Release Request message to SN with data forwarding addresses if applicable",
+            "Verify SN receives request and sends SgNB Release Request Acknowledge confirming release",
+            "MN sends RRCConnectionReconfiguration message to UE indicating SCG configuration release",
+            "Verify UE applies SCG configuration release or performs reconfiguration failure procedure if unable",
+            "Verify SN sends SN Status Transfer message for RLC AM bearers",
+            "Verify SN starts data forwarding to MN",
+            "Verify SN sends Secondary RAT Data Usage Report message with correct data volume info",
+            "If applicable, verify path update procedure initiation",
+            "Send UE Context Release message from MN; confirm SN releases radio and C-plane resources",
+            "Verify any ongoing data forwarding continues after resource release"
+        ],
+        "expectedResults": [
+            "SgNB Release Request Acknowledge message is received confirming SN Release",
+            "UE releases SCG configuration successfully or handles failure as per spec",
+            "SN Status Transfer message is sent for applicable bearers",
+            "Data forwarding starts without interruption",
+            "Secondary RAT Data Usage Report message accurately reflects data volumes",
+            "Path update procedure is initiated if applicable",
+            "UE Context Release triggers resource release at SN",
+            "No service gaps or errors during procedure"
+        ],
+        "commandsUsed": [
+            "Access the 5G management interface through the provided connection method and authenticate with appropriate credentials"
+        ],
+        "verificationMethods": [
+            "Monitor signalling messages between MN and SN",
+            "Check UE state and response to RRCConnectionReconfiguration",
+            "Inspect SN logs for SN Status Transfer and data forwarding start",
+            "Validate Secondary RAT Data Usage Report contents",
+            "Verify resource release confirmation on SN"
+        ],
+        "category": "Positive Testing"
+    },
+    {
+        "testCaseId": "TC_EN-DC_002_NEG_SN_Rejects_MN_Initiated_SN_Release",
+        "title": "Negative Test: SN Rejects MN Initiated SN Release Request Due to SN Change Procedure",
+        "description": "Validate that SN rejects the MN initiated SN Release request when a SN change procedure is triggered by SN, and MN handles the rejection properly.",
+        "preconditions": [
+            "MN and SN connected with UE in EN-DC mode",
+            "SN change procedure is triggered at SN during MN initiated SN Release"
+        ],
+        "testSteps": [
+            "Access 5G management interface and authenticate",
+            "MN sends SgNB Release Request message to SN",
+            "SN rejects the SN Release request due to ongoing SN change procedure",
+            "MN receives rejection and does not proceed with RRCConnectionReconfiguration message to UE",
+            "Verify MN cancels any data forwarding address setup",
+            "Verify MN handles rejection gracefully without service disruption"
+        ],
+        "expectedResults": [
+            "SN sends rejection response to MN",
+            "MN receives rejection and cancels SN Release procedure",
+            "No RRCConnectionReconfiguration message is sent to UE for SCG release",
+            "No unintended service interruption or failure occurs"
+        ],
+        "commandsUsed": [
+            "Access the 5G management interface through the provided connection method and authenticate with appropriate credentials"
+        ],
+        "verificationMethods": [
+            "Capture signalling to verify rejection message from SN",
+            "Monitor MN handling of rejection and cancellation of forwarding addresses",
+            "Confirm no RRC signalling towards UE for SCG release"
+        ],
+        "category": "Negative Testing"
+    },
+    {
+        "testCaseId": "TC_EN-DC_003_EDGE_MN_Initiated_SN_Release_With_Partial_UE_Compliance",
+        "title": "Edge Case: UE Unable to Fully Comply with RRCConnectionReconfiguration Message During MN Initiated SN Release",
+        "description": "Test behavior when UE cannot fully comply with the SCG release configuration included in RRCConnectionReconfiguration message during MN initiated SN Release.",
+        "preconditions": [
+            "MN and SN connected with UE active",
+            "UE has limited capability to comply with SCG release configuration"
+        ],
+        "testSteps": [
+            "MN sends SgNB Release Request to SN",
+            "SN confirms SN Release",
+            "MN sends RRCConnectionReconfiguration message to UE indicating SCG configuration release",
+            "UE fails to comply with part or all of the configuration",
+            "UE triggers reconfiguration failure procedure",
+            "Verify MN and SN handle the failure procedure appropriately"
+        ],
+        "expectedResults": [
+            "UE initiates reconfiguration failure procedure as per spec",
+            "MN and SN maintain stable state without unintended resource release",
+            "Data forwarding and connectivity remain intact or recovery procedures are triggered"
+        ],
+        "commandsUsed": [
+            "Access the 5G management interface through the provided connection method and authenticate with appropriate credentials"
+        ],
+        "verificationMethods": [
+            "Monitor UE response to RRCConnectionReconfiguration",
+            "Check signalling messages for reconfiguration failure procedure",
+            "Verify system stability and data forwarding continuity"
+        ],
+        "category": "Edge Cases"
+    },
+    {
+        "testCaseId": "TC_EN-DC_004_POS_SN_Initiated_SN_Release_Success",
+        "title": "Positive Test: SN Initiated Secondary Node Release Procedure Successful Completion",
+        "description": "Verify that the SN can successfully initiate the SN Release procedure, MN confirms release, and proper UE context release and data forwarding occur.",
+        "preconditions": [
+            "SN and MN connected with UE context in EN-DC mode",
+            "Data forwarding addresses are configured if applicable"
+        ],
+        "testSteps": [
+            "SN sends SgNB Release Required message to MN, optionally with inter-node delta configuration message",
+            "MN responds with SgNB Release Confirm message including data forwarding addresses if applicable",
+            "SN starts data forwarding and stops user data delivery to UE",
+            "MN sends RRCConnectionReconfiguration message to UE to release entire SCG configuration",
+            "UE applies configuration or triggers reconfiguration failure procedure if unable",
+            "SN sends SN Status Transfer message for RLC AM bearers",
+            "SN starts data forwarding to MN",
+            "SN sends Secondary RAT Data Usage Report with data volume information",
+            "If applicable, path update procedure is initiated",
+            "MN sends UE Context Release message; SN releases radio and C-plane resources",
+            "Verify any ongoing data forwarding continues after resource release"
+        ],
+        "expectedResults": [
+            "MN acknowledges SN Release with SgNB Release Confirm",
+            "UE releases SCG configuration or handles failure properly",
+            "SN Status Transfer message is sent correctly",
+            "Data forwarding starts and continues seamlessly",
+            "Secondary RAT Data Usage Report reflects accurate data volumes",
+            "Path update procedure is initiated if applicable",
+            "SN releases UE context resources without interrupting ongoing data forwarding"
+        ],
+        "commandsUsed": [
+            "Access the 5G management interface through the provided connection method and authenticate with appropriate credentials"
+        ],
+        "verificationMethods": [
+            "Monitor signalling messages between SN and MN",
+            "Verify UE state changes and reconfiguration response",
+            "Check SN logs for SN Status Transfer and data forwarding",
+            "Validate Secondary RAT Data Usage Report contents",
+            "Confirm resource release on SN after UE Context Release"
+        ],
+        "category": "Positive Testing"
+    },
+    {
+        "testCaseId": "TC_EN-DC_005_NEG_SN_Initiated_SN_Release_With_Rejection_Scenario",
+        "title": "Negative Test: MN Rejects SN Initiated SN Release Due to Internal Conditions",
+        "description": "Test that MN can reject SN Initiated SN Release request if internal conditions such as ongoing SN change procedure prevent release.",
+        "preconditions": [
+            "SN initiates SN Release procedure",
+            "MN has ongoing SN change procedure or similar preventing release"
+        ],
+        "testSteps": [
+            "SN sends SgNB Release Required message to MN",
+            "MN rejects the release request due to ongoing SN change procedure",
+            "Verify SN handles rejection properly and does not proceed with release",
+            "Ensure no RRCConnectionReconfiguration message is sent to UE",
+            "Confirm user data delivery continues uninterrupted"
+        ],
+        "expectedResults": [
+            "MN sends rejection response to SN",
+            "SN cancels or defers SN Release procedure",
+            "No SCG release signalling towards UE",
+            "No disruption to user data or ongoing sessions"
+        ],
+        "commandsUsed": [
+            "Access the 5G management interface through the provided connection method and authenticate with appropriate credentials"
+        ],
+        "verificationMethods": [
+            "Monitor signalling for rejection from MN to SN",
+            "Verify SN does not proceed with release",
+            "Confirm UE continues data reception without SCG release"
+        ],
+        "category": "Negative Testing"
+    },
+    {
+        "testCaseId": "TC_EN-DC_006_EDGE_SN_Initiated_SN_Release_UE_Partial_Compliance",
+        "title": "Edge Case: UE Fails to Fully Comply with RRCConnectionReconfiguration in SN Initiated SN Release",
+        "description": "Verify system behavior when UE cannot fully comply with SCG release configuration in RRCConnectionReconfiguration message during SN initiated SN Release.",
+        "preconditions": [
+            "SN initiates SN Release",
+            "UE has limited capability to comply with SCG release"
+        ],
+        "testSteps": [
+            "SN sends SgNB Release Required message to MN",
+            "MN sends RRCConnectionReconfiguration message to UE indicating SCG release",
+            "UE fails to comply fully and triggers reconfiguration failure procedure",
+            "Verify MN and SN handle failure procedure appropriately",
+            "Monitor data forwarding and resource management"
+        ],
+        "expectedResults": [
+            "UE initiates reconfiguration failure as per specification",
+            "MN and SN maintain stable state without premature resource release",
+            "Data forwarding remains uninterrupted or recovery procedures are triggered"
+        ],
+        "commandsUsed": [
+            "Access the 5G management interface through the provided connection method and authenticate with appropriate credentials"
+        ],
+        "verificationMethods": [
+            "Monitor UE signalling for reconfiguration failure",
+            "Check MN and SN logs for failure handling",
+            "Verify data forwarding continuity"
+        ],
+        "category": "Edge Cases"
+    },
+    {
+        "testCaseId": "TC_EN-DC_007_PERF_SN_Release_Procedure_Under_High_Load",
+        "title": "Performance Test: SN Release Procedure Execution Under High Load Conditions",
+        "description": "Evaluate the performance and timing of MN and SN initiated SN Release procedures when multiple UEs undergo release concurrently under high load.",
+        "preconditions": [
+            "Network supports EN-DC with multiple active UEs",
+            "High traffic load and multiple SN Release procedures triggered simultaneously"
+        ],
+        "testSteps": [
+            "Simultaneously initiate MN initiated SN Release procedures for multiple UEs",
+            "Simultaneously initiate SN initiated SN Release procedures for multiple UEs",
+            "Monitor signalling flow timings for SgNB Release Request/Required and Confirm/Acknowledge messages",
+            "Measure latency for RRCConnectionReconfiguration and UE Context Release processing",
+            "Observe data forwarding coordination and Secondary RAT Data Usage Report message timing",
+            "Assess system resource utilization during procedure execution"
+        ],
+        "expectedResults": [
+            "All SN Release procedures complete successfully within acceptable latency limits",
+            "No message loss or misordering occurs",
+            "Data forwarding coordination minimizes service gaps",
+            "System resources remain within operational thresholds"
+        ],
+        "commandsUsed": [
+            "Access the 5G management interface through the provided connection method and authenticate with appropriate credentials"
+        ],
+        "verificationMethods": [
+            "Capture and analyze signalling traces for timing and order",
+            "Monitor system CPU, memory, and network usage",
+            "Verify successful completion of all release procedures"
+        ],
+        "category": "Performance Testing"
+    },
+    {
+        "testCaseId": "TC_EN-DC_008_SEC_SN_Release_Authentication_Authorization",
+        "title": "Security Test: Authentication and Authorization Checks During SN Release Procedure",
+        "description": "Verify that only authenticated and authorized MN and SN entities can initiate or confirm SN Release procedures.",
+        "preconditions": [
+            "MN and SN entities have authentication credentials configured",
+            "Security policies enforce authorization for SN Release operations"
+        ],
+        "testSteps": [
+            "Attempt to initiate SN Release procedure from an unauthenticated MN entity",
+            "Attempt to confirm SN Release from unauthorized SN entity",
+            "Attempt SN Release procedure initiation with invalid credentials or corrupted messages",
+            "Validate that system rejects unauthorized requests",
+            "Verify that logs record authentication/authorization failures",
+            "Confirm no SCG release or UE context release occurs from unauthorized requests"
+        ],
+        "expectedResults": [
+            "Unauthorized SN Release initiation or confirmation requests are rejected",
+            "System logs authentication and authorization failures",
+            "No unintended resource release or signalling towards UE occurs",
+            "Security policies enforced consistently"
+        ],
+        "commandsUsed": [
+            "Access the 5G management interface through the provided connection method and authenticate with authorized and unauthorized credentials as needed"
+        ],
+        "verificationMethods": [
+            "Review rejection messages and error codes",
+            "Inspect system security logs for recorded events",
+            "Monitor system state to confirm no unauthorized release"
+        ],
+        "category": "Security Testing"
+    },
+    {
+        "testCaseId": "TC_EN-DC_009_INT_MN_SN_Coordination_SN_Release_With_CPC_Cancellation",
+        "title": "Integration Test: MN and SN Coordination During SN Release with CPA and Inter-SN CPC Cancellation",
+        "description": "Test the interaction between MN and SN when SN Release is performed with CPA or inter-SN CPC configured, ensuring proper cancellation of CPAC and CPC configurations.",
+        "preconditions": [
+            "Network configured with CPA and/or inter-SN CPC features",
+            "MN and SN have prepared PSCells and CPAC configurations"
+        ],
+        "testSteps": [
+            "MN initiates SN Release procedure by sending SgNB Release Request",
+            "SN confirms with SgNB Release Request Acknowledge",
+            "MN cancels all CPC configurations with target candidate SN(s) upon reception",
+            "MN cancels all CPAC configurations in candidate SN if applicable",
+            "For SN initiated inter-SN CPC, MN triggers Conditional PSCell Change Cancel procedure towards source SN",
+            "Verify proper signalling exchange for cancellation procedures",
+            "Verify that prepared PSCells at candidate SN are cancelled",
+            "Verify UE context release at SN and data forwarding coordination"
+        ],
+        "expectedResults": [
+            "MN correctly cancels CPC and CPAC configurations",
+            "Conditional PSCell Change Cancel procedure triggered as required",
+            "No residual prepared PSCells remain at candidate SN",
+            "SN Release completes successfully with proper resource release",
+            "No service disruption during cancellation"
+        ],
+        "commandsUsed": [
+            "Access the 5G management interface through the provided connection method and authenticate with appropriate credentials"
+        ],
+        "verificationMethods": [
+            "Monitor signalling messages for CPC and CPAC cancellations",
+            "Inspect SN and MN logs for configuration changes",
+            "Validate UE context release and data forwarding status"
+        ],
+        "category": "Integration Testing"
+    },
+    {
+        "testCaseId": "TC_EN-DC_010_USAB_SN_Release_Procedure_User_Experience_Clarity",
+        "title": "Usability Test: Clarity and Simplicity of SN Release Procedure Signalling and Error Handling",
+        "description": "Evaluate the clarity and user experience of SN Release procedure signalling flows and error indications from the perspective of network operators and UE behavior.",
+        "preconditions": [
+            "Test environment with SN and MN supporting SN Release",
+            "Access to signalling logs and UE debug information"
+        ],
+        "testSteps": [
+            "Simulate MN initiated SN Release with successful completion",
+            "Simulate SN initiated SN Release with successful completion",
+            "Trigger rejection scenarios from SN and MN respectively",
+            "Cause UE to perform reconfiguration failure procedure",
+            "Review signalling messages and error codes for clarity",
+            "Assess logs and interfaces used by network operators for troubleshooting",
+            "Gather UE debug info and user impact reports",
+            "Evaluate documentation clarity and operator feedback"
+        ],
+        "expectedResults": [
+            "Signalling messages and error indications are clear and unambiguous",
+            "Operators can easily identify procedure status and failure causes",
+            "UE behavior aligns with specification and provides understandable failure procedures",
+            "Overall procedure is simple to monitor and troubleshoot"
+        ],
+        "commandsUsed": [
+            "Access the 5G management interface through the provided connection method and authenticate",
+            "Use monitoring and logging interfaces to capture signalling and error information"
+        ],
+        "verificationMethods": [
+            "Review signalling message content and error codes",
+            "Analyze operator interface usability",
+            "Collect UE debug logs and user reports",
+            "Conduct operator feedback sessions"
+        ],
+        "category": "Usability Testing"
+    },
+    {
+        "testCaseId": "TC_EN-DC_011_COMP_Version_Compatibility_SN_Release_Procedure",
+        "title": "Compatibility Test: SN Release Procedure Across Different EN-DC Version Implementations",
+        "description": "Validate that SN Release procedures initiated by MN or SN operate correctly across different EN-DC protocol versions and implementations.",
+        "preconditions": [
+            "Test environment with MN and SN using different EN-DC versions (e.g., release 15, 16, 17)",
+            "UE is capable of handling respective versions"
+        ],
+        "testSteps": [
+            "Perform MN initiated SN Release with MN and SN on different EN-DC versions",
+            "Perform SN initiated SN Release with MN and SN on different EN-DC versions",
+            "Verify that signalling messages are correctly interpreted and accepted",
+            "Ensure UE configuration release and reconfiguration failure procedures execute correctly",
+            "Check for any version-related incompatibilities or errors",
+            "Test feature-specific scenarios such as CPA and inter-SN CPC cancellation across versions"
+        ],
+        "expectedResults": [
+            "SN Release procedures complete successfully regardless of version differences",
+            "No protocol errors or message rejections due to version incompatibility",
+            "UE behavior is consistent and compliant with respective versions",
+            "CPA and CPC related features operate correctly across versions"
+        ],
+        "commandsUsed": [
+            "Access the 5G management interface through the provided connection method and authenticate",
+            "Verify version information on MN and SN nodes"
+        ],
+        "verificationMethods": [
+            "Capture signalling traces and analyze protocol compliance",
+            "Inspect UE logs for error messages",
+            "Compare behaviour across different version setups"
+        ],
+        "category": "Compatibility Testing"
+    }
+]

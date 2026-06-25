@@ -1,0 +1,13 @@
+Test Setup and Methodology
+
+
+Figure 9-1 Illustration of test setup for RIC enabled use case E2E testing
+The purpose of these tests is to validate the O-RAN system’s E2E performance for all the various RIC-enabled use cases in different network deployment scenarios [36-38].   To achieve this, multiple sets of test configuration parameters are defined for system level, cell level and UE level configurations.  In keeping with the spirit of the end-to-end test focus on the O-RAN system as SUT, the detailed ORAN protocol conformance on the various O-RAN internal interfaces as specified in [36-38] will not be verified, and instead, system-level performance according to the objectives of the use case is the primary test focus.     
+There are no passing criteria defined for these performance-focused tests.  This is due to the diversity of vendor-specific RRM and MAC layer scheduler implementations in the O-RAN system which also depend on specific network deployment scenarios, making it difficult to specify minimum performance requirements.  
+The performance of the system with Non-RT RIC and Near-RT optimisations shall be benchmarked through analysis of KPI measurement results.  The performance gain with Non-RT RIC and Near-RT optimisation is evaluated by comparing the test result with RIC optimisation enabled versus that with it disabled.  
+
+
+==================================================
+RECURSIVE EXTRACTION RESULTS
+==================================================
+

@@ -1,0 +1,114 @@
+{
+  "validated": true,
+  "pipeline": [
+    "input_guardrails",
+    "extraction",
+    "dataset_files_on_disk",
+    "schema_validation",
+    "hierarchy_validation",
+    "source_traceability_validation",
+    "nli_groundedness_validation",
+    "save_dataset",
+    "ready_for_test_script_generator"
+  ],
+  "output_guardrails": {
+    "passed": true,
+    "blocked": false,
+    "schema_validation": {
+      "step": "schema_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "hierarchy_validation": {
+      "step": "hierarchy_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "source_traceability_validation": {
+      "step": "source_traceability_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": [
+        "Section title not found near start of extracted section text"
+      ]
+    },
+    "nli_groundedness_validation": {
+      "step": "nli_groundedness_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": [
+        "NLI neutral (0.99) for O-RAN source: ==================================================",
+        "NLI neutral (0.99) for clause '10.5.1': The Secondary Node Change procedure is initiated either by MN or SN and used to transfer a UE context from a source S...",
+        "NLI neutral (0.99) for clause '10.5.1': In case of inter-SN CPC, the Conditional Secondary Node Change procedure initiated either by the MN or SN is also use...",
+        "NLI neutral (0.99) for clause '10.5.1': NOTE 1: Inter-RAT SN change procedure with single RRC reconfiguration is not supported in this version of the protoco...",
+        "NLI neutral (0.99) for clause '10.5.1': no transition from EN-DC to DC).",
+        "NLI neutral (0.99) for clause '10.5.1': The Secondary Node Change procedure always involves signalling over MCG SRB towards the UE.",
+        "NLI neutral (0.99) for clause '10.5.1': Figure 10.5.1-1: SN Change \u2013 MN initiated",
+        "NLI neutral (0.99) for clause '10.5.1': Figure 10.5.1-1 shows an example signalling flow for the MN initiated Secondary Node Change:",
+        "NLI neutral (0.99) for clause '10.5.1': The MN initiates the SN change by requesting the target SN to allocate resources for the UE by means of the SgNB Addi...",
+        "NLI neutral (0.99) for clause '10.5.1': The MN may include measurement results related to the target SN.",
+        "NLI neutral (1.00) for clause '10.5.1': If forwarding is needed, the target SN provides forwarding addresses to the MN.",
+        "NLI neutral (0.99) for clause '10.5.1': The target SN includes the indication of the full or delta RRC configuration.",
+        "NLI neutral (0.99) for clause '10.5.1': NOTE 2: The MN may trigger the MN-initiated SN Modification procedure (to the source SN) to retrieve the current SCG...",
+        "NLI neutral (0.99) for clause '10.5.1': NOTE 2a: In case the target SN includes the indication of the full RRC configuration, the MN performs release of the...",
+        "NLI neutral (0.99) for clause '10.5.1': If the allocation of target SN resources was successful, the MN initiates the release of the source SN resources incl...",
+        "NLI neutral (0.99) for clause '10.5.1': The Source SN may reject the release.",
+        "NLI neutral (1.00) for clause '10.5.1': If data forwarding is needed the MN provides data forwarding addresses to the source SN.",
+        "NLI neutral (1.00) for clause '10.5.1': If direct data forwarding is used for SN terminated bearers, the MN provides data forwarding addresses as received fr...",
+        "NLI neutral (0.99) for clause '10.5.1': Reception of the SgNB Release Request message triggers the source SN to stop providing user data to the UE and, if ap...",
+        "NLI neutral (0.99) for clause '10.5.1': The MN triggers the UE to apply the new configuration.",
+        "NLI neutral (0.99) for clause '10.5.1': The MN indicates to the UE the new configuration in the RRCConnectionReconfiguration message including the NR RRC con..."
+      ],
+      "details": {
+        "available": true,
+        "pairs_checked": 21,
+        "passed": true,
+        "contradictions": [],
+        "warnings": [
+          "NLI neutral (0.99) for O-RAN source: ==================================================",
+          "NLI neutral (0.99) for clause '10.5.1': The Secondary Node Change procedure is initiated either by MN or SN and used to transfer a UE context from a source S...",
+          "NLI neutral (0.99) for clause '10.5.1': In case of inter-SN CPC, the Conditional Secondary Node Change procedure initiated either by the MN or SN is also use...",
+          "NLI neutral (0.99) for clause '10.5.1': NOTE 1: Inter-RAT SN change procedure with single RRC reconfiguration is not supported in this version of the protoco...",
+          "NLI neutral (0.99) for clause '10.5.1': no transition from EN-DC to DC).",
+          "NLI neutral (0.99) for clause '10.5.1': The Secondary Node Change procedure always involves signalling over MCG SRB towards the UE.",
+          "NLI neutral (0.99) for clause '10.5.1': Figure 10.5.1-1: SN Change \u2013 MN initiated",
+          "NLI neutral (0.99) for clause '10.5.1': Figure 10.5.1-1 shows an example signalling flow for the MN initiated Secondary Node Change:",
+          "NLI neutral (0.99) for clause '10.5.1': The MN initiates the SN change by requesting the target SN to allocate resources for the UE by means of the SgNB Addi...",
+          "NLI neutral (0.99) for clause '10.5.1': The MN may include measurement results related to the target SN.",
+          "NLI neutral (1.00) for clause '10.5.1': If forwarding is needed, the target SN provides forwarding addresses to the MN.",
+          "NLI neutral (0.99) for clause '10.5.1': The target SN includes the indication of the full or delta RRC configuration.",
+          "NLI neutral (0.99) for clause '10.5.1': NOTE 2: The MN may trigger the MN-initiated SN Modification procedure (to the source SN) to retrieve the current SCG...",
+          "NLI neutral (0.99) for clause '10.5.1': NOTE 2a: In case the target SN includes the indication of the full RRC configuration, the MN performs release of the...",
+          "NLI neutral (0.99) for clause '10.5.1': If the allocation of target SN resources was successful, the MN initiates the release of the source SN resources incl...",
+          "NLI neutral (0.99) for clause '10.5.1': The Source SN may reject the release.",
+          "NLI neutral (1.00) for clause '10.5.1': If data forwarding is needed the MN provides data forwarding addresses to the source SN.",
+          "NLI neutral (1.00) for clause '10.5.1': If direct data forwarding is used for SN terminated bearers, the MN provides data forwarding addresses as received fr...",
+          "NLI neutral (0.99) for clause '10.5.1': Reception of the SgNB Release Request message triggers the source SN to stop providing user data to the UE and, if ap...",
+          "NLI neutral (0.99) for clause '10.5.1': The MN triggers the UE to apply the new configuration.",
+          "NLI neutral (0.99) for clause '10.5.1': The MN indicates to the UE the new configuration in the RRCConnectionReconfiguration message including the NR RRC con..."
+        ],
+        "errors": [],
+        "load_error": null,
+        "metadata": {
+          "model": "cross-encoder/nli-deberta-v3-small",
+          "contradiction_threshold": 0.65,
+          "strict_mode": false,
+          "oran_pairs_checked": 1,
+          "clause_pairs_checked": 20,
+          "oran_source_used": true
+        }
+      }
+    }
+  },
+  "metadata": {
+    "source_file_id": "cd51abc6-0ab2-4dcd-9d65-8d1c8c2a91cd.docx",
+    "source_document_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/cd51abc6-0ab2-4dcd-9d65-8d1c8c2a91cd.docx",
+    "section": "Functional tests",
+    "subsection": "Inter-O-CU mobility",
+    "safe_subsection": "Inter-O-CU mobility",
+    "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/extract/datasets/Inter-O-CU mobility"
+  },
+  "ready_for_test_script_generator": true
+}

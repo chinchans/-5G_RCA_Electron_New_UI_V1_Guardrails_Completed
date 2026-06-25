@@ -1,0 +1,41 @@
+Downlink peak throughput
+Test description and applicability
+The purpose of the test is to measure the peak (i.e., maximum achievable) user data throughput in the downlink direction (i.e., data transmitted from application (traffic) server to UE).  A stationary UE is placed under excellent radio conditions inside an isolated cell.  
+Test setup and configuration
+The test setup is a single cell scenario (i.e., an isolated cell without any inter-cell interference – see clause 4.7) with a stationary UE (real or emulated UE) placed under excellent radio conditions as defined in clause 4.6 – using SINR as the metric since this is a downlink test. Note that in this case of a single cell scenario, SINR is in fact SNR as inter-cell interference is not present. Within the cell there shall be only one active UE downloading data from the application server.  The application server shall be placed as close as possible to the core/core emulator and connected to the core/core emulator via a transport link with sufficient capacity so as not to limit the expected data throughput. The test is suitable for both lab and field environments.
+Test configuration: The test configuration is not specified. The utilized test configuration (parameters) shall be recorded in the test report. 
+Laboratory setup: The radio conditions experienced by the UE can be modified using a variable attenuator/fading generator inserted between the antenna connectors (if available) of the O-RU and the UE, or appropriately emulated using a UE emulator. The test environment shall be setup to achieve excellent radio conditions (SINR as defined in clause 4.6) for the UE, but the minimum coupling loss (see clause 4.6) shall not be exceeded.  The UE shall be placed inside an RF shielded box or RF shielded room if the UE is not connected via cable.
+Field setup: The UE is placed in the centre of cell close to the radiated eNB/gNB antenna(s), where excellent radio conditions (SINR as defined in clause 4.6) shall be observed. The minimum coupling loss (see clause 4.6) shall not be exceeded.
+Figure 6-1 The test setups of 4G, 5G NSA and 5G SA
+Test procedure
+The test setup is configured according to the test configuration. The test configuration shall be recorded in the test report. The serving cell under test is activated and unloaded. All other cells are turned off. 
+The UE (real or emulated UE) is placed under excellent radio conditions (cell centre close to radiated eNB/gNB antenna) using SINR thresholds as indicated in clause 4.6. The UE is powered on and attached to the network. 
+The downlink full-buffer UDP and TCP data transmission (see clause 4.4) from the application server shall be verified by adjusting the connection settings (cabled environment) or UE position (OTA environment). The UE under excellent radio conditions that is achieving peak user throughput shall see stable utilization of the highest possible downlink MCS, downlink transport block size and downlink MIMO rank (number of layers). These KPIs shall also be verified. 
+The UE shall be turned off or set to airplane mode, to empty the buffers. The downlink full-buffer UDP data transmission from the application server to the UE is started. The UE shall receive the data from the application server. 
+All the required performance data (incl. the signalling and control data) as specified in the “Test requirements” clause below is measured and captured at the UE and Application server sides using logging/measurement tools. The duration of the test shall be at least 3 minutes when the throughput is stable. The location and position of the UE shall remain unchanged during the entire measurement duration (capture of log data). 
+The capture of log data is stopped. The downlink full-buffer UDP data transmission from the application server is stopped. 
+[Optional] Steps 4 to 6 are repeated for downlink full-buffer TCP data transmission.
+Test requirements (expected results)
+In addition to the common minimum set of configuration parameters (see clause 4.3), the following metrics and counters shall be captured and reported in the test report for the performance assessment.
+UE side (real or emulated UE):
+Radio parameters such as RSRP, RSRQ, CQI, PDSCH SINR (average sample per second)
+PDSCH BLER, PDSCH MCS, MIMO rank (number of layers) (average sample per second)
+Received downlink throughput (L1 and Application layers) (average sample per second)
+Downlink transmission mode
+Channel utilization, i.e., Number of allocated/occupied downlink PRBs and Number of allocated/occupied slots (average sample per second)
+Application server side:
+Transmitted downlink throughput (Application layer) (average sample per second)
+When the UE is under excellent radio conditions (cell centre), the stable utilization of the highest possible downlink MCS, downlink transport block size and downlink MIMO rank shall be observed. The UE shall also receive the data with minimum downlink BLER.
+The Table 6-6 gives an example of the test results record (median and standard deviation from the captured samples shall be calculated for each metric). In case of 5G SA and NSA, SS-RSRP and SS-SINR shall be reported. In case of 5G NSA and dual connectivity (EN-DC), the values shall be provided separately for both LTE and 5G paths. The spectral efficiency (see clause 4.8) shall be calculated for benchmarking and comparison purposes to minimize the influence of different configured parameters such as bandwidth and TDD DL/UL ratio.
+Table 6-6 Example record of test results (median and standard deviation from the captured samples)
+The following figures shall be also included in the test report, and the stable behavior shall be observed and evaluated.
+Received UDP downlink throughput (L1 and Application layer) vs Time duration
+PDSCH SINR vs Time duration
+Number of allocated/occupied downlink PRBs and Number of allocated/occupied slots vs Time duration
+The gap analysis shall be provided for the measured and the expected target downlink throughputs which can be calculated based on the procedures from clause 6.1.  
+
+
+==================================================
+RECURSIVE EXTRACTION RESULTS
+==================================================
+

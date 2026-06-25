@@ -1,0 +1,87 @@
+frame = 100, slot = 0 : [PDCP] Initializing gNB PDCP at frame 100, slot 0
+frame = 100, slot = 1 : [PDCP] PDCP configuration: integrity_algorithm=3, cipher_algorithm=2
+frame = 101, slot = 0 : [RRC] Received RRC Connection Request from UE with rnti 7c45
+frame = 101, slot = 3 : [RRC] Sending RRC Connection Setup to UE with rnti 7c45
+frame = 101, slot = 4 : Function: nr_rrc_setup_process processing
+frame = 102, slot = 0 : [MAC] Scheduling resources for UE with rnti 7c45
+frame = 102, slot = 1 : [RRC] Received RRC Setup Complete from UE with rnti 7c45
+frame = 102, slot = 2 : [NGAP] Sending Initial UE Message to AMF for UE with gNB_UE_NGAP_ID 5344
+frame = 102, slot = 5 : [NGAP] Received Downlink NAS Transport from AMF with Authentication Request for UE with gNB_UE_NGAP_ID 5344
+frame = 103, slot = 0 : [RRC] Sending DL Information Transfer to UE with rnti 7c45
+frame = 103, slot = 3 : [RRC] Received UL Information Transfer from UE with rnti 7c45
+frame = 103, slot = 4 : [NGAP] Sending Uplink NAS Transport to AMF for UE with gNB_UE_NGAP_ID 5344
+frame = 103, slot = 8 : [NGAP] Received Downlink NAS Transport from AMF with Security Mode Command for UE with gNB_UE_NGAP_ID 5344
+frame = 104, slot = 0 : [RRC] Sending DL Information Transfer to UE with rnti 7c45
+frame = 104, slot = 3 : [RRC] Received UL Information Transfer from UE with rnti 7c45
+frame = 104, slot = 5 : [NGAP] Sending Uplink NAS Transport to AMF for UE with gNB_UE_NGAP_ID 5344
+frame = 104, slot = 8 : [NGAP] Received Initial Context Setup Request from AMF for UE with gNB_UE_NGAP_ID 5344
+frame = 105, slot = 0 : [RRC] Initiating Security Mode Procedure for UE with rnti 7c45
+frame = 105, slot = 1 : Function: rrc_gNB_generate_SecurityModeCommand processing
+frame = 105, slot = 3 : [RRC] Security Mode Command sent to UE with rnti 7c45
+frame = 105, slot = 5 : [RRC] Received Security Mode Complete from UE with rnti 7c45
+frame = 105, slot = 6 : Function: rrc_gNB_process_SecurityModeComplete processing
+frame = 105, slot = 8 : [RRC] Security Mode Procedure completed successfully for UE with rnti 7c45
+frame = 106, slot = 0 : [RRC] Generating RRC Reconfiguration for UE with rnti 7c45
+frame = 106, slot = 3 : [RRC] RRC Reconfiguration sent to UE with rnti 7c45
+frame = 106, slot = 7 : [RRC] Received RRC Reconfiguration Complete from UE with rnti 7c45
+frame = 106, slot = 9 : [NGAP] Sending Initial Context Setup Response to AMF for UE with gNB_UE_NGAP_ID 5344
+frame = 107, slot = 0 : [PDCP] PDCP security configuration applied for UE with rnti 7c45
+frame = 107, slot = 1 : Function: pdcp_apply_security_config processing
+frame = 107, slot = 2 : [PDCP] PDCP security context established: integrity=enabled, ciphering=enabled
+frame = 107, slot = 5 : [MAC] UE with rnti 7c45 is fully connected with 1 active DRBs
+
+# Handover preparation starts
+frame = 350, slot = 0 : [RRC] MeasurementReport received from UE with rnti 7c45, target cell PCI=25
+frame = 350, slot = 2 : [RRC] Measurement indicates A3 event triggered for UE with rnti 7c45
+frame = 350, slot = 5 : [X2AP] Sending Handover Request to target gNB for UE with rnti 7c45
+frame = 350, slot = 7 : Function: x2ap_handover_request_process processing
+frame = 351, slot = 0 : [X2AP] Received Handover Request ACK from target gNB
+frame = 351, slot = 2 : [RRC] Generating Handover Command for UE with rnti 7c45
+frame = 351, slot = 3 : Function: rrc_gNB_generate_HandoverCommand processing
+
+# PDCP security integrity issue during handover
+frame = 351, slot = 5 : [PDCP] Starting PDCP data forwarding for UE with rnti 7c45
+frame = 351, slot = 6 : Function: pdcp_data_req processing
+frame = 351, slot = 7 : Function: pdcp_apply_integrity processing
+frame = 351, slot = 8 : ERROR: PDCP integrity check failed for UE with rnti 7c45 during handover data forwarding
+frame = 351, slot = 9 : Function: pdcp_apply_integrity returned error code -1
+frame = 352, slot = 0 : [PDCP] Function: pdcp_data_forward_to_target processing
+frame = 352, slot = 1 : WARNING: Data forwarding integrity protection failed, retrying with fallback configuration
+frame = 352, slot = 2 : Function: pdcp_get_security_context processing
+frame = 352, slot = 3 : ERROR: Invalid security parameters detected in PDCP security context
+frame = 352, slot = 4 : [PDCP] PDCP security context verification failed for DRB 1
+frame = 352, slot = 5 : Function: pdcp_security_context_check returned error code -2
+
+# Handover failure occurs
+frame = 352, slot = 6 : [RRC] Sending Handover Command to UE with rnti 7c45
+frame = 352, slot = 8 : [X2AP] Error in handover data preparation
+frame = 353, slot = 0 : [X2AP] Sending Handover Preparation Failure to target gNB
+frame = 353, slot = 2 : [X2AP] Reason: PDCP Integrity Protection Failure
+frame = 353, slot = 5 : [RRC] Handover cancelled for UE with rnti 7c45
+frame = 353, slot = 7 : Function: rrc_gNB_handover_cancel processing
+frame = 353, slot = 9 : [PDCP] Restoring PDCP entity for UE with rnti 7c45
+
+# Recovery attempt
+frame = 354, slot = 0 : [PDCP] Attempting to recover security context for UE with rnti 7c45
+frame = 354, slot = 2 : Function: pdcp_security_context_regenerate processing
+frame = 354, slot = 3 : [PDCP] Fetching security parameters from RRC
+frame = 354, slot = 5 : Function: nr_rrc_get_security_context processing
+frame = 354, slot = 7 : [PDCP] Security context regeneration successful
+frame = 354, slot = 9 : [RRC] Reestablishing radio bearers for UE with rnti 7c45
+
+# Second handover attempt
+frame = 400, slot = 0 : [RRC] MeasurementReport received from UE with rnti 7c45, target cell PCI=25
+frame = 400, slot = 2 : [RRC] Preparing for second handover attempt
+frame = 400, slot = 5 : [X2AP] Sending Handover Request to target gNB for UE with rnti 7c45
+frame = 400, slot = 7 : Function: x2ap_handover_request_process processing
+frame = 401, slot = 0 : [X2AP] Received Handover Request ACK from target gNB
+frame = 401, slot = 2 : [RRC] Generating Handover Command for UE with rnti 7c45
+frame = 401, slot = 3 : Function: rrc_gNB_generate_HandoverCommand processing
+frame = 401, slot = 5 : [PDCP] Starting PDCP data forwarding for UE with rnti 7c45
+frame = 401, slot = 6 : Function: pdcp_data_req processing
+frame = 401, slot = 7 : Function: pdcp_apply_integrity processing
+frame = 401, slot = 8 : ERROR: PDCP integrity check failed again for UE with rnti 7c45 during handover
+frame = 401, slot = 9 : [RRC] Aborting handover procedure for UE with rnti 7c45
+frame = 402, slot = 0 : [NGAP] Sending Error Indication to AMF for UE with gNB_UE_NGAP_ID 5344
+frame = 402, slot = 2 : [NGAP] Error cause: Radio Network Layer Failure
+frame = 402, slot = 5 : [RRC] Initiating connection re-establishment for UE with rnti 7c45 

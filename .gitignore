@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+*.npy
+
+# Virtual Environments
+Backend/.venv/
+Backend/venv/
+venv/
+ENV/
+env/
+
+# Environment Variables
+Backend/.env
+.env
+.env.local
+.env.*.local
+
+# Large ML / index artifacts (use faiss_indices.zip via Git LFS; unzip locally)
+Backend/app/services/Error_fixing_pipelin/faiss_indices/*.faiss
+Backend/app/services/Error_fixing_pipelin/faiss_indices/embeddings.npy
+Backend/app/services/Error_fixing_pipelin/faiss_indices/functions_embeddings.npy
+Backend/app/services/Error_fixing_pipelin/resources/embeddings/*.npy
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Node.js / Electron
+Frontend/node_modules/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*

@@ -1,0 +1,56 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"No AMF is associated to the gNB\"  \nContext: Logged by [NGAP] after UE RRC connection setup completion, indicating that the gNB has no AMF association, which would prevent proper registration and operation of the gNB within the 5G core network.",
+  "log_file": "cu_ngap_failure.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/cu_ngap_failure.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-test",
+  "timestamp": "2026-05-29T18:10:51.265332",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"No AMF is associated to the gNB\"  \nContext: Logged by [NGAP] after UE RRC connection setup completion, indicating that the gNB has no AMF association, which would prevent proper registration and operation of the gNB within the 5G core network.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/log_files/cu_ngap_failure.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test basic connectivity from gNB to AMF IP"
+          },
+          {
+            "command": "ip route show 192.168.70.132",
+            "hint": "Verify routing to AMF IP from gNB to ensure proper path exists"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test basic connectivity from gNB to AMF IP"
+          },
+          {
+            "command": "ip route show 192.168.70.132",
+            "explanation": "Verify routing to AMF IP from gNB to ensure proper path exists"
+          }
+        ],
+        "command_count": 2
+      },
+      "command_count": 2
+    },
+    "timestamp": "2026-05-29T18:10:51.144550"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260529_181051.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}
