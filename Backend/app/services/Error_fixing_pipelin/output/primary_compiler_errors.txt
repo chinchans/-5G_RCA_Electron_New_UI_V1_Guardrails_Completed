@@ -1,6 +1,0 @@
-/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:9: [read_slice_info] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’
-/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: [read_slice_info] (undeclared_identifier) ‘F1AP_ProtocolExtensionContainer_10696P34_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P34_t’?
-/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: [read_slice_info] (compiler_error) expected expression before ‘)’ token
-/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115:11: [decode_f1ap_setup_response] (unknown_type_name) unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?
-/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: [decode_f1ap_setup_response] (undeclared_identifier) ‘F1AP_ProtocolExtensionContainer_10696P228_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?
-/home/tcs/Phani/gNB-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: [decode_f1ap_setup_response] (compiler_error) expected expression before ‘)’ token
