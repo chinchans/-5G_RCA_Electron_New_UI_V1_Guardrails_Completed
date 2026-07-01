@@ -1,0 +1,299 @@
+{
+  "version": 2,
+  "subsection": "LTE/5G NSA attach and detach of multiple UEs",
+  "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/extract/datasets/LTE_5G NSA attach and detach of multiple UEs",
+  "nodes": [
+    {
+      "id": "subsection:lte_5g_nsa_attach_and_detach_of_multiple_ues",
+      "type": "oran_subsection",
+      "label": "LTE/5G NSA attach and detach of multiple UEs",
+      "mandatory": false,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "lte/5g nsa attach and detach of multiple ues"
+      ]
+    },
+    {
+      "id": "clause:10_2_1",
+      "type": "clause",
+      "label": "Clause 10.2.1",
+      "mandatory": false,
+      "clause_ids": [
+        "10.2.1"
+      ],
+      "references": [
+        "10.2.1\tEN-DC The Secondary Node Addition procedure is initiated by the MN and is used to establish a UE context at the SN to provide resources from the SN to the UE. For bearers requiring SCG radio re"
+      ],
+      "keywords": [
+        "10.2.1",
+        "clause 10.2.1"
+      ]
+    },
+    {
+      "id": "clause:10_4_1",
+      "type": "clause",
+      "label": "Clause 10.4.1",
+      "mandatory": false,
+      "clause_ids": [
+        "10.4.1"
+      ],
+      "references": [
+        "10.4.1\tEN-DC The Secondary Node Release procedure may be initiated either by the MN or by the SN and is used to initiate the release of the UE context at the SN. The recipient node of this request can"
+      ],
+      "keywords": [
+        "10.4.1",
+        "clause 10.4.1"
+      ]
+    },
+    {
+      "id": "clause:5_3_2_1",
+      "type": "clause",
+      "label": "Clause 5.3.2.1",
+      "mandatory": false,
+      "clause_ids": [
+        "5.3.2.1"
+      ],
+      "references": [
+        "5.3.2.1\tE-UTRAN Initial Attach A UE/user needs to register with the network to receive services that require registration. This registration is described as Network Attachment. The always-on connectiv"
+      ],
+      "keywords": [
+        "5.3.2.1",
+        "clause 5.3.2.1"
+      ]
+    },
+    {
+      "id": "clause:5_3_8_2_1",
+      "type": "clause",
+      "label": "Clause 5.3.8.2.1",
+      "mandatory": false,
+      "clause_ids": [
+        "5.3.8.2.1"
+      ],
+      "references": [
+        "5.3.8.2.1\tUE-initiated Detach procedure for E-UTRAN Figure 5.3.8.2-1 shows the case when UE camps on E-UTRAN and Detach Request is sent to MME.  Figure 5.3.8.2-1: UE-Initiated Detach Procedure - UE ca"
+      ],
+      "keywords": [
+        "5.3.8.2.1",
+        "clause 5.3.8.2.1"
+      ]
+    },
+    {
+      "id": "procedure:lte_attach",
+      "type": "procedure",
+      "label": "LTE Attach",
+      "mandatory": true,
+      "clause_ids": [
+        "5.3.2.1"
+      ],
+      "references": [],
+      "keywords": [
+        "lte attach",
+        "e-utran initial attach"
+      ]
+    },
+    {
+      "id": "procedure:lte_detach",
+      "type": "procedure",
+      "label": "LTE Detach",
+      "mandatory": true,
+      "clause_ids": [
+        "5.3.8.2.1"
+      ],
+      "references": [],
+      "keywords": [
+        "lte detach",
+        "ue-initiated detach procedure for e-utran"
+      ]
+    },
+    {
+      "id": "procedure:5g_nsa_attach",
+      "type": "procedure",
+      "label": "5G NSA Attach",
+      "mandatory": true,
+      "clause_ids": [
+        "10.2.1",
+        "5.3.2.1"
+      ],
+      "references": [],
+      "keywords": [
+        "5g nsa attach",
+        "secondary node addition",
+        "en-dc"
+      ]
+    },
+    {
+      "id": "procedure:5g_nsa_detach",
+      "type": "procedure",
+      "label": "5G NSA Detach",
+      "mandatory": true,
+      "clause_ids": [
+        "10.4.1",
+        "5.3.8.2.1"
+      ],
+      "references": [],
+      "keywords": [
+        "5g nsa detach",
+        "secondary node release"
+      ]
+    },
+    {
+      "id": "kpi:attach_success_rate",
+      "type": "kpi",
+      "label": "Attach success rate",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "attach success rate",
+        "attach success",
+        "attach request and attach complete"
+      ]
+    },
+    {
+      "id": "kpi:detach_success_rate",
+      "type": "kpi",
+      "label": "Detach success rate",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "detach success rate",
+        "detach success",
+        "detach request and detach accept"
+      ]
+    },
+    {
+      "id": "kpi:attach_latency",
+      "type": "kpi",
+      "label": "Attach latency",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "attach latency",
+        "maximum latency",
+        "minimum latency",
+        "average latency"
+      ]
+    },
+    {
+      "id": "kpi:sn_addition_success_rate",
+      "type": "kpi",
+      "label": "Secondary node addition success rate",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "secondary node addition success rate",
+        "secondary node addition",
+        "sgnb addition"
+      ]
+    },
+    {
+      "id": "kpi:sn_release_success_rate",
+      "type": "kpi",
+      "label": "Secondary node release success rate",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "secondary node release success rate",
+        "secondary node release",
+        "sgnb release"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "subsection:lte_5g_nsa_attach_and_detach_of_multiple_ues",
+      "target": "procedure:lte_attach",
+      "relation": "requires"
+    },
+    {
+      "source": "procedure:lte_attach",
+      "target": "clause:5_3_2_1",
+      "relation": "grounded_in"
+    },
+    {
+      "source": "subsection:lte_5g_nsa_attach_and_detach_of_multiple_ues",
+      "target": "procedure:lte_detach",
+      "relation": "requires"
+    },
+    {
+      "source": "procedure:lte_detach",
+      "target": "clause:5_3_8_2_1",
+      "relation": "grounded_in"
+    },
+    {
+      "source": "subsection:lte_5g_nsa_attach_and_detach_of_multiple_ues",
+      "target": "procedure:5g_nsa_attach",
+      "relation": "requires"
+    },
+    {
+      "source": "procedure:5g_nsa_attach",
+      "target": "clause:10_2_1",
+      "relation": "grounded_in"
+    },
+    {
+      "source": "procedure:5g_nsa_attach",
+      "target": "clause:5_3_2_1",
+      "relation": "grounded_in"
+    },
+    {
+      "source": "subsection:lte_5g_nsa_attach_and_detach_of_multiple_ues",
+      "target": "procedure:5g_nsa_detach",
+      "relation": "requires"
+    },
+    {
+      "source": "procedure:5g_nsa_detach",
+      "target": "clause:10_4_1",
+      "relation": "grounded_in"
+    },
+    {
+      "source": "procedure:5g_nsa_detach",
+      "target": "clause:5_3_8_2_1",
+      "relation": "grounded_in"
+    },
+    {
+      "source": "procedure:lte_attach",
+      "target": "kpi:attach_success_rate",
+      "relation": "measures"
+    },
+    {
+      "source": "procedure:5g_nsa_attach",
+      "target": "kpi:attach_success_rate",
+      "relation": "measures"
+    },
+    {
+      "source": "procedure:lte_detach",
+      "target": "kpi:detach_success_rate",
+      "relation": "measures"
+    },
+    {
+      "source": "procedure:5g_nsa_detach",
+      "target": "kpi:detach_success_rate",
+      "relation": "measures"
+    },
+    {
+      "source": "procedure:lte_attach",
+      "target": "kpi:attach_latency",
+      "relation": "measures"
+    },
+    {
+      "source": "procedure:5g_nsa_attach",
+      "target": "kpi:attach_latency",
+      "relation": "measures"
+    },
+    {
+      "source": "procedure:5g_nsa_attach",
+      "target": "kpi:sn_addition_success_rate",
+      "relation": "measures"
+    },
+    {
+      "source": "procedure:5g_nsa_detach",
+      "target": "kpi:sn_release_success_rate",
+      "relation": "measures"
+    }
+  ]
+}

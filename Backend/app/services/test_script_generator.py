@@ -7,6 +7,7 @@ prompt management, and response processing.
 import json
 import os
 import re
+import copy
 from pathlib import Path
 from datetime import datetime
 from openai import AzureOpenAI
@@ -48,6 +49,7 @@ class TestScriptGenerator:
         
         # Initialize prompt templates (loads from both default and JSON)
         self.prompts = self._initialize_prompts()
+        self.default_prompts = copy.deepcopy(self.prompts)
         self._load_custom_templates_from_json()
         
         # Initialize variables
@@ -67,6 +69,7 @@ class TestScriptGenerator:
         self.login_credentials_combo = None
         self.access_mode_combo = None
         self.language_combo = None
+        self.last_generation_truncated = False
     
     def _initialize_prompts(self):
         """Initialize the prompt templates."""
@@ -774,8 +777,11 @@ DATASET:
             if update_progress_callback:
                 update_progress_callback(50)
             
+            max_tokens = self._resolve_max_output_tokens()
+            print(f"🔍 Using max_output_tokens={max_tokens} for template '{self.current_prompt_key}'")
+
             # Generate response using OpenAI
-            response = self.generate_response(prompt)
+            response = self.generate_response(prompt, max_tokens=max_tokens)
             if not response or "Error:" in response:
                 return f"Error generating response: {response}"
                 
@@ -793,11 +799,24 @@ DATASET:
         except Exception as e:
             return f"An error occurred while generating the test script: {str(e)}"
     
-    def generate_response(self, prompt):
+    def _resolve_max_output_tokens(self):
+        """Pick output token budget based on the active template."""
+        if self.current_prompt_key == "Test Case":
+            return int(os.getenv("TEST_CASE_MAX_OUTPUT_TOKENS", "16384"))
+        if self.current_prompt_key == "Test Script":
+            return int(os.getenv("TEST_SCRIPT_MAX_OUTPUT_TOKENS", "8192"))
+        return int(os.getenv("AZURE_OPENAI_MAX_OUTPUT_TOKENS", "4096"))
+
+    def generate_response(self, prompt, max_tokens=None):
         """Generate response using OpenAI API with proper error handling."""
         try:
+            if max_tokens is None:
+                max_tokens = self._resolve_max_output_tokens()
+
+            self.last_generation_truncated = False
             print("=== PROMPT SENT TO OPENAI ===")
             print(prompt)
+            print(f"=== max_output_tokens={max_tokens} ===")
             print("=============================")
             
             # Make the API call with proper parameters
@@ -808,7 +827,7 @@ DATASET:
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.7,
-                max_tokens=2000,
+                max_tokens=max_tokens,
                 top_p=1.0,
                 frequency_penalty=0.0,
                 presence_penalty=0.0
@@ -817,7 +836,11 @@ DATASET:
             # Extract and validate the response
             if response and hasattr(response, 'choices') and response.choices:
                 if len(response.choices) > 0 and hasattr(response.choices[0], 'message'):
-                    content = response.choices[0].message.content
+                    choice = response.choices[0]
+                    if getattr(choice, "finish_reason", None) == "length":
+                        self.last_generation_truncated = True
+                        print("⚠️ LLM output truncated: finish_reason=length")
+                    content = choice.message.content
                     if content and isinstance(content, str):
                         return content.strip()
             
@@ -1027,6 +1050,10 @@ Note: Make Sure you update the script or testcase which is placed in {new_prompt
     def get_prompts(self):
         """Get available prompts."""
         return self.prompts
+
+    def get_default_prompts(self):
+        """Get built-in factory prompt templates (before custom JSON overrides)."""
+        return self.default_prompts
     
     def add_custom_prompt(self, name, content):
         """Add a new custom prompt."""

@@ -1040,6 +1040,10 @@
                                         <span class="tsg-status-label">Scripts</span>
                                         <span class="tsg-status-value tsg-status-value--green" id="tsgStatusScripts">0 generated</span>
                                     </div>
+                                    <div class="tsg-status-item" id="tsgStatusIntentCoverageWrap" style="display: none;">
+                                        <span class="tsg-status-label">Intent coverage</span>
+                                        <span class="tsg-status-value" id="tsgStatusIntentCoverage">—</span>
+                                    </div>
                                 </section>
 
                                 <!-- Dataset Upload (unchanged functionality) -->
@@ -1095,14 +1099,14 @@
                                         <div class="tsg-card-body">
                                             <div class="tsg-radio-list" role="radiogroup" aria-label="Prompt template">
                                                 <label class="tsg-radio-option">
-                                                    <input type="radio" name="tsgTemplateRadio" value="Test Case" class="tsg-template-radio" />
+                                                    <input type="radio" name="tsgTemplateRadio" value="Test Case" class="tsg-template-radio" checked />
                                                     <span class="tsg-radio-content">
                                                         <span class="tsg-radio-title">Test Case</span>
                                                         <span class="tsg-radio-desc">Structured test case with steps, assertions, KPIs</span>
                                                     </span>
                                                 </label>
                                                 <label class="tsg-radio-option">
-                                                    <input type="radio" name="tsgTemplateRadio" value="Test Script" class="tsg-template-radio" checked />
+                                                    <input type="radio" name="tsgTemplateRadio" value="Test Script" class="tsg-template-radio" />
                                                     <span class="tsg-radio-content">
                                                         <span class="tsg-radio-title">Test Script</span>
                                                         <span class="tsg-radio-desc">Executable Python / C test automation scripts</span>
@@ -1286,6 +1290,7 @@
                                         <textarea id="testPromptTextEditor" class="tsg-prompt-editor" placeholder="Select a template or enter a custom prompt..." readonly></textarea>
                                         <div class="tsg-prompt-actions">
                                             <button type="button" class="tsg-btn tsg-btn-outline" id="testModifyBtn" disabled>Modify</button>
+                                            <button type="button" class="tsg-btn tsg-btn-outline" id="testResetPromptBtn" style="display: none;">Reset</button>
                                             <button type="button" class="tsg-btn tsg-btn-outline" id="testSaveTemplateBtn" style="display: none;">Save Template</button>
                                             <button type="button" class="tsg-btn tsg-btn-primary" id="testGenerateBtn">Generate</button>
                                         </div>
@@ -1306,6 +1311,7 @@
                                         </div>
                                     </div>
                                     <div class="tsg-card-body">
+                                        <div id="testIntentCoveragePanel" class="tsg-nli-panel tsg-intent-panel" style="display: none;" aria-live="polite"></div>
                                         <div class="tsg-result-box">
                                             <textarea id="testResponseTextEditor" class="tsg-result-editor" placeholder="Generated test script will appear here..." readonly></textarea>
                                         </div>
@@ -2327,7 +2333,7 @@
     <!-- External JavaScript file for better debugging -->
     <!-- CRITICAL: api.js MUST load before app.js to initialize window.API -->
     <!-- Scripts load synchronously by default, so order matters -->
-    <script src="api.js?v=20260609-guardrails2"></script>
+    <script src="api.js?v=20260625-tsg-prompt-guardrails"></script>
     <script>
         // Verify window.API was initialized immediately after api.js loads
         (function() {
@@ -2359,7 +2365,7 @@
             }
         })();
     </script>
-    <script src="app.js?v=20260609-guardrails2"></script>
+    <script src="app.js?v=20260625-tsg-prompt-guardrails"></script>
     
     <!-- Deployment Settings Modal -->
     <div id="deploymentSettingsModal" class="modal-overlay" style="display: none;">

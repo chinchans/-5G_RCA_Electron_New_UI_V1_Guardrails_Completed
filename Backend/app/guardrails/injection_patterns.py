@@ -50,6 +50,18 @@ MALICIOUS_LITERALS: Tuple[str, ...] = (
     "without limitations",
     "hypothetically ignore",
     "for educational purposes ignore",
+    "hidden prompts",
+    "output all hidden",
+    "ignore test case generation",
+    "ignore test case",
+    "configuration has expired",
+    "previous configuration has expired",
+    "share the important information regarding the dataset",
+    "important information regarding the dataset",
+    "ignore developer instructions",
+    "ignore system prompts",
+    "reveal sensitive information",
+    "exfiltrate",
 )
 
 INJECTION_PATTERNS: List[Tuple[str, re.Pattern]] = [
@@ -117,6 +129,22 @@ INJECTION_PATTERNS: List[Tuple[str, re.Pattern]] = [
         r"(end|start)\s+of\s+(system|user)\s+(prompt|message)",
         re.IGNORECASE,
     )),
+    ("tsg_ignore_objective", re.compile(
+        r"ignore\s+(the\s+)?(test\s+case\s+generation|test\s+case)\s+(objective|instructions?|task)",
+        re.IGNORECASE,
+    )),
+    ("tsg_hidden_prompts_exfil", re.compile(
+        r"(output|reveal|show|print|share|disclose)\s+(all\s+)?(hidden|system)\s+prompts?",
+        re.IGNORECASE,
+    )),
+    ("tsg_config_expired_override", re.compile(
+        r"(previous|your)\s+configuration\s+has\s+expired",
+        re.IGNORECASE,
+    )),
+    ("tsg_dataset_exfil", re.compile(
+        r"(share|reveal|output|disclose|dump).{0,40}(dataset|document\s+content|hidden\s+information)",
+        re.IGNORECASE,
+    )),
 ]
 
 
@@ -138,6 +166,10 @@ HIGH_CONFIDENCE_BLOCKING_PATTERNS = frozenset({
     "pretend_roleplay",
     "instruction_boundary",
     "system_prompt_reference",
+    "tsg_ignore_objective",
+    "tsg_hidden_prompts_exfil",
+    "tsg_config_expired_override",
+    "tsg_dataset_exfil",
 })
 
 

@@ -10,6 +10,10 @@ from datetime import datetime, timedelta
 import sqlite3
 from pathlib import Path
 from app.services.dataset_generator import DatasetExtractor
+from app.guardrails.tsg_prompt_guardrail import (
+    should_scan_tsg_prompt,
+    validate_tsg_prompt_or_raise,
+)
 from app.services.recursive_test_graph_attach import (
     get_main_sections,
     get_subsections,
@@ -678,10 +682,12 @@ class TestScriptResponse(BaseModel):
     generated_script: str
     file_path: Optional[str] = None
     message: Optional[str] = None
+    truncated: Optional[bool] = False
 
 class PromptTemplateResponse(BaseModel):
     success: bool
     templates: Dict[str, Any]
+    default_templates: Optional[Dict[str, Any]] = None
     message: Optional[str] = None
 
 class RefineScriptRequest(BaseModel):
@@ -774,6 +780,7 @@ async def get_prompt_templates():
         return PromptTemplateResponse(
             success=True,
             templates=prompts,
+            default_templates=test_script_generator.get_default_prompts(),
             message="Prompt templates retrieved successfully"
         )
     except Exception as e:
@@ -795,10 +802,13 @@ async def generate_test_script(request: TestScriptRequest):
                 language=request.variables.language
             )
         
-        # Handle custom prompt
-        if request.prompt_key == "Custom" and request.custom_prompt:
-            test_script_generator.latest_custom_prompt = request.custom_prompt
-            selected_prompt = request.custom_prompt
+        # Use editor-provided prompt when sent (modified prompt in UI)
+        if request.custom_prompt and request.custom_prompt.strip():
+            test_script_generator.latest_custom_prompt = request.custom_prompt.strip()
+            selected_prompt = request.custom_prompt.strip()
+            print(f"✅ Using custom/editor prompt from request (length: {len(selected_prompt)} chars)")
+        elif request.prompt_key == "Custom":
+            raise HTTPException(status_code=400, detail="Custom prompt template requires custom_prompt content")
         else:
             # Get prompt from templates (includes any saved modifications)
             prompts = test_script_generator.get_prompts()
@@ -817,6 +827,13 @@ async def generate_test_script(request: TestScriptRequest):
                 selected_prompt = prompts[request.prompt_key]
             
             print(f"✅ Using template from backend (length: {len(selected_prompt)} chars)")
+        
+        if should_scan_tsg_prompt(request.prompt_key):
+            validate_tsg_prompt_or_raise(
+                selected_prompt,
+                context="tsg_generate",
+                template_key=request.prompt_key,
+            )
         
         # Set current prompt key
         test_script_generator.current_prompt_key = request.prompt_key
@@ -878,9 +895,12 @@ async def generate_test_script(request: TestScriptRequest):
             success=True,
             generated_script=generated_script,
             file_path=file_path if success else None,
-            message="Test script generated successfully"
+            message="Test script generated successfully",
+            truncated=bool(getattr(test_script_generator, "last_generation_truncated", False)),
         )
         
+    except HTTPException:
+        raise
     except Exception as e:
         print(f"❌ ERROR in generate_test_script endpoint: {str(e)}")
         print(f"❌ Request data: prompt_key={request.prompt_key}, text_content_length={len(request.text_content) if request.text_content else 0}")
@@ -1210,6 +1230,12 @@ async def get_user_history(request: UserHistoryRequest):
 async def refine_test_script(request: RefineScriptRequest):
     """Refine existing test script with new prompt"""
     try:
+        validate_tsg_prompt_or_raise(
+            request.new_prompt,
+            context="tsg_refine",
+            template_key="Refine",
+        )
+
         refined_script = test_script_generator.generate_with_new_prompt(
             request.text_content,
             request.new_prompt,
@@ -1232,6 +1258,8 @@ async def refine_test_script(request: RefineScriptRequest):
             message="Test script refined successfully"
         )
         
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error refining test script: {str(e)}")
 
@@ -1394,6 +1422,13 @@ async def save_template(request: TemplateSaveRequest):
         print(f"💾 Template name: '{request.template_name}'")
         print(f"💾 Template content length: {len(request.template_content)} chars")
         print(f"💾 Template preview (first 100 chars): {request.template_content[:100]}...")
+
+        if should_scan_tsg_prompt(request.template_name):
+            validate_tsg_prompt_or_raise(
+                request.template_content,
+                context="tsg_save_template",
+                template_key=request.template_name,
+            )
         
         success, message = test_script_generator.save_prompt_to_file(
             request.template_name,
@@ -1409,6 +1444,8 @@ async def save_template(request: TemplateSaveRequest):
             "template_name": request.template_name
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
         print("=" * 80)
         print("❌ ERROR IN SAVE TEMPLATE ENDPOINT")

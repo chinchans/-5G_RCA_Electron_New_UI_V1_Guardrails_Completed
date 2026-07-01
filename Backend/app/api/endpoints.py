@@ -17,6 +17,10 @@ from app.guardrails import (
     validate_saved_dataset_on_disk,
     validate_tsg_dataset_upload,
 )
+from app.guardrails.tsg_prompt_guardrail import (
+    should_scan_tsg_prompt,
+    validate_tsg_prompt_or_raise,
+)
 from app.guardrails.config import (
     LEGACY_SPEC_INTEL_EXTRACT_ROOT,
     SPEC_INTEL_DATASETS_DIR,
@@ -49,6 +53,29 @@ from pathlib import Path
 # This file is at: Backend/app/api/endpoints.py
 # So Backend is: __file__.parent.parent.parent
 BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
+TEST_SCRIPT_GENERATOR_DIR = BACKEND_DIR / "resources" / "TestScriptGenerator"
+TEST_SUITE_DIR = TEST_SCRIPT_GENERATOR_DIR / "test_suite"
+
+
+def _resolve_test_suite_folder(folder_type: str) -> Path:
+    """Absolute path to test_case or test_script output folder."""
+    normalized = (folder_type or "").strip().lower()
+    if normalized not in {"test_case", "test_script"}:
+        raise HTTPException(
+            status_code=400,
+            detail="folder_type must be 'test_case' or 'test_script'",
+        )
+    folder = TEST_SUITE_DIR / normalized
+    folder.mkdir(parents=True, exist_ok=True)
+    return folder.resolve()
+
+
+def _resolve_folder_path(folder_path: str) -> Path:
+    """Resolve absolute or Backend-relative folder paths."""
+    path = Path(folder_path).expanduser()
+    if not path.is_absolute():
+        path = (BACKEND_DIR / path).resolve()
+    return path
 
 
 def _spec_intel_extract_roots() -> List[Path]:
@@ -745,6 +772,12 @@ async def extract_dataset_pyqt_style(
                 ),
                 encoding="utf-8",
             )
+            try:
+                from app.guardrails.intent_graph_store import build_and_save_intent_graph
+
+                build_and_save_intent_graph(Path(validated_dataset.metadata.dataset_folder))
+            except Exception as intent_exc:
+                print(f"⚠️ Intent graph build skipped: {intent_exc}")
 
         print("=" * 60)
         print("DATASET EXTRACTION COMPLETED SUCCESSFULLY")
@@ -826,16 +859,27 @@ class TestScriptRequest(BaseModel):
     text_content: str
     variables: Optional[TestScriptVariables] = None
     custom_prompt: Optional[str] = None
+    dataset_folder: Optional[str] = None
 
 class TestScriptResponse(BaseModel):
     success: bool
     generated_script: str
     file_path: Optional[str] = None
     message: Optional[str] = None
+    intent_coverage: Optional[Dict[str, Any]] = None
+    guardrails: Optional[Dict[str, Any]] = None
+    dataset_folder: Optional[str] = None
+    truncated: Optional[bool] = False
+
+class IntentCoverageRequest(BaseModel):
+    dataset_folder: str
+    generated_text: str
+    use_nli_for_gaps: bool = True
 
 class PromptTemplateResponse(BaseModel):
     success: bool
     templates: Dict[str, Any]
+    default_templates: Optional[Dict[str, Any]] = None
     message: Optional[str] = None
 
 class RefineScriptRequest(BaseModel):
@@ -928,6 +972,7 @@ async def get_prompt_templates():
         return PromptTemplateResponse(
             success=True,
             templates=prompts,
+            default_templates=test_script_generator.get_default_prompts(),
             message="Prompt templates retrieved successfully"
         )
     except Exception as e:
@@ -949,10 +994,13 @@ async def generate_test_script(request: TestScriptRequest):
                 language=request.variables.language
             )
         
-        # Handle custom prompt
-        if request.prompt_key == "Custom" and request.custom_prompt:
-            test_script_generator.latest_custom_prompt = request.custom_prompt
-            selected_prompt = request.custom_prompt
+        # Use editor-provided prompt when sent (modified prompt in UI)
+        if request.custom_prompt and request.custom_prompt.strip():
+            test_script_generator.latest_custom_prompt = request.custom_prompt.strip()
+            selected_prompt = request.custom_prompt.strip()
+            print(f"✅ Using custom/editor prompt from request (length: {len(selected_prompt)} chars)")
+        elif request.prompt_key == "Custom":
+            raise HTTPException(status_code=400, detail="Custom prompt template requires custom_prompt content")
         else:
             # Get prompt from templates (includes any saved modifications)
             prompts = test_script_generator.get_prompts()
@@ -972,6 +1020,13 @@ async def generate_test_script(request: TestScriptRequest):
             
             print(f"✅ Using template from backend (length: {len(selected_prompt)} chars)")
         
+        if should_scan_tsg_prompt(request.prompt_key):
+            validate_tsg_prompt_or_raise(
+                selected_prompt,
+                context="tsg_generate",
+                template_key=request.prompt_key,
+            )
+
         # Set current prompt key
         test_script_generator.current_prompt_key = request.prompt_key
         
@@ -1028,19 +1083,94 @@ async def generate_test_script(request: TestScriptRequest):
             except Exception as history_error:
                 print(f"⚠️ Failed to append history to {history_filename}: {history_error}")
 
+        intent_coverage = None
+        intent_guardrails = None
+        is_test_case = (request.prompt_key or "").strip().lower() == "test case"
+        resolved_dataset_folder = request.dataset_folder
+        if is_test_case and not resolved_dataset_folder and request.text_content:
+            from app.guardrails.output_guardrail import resolve_tsg_dataset_folder_from_content
+
+            folder = resolve_tsg_dataset_folder_from_content(request.text_content)
+            if folder:
+                resolved_dataset_folder = str(folder.resolve())
+
+        if is_test_case and resolved_dataset_folder:
+            try:
+                from app.guardrails.intent_coverage_service import validate_intent_coverage
+                from app.guardrails.intent_graph_store import load_intent_graph_model
+
+                load_intent_graph_model(Path(resolved_dataset_folder))
+                coverage_result = validate_intent_coverage(
+                    resolved_dataset_folder,
+                    generated_script,
+                    use_nli_for_gaps=False,
+                )
+                intent_coverage = coverage_result.to_dict()
+                intent_guardrails = {
+                    "intent_coverage_validation": {
+                        "step": "intent_coverage_validation",
+                        "passed": coverage_result.passed,
+                        "errors": coverage_result.errors,
+                        "warnings": coverage_result.warnings,
+                        "details": intent_coverage,
+                    }
+                }
+            except Exception as coverage_exc:
+                print(f"⚠️ Intent coverage validation skipped: {coverage_exc}")
+
+        response_message = "Test script generated successfully"
+        if intent_coverage and intent_coverage.get("available"):
+            pct = intent_coverage.get("coverage_percent", 0)
+            covered = intent_coverage.get("mandatory_covered", 0)
+            total = intent_coverage.get("mandatory_total", 0)
+            if intent_coverage.get("passed"):
+                response_message = (
+                    f"Test cases generated. Intent coverage passed ({pct}% — "
+                    f"{covered}/{total} mandatory intents)."
+                )
+            else:
+                response_message = (
+                    f"Test cases generated. Intent coverage review needed ({pct}% — "
+                    f"{covered}/{total} mandatory intents)."
+                )
+
         return TestScriptResponse(
             success=True,
             generated_script=generated_script,
             file_path=file_path if success else None,
-            message="Test script generated successfully"
+            message=response_message,
+            intent_coverage=intent_coverage,
+            guardrails=intent_guardrails,
+            dataset_folder=resolved_dataset_folder,
+            truncated=bool(getattr(test_script_generator, "last_generation_truncated", False)),
         )
         
+    except HTTPException:
+        raise
     except Exception as e:
         print(f"❌ ERROR in generate_test_script endpoint: {str(e)}")
         print(f"❌ Request data: prompt_key={request.prompt_key}, text_content_length={len(request.text_content) if request.text_content else 0}")
         import traceback
         print(f"❌ Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=f"Error generating test script: {str(e)}")
+
+@router.post("/api/test-script/validate-intent-coverage")
+async def validate_test_case_intent_coverage(request: IntentCoverageRequest):
+    """Validate generated test cases against the dataset intent graph."""
+    try:
+        from app.guardrails.intent_coverage_service import validate_intent_coverage
+
+        result = validate_intent_coverage(
+            request.dataset_folder,
+            request.generated_text,
+            use_nli_for_gaps=request.use_nli_for_gaps,
+        )
+        return {"success": True, "intent_coverage": result.to_dict()}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error validating intent coverage: {str(e)}",
+        )
 
 # ----------------------
 # History Query Endpoints
@@ -1364,6 +1494,12 @@ async def get_user_history(request: UserHistoryRequest):
 async def refine_test_script(request: RefineScriptRequest):
     """Refine existing test script with new prompt"""
     try:
+        validate_tsg_prompt_or_raise(
+            request.new_prompt,
+            context="tsg_refine",
+            template_key="Refine",
+        )
+
         refined_script = test_script_generator.generate_with_new_prompt(
             request.text_content,
             request.new_prompt,
@@ -1383,9 +1519,12 @@ async def refine_test_script(request: RefineScriptRequest):
         return TestScriptResponse(
             success=True,
             generated_script=refined_script,
-            message="Test script refined successfully"
+            message="Test script refined successfully",
+            truncated=bool(getattr(test_script_generator, "last_generation_truncated", False)),
         )
         
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error refining test script: {str(e)}")
 
@@ -1502,6 +1641,17 @@ async def load_test_dataset(files: List[UploadFile] = File(...)):
         if output_applicable and output_verdict:
             response_payload["guardrails"]["output"] = output_verdict.to_dict()
             details = output_verdict.groundedness.details or {}
+            dataset_folder = details.get("dataset_folder")
+            if dataset_folder:
+                response_payload["dataset_folder"] = dataset_folder
+                try:
+                    from app.guardrails.intent_graph_store import intent_graph_path
+
+                    response_payload["intent_graph_available"] = intent_graph_path(
+                        Path(dataset_folder)
+                    ).is_file()
+                except Exception:
+                    response_payload["intent_graph_available"] = False
             upload_type = details.get("upload_type", "file")
             dataset_title = details.get("dataset_title", "unknown")
             if details.get("dataset_matched"):
@@ -1642,6 +1792,13 @@ async def save_template(request: TemplateSaveRequest):
         print(f"💾 Template name: '{request.template_name}'")
         print(f"💾 Template content length: {len(request.template_content)} chars")
         print(f"💾 Template preview (first 100 chars): {request.template_content[:100]}...")
+
+        if should_scan_tsg_prompt(request.template_name):
+            validate_tsg_prompt_or_raise(
+                request.template_content,
+                context="tsg_save_template",
+                template_key=request.template_name,
+            )
         
         success, message = test_script_generator.save_prompt_to_file(
             request.template_name,
@@ -1657,6 +1814,8 @@ async def save_template(request: TemplateSaveRequest):
             "template_name": request.template_name
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
         print("=" * 80)
         print("❌ ERROR IN SAVE TEMPLATE ENDPOINT")
@@ -2300,11 +2459,33 @@ async def get_extract_folder_path():
             "success": True,
             "extract_path": str(extract_path),
             "datasets_path": str(datasets_path),
+            "test_case_folder": str(_resolve_test_suite_folder("test_case")),
+            "test_script_folder": str(_resolve_test_suite_folder("test_script")),
             "message": f"Extract folder path: {extract_path}"
         }
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get extract folder path: {str(e)}")
+
+
+@router.get("/api/test-script/folder-path")
+async def get_test_script_folder_path(folder_type: str = "test_case"):
+    """Get the absolute path where generated test cases or scripts are saved."""
+    try:
+        folder = _resolve_test_suite_folder(folder_type)
+        return {
+            "success": True,
+            "folder_type": folder_type,
+            "folder_path": str(folder),
+            "message": f"Test {folder_type.replace('_', ' ')} folder: {folder}",
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get test script folder path: {str(e)}",
+        ) from e
 
 @router.post("/api/dataset/open-folder")
 async def open_folder_in_explorer(request: OpenFolderRequest):
@@ -2315,8 +2496,8 @@ async def open_folder_in_explorer(request: OpenFolderRequest):
         
         folder_path = request.folder_path
         
-        # Ensure the folder path exists
-        folder_path_obj = Path(folder_path)
+        # Ensure the folder path exists (resolve relative paths against Backend/)
+        folder_path_obj = _resolve_folder_path(folder_path)
         if not folder_path_obj.exists():
             return {
                 "success": False,

@@ -27,7 +27,8 @@ function parseGuardrailHttpErrorBody(errorText) {
             result.guardrailReasons = Array.isArray(detail.reasons) ? detail.reasons : [];
             result.message = detail.message || result.message;
             if (detail.error) {
-                result.isGuardrailBlock = detail.error === 'document_blocked_by_guardrails';
+                result.isGuardrailBlock = detail.error === 'document_blocked_by_guardrails'
+                    || detail.error === 'prompt_blocked_by_guardrails';
                 result.message = `${detail.error}: ${result.message}`;
             }
             if (result.guardrailReasons.length) {
@@ -75,33 +76,25 @@ async function makeAPICall(endpoint, method = 'GET', data = null) {
         
         if (!response.ok) {
             // Try to extract error message from response body
-            // Note: We can only read response body once, so clone it first
             let errorMessage = `HTTP error! status: ${response.status}`;
-            
-            // Clone response to read it safely
-            const responseClone = response.clone();
+            let errorText = '';
+
             try {
-                const errorData = await responseClone.json();
-                if (errorData.detail) {
-                    errorMessage = errorData.detail;
-                } else if (errorData.message) {
-                    errorMessage = errorData.message;
-                } else if (errorData.error) {
-                    errorMessage = errorData.error;
-                }
+                errorText = await response.text();
             } catch (e) {
-                // If response is not JSON, try to get text from original response
-                try {
-                    const errorText = await response.text();
-                    if (errorText && errorText.trim()) {
-                        errorMessage = errorText.trim();
-                    }
-                } catch (e2) {
-                    // If that also fails, use default message with status
-                    console.warn('Could not extract error message from response:', e2);
-                }
+                console.warn('Could not read error response body:', e);
             }
-            
+
+            if (errorText && errorText.trim()) {
+                const info = parseGuardrailHttpErrorBody(errorText);
+                errorMessage = info.message || errorText.trim();
+                const error = new Error(errorMessage);
+                error.status = response.status;
+                error.response = response;
+                attachGuardrailFieldsToError(error, errorText);
+                throw error;
+            }
+
             const error = new Error(errorMessage);
             error.status = response.status;
             error.response = response;
@@ -325,6 +318,31 @@ async function getExtractFolderPath() {
     }
 }
 
+// Get test case / test script output folder path
+async function getTestScriptFolderPath(folderType = 'test_case') {
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/api/test-script/folder-path?folder_type=${encodeURIComponent(folderType)}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to get test script folder path:', error);
+        throw error;
+    }
+}
+
 // Open folder in Explorer
 async function openFolderInExplorer(folderPath) {
     try {
@@ -454,16 +472,34 @@ async function getPromptTemplates() {
     return await makeAPICall('/api/test-script/prompts');
 }
 
+// IMMEDIATE: Assign getPromptTemplates to window.API right after definition
+if (typeof window !== 'undefined') {
+    if (!window.API) {
+        window.API = {};
+    }
+    window.API.getPromptTemplates = getPromptTemplates;
+    console.log('[api.js] ✅ IMMEDIATE: getPromptTemplates assigned to window.API right after definition');
+}
+
 // Generate test script
-async function generateTestScript(promptKey, textContent, variables = null, customPrompt = null) {
+async function generateTestScript(promptKey, textContent, variables = null, customPrompt = null, datasetFolder = null) {
     const requestData = {
         prompt_key: promptKey,
         text_content: textContent,
         variables: variables,
-        custom_prompt: customPrompt
+        custom_prompt: customPrompt,
+        dataset_folder: datasetFolder
     };
     
     return await makeAPICall('/api/test-script/generate', 'POST', requestData);
+}
+
+async function validateIntentCoverage(datasetFolder, generatedText, useNliForGaps = true) {
+    return await makeAPICall('/api/test-script/validate-intent-coverage', 'POST', {
+        dataset_folder: datasetFolder,
+        generated_text: generatedText,
+        use_nli_for_gaps: useNliForGaps,
+    });
 }
 
 // Refine existing test script
@@ -562,7 +598,12 @@ async function saveTemplatePrompt(templateName, templateContent) {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            const info = parseGuardrailHttpErrorBody(errorText);
+            const err = new Error(`HTTP error! status: ${response.status} - ${info.message}`);
+            attachGuardrailFieldsToError(err, errorText);
+            err.status = response.status;
+            throw err;
         }
 
         return await response.json();
@@ -848,6 +889,9 @@ if (typeof window !== 'undefined') {
         if (typeof getExtractFolderPath === 'function') {
             window.API.getExtractFolderPath = getExtractFolderPath;
         }
+        if (typeof getTestScriptFolderPath === 'function') {
+            window.API.getTestScriptFolderPath = getTestScriptFolderPath;
+        }
         if (typeof openFolderInExplorer === 'function') {
             window.API.openFolderInExplorer = openFolderInExplorer;
         }
@@ -867,6 +911,9 @@ if (typeof window !== 'undefined') {
         }
         if (typeof generateTestScript === 'function') {
             window.API.generateTestScript = generateTestScript;
+        }
+        if (typeof validateIntentCoverage === 'function') {
+            window.API.validateIntentCoverage = validateIntentCoverage;
         }
         // CRITICAL: refineTestScript must be assigned
         window.API.refineTestScript = refineTestScript;

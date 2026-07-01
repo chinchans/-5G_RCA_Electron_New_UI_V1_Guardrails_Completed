@@ -1,0 +1,9 @@
+{
+  "model_name": "all-mpnet-base-v2",
+  "embedding_dimension": 768,
+  "total_configs": 45839,
+  "path_format": "relative",
+  "device_used": "cuda",
+  "note": "Paths are relative to repository root, not hardcoded to specific folder name",
+  "generated_for": "config_parameters_only"
+}

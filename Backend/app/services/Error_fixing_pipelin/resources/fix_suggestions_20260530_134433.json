@@ -1,0 +1,18 @@
+{
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "fix_suggestion": {
+    "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+    "code_patches": [
+      {
+        "function_name": "rrc_gNB_process_RRCSetupComplete",
+        "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+        "patch_type": "remove_null_assignment",
+        "original_code": "  rrc_gNB_send_NGAP_NAS_FIRST_REQ(rrc, UE, rrcSetupComplete);\n  \n  rrcSetupComplete=NULL;\n\n  rrc_gNB_send_NGAP_NAS_FIRST_REQ(rrc, UE, rrcSetupComplete);",
+        "patched_code": "  rrc_gNB_send_NGAP_NAS_FIRST_REQ(rrc, UE, rrcSetupComplete);\n\n  // REMOVED: rrcSetupComplete=NULL;\n\n  // Removed second call with NULL to prevent crash\n  // rrc_gNB_send_NGAP_NAS_FIRST_REQ(rrc, UE, rrcSetupComplete);",
+        "line_numbers": "1963-1970",
+        "description": "Remove the invalid assignment of rrcSetupComplete=NULL and the subsequent call with NULL parameter that causes the crash."
+      }
+    ],
+    "config_patches": []
+  }
+}

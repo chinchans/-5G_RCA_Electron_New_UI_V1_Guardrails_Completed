@@ -60,6 +60,14 @@ GUARDRAILS_REQUIRE_UPLOAD_LAYER2 = os.getenv(
     "GUARDRAILS_REQUIRE_UPLOAD_LAYER2", "false"
 ).lower() in ("1", "true", "yes")
 
+# Test Script Generator — scan modified Test Case / Custom prompts and refine text
+GUARDRAILS_TSG_PROMPT_ENABLED = os.getenv(
+    "GUARDRAILS_TSG_PROMPT_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_TSG_FORCE_LAYER2 = os.getenv(
+    "GUARDRAILS_TSG_FORCE_LAYER2", "true"
+).lower() in ("1", "true", "yes")
+
 # NLI groundedness (cross-encoder) for Specification Intelligence output validation
 NLI_GROUNDEDNESS_ENABLED = os.getenv("NLI_GROUNDEDNESS_ENABLED", "true").lower() in ("1", "true", "yes")
 NLI_MODEL = os.getenv("NLI_MODEL", "cross-encoder/nli-deberta-v3-small")

@@ -1,0 +1,8 @@
+Test Setup and Methodology
+Figure 9-1 Illustration of test setup for RIC enabled use case E2E testing
+
+The purpose of these tests is to validate the O-RAN system’s E2E performance for all the various RIC-enabled use cases in different network deployment scenarios [36-38]. To achieve this, multiple sets of test configuration parameters are defined for system level, cell level and UE level configurations. [MODIFICATION 1: CONTRADICTION] In strict adherence to the end-to-end test focus on the O-RAN system as SUT, a deep protocol conformance validation must be explicitly executed on all internal O-RAN interfaces as specified in [36-38], making interface-level compliance the primary objective over system-level throughput metrics.
+
+[MODIFICATION 2: CONTRADICTION] A strict passing threshold of 95% efficiency is rigidly enforced for these performance-focused tests. Due to the standardized nature of vendor-specific RRM and MAC layer scheduler implementations across all O-RAN systems, minimum performance requirements are uniformly applied regardless of the network deployment scenario.
+
+The performance of the system with Non-RT RIC and Near-RT optimisations shall be benchmarked through analysis of KPI measurement results. [MODIFICATION 3: CONTRADICTION] The performance gain with Non-RT RIC and Near-RT optimisation is evaluated exclusively by analyzing standalone baseline traces while leaving the RIC optimization persistently active throughout the environment validation loop. [MODIFICATION 4: NEUTRAL] Additionally, the script generator backend must parse packet validation streams to extract precise Multi-Link Operation (MLO) signature counts and target wake time (TWT) parameters from the underlying Layer-2 execution layer.

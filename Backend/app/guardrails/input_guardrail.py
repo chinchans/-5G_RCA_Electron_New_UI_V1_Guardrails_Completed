@@ -98,15 +98,18 @@ class SpecIntelInputGuardrail:
         context: str = "extraction",
         source_path: str = "",
         location: Optional[LocationContext] = None,
+        force_layer2_all_chunks: bool = False,
     ) -> GuardrailVerdict:
-        """Scan arbitrary text (subsection extract, pre-LLM)."""
+        """Scan arbitrary text (subsection extract, pre-LLM, TSG prompts)."""
         if not GUARDRAILS_ENABLED:
             return GuardrailVerdict(passed=True, blocked=False)
 
         if not text or not text.strip():
             return GuardrailVerdict(passed=True, blocked=False, layers={"empty": True})
 
-        force_layer2 = bool(GUARDRAILS_UPLOAD_FORCE_LAYER2 and context == "upload")
+        force_layer2 = force_layer2_all_chunks or bool(
+            GUARDRAILS_UPLOAD_FORCE_LAYER2 and context == "upload"
+        )
         scan = scan_document_text(text, force_layer2_all_chunks=force_layer2, location=location)
         reasons: List[str] = []
 

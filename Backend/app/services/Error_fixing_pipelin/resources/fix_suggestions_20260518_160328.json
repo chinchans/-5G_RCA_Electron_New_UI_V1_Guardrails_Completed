@@ -1,0 +1,36 @@
+{
+  "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-test",
+  "fix_suggestion": {
+    "code_dir": "C:\\Users\\ChanduVangala\\Desktop\\RCA_Electron-main\\RCA_Electron-main\\Backend\\app\\services\\Error_fixing_pipelin\\openairinterface5g-test",
+    "code_patches": [
+      {
+        "function_name": "encode_cu_to_du_rrc_info / decode_cu_to_du_rrc_info",
+        "file_path": "openairinterface5g-develop/openair2/F1AP/lib/f1ap_ue_context.c",
+        "patch_type": "targeted_replacement",
+        "original_code": "F1AP_ProtocolExtensionContainer_10696P60_t *p = NULL;",
+        "patched_code": "F1AP_ProtocolExtensionContainer_19016P60_t *p = NULL;",
+        "line_numbers": "around line 61 and 92",
+        "description": "Replace incorrect ASN.1 generated type 'F1AP_ProtocolExtensionContainer_10696P60_t' with the correct 'F1AP_ProtocolExtensionContainer_19016P60_t' as suggested by compiler to fix unknown type errors and enable correct struct member access."
+      },
+      {
+        "function_name": "encode_drbs_to_setup / encode_drbs_to_setupmod / decode_drbs_to_setup / decode_drbs_to_setupmod",
+        "file_path": "openairinterface5g-develop/openair2/F1AP/lib/f1ap_ue_context.c",
+        "patch_type": "targeted_replacement",
+        "original_code": "F1AP_ProtocolExtensionContainer_10696P82_t *ext = calloc_or_fail(1, sizeof(*ext));",
+        "patched_code": "F1AP_ProtocolExtensionContainer_19016P82_t *ext = calloc_or_fail(1, sizeof(*ext));",
+        "line_numbers": "around line 669, 784",
+        "description": "Replace incorrect ASN.1 generated type 'F1AP_ProtocolExtensionContainer_10696P82_t' with the correct 'F1AP_ProtocolExtensionContainer_19016P82_t' to fix unknown type errors and allow proper access to 'list' member."
+      },
+      {
+        "function_name": "encode_drbs_to_setupmod / decode_drbs_to_setupmod",
+        "file_path": "openairinterface5g-develop/openair2/F1AP/lib/f1ap_ue_context.c",
+        "patch_type": "targeted_replacement",
+        "original_code": "F1AP_ProtocolExtensionContainer_10696P83_t *ext = calloc_or_fail(1, sizeof(*ext));",
+        "patched_code": "F1AP_ProtocolExtensionContainer_19016P83_t *ext = calloc_or_fail(1, sizeof(*ext));",
+        "line_numbers": "around line 726, 850",
+        "description": "Replace incorrect ASN.1 generated type 'F1AP_ProtocolExtensionContainer_10696P83_t' with the correct 'F1AP_ProtocolExtensionContainer_19016P83_t' as per compiler suggestion to fix unknown type errors and enable correct struct usage."
+      }
+    ],
+    "config_patches": []
+  }
+}

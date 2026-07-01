@@ -1,0 +1,244 @@
+Will compile gNB
+OPENAIR_DIR    = /home/tcs/Downloads/OAI-CU
+Running "cmake ../../.."
+-- Ccache not found. Consider installing it for faster compilation. Command: sudo apt/dnf install ccache
+-- Check if /opt/asn1c/bin/asn1c supports -gen-APER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-UPER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-JER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-BER
+-- Check if /opt/asn1c/bin/asn1c supports -no-gen-OER
+-- CMAKE_BUILD_TYPE is RelWithDebInfo
+-- CPU architecture is x86_64
+-- AVX512 intrinsics are OFF
+-- AVX2 intrinsics are ON
+-- LTTNG support disabled
+-- Checking for module 'libcap'
+--   No package 'libcap' found
+-- Checking for module 'cblas'
+--   No package 'cblas' found
+-- No Doxygen documentation requested
+-- No Support for Aerial
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build
+cd /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build
+Running "cmake --build .  --target  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim -- -j4"
+Log file for compilation is being written to: /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt
+Consolidate compiler generated dependencies of target ldpc
+[ 53%] Built target ldpc
+Consolidate compiler generated dependencies of target asn1_nr_rrc
+Consolidate compiler generated dependencies of target GTPV1U
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘read_slice_info’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:9: error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’
+  386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 53%] Built target GTPV1U
+Consolidate compiler generated dependencies of target thread-pool
+[ 53%] Built target thread-pool
+--
+[ 53%] Built target LOG
+Consolidate compiler generated dependencies of target T
+[ 53%] Built target T
+Consolidate compiler generated dependencies of target utils
+[ 77%] Built target asn1_lte_rrc
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: error: ‘F1AP_ProtocolExtensionContainer_10696P34_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P34_t’?
+  386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;
+      |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                          F1AP_ProtocolExtensionContainer_19016P34_t
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:58: note: each undeclared identifier is reported only once for each function it appears in
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:386:102: error: expected expression before ‘)’ token
+  386 |   const F1AP_ProtocolExtensionContainer_10696P34_t *p = (F1AP_ProtocolExtensionContainer_10696P34_t *)plmn->iE_Extensions;
+      |                                                                                                      ^
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:387:8: error: request for member ‘list’ in something not a structure or union
+  387 |   if (p->list.count == 0)
+      |        ^~
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:49: error: request for member ‘list’ in something not a structure or union
+  390 |   const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];
+      |                                                 ^~
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: At top level:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:403:8: error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’
+  403 | static F1AP_ProtocolExtensionContainer_10696P34_t *write_slice_info(int num_ssi, const nssai_t *nssai)
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 77%] Built target utils
+Consolidate compiler generated dependencies of target UTIL
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘write_slice_info’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:408:3: error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P34_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P34_t’?
+  408 |   F1AP_ProtocolExtensionContainer_10696P34_t *p = calloc_or_fail(1, sizeof(*p));
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |   F1AP_ProtocolExtensionContainer_19016P34_t
+In file included from /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/F1AP_ProtocolIE-Container.h:15,
+                 from /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/F1AP_InitialULRRCMessageTransfer.h:15,
+                 from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_includes.h:26,
+                 from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:31:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:409:21: error: request for member ‘list’ in something not a structure or union
+  409 |   asn1cSequenceAdd(p->list, F1AP_ServedPLMNs_ItemExtIEs_t, served_plmns_itemExtIEs);
+      |                     ^~
+/home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/asn_SEQUENCE_OF.h:22:27: note: in definition of macro ‘ASN_SEQUENCE_ADD’
+   22 |         asn_sequence_add((headptr), (ptr))
+      |                           ^~~~~~~
+--
+  409 |   asn1cSequenceAdd(p->list, F1AP_ServedPLMNs_ItemExtIEs_t, served_plmns_itemExtIEs);
+      |   ^~~~~~~~~~~~~~~~
+[ 77%] Built target UTIL
+Consolidate compiler generated dependencies of target CONFIG_LIB
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘encode_cells_to_activate’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:635:5: error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P112_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P112_t’?
+  635 |     F1AP_ProtocolExtensionContainer_10696P112_t *p = calloc_or_fail(1, sizeof(*p));
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |     F1AP_ProtocolExtensionContainer_19016P112_t
+[ 77%] Built target CONFIG_LIB
+In file included from /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/F1AP_ProtocolIE-Container.h:15,
+                 from /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/F1AP_InitialULRRCMessageTransfer.h:15,
+                 from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_includes.h:26,
+                 from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:31:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:637:23: error: request for member ‘list’ in something not a structure or union
+  637 |     asn1cSequenceAdd(p->list, F1AP_Cells_to_be_Activated_List_ItemExtIEs_t, cells_to_be_activated_itemExtIEs);
+      |                       ^~
+/home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/asn_SEQUENCE_OF.h:22:27: note: in definition of macro ‘ASN_SEQUENCE_ADD’
+   22 |         asn_sequence_add((headptr), (ptr))
+      |                           ^~~~~~~
+--
+  637 |     asn1cSequenceAdd(p->list, F1AP_Cells_to_be_Activated_List_ItemExtIEs_t, cells_to_be_activated_itemExtIEs);
+      |     ^~~~~~~~~~~~~~~~
+Consolidate compiler generated dependencies of target shlib_loader
+Consolidate compiler generated dependencies of target SCHED_NR_LIB
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘decode_cells_to_activate’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:670:3: error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P112_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P112_t’?
+  670 |   F1AP_ProtocolExtensionContainer_10696P112_t *ext = (F1AP_ProtocolExtensionContainer_10696P112_t *)cell->iE_Extensions;
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |   F1AP_ProtocolExtensionContainer_19016P112_t
+[ 77%] Built target shlib_loader
+[ 77%] Built target SCHED_NR_LIB
+--
+[ 77%] Built target PHY_COMMON
+[ 77%] Built target PHY_NR_COMMON
+Consolidate compiler generated dependencies of target nr_common
+Consolidate compiler generated dependencies of target nr_phy_common
+[ 77%] Built target nr_common
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:670:55: error: ‘F1AP_ProtocolExtensionContainer_10696P112_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P112_t’?
+  670 |   F1AP_ProtocolExtensionContainer_10696P112_t *ext = (F1AP_ProtocolExtensionContainer_10696P112_t *)cell->iE_Extensions;
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                       F1AP_ProtocolExtensionContainer_19016P112_t
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:670:100: error: expected expression before ‘)’ token
+  670 |   F1AP_ProtocolExtensionContainer_10696P112_t *ext = (F1AP_ProtocolExtensionContainer_10696P112_t *)cell->iE_Extensions;
+      |                                                                                                    ^
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:672:32: error: request for member ‘list’ in something not a structure or union
+  672 |     for (int cnt = 0; cnt < ext->list.count; cnt++) {
+      |                                ^~
+In file included from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:24:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:673:22: error: request for member ‘list’ in something not a structure or union
+  673 |       AssertError(ext->list.count == 1, return false, "At least one SI message should be present, and only 1 is supported");
+      |                      ^~
+/home/tcs/Downloads/OAI-CU/common/utils/assertions.h:49:11: note: in definition of macro ‘_Assert_’
+   49 |     if (!(cOND)) {                                          \
+      |           ^~~~
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:673:7: note: in expansion of macro ‘AssertError’
+  673 |       AssertError(ext->list.count == 1, return false, "At least one SI message should be present, and only 1 is supported");
+      |       ^~~~~~~~~~~
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:675:62: error: request for member ‘list’ in something not a structure or union
+  675 |           (F1AP_Cells_to_be_Activated_List_ItemExtIEs_t *)ext->list.array[cnt];
+      |                                                              ^~
+[ 77%] Built target nr_phy_common
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘encode_f1ap_setup_request’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:789:3: error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?
+  789 |   F1AP_ProtocolExtensionContainer_10696P228_t *p = calloc_or_fail(1, sizeof(*p));
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |   F1AP_ProtocolExtensionContainer_19016P228_t
+In file included from /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/F1AP_ProtocolIE-Container.h:15,
+                 from /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/F1AP_InitialULRRCMessageTransfer.h:15,
+                 from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_includes.h:26,
+                 from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:31:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:790:21: error: request for member ‘list’ in something not a structure or union
+  790 |   asn1cSequenceAdd(p->list, F1AP_RRC_Version_ExtIEs_t, rrcv_ext);
+      |                     ^~
+/home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/asn_SEQUENCE_OF.h:22:27: note: in definition of macro ‘ASN_SEQUENCE_ADD’
+   22 |         asn_sequence_add((headptr), (ptr))
+      |                           ^~~~~~~
+--
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:790:3: note: in expansion of macro ‘asn1cSequenceAdd’
+  790 |   asn1cSequenceAdd(p->list, F1AP_RRC_Version_ExtIEs_t, rrcv_ext);
+      |   ^~~~~~~~~~~~~~~~
+Consolidate compiler generated dependencies of target PHY_RU
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘decode_f1ap_setup_request’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:869:11: error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?
+  869 |           F1AP_ProtocolExtensionContainer_10696P228_t *ext =
+      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |           F1AP_ProtocolExtensionContainer_19016P228_t
+Consolidate compiler generated dependencies of target e1ap
+[ 77%] Built target PHY_RU
+--
+Consolidate compiler generated dependencies of target multi
+Consolidate compiler generated dependencies of target time_management_core
+[ 77%] Built target multi
+[ 77%] Built target time_management_core
+Consolidate compiler generated dependencies of target e1_if
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:870:16: error: ‘F1AP_ProtocolExtensionContainer_10696P228_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?
+  870 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                F1AP_ProtocolExtensionContainer_19016P228_t
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:870:61: error: expected expression before ‘)’ token
+  870 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;
+      |                                                             ^
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:871:18: error: request for member ‘list’ in something not a structure or union
+  871 |           if (ext->list.count > 0) {
+      |                  ^~
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:52: error: request for member ‘list’ in something not a structure or union
+  872 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];
+      |                                                    ^~
+[ 77%] Built target e1_if
+Consolidate compiler generated dependencies of target PHY_NR
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘encode_f1ap_setup_response’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1061:3: error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?
+ 1061 |   F1AP_ProtocolExtensionContainer_10696P228_t *p = calloc_or_fail(1, sizeof(*p));
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |   F1AP_ProtocolExtensionContainer_19016P228_t
+In file included from /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/F1AP_ProtocolIE-Container.h:15,
+                 from /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/F1AP_InitialULRRCMessageTransfer.h:15,
+                 from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_includes.h:26,
+                 from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:31:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1062:21: error: request for member ‘list’ in something not a structure or union
+ 1062 |   asn1cSequenceAdd(p->list, F1AP_RRC_Version_ExtIEs_t, rrcv_ext);
+      |                     ^~
+/home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build/openair2/F1AP/MESSAGES/asn_SEQUENCE_OF.h:22:27: note: in definition of macro ‘ASN_SEQUENCE_ADD’
+   22 |         asn_sequence_add((headptr), (ptr))
+      |                           ^~~~~~~
+--
+[ 77%] Built target T_tools
+[ 77%] Built target PHY_NR
+Consolidate compiler generated dependencies of target time_management
+[100%] Built target asn1_nr_rrc
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function ‘decode_f1ap_setup_response’:
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1115:11: error: unknown type name ‘F1AP_ProtocolExtensionContainer_10696P228_t’; did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?
+ 1115 |           F1AP_ProtocolExtensionContainer_10696P228_t *ext =
+      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |           F1AP_ProtocolExtensionContainer_19016P228_t
+[100%] Built target time_management
+Consolidate compiler generated dependencies of target nr_rrc
+[100%] Built target nr_rrc
+Consolidate compiler generated dependencies of target lte_rrc
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:16: error: ‘F1AP_ProtocolExtensionContainer_10696P228_t’ undeclared (first use in this function); did you mean ‘F1AP_ProtocolExtensionContainer_19016P228_t’?
+ 1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                F1AP_ProtocolExtensionContainer_19016P228_t
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1116:61: error: expected expression before ‘)’ token
+ 1116 |               (F1AP_ProtocolExtensionContainer_10696P228_t *)ie->value.choice.RRC_Version.iE_Extensions;
+      |                                                             ^
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1117:18: error: request for member ‘list’ in something not a structure or union
+ 1117 |           if (ext->list.count > 0) {
+      |                  ^~
+/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:52: error: request for member ‘list’ in something not a structure or union
+ 1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];
+      |                                                    ^~
+[100%] Built target lte_rrc
+gmake[3]: *** [openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/build.make:104: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:7109: openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/all] Error 2
+gmake[2]: *** Waiting for unfinished jobs....
+Consolidate compiler generated dependencies of target s1ap
+Consolidate compiler generated dependencies of target m2ap
+[100%] Built target s1ap
+[100%] Built target m2ap
+gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2
+gmake: *** [Makefile:891: nr-softmodem] Error 2
+ERROR: 30 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt
+compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed
+build have failed

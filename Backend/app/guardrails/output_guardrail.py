@@ -393,6 +393,18 @@ def _match_folder_by_scanning_known_titles(text: str) -> Optional[Path]:
     return None
 
 
+def resolve_tsg_dataset_folder_from_content(content: str) -> Optional[Path]:
+    """Resolve Spec Intelligence dataset folder from uploaded or staged total_content text."""
+    if not content or not content.strip():
+        return None
+    title = _infer_title_from_text(content)
+    return (
+        resolve_dataset_folder_by_title(title)
+        or _match_dataset_folder_from_content(content)
+        or _match_folder_by_scanning_known_titles(content)
+    )
+
+
 def _extract_tsg_upload_text(path: Path, max_chars: int = 200_000) -> str:
     from app.guardrails.document_text_extractor import extract_text_for_scan
 
@@ -877,6 +889,13 @@ def validate_tsg_dataset_upload(
             "dataset_folder": str(folder.resolve()),
         },
     )
+
+    try:
+        from app.guardrails.intent_graph_store import build_and_save_intent_graph
+
+        build_and_save_intent_graph(folder)
+    except Exception as exc:
+        groundedness.warnings.append(f"Intent graph build skipped: {exc}")
 
     return dataset, _tsg_nli_verdict(groundedness=groundedness), True
 

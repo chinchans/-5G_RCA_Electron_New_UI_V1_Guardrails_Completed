@@ -119,7 +119,9 @@ function extractGuardrailPayload(error) {
         reasons: Array.isArray(reasons) ? reasons : [],
         detail,
         isGuardrailBlock: Boolean(
-            error.isGuardrailBlock || detail?.error === 'document_blocked_by_guardrails'
+            error.isGuardrailBlock
+            || detail?.error === 'document_blocked_by_guardrails'
+            || detail?.error === 'prompt_blocked_by_guardrails'
         ),
     };
 }
@@ -143,8 +145,34 @@ function formatGuardrailRejectionStatus(findings, reasons) {
         const suffix = rows.length > 3 ? ` (+${rows.length - 3} more)` : '';
         return parts.join('; ') + suffix;
     }
-    return 'The document was blocked because the guardrails detected instruction-like or malicious prompt content.';
+    return 'The content was blocked because the guardrails detected instruction-like or malicious prompt content.';
 }
+
+function isTsgPromptGuardrailError(errorMsg) {
+    const msg = String(errorMsg || '').toLowerCase();
+    return msg.includes('prompt_blocked_by_guardrails')
+        || msg.includes('input security guardrails')
+        || msg.includes('prompt injection')
+        || msg.includes('jailbreak detected')
+        || (msg.includes('422') && msg.includes('guardrail'));
+}
+
+function showTsgPromptGuardrailStatus(error, title) {
+    const payload = extractGuardrailPayload(error);
+    const rejected = payload.isGuardrailBlock || isTsgPromptGuardrailError(error?.message);
+    if (!rejected) {
+        return false;
+    }
+    showStatusBar(
+        formatGuardrailRejectionStatus(payload.findings, payload.reasons),
+        'error',
+        title || 'Prompt blocked — prompt injection / jailbreak detected'
+    );
+    return true;
+}
+
+window.isTsgPromptGuardrailError = isTsgPromptGuardrailError;
+window.showTsgPromptGuardrailStatus = showTsgPromptGuardrailStatus;
 
 function getStatusTitle(type) {
     switch (type) {
@@ -6814,8 +6842,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (absFolder) {
             currentDatasetFolderPath = absFolder;
+            setActiveTestDatasetFolder(absFolder);
         } else if (absTotal) {
             currentDatasetFolderPath = absTotal.replace(/\/total_content\.txt$/i, '');
+            setActiveTestDatasetFolder(currentDatasetFolderPath);
         }
 
         return { absTotal, absFolder };
@@ -9122,9 +9152,232 @@ ${escapeHtml(output)}
 
     // Test Script Generator variables
     let currentTestDataset = null;
+    let currentTestDatasetFolder = null;
+    let lastIntentCoverageResult = null;
+
+    function getActiveTestDatasetFolder() {
+        return currentTestDatasetFolder || currentDatasetFolderPath || null;
+    }
+
+    function setActiveTestDatasetFolder(folderPath) {
+        if (!folderPath) return;
+        currentTestDatasetFolder = folderPath;
+    }
     let currentTestPromptKey = null;
     let testPromptTemplates = {};
     let previousTestResponse = null;
+    let originalTemplateContent = null;
+    let isTestPromptEditing = false;
+    let testPromptEditBaseline = null;
+    let testPromptResetContent = null;
+    let testPromptFactoryDefaults = null;
+
+    const BUILTIN_FACTORY_TEMPLATE_KEYS = new Set([
+        'Test Case',
+        'Test Script',
+        'Testing Strategy',
+        'Bug Analysis',
+        'Feature Design',
+        'Code Review',
+        'Performance Test',
+        'API Design',
+        'Code Assistant'
+    ]);
+
+    function cloneTemplateMap(templates) {
+        if (!templates) return null;
+        try {
+            return JSON.parse(JSON.stringify(templates));
+        } catch {
+            return templates;
+        }
+    }
+
+    function setTestPromptFactoryDefaults(defaults) {
+        if (!defaults || typeof defaults !== 'object') return;
+        testPromptFactoryDefaults = cloneTemplateMap(defaults);
+    }
+
+    function normalizeTemplateContentForDisplay(templateContent) {
+        if (templateContent == null) return '';
+        if (typeof templateContent === 'string') return templateContent;
+        if (typeof templateContent === 'object') {
+            const systemPrompt = templateContent['System Prompt'] || '';
+            const userPrompt = templateContent['User Prompt'] || '';
+            if (systemPrompt || userPrompt) {
+                return systemPrompt ? `${systemPrompt}\n\n${userPrompt}` : userPrompt;
+            }
+            try {
+                return JSON.stringify(templateContent);
+            } catch {
+                return String(templateContent);
+            }
+        }
+        return String(templateContent);
+    }
+
+    function getTemplateContentPreview(templateContent, maxLen = 100) {
+        const text = normalizeTemplateContentForDisplay(templateContent);
+        if (!text) return '';
+        return text.length > maxLen ? `${text.substring(0, maxLen)}...` : text;
+    }
+
+    function applyTestPromptVariablesToContent(baseContent) {
+        if (!baseContent) return '';
+
+        const domainSelect = document.getElementById('domainSelect');
+        const systemTypeSelect = document.getElementById('systemTypeSelect');
+        const primaryFeatureSelect = document.getElementById('primaryFeatureSelect');
+        const connectionMethodSelect = document.getElementById('connectionMethodSelect');
+        const loginCredentialsSelect = document.getElementById('loginCredentialsSelect');
+        const accessModeSelect = document.getElementById('accessModeSelect');
+        const languageSelect = document.getElementById('languageSelect');
+
+        const domain = domainSelect ? domainSelect.value : '';
+        const systemType = systemTypeSelect ? systemTypeSelect.value : '';
+        const primaryFeature = primaryFeatureSelect ? primaryFeatureSelect.value : '';
+        const connectionMethod = connectionMethodSelect ? connectionMethodSelect.value : '';
+        const loginCredentials = loginCredentialsSelect ? loginCredentialsSelect.value : '';
+        const accessMode = accessModeSelect ? accessModeSelect.value : '';
+        const language = languageSelect ? languageSelect.value : '';
+
+        let updatedContent = baseContent;
+        updatedContent = updatedContent.replace(/\{DOMAIN\}/g, domain || '{DOMAIN}');
+        updatedContent = updatedContent.replace(/\{SYSTEM_TYPE\}/g, systemType || '{SYSTEM_TYPE}');
+        updatedContent = updatedContent.replace(/\{PRIMARY_FEATURE\}/g, primaryFeature || '{PRIMARY_FEATURE}');
+        updatedContent = updatedContent.replace(/\{CONNECTION_METHOD\}/g, connectionMethod || '{CONNECTION_METHOD}');
+        updatedContent = updatedContent.replace(/\{LOGIN_CREDENTIALS\}/g, loginCredentials || '{LOGIN_CREDENTIALS}');
+        updatedContent = updatedContent.replace(/\{ACCESS_MODE\}/g, accessMode || '{ACCESS_MODE}');
+        updatedContent = updatedContent.replace(/\{LANGUAGE\}/g, language || '{LANGUAGE}');
+        return updatedContent;
+    }
+
+    function getTemplateBaseContentForDisplay(templateKey) {
+        if (BUILTIN_FACTORY_TEMPLATE_KEYS.has(templateKey)
+            && testPromptFactoryDefaults
+            && testPromptFactoryDefaults[templateKey] != null) {
+            return normalizeTemplateContentForDisplay(testPromptFactoryDefaults[templateKey]);
+        }
+        if (testPromptTemplates && testPromptTemplates[templateKey] != null) {
+            return normalizeTemplateContentForDisplay(testPromptTemplates[templateKey]);
+        }
+        return '';
+    }
+
+    function getFactoryTestPromptContent() {
+        return getCanonicalTestPromptContent();
+    }
+
+    function getCanonicalTestPromptContent() {
+        const key = currentTestPromptKey;
+        if (!key) return '';
+
+        const baseContent = getTemplateBaseContentForDisplay(key);
+        if (!baseContent) {
+            return testPromptResetContent || '';
+        }
+
+        if (key === 'Test Case' || key === 'Test Script') {
+            return applyTestPromptVariablesToContent(baseContent);
+        }
+        return baseContent;
+    }
+
+    function captureTestPromptResetContent() {
+        if (isTestPromptEditing) return;
+        testPromptResetContent = getFactoryTestPromptContent();
+    }
+
+    function setTestPromptEditorReadOnly(readOnly) {
+        const promptEditor = document.getElementById('testPromptTextEditor');
+        if (!promptEditor) return;
+        promptEditor.readOnly = readOnly;
+        if (readOnly) {
+            promptEditor.setAttribute('readonly', 'readonly');
+            promptEditor.style.backgroundColor = '#FAFAFA';
+        } else {
+            promptEditor.removeAttribute('readonly');
+            promptEditor.style.backgroundColor = '#ffffff';
+        }
+    }
+
+    function updateTestPromptActionButtons() {
+        const modifyBtn = document.getElementById('testModifyBtn');
+        const resetBtn = document.getElementById('testResetPromptBtn');
+        const saveTemplateBtn = document.getElementById('testSaveTemplateBtn');
+        const promptEditor = document.getElementById('testPromptTextEditor');
+        const hasTemplate = Boolean(currentTestPromptKey && currentTestPromptKey !== 'more-templates');
+        const hasContent = Boolean(promptEditor && promptEditor.value.trim());
+
+        if (modifyBtn) {
+            modifyBtn.disabled = isTestPromptEditing || !hasTemplate;
+            modifyBtn.style.display = isTestPromptEditing ? 'none' : '';
+        }
+        if (resetBtn) {
+            resetBtn.style.display = isTestPromptEditing ? '' : 'none';
+            resetBtn.disabled = !isTestPromptEditing;
+        }
+        if (saveTemplateBtn && !isTestPromptEditing) {
+            saveTemplateBtn.style.display = 'none';
+        }
+        if (saveTemplateBtn && isTestPromptEditing) {
+            saveTemplateBtn.style.display = 'inline-block';
+            saveTemplateBtn.disabled = !hasContent;
+        }
+    }
+
+    function enterTestPromptEditMode() {
+        const promptEditor = document.getElementById('testPromptTextEditor');
+        if (!promptEditor) {
+            showStatusBar('Prompt editor not found', 'error');
+            return;
+        }
+        if (!currentTestPromptKey || currentTestPromptKey === 'more-templates') {
+            showStatusBar('Select a template before modifying the prompt', 'warning');
+            return;
+        }
+
+        testPromptEditBaseline = getFactoryTestPromptContent() || promptEditor.value;
+        if (!originalTemplateContent) {
+            originalTemplateContent = testPromptEditBaseline;
+        }
+        isTestPromptEditing = true;
+        setTestPromptEditorReadOnly(false);
+        updateTestPromptActionButtons();
+        promptEditor.focus();
+        showStatusBar('Prompt editing enabled — use Reset to restore the original', 'info');
+    }
+
+    function resetTestPromptEditor() {
+        const promptEditor = document.getElementById('testPromptTextEditor');
+        if (!promptEditor) return;
+
+        const resetContent = getFactoryTestPromptContent();
+        if (!resetContent) {
+            showStatusBar('Unable to restore the default template prompt', 'error');
+            return;
+        }
+
+        promptEditor.value = resetContent;
+        originalTemplateContent = resetContent;
+        testPromptResetContent = resetContent;
+
+        isTestPromptEditing = false;
+        setTestPromptEditorReadOnly(true);
+        updateTestPromptActionButtons();
+        showStatusBar('Prompt reset to default system template', 'success');
+    }
+
+    function exitTestPromptEditMode({ keepChanges = true } = {}) {
+        const promptEditor = document.getElementById('testPromptTextEditor');
+        if (!keepChanges && testPromptEditBaseline != null && promptEditor) {
+            promptEditor.value = testPromptEditBaseline;
+        }
+        isTestPromptEditing = false;
+        testPromptEditBaseline = null;
+        setTestPromptEditorReadOnly(true);
+        updateTestPromptActionButtons();
+    }
 
     function showTsgGenConfigPanel(templateKey) {
         const panelMap = {
@@ -9189,7 +9442,59 @@ ${escapeHtml(output)}
             const statusDiv = document.getElementById('testDatasetStatus');
             sourceEl.textContent = statusDiv?.textContent || 'No dataset loaded';
         }
+        updateTsgIntentCoverageStatus();
     }
+
+    function formatTestCaseJsonForDisplay(content) {
+        if (!content || typeof content !== 'string') return content || '';
+        const trimmed = content.trim();
+        try {
+            return JSON.stringify(JSON.parse(trimmed), null, 2);
+        } catch {
+            const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
+            if (fenced) {
+                try {
+                    return JSON.stringify(JSON.parse(fenced[1].trim()), null, 2);
+                } catch {
+                    return fenced[1].trim();
+                }
+            }
+            return content;
+        }
+    }
+
+    function syncTestResultEditorHeight() {
+        const editor = document.getElementById('testResponseTextEditor');
+        if (!editor) return;
+        editor.style.height = 'auto';
+        const targetHeight = Math.min(
+            Math.max(editor.scrollHeight + 8, 280),
+            Math.floor(window.innerHeight * 0.65)
+        );
+        editor.style.height = `${targetHeight}px`;
+    }
+
+    function displayGeneratedTestResult(content, { truncated = false, templateKey = null } = {}) {
+        const responseEditor = document.getElementById('testResponseTextEditor');
+        if (!responseEditor) return;
+
+        const key = templateKey || currentTestPromptKey;
+        const displayContent = key === 'Test Case'
+            ? formatTestCaseJsonForDisplay(content)
+            : (content || '');
+
+        responseEditor.value = displayContent;
+        previousTestResponse = displayContent;
+        syncTestResultEditorHeight();
+
+        if (truncated) {
+            showStatusBar(
+                'Generated output was truncated by the model token limit. Restart the backend and regenerate, or raise TEST_CASE_MAX_OUTPUT_TOKENS in Backend/.env.',
+                'warning'
+            );
+        }
+    }
+
     // Load Test Script Generator prompt templates
     // Initialize custom templates list
     window.customTemplateNames = [];
@@ -9216,9 +9521,12 @@ ${escapeHtml(output)}
                 console.warn('⚠️ window.API.checkBackendHealth not available, proceeding to load templates anyway');
             }
             
-            const response = await window.API.getPromptTemplates();
+            const response = await fetchPromptTemplatesFromBackend();
             if (response.success) {
                 testPromptTemplates = response.templates;
+                if (response.default_templates) {
+                    setTestPromptFactoryDefaults(response.default_templates);
+                }
                 console.log('✅ Backend prompt templates loaded:', Object.keys(testPromptTemplates));
                 console.log('✅ Template count:', Object.keys(testPromptTemplates).length);
                 
@@ -9712,6 +10020,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             },
             "Custom": ""
         };
+        setTestPromptFactoryDefaults(testPromptTemplates);
                 return false;
             }
         } catch (error) {
@@ -9835,11 +10144,25 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 },
                 "Custom": ""
             };
+            setTestPromptFactoryDefaults(testPromptTemplates);
             return false;
         }
     }
 
     // Save template to backend
+    async function fetchPromptTemplatesFromBackend() {
+        if (window.API && typeof window.API.getPromptTemplates === 'function') {
+            return await window.API.getPromptTemplates();
+        }
+
+        const baseUrl = (window.API && window.API.API_BASE_URL) || 'http://127.0.0.1:8000';
+        const response = await fetch(`${baseUrl}/api/test-script/prompts`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    }
+
     async function saveTemplateToBackend(templateName, templateContent) {
         try {
             console.log('💾 Saving template to backend:');
@@ -9871,7 +10194,23 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const errorText = await response.text();
+                    const parseFn = window.API?.parseGuardrailHttpErrorBody;
+                    const attachFn = window.API?.attachGuardrailFieldsToError;
+                    const info = typeof parseFn === 'function'
+                        ? parseFn(errorText)
+                        : { message: errorText, guardrailFindings: [], isGuardrailBlock: false };
+                    const fetchErr = new Error(`HTTP error! status: ${response.status} - ${info.message}`);
+                    fetchErr.status = response.status;
+                    if (typeof attachFn === 'function') {
+                        attachFn(fetchErr, errorText);
+                    } else {
+                        fetchErr.guardrailDetail = info.guardrailDetail || null;
+                        fetchErr.guardrailFindings = info.guardrailFindings || [];
+                        fetchErr.guardrailReasons = info.guardrailReasons || [];
+                        fetchErr.isGuardrailBlock = Boolean(info.isGuardrailBlock);
+                    }
+                    throw fetchErr;
                 }
                 
                 const result = await response.json();
@@ -10091,7 +10430,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     
                     // Also load their content into testPromptTemplates
                     console.log('🔄 Loading template contents from backend...');
-                    const allTemplates = await window.API.getPromptTemplates();
+                    const allTemplates = await fetchPromptTemplatesFromBackend();
                     if (allTemplates.success) {
                         console.log('📚 All templates from backend:', Object.keys(allTemplates.templates));
                         customTemplates.forEach(name => {
@@ -10196,6 +10535,157 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         }
     }
 
+    function clearTsgIntentCoveragePanel() {
+        const panel = document.getElementById('testIntentCoveragePanel');
+        if (!panel) return;
+        panel.style.display = 'none';
+        panel.innerHTML = '';
+        lastIntentCoverageResult = null;
+        updateTsgIntentCoverageStatus();
+    }
+
+    function updateTsgIntentCoverageStatus() {
+        const wrap = document.getElementById('tsgStatusIntentCoverageWrap');
+        const valueEl = document.getElementById('tsgStatusIntentCoverage');
+        if (!wrap || !valueEl) return;
+
+        const isTestCase = currentTestPromptKey === 'Test Case';
+        if (!isTestCase) {
+            wrap.style.display = 'none';
+            return;
+        }
+
+        wrap.style.display = '';
+        if (!lastIntentCoverageResult || lastIntentCoverageResult.available === false) {
+            valueEl.textContent = getActiveTestDatasetFolder()
+                ? 'Pending — generate test cases'
+                : '—';
+            valueEl.className = 'tsg-status-value';
+            return;
+        }
+
+        const passed = lastIntentCoverageResult.passed !== false;
+        const pct = Number(lastIntentCoverageResult.coverage_percent) || 0;
+        const covered = lastIntentCoverageResult.mandatory_covered ?? 0;
+        const total = lastIntentCoverageResult.mandatory_total ?? 0;
+        valueEl.textContent = `${passed ? 'PASS' : 'REVIEW'} · ${pct}% (${covered}/${total})`;
+        valueEl.className = passed
+            ? 'tsg-status-value tsg-status-value--green'
+            : 'tsg-status-value tsg-status-value--amber';
+    }
+
+    function buildTsgIntentCoverageSuccessState(intentCoverage) {
+        const pct = Number(intentCoverage.coverage_percent) || 0;
+        const mandatoryCovered = intentCoverage.mandatory_covered ?? 0;
+        const mandatoryTotal = intentCoverage.mandatory_total ?? 0;
+
+        let html = '<div class="tsg-nli-panel__success tsg-intent-panel__success" role="status" aria-live="polite">';
+        html += '<div class="tsg-nli-panel__success-icon" aria-hidden="true">';
+        html += '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">';
+        html += '<path d="M20 6 9 17l-5-5"/>';
+        html += '</svg></div>';
+        html += '<p class="tsg-nli-panel__success-title">Intent coverage guardrail passed</p>';
+        html += `<p class="tsg-nli-panel__success-subtitle">${pct}% mandatory intent coverage</p>`;
+        html += `<p class="tsg-nli-panel__success-detail">`;
+        html += `Generated test cases cover <strong>${mandatoryCovered}/${mandatoryTotal}</strong> mandatory procedures and KPIs `;
+        html += `from the dataset knowledge graph.`;
+        html += `</p>`;
+        html += '<div class="tsg-nli-panel__success-badges">';
+        html += '<span class="tsg-nli-panel__success-chip">Knowledge graph validated</span>';
+        html += '<span class="tsg-nli-panel__success-chip">Intent coverage passed</span>';
+        html += '</div></div>';
+        return html;
+    }
+
+    function renderTsgIntentCoveragePanel(intentCoverage) {
+        const panel = document.getElementById('testIntentCoveragePanel');
+        if (!panel || !intentCoverage || intentCoverage.available === false) {
+            clearTsgIntentCoveragePanel();
+            return;
+        }
+
+        lastIntentCoverageResult = intentCoverage;
+        updateTsgIntentCoverageStatus();
+
+        const escapeHtml = tsgNliEscapeHtml;
+        const passed = intentCoverage.passed !== false;
+        const pct = Number(intentCoverage.coverage_percent) || 0;
+        const mandatoryCovered = intentCoverage.mandatory_covered ?? 0;
+        const mandatoryTotal = intentCoverage.mandatory_total ?? 0;
+        const uncovered = Array.isArray(intentCoverage.uncovered_intents) ? intentCoverage.uncovered_intents : [];
+        const mappings = Array.isArray(intentCoverage.test_case_mappings) ? intentCoverage.test_case_mappings : [];
+        const warnings = (Array.isArray(intentCoverage.warnings) ? intentCoverage.warnings : [])
+            .filter((w) => !String(w).toLowerCase().includes('test categor'));
+
+        let html = '<div class="tsg-nli-panel__inner tsg-intent-panel__inner">';
+
+        if (passed && uncovered.length === 0) {
+            html += buildTsgIntentCoverageSuccessState(intentCoverage);
+        } else {
+            html += '<div class="tsg-nli-panel__header">';
+            html += '<div class="tsg-nli-panel__header-main">';
+            html += '<h3 class="tsg-nli-panel__title">Intent coverage guardrail</h3>';
+            html += `<p class="tsg-nli-panel__meta tsg-nli-panel__meta--${passed ? 'ok' : 'warn'}">`;
+            html += passed
+                ? 'All mandatory intents from the dataset knowledge graph are covered.'
+                : 'Some mandatory intents from the dataset knowledge graph are not covered yet.';
+            html += '</p></div>';
+            html += '<div class="tsg-nli-panel__header-actions">';
+            html += `<span class="tsg-nli-panel__badge tsg-nli-panel__badge--${passed ? 'pass' : 'warn'}">${passed ? 'PASS' : 'REVIEW'}</span>`;
+            html += `<span class="tsg-nli-panel__badge tsg-nli-panel__badge--${passed ? 'pass' : 'warn'}">${pct}%</span>`;
+            html += '</div></div>';
+
+            html += '<div class="tsg-intent-panel__body">';
+            html += '<p class="tsg-nli-panel__summary">';
+            html += `Mandatory intents: <strong>${mandatoryCovered}/${mandatoryTotal}</strong>`;
+            if (intentCoverage.advisory_only !== false) {
+                html += ' · <em>Advisory — generation not blocked</em>';
+            }
+            html += '</p>';
+
+            if (uncovered.length) {
+                html += '<div class="tsg-nli-panel__preview-title">Uncovered mandatory intents</div>';
+                html += '<ul class="tsg-intent-panel__list">';
+                uncovered.slice(0, 8).forEach((item) => {
+                    html += `<li><span class="tsg-intent-panel__type">${escapeHtml(item.type || '')}</span> ${escapeHtml(item.label || item.id || '')}</li>`;
+                });
+                if (uncovered.length > 8) {
+                    html += `<li>…and ${uncovered.length - 8} more</li>`;
+                }
+                html += '</ul>';
+            }
+
+            if (mappings.length) {
+                html += '<div class="tsg-nli-panel__preview-title">Test case → intent mappings</div>';
+                html += '<div class="tsg-intent-panel__mappings">';
+                mappings.slice(0, 12).forEach((mapping) => {
+                    const count = Array.isArray(mapping.intent_ids) ? mapping.intent_ids.length : 0;
+                    html += `<div class="tsg-intent-panel__mapping"><strong>${escapeHtml(mapping.test_case_id || '')}</strong>`;
+                    if (mapping.title) {
+                        html += ` — ${escapeHtml(mapping.title)}`;
+                    }
+                    html += `<span class="tsg-intent-panel__count">${count} intent(s)</span></div>`;
+                });
+                if (mappings.length > 12) {
+                    html += `<p class="tsg-intent-panel__more">…and ${mappings.length - 12} more test case(s)</p>`;
+                }
+                html += '</div>';
+            }
+
+            if (warnings.length) {
+                html += '<div class="tsg-nli-panel__preview-title">Notes</div><ul class="tsg-intent-panel__list">';
+                warnings.forEach((w) => { html += `<li>${escapeHtml(w)}</li>`; });
+                html += '</ul>';
+            }
+            html += '</div>';
+        }
+
+        html += '</div>';
+        panel.innerHTML = html;
+        panel.style.display = 'block';
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
     function clearTsgNliPanel() {
         const panel = document.getElementById('testDatasetNliPanel');
         if (!panel) return;
@@ -10230,7 +10720,31 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             passed: nli.passed !== false,
             advisoryMode: details.advisory_mode === true,
             datasetMatched: details.dataset_matched !== false,
+            skippedFaithful: details.metadata?.skipped_faithful_matches ?? details.skipped_faithful_matches ?? 0,
         };
+    }
+
+    function buildTsgNliCleanPassState(nli) {
+        const escapeHtml = tsgNliEscapeHtml;
+        const skippedFaithful = Number(nli.skippedFaithful) || 0;
+        const detailText = skippedFaithful > 0
+            ? `All ${skippedFaithful} extracted claim(s) match the original O-RAN / 3GPP source. No contradictions or ungrounded modifications were found.`
+            : 'Dataset content matches the original O-RAN / 3GPP source specifications. No modifications were detected for NLI review.';
+
+        let html = '<div class="tsg-nli-panel__success" role="status" aria-live="polite">';
+        html += '<div class="tsg-nli-panel__success-icon" aria-hidden="true">';
+        html += '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">';
+        html += '<path d="M20 6 9 17l-5-5"/>';
+        html += '</svg></div>';
+        html += '<p class="tsg-nli-panel__success-title">Dataset loaded successfully</p>';
+        html += '<p class="tsg-nli-panel__success-subtitle">NLI groundedness passed</p>';
+        html += `<p class="tsg-nli-panel__success-detail">${escapeHtml(detailText)}</p>`;
+        html += '<div class="tsg-nli-panel__success-badges">';
+        html += '<span class="tsg-nli-panel__success-chip">Input guardrails passed</span>';
+        html += '<span class="tsg-nli-panel__success-chip">Output guardrails passed</span>';
+        html += '<span class="tsg-nli-panel__success-chip">NLI passed</span>';
+        html += '</div></div>';
+        return html;
     }
 
     function buildTsgNliFindings(nli) {
@@ -10506,15 +11020,18 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             if (totalFindings > 0) {
                 html += buildTsgNliFindingsTableRows(findings, 'all');
             } else {
-                html += '<tr><td colspan="4" class="tsg-nli-panel__empty">No contradictions or neutral findings.</td></tr>';
+                html += '<tr><td colspan="4" class="tsg-nli-panel__empty tsg-nli-panel__section--ok">NLI passed — no contradictions or neutral findings.</td></tr>';
             }
             html += '</tbody></table></div>';
 
             html += `<div class="tsg-nli-panel__footer"><span class="tsg-nli-panel__footer-count">Showing 1 to ${totalFindings} of ${totalFindings} results</span></div>`;
 
             panel._tsgNliFindings = findings;
+        } else if (datasetMatched && overallPassed) {
+            html += buildTsgNliCleanPassState(nli);
+            panel._tsgNliFindings = [];
         } else if (datasetMatched) {
-            html += '<div class="tsg-nli-panel__empty">No NLI pairs were analyzed for this dataset.</div>';
+            html += '<div class="tsg-nli-panel__empty">NLI review could not be completed for this dataset.</div>';
             panel._tsgNliFindings = [];
         } else {
             panel._tsgNliFindings = [];
@@ -10539,7 +11056,9 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             testDatasetFilesInput.value = '';
         }
         currentTestDataset = null;
+        currentTestDatasetFolder = null;
         hideSelectedFiles();
+        clearTsgIntentCoveragePanel();
     }
 
     /** Stage total_content.txt into the hidden file input (Specification Intelligence → Test Script Generator). */
@@ -10561,6 +11080,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 if (backendPayload.path) {
                     currentTotalContentFilePath = backendPayload.path;
                     currentDatasetFolderPath = backendPayload.folder || backendPayload.path.replace(/\/total_content\.txt$/i, '');
+                    setActiveTestDatasetFolder(currentDatasetFolderPath);
                 }
                 console.log('[app.js] ✅ Loaded total_content.txt via backend API:', backendPayload.path);
             }
@@ -10828,11 +11348,13 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             console.error('❌ Prompt editor not found');
             return;
         }
-        
+
+        exitTestPromptEditMode({ keepChanges: false });
+        testPromptEditBaseline = null;
+        testPromptResetContent = null;
+
         // Set the current prompt key
         currentTestPromptKey = templateKey;
-        
-        // Load the template content
         let templateContent = '';
         
         // Check if template is in cache
@@ -10895,32 +11417,21 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             console.error('❌ Template content is empty for:', templateKey);
             showStatusBar(`Template "${templateKey}"content not found. Please check backend.`, 'warning');
             promptEditor.value = `Template "${templateKey}"content not available.`;
-            promptEditor.readOnly = true;
+            setTestPromptEditorReadOnly(true);
             return;
         }
         
         // Display the template content
         promptEditor.value = templateContent;
-        promptEditor.readOnly = true;
+        setTestPromptEditorReadOnly(true);
         promptEditor.placeholder = '';
-        promptEditor.style.backgroundColor = '#FAFAFA';
         
         // Store original template content for variable replacement (if needed)
         originalTemplateContent = templateContent;
+        testPromptResetContent = templateContent;
         
         // Enable modify button for all templates (like Test Script and Test Case)
-        const modifyBtn = document.getElementById('testModifyBtn');
-        const saveTemplateBtn = document.getElementById('testSaveTemplateBtn');
-        if (modifyBtn) {
-            modifyBtn.disabled = false;
-            console.log('✅ Modify button enabled for template:', templateKey);
-        } else {
-            console.error('❌ Modify button not found');
-        }
-        if (saveTemplateBtn) {
-            saveTemplateBtn.style.display = 'none'; // Hide save button initially
-            console.log('✅ Save button hidden initially');
-        }
+        updateTestPromptActionButtons();
         
         // Hide variable sections (these templates don't use variables)
         const testCaseVariables = document.getElementById('testCaseVariables');
@@ -10947,6 +11458,11 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         const saveTemplateBtn = document.getElementById('testSaveTemplateBtn');
         
         if (!promptEditor) return;
+
+        exitTestPromptEditMode({ keepChanges: false });
+        originalTemplateContent = null;
+        testPromptEditBaseline = null;
+        testPromptResetContent = null;
         
         currentTestPromptKey = templateKey;
         
@@ -10962,22 +11478,21 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         try {
             if (templateKey === 'more-templates') {
                 promptEditor.value = '';
-                promptEditor.readOnly = true;
-                promptEditor.style.backgroundColor = '#FAFAFA';
+                setTestPromptEditorReadOnly(true);
                 if (modifyBtn) modifyBtn.disabled = true;
                 if (saveTemplateBtn) saveTemplateBtn.style.display = 'none';
                 currentTestPromptKey = 'more-templates';
+                updateTestPromptActionButtons();
                 updateTsgStatusBar();
                 return;
             } else if (templateKey === 'Custom') {
                 // For Custom template: empty box, editable after clicking Modify button
                 promptEditor.value = '';
-                promptEditor.readOnly = true; // Initially read-only until Modify is clicked
+                setTestPromptEditorReadOnly(true);
                 promptEditor.placeholder = 'Click Modify button to enter your custom prompt...';
-                promptEditor.style.backgroundColor = '#FAFAFA'; // Read-only background
                 
                 // Enable Modify button for Custom template
-                modifyBtn.disabled = false;
+                if (modifyBtn) modifyBtn.disabled = false;
                 
                 // Hide Save Template button initially (only show after user enters prompt)
                 if (saveTemplateBtn) {
@@ -11065,16 +11580,14 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     console.error('❌ Template content is empty for:', templateKey);
                     showStatusBar(`Template "${templateKey}"content is empty. Please save it again.`, 'error');
                     promptEditor.value = '';
-                    promptEditor.readOnly = true;
-                    promptEditor.style.backgroundColor = '#FAFAFA';
+                    setTestPromptEditorReadOnly(true);
                     return;
                 }
                 
                 // Display the saved prompt in the editor - THIS IS WHAT USER SAVED
                 promptEditor.value = templateContent;
-                promptEditor.readOnly = false; // Allow editing
-                promptEditor.style.backgroundColor = '#ffffff'; // White background for editable
-                promptEditor.placeholder = ''; // Remove placeholder
+                setTestPromptEditorReadOnly(true);
+                promptEditor.placeholder = '';
                 
                 // Store original template content
                 originalTemplateContent = templateContent;
@@ -11109,23 +11622,17 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 
                 // Keep the actual template key so it can be updated if modified
             } else {
-                promptEditor.readOnly = true;
+                setTestPromptEditorReadOnly(true);
                 promptEditor.placeholder = '';
                 
                 // Map dropdown values to template keys and handle different template types
                 let templateContent = '';
                 
                 if (templateKey === 'Test Case') {
-                    if (typeof testPromptTemplates['Test Case'] === 'object') {
-                        const systemPrompt = testPromptTemplates['Test Case']['System Prompt'] || '';
-                        const userPrompt = testPromptTemplates['Test Case']['User Prompt'] || '';
-                        templateContent = `${systemPrompt}\n\n${userPrompt}`;
-                    } else {
-                        templateContent = testPromptTemplates['Test Case'] || '';
-                    }
+                    templateContent = getTemplateBaseContentForDisplay('Test Case');
                     console.log('📝 Test Case template selected, content length:', templateContent.length);
                 } else if (templateKey === 'Test Script') {
-                    templateContent = testPromptTemplates['Test Script'] || '';
+                    templateContent = getTemplateBaseContentForDisplay('Test Script');
                     console.log('📝 Test Script template selected, content length:', templateContent.length);
                 } else {
                     // Handle other template keys directly (Testing Strategy, Bug Analysis, etc.)
@@ -11163,17 +11670,16 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     `;
                 }
                 
-                modifyBtn.disabled = false;
-                saveTemplateBtn.style.display = 'none';
-                // Ensure editor is in read-only mode for non-custom templates
-                promptEditor.readOnly = true;
-                promptEditor.style.backgroundColor = '#FAFAFA';
+                if (modifyBtn) modifyBtn.disabled = false;
+                if (saveTemplateBtn) saveTemplateBtn.style.display = 'none';
+                setTestPromptEditorReadOnly(true);
                 
                 console.log('✅ Template displayed in editor:', templateKey);
             }
             
             // Update prompt with any selected variables after template is loaded (immediately)
-                updateTestPromptVariables();
+            updateTestPromptVariables();
+            updateTestPromptActionButtons();
             updateTsgStatusBar();
             
         } catch (error) {
@@ -11276,6 +11782,13 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             
             if (response.success) {
                 currentTestDataset = response.content;
+                const nliDetails = response.guardrails?.output?.nli_groundedness_validation?.details || {};
+                setActiveTestDatasetFolder(
+                    response.dataset_folder
+                    || nliDetails.dataset_folder
+                    || currentDatasetFolderPath
+                    || null
+                );
                 
                 console.log('✅ Dataset loaded successfully!');
                 console.log('  - Files loaded:', response.files_loaded);
@@ -11478,10 +11991,12 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             
             // Check if this is a custom saved template
             const isCustomTemplate = window.customTemplateNames && window.customTemplateNames.includes(currentTestPromptKey);
-            console.log('  - Is custom template:', isCustomTemplate);
-            console.log('  - Custom prompt:', (currentTestPromptKey === 'Custom' || isCustomTemplate) ? selectedPrompt : 'N/A');
+            // Always send the current editor prompt so modified templates are used by the LLM
+            console.log('  - Editor prompt length:', selectedPrompt.length);
+            console.log('  - Dataset folder:', getActiveTestDatasetFolder() || 'NOT RESOLVED');
             
             let response;
+            const activeDatasetFolder = getActiveTestDatasetFolder();
             // Try window.API.generateTestScript first, fallback to direct fetch
             if (window.API && typeof window.API.generateTestScript === 'function') {
                 console.log('[app.js] ✅ Using window.API.generateTestScript');
@@ -11489,7 +12004,8 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 isCustomTemplate ? 'Custom': currentTestPromptKey, // Treat custom templates as Custom type
                 currentTestDataset || "No dataset provided - generating test script based on prompt only",
                     variables, // Send dropdown values as variables
-                (currentTestPromptKey === 'Custom'|| isCustomTemplate) ? selectedPrompt : null
+                selectedPrompt,
+                activeDatasetFolder
             );
             } else {
                 console.warn('[app.js] ⚠️ window.API.generateTestScript not available, using direct fetch call');
@@ -11497,7 +12013,8 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     prompt_key: isCustomTemplate ? 'Custom': currentTestPromptKey,
                     text_content: currentTestDataset || "No dataset provided - generating test script based on prompt only",
                     variables: variables,
-                    custom_prompt: (currentTestPromptKey === 'Custom'|| isCustomTemplate) ? selectedPrompt : null
+                    custom_prompt: selectedPrompt,
+                    dataset_folder: activeDatasetFolder
                 };
                 
                 const apiResponse = await fetch('http://127.0.0.1:8000/api/test-script/generate', {
@@ -11510,7 +12027,22 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 
                 if (!apiResponse.ok) {
                     const errorText = await apiResponse.text();
-                    throw new Error(`HTTP error! status: ${apiResponse.status} - ${errorText}`);
+                    const parseFn = window.API?.parseGuardrailHttpErrorBody;
+                    const attachFn = window.API?.attachGuardrailFieldsToError;
+                    const info = typeof parseFn === 'function'
+                        ? parseFn(errorText)
+                        : { message: errorText, guardrailFindings: [], isGuardrailBlock: false };
+                    const fetchErr = new Error(`HTTP error! status: ${apiResponse.status} - ${info.message}`);
+                    fetchErr.status = apiResponse.status;
+                    if (typeof attachFn === 'function') {
+                        attachFn(fetchErr, errorText);
+                    } else {
+                        fetchErr.guardrailDetail = info.guardrailDetail || null;
+                        fetchErr.guardrailFindings = info.guardrailFindings || [];
+                        fetchErr.guardrailReasons = info.guardrailReasons || [];
+                        fetchErr.isGuardrailBlock = Boolean(info.isGuardrailBlock);
+                    }
+                    throw fetchErr;
                 }
                 
                 response = await apiResponse.json();
@@ -11521,8 +12053,13 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             updateProgressDialog(progressDialog, 75, 'Processing response...');
             
             if (response.success) {
-                responseEditor.value = response.generated_script;
-                previousTestResponse = response.generated_script;
+                displayGeneratedTestResult(response.generated_script, {
+                    truncated: Boolean(response.truncated),
+                    templateKey: currentTestPromptKey
+                });
+                if (response.dataset_folder) {
+                    setActiveTestDatasetFolder(response.dataset_folder);
+                }
                 
                 updateProgressDialog(progressDialog, 100, 'Complete!');
                 
@@ -11550,10 +12087,49 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 }
                 
                 if (response.file_path) {
-                    showStatusBar(`${templateName} generated and saved to: ${response.file_path}`, 'success');
+                    showStatusBar(response.message || `${templateName} generated and saved to: ${response.file_path}`, 'success');
                 } else {
-                    showStatusBar(`${templateName} generated successfully`, 'success');
+                    showStatusBar(response.message || `${templateName} generated successfully`, 'success');
                 }
+
+                const isTestCaseGeneration = currentTestPromptKey === 'Test Case';
+                if (isTestCaseGeneration) {
+                    const coverage = response.intent_coverage
+                        || response.guardrails?.intent_coverage_validation?.details;
+                    if (coverage) {
+                        renderTsgIntentCoveragePanel(coverage);
+                        if (!response.message) {
+                            const pct = Number(coverage.coverage_percent) || 0;
+                            const covered = coverage.mandatory_covered ?? 0;
+                            const total = coverage.mandatory_total ?? 0;
+                            const level = coverage.passed !== false ? 'success' : 'warning';
+                            showStatusBar(
+                                `Test cases generated. Intent coverage ${coverage.passed !== false ? 'passed' : 'review'}: ${pct}% (${covered}/${total} mandatory intents).`,
+                                level
+                            );
+                        }
+                    } else if (getActiveTestDatasetFolder() && response.generated_script) {
+                        try {
+                            if (window.API?.validateIntentCoverage) {
+                                const coverageResponse = await window.API.validateIntentCoverage(
+                                    getActiveTestDatasetFolder(),
+                                    response.generated_script
+                                );
+                                if (coverageResponse?.intent_coverage) {
+                                    renderTsgIntentCoveragePanel(coverageResponse.intent_coverage);
+                                }
+                            }
+                        } catch (coverageErr) {
+                            console.warn('Intent coverage validation skipped:', coverageErr);
+                            clearTsgIntentCoveragePanel();
+                        }
+                    } else {
+                        clearTsgIntentCoveragePanel();
+                    }
+                } else {
+                    clearTsgIntentCoveragePanel();
+                }
+
                 updateTsgStatusBar();
             } else {
                 showStatusBar('Failed to generate test script', 'error');
@@ -11567,6 +12143,10 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 hasDataset: !!currentTestDataset,
                 promptLength: selectedPrompt.length
             });
+
+            if (showTsgPromptGuardrailStatus(error)) {
+                return;
+            }
             
             let errorMessage = 'Error generating test script';
             if (error.message.includes('Failed to fetch')) {
@@ -11683,37 +12263,23 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 console.log('📥 Fetch response ok:', fetchResponse.ok);
                 
                 if (!fetchResponse.ok) {
-                    // Try to extract error message from response body
-                    let errorText = `HTTP error! status: ${fetchResponse.status}`;
-                    
-                    // Clone response to read it safely
-                    const responseClone = fetchResponse.clone();
-                    try {
-                        const errorData = await responseClone.json();
-                        if (errorData.detail) {
-                            errorText = errorData.detail;
-                        } else if (errorData.message) {
-                            errorText = errorData.message;
-                        } else if (errorData.error) {
-                            errorText = errorData.error;
-                        }
-                        console.error('❌ Backend error response:', errorData);
-                    } catch (e) {
-                        // If not JSON, try text from original response
-                        try {
-                            const textError = await fetchResponse.text();
-                            if (textError && textError.trim()) {
-                                errorText = textError.trim();
-                            }
-                            console.error('❌ Backend error text:', textError);
-                        } catch (e2) {
-                            // If that also fails, use default
-                            console.warn('Could not extract error message from response:', e2);
-                        }
-                    }
-                    
-                    const fetchErr = new Error(errorText);
+                    const errorText = await fetchResponse.text();
+                    console.error('❌ Backend error response:', errorText);
+                    const parseFn = window.API?.parseGuardrailHttpErrorBody;
+                    const attachFn = window.API?.attachGuardrailFieldsToError;
+                    const info = typeof parseFn === 'function'
+                        ? parseFn(errorText)
+                        : { message: errorText, guardrailFindings: [], isGuardrailBlock: false };
+                    const fetchErr = new Error(`HTTP error! status: ${fetchResponse.status} - ${info.message}`);
                     fetchErr.status = fetchResponse.status;
+                    if (typeof attachFn === 'function') {
+                        attachFn(fetchErr, errorText);
+                    } else {
+                        fetchErr.guardrailDetail = info.guardrailDetail || null;
+                        fetchErr.guardrailFindings = info.guardrailFindings || [];
+                        fetchErr.guardrailReasons = info.guardrailReasons || [];
+                        fetchErr.isGuardrailBlock = Boolean(info.isGuardrailBlock);
+                    }
                     throw fetchErr;
                 }
                 
@@ -11725,6 +12291,10 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 console.error('❌ Direct fetch failed:', fetchError);
                 console.error('  - Error message:', fetchError.message);
                 console.error('  - Error stack:', fetchError.stack);
+
+                if (showTsgPromptGuardrailStatus(fetchError)) {
+                    throw fetchError;
+                }
                 
                 // Extract and show error message
                 let errorMsg = fetchError.message || 'Error refining test script';
@@ -11740,8 +12310,13 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             updateProgressDialog(progressDialog, 75, 'Processing refined response...');
             
             if (response && response.success) {
-                responseEditor.value = response.generated_script || response.response || '';
-                previousTestResponse = response.generated_script || response.response || '';
+                displayGeneratedTestResult(
+                    response.generated_script || response.response || '',
+                    {
+                        truncated: Boolean(response.truncated),
+                        templateKey: currentTestPromptKey
+                    }
+                );
                 
                 updateProgressDialog(progressDialog, 100, 'Complete!');
                 showStatusBar('Test script refined successfully', 'success');
@@ -11755,6 +12330,9 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         } catch (error) {
             console.error('❌ Error refining test script:', error);
             console.error('  - Error message:', error.message);
+            if (showTsgPromptGuardrailStatus(error)) {
+                return;
+            }
             console.error('  - Error stack:', error.stack);
             
             // Extract error message from response if available
@@ -16191,35 +16769,24 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                         console.log('📥 Save response ok:', fetchResponse.ok);
                         
                         if (!fetchResponse.ok) {
-                            // Try to extract error message from response body
-                            let errorText = `HTTP error! status: ${fetchResponse.status}`;
-                            
-                            // Clone response to read it safely
-                            const responseClone = fetchResponse.clone();
-                            try {
-                                const errorData = await responseClone.json();
-                                if (errorData.detail) {
-                                    errorText = errorData.detail;
-                                } else if (errorData.message) {
-                                    errorText = errorData.message;
-                                } else if (errorData.error) {
-                                    errorText = errorData.error;
-                                }
-                                console.error('❌ Backend error response:', errorData);
-                            } catch (e) {
-                                // If not JSON, try text from original response
-                                try {
-                                    const textError = await fetchResponse.text();
-                                    if (textError && textError.trim()) {
-                                        errorText = textError.trim();
-                                    }
-                                    console.error('❌ Backend error text:', textError);
-                                } catch (e2) {
-                                    console.warn('Could not extract error message from response:', e2);
-                                }
+                            const errorText = await fetchResponse.text();
+                            console.error('❌ Backend error response:', errorText);
+                            const parseFn = window.API?.parseGuardrailHttpErrorBody;
+                            const attachFn = window.API?.attachGuardrailFieldsToError;
+                            const info = typeof parseFn === 'function'
+                                ? parseFn(errorText)
+                                : { message: errorText, guardrailFindings: [], isGuardrailBlock: false };
+                            const fetchErr = new Error(`HTTP error! status: ${fetchResponse.status} - ${info.message}`);
+                            fetchErr.status = fetchResponse.status;
+                            if (typeof attachFn === 'function') {
+                                attachFn(fetchErr, errorText);
+                            } else {
+                                fetchErr.guardrailDetail = info.guardrailDetail || null;
+                                fetchErr.guardrailFindings = info.guardrailFindings || [];
+                                fetchErr.guardrailReasons = info.guardrailReasons || [];
+                                fetchErr.isGuardrailBlock = Boolean(info.isGuardrailBlock);
                             }
-                            
-                            throw new Error(errorText);
+                            throw fetchErr;
                         }
                         
                         const response = await fetchResponse.json();
@@ -16245,6 +16812,12 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                         console.error('  - Error message:', error.message);
                         console.error('  - Error stack:', error.stack);
                         
+                        if (showTsgPromptGuardrailStatus(error)) {
+                            this.disabled = false;
+                            this.textContent = 'Save Prompt';
+                            return;
+                        }
+
                         // Only show error if it's a real error (not just a missing function warning)
                         // Check if template was actually saved by checking the response
                         const errorMsg = error.message || '';
@@ -16538,15 +17111,20 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         console.log('✅ Template dropdown event listeners attached');
     }
 
+    function handleTestCaseVariableChange() {
+        updateTsgStatusBar();
+        updateTestPromptVariables();
+    }
+
     // Test case / test script variable dropdowns (portal pattern - fixes Electron native select bug)
     const testCaseVariableDropdownConfigs = [
-        { dropdownId: 'domainDropdown', btnId: 'domainBtn', menuId: 'domainDropdownMenu', hiddenId: 'domainSelect', labelId: 'domainBtnLabel', defaultLabel: 'Select Domain...', onSelect: () =>updateTsgStatusBar() },
-        { dropdownId: 'systemTypeDropdown', btnId: 'systemTypeBtn', menuId: 'systemTypeDropdownMenu', hiddenId: 'systemTypeSelect', labelId: 'systemTypeBtnLabel', defaultLabel: 'Select System Type...', onSelect: () =>updateTsgStatusBar() },
-        { dropdownId: 'primaryFeatureDropdown', btnId: 'primaryFeatureBtn', menuId: 'primaryFeatureDropdownMenu', hiddenId: 'primaryFeatureSelect', labelId: 'primaryFeatureBtnLabel', defaultLabel: 'Select Primary Feature...', onSelect: () =>updateTsgStatusBar() },
-        { dropdownId: 'connectionMethodDropdown', btnId: 'connectionMethodBtn', menuId: 'connectionMethodDropdownMenu', hiddenId: 'connectionMethodSelect', labelId: 'connectionMethodBtnLabel', defaultLabel: 'Select Connection Method...', onSelect: () =>updateTsgStatusBar() },
-        { dropdownId: 'loginCredentialsDropdown', btnId: 'loginCredentialsBtn', menuId: 'loginCredentialsDropdownMenu', hiddenId: 'loginCredentialsSelect', labelId: 'loginCredentialsBtnLabel', defaultLabel: 'Select Login Credentials...', onSelect: () =>updateTsgStatusBar() },
-        { dropdownId: 'accessModeDropdown', btnId: 'accessModeBtn', menuId: 'accessModeDropdownMenu', hiddenId: 'accessModeSelect', labelId: 'accessModeBtnLabel', defaultLabel: 'Select Access Mode...', onSelect: () =>updateTsgStatusBar() },
-        { dropdownId: 'languageDropdown', btnId: 'languageBtn', menuId: 'languageDropdownMenu', hiddenId: 'languageSelect', labelId: 'languageBtnLabel', defaultLabel: 'Select Language...', onSelect: () =>updateTsgStatusBar() }
+        { dropdownId: 'domainDropdown', btnId: 'domainBtn', menuId: 'domainDropdownMenu', hiddenId: 'domainSelect', labelId: 'domainBtnLabel', defaultLabel: 'Select Domain...', onSelect: handleTestCaseVariableChange },
+        { dropdownId: 'systemTypeDropdown', btnId: 'systemTypeBtn', menuId: 'systemTypeDropdownMenu', hiddenId: 'systemTypeSelect', labelId: 'systemTypeBtnLabel', defaultLabel: 'Select System Type...', onSelect: handleTestCaseVariableChange },
+        { dropdownId: 'primaryFeatureDropdown', btnId: 'primaryFeatureBtn', menuId: 'primaryFeatureDropdownMenu', hiddenId: 'primaryFeatureSelect', labelId: 'primaryFeatureBtnLabel', defaultLabel: 'Select Primary Feature...', onSelect: handleTestCaseVariableChange },
+        { dropdownId: 'connectionMethodDropdown', btnId: 'connectionMethodBtn', menuId: 'connectionMethodDropdownMenu', hiddenId: 'connectionMethodSelect', labelId: 'connectionMethodBtnLabel', defaultLabel: 'Select Connection Method...', onSelect: handleTestCaseVariableChange },
+        { dropdownId: 'loginCredentialsDropdown', btnId: 'loginCredentialsBtn', menuId: 'loginCredentialsDropdownMenu', hiddenId: 'loginCredentialsSelect', labelId: 'loginCredentialsBtnLabel', defaultLabel: 'Select Login Credentials...', onSelect: handleTestCaseVariableChange },
+        { dropdownId: 'accessModeDropdown', btnId: 'accessModeBtn', menuId: 'accessModeDropdownMenu', hiddenId: 'accessModeSelect', labelId: 'accessModeBtnLabel', defaultLabel: 'Select Access Mode...', onSelect: handleTestCaseVariableChange },
+        { dropdownId: 'languageDropdown', btnId: 'languageBtn', menuId: 'languageDropdownMenu', hiddenId: 'languageSelect', labelId: 'languageBtnLabel', defaultLabel: 'Select Language...', onSelect: handleTestCaseVariableChange }
     ];
     testCaseVariableDropdownConfigs.forEach(initPortalSelectDropdown);
 
@@ -16604,10 +17182,12 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
 
                 // Clear any loaded dataset content
                 currentTestDataset = null;
+                currentTestDatasetFolder = null;
 
                 // Reset UI back to empty state
                 hideSelectedFiles();
                 clearTsgNliPanel();
+                clearTsgIntentCoveragePanel();
                 if (loadTestDatasetBtn) {
                     loadTestDatasetBtn.disabled = false;
                     loadTestDatasetBtn.textContent = 'Load';
@@ -16698,38 +17278,32 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 return;
             }
             
-            // Get the folder path from backend
-            // Test cases: resources/TestScriptGenerator/test_suite/test_case/
-            // Test scripts: resources/TestScriptGenerator/test_suite/test_script/
-            const basePath = 'resources/TestScriptGenerator/test_suite';
-            const folderPath = `${basePath}/${folderType}`;
-            
-            // Get absolute path from backend
+            // Get the absolute folder path from backend
             let extractPath;
             try {
-                // Try to get the extract folder path from backend (similar to dataset generator)
-                // This will give us the absolute path to resources/extract, we can use it to construct the TestScriptGenerator path
-                const response = await fetch('http://127.0.0.1:8000/api/dataset/extract-folder-path');
-                if (response.ok) {
-                    const data = await response.json();
-                    // Extract the base path from the extract path (resources folder)
-                    // data.extract_path is something like: C:\...\Backend\resources\extract
-                    // We need: C:\...\Backend\resources\TestScriptGenerator\test_suite\test_case or test_script
-                    const extractBasePath = data.extract_path.replace(/[\\/]extract$/, '');
-                    // Ensure proper path separator
-                    const separator = extractBasePath.includes('\\') ? '\\': '/';
-                    extractPath = `${extractBasePath}${separator}TestScriptGenerator${separator}test_suite${separator}${folderType}`;
-                    console.log('📁 Using extract path as base:', extractBasePath);
-                    console.log('📁 Final folder path:', extractPath);
+                let pathResponse;
+                if (window.API && typeof window.API.getTestScriptFolderPath === 'function') {
+                    pathResponse = await window.API.getTestScriptFolderPath(folderType);
                 } else {
-                    // Fallback: use relative path (will be resolved by backend)
-                    extractPath = folderPath;
-                    console.log('⚠️ Using relative path as fallback:', extractPath);
+                    const response = await fetch(
+                        `http://127.0.0.1:8000/api/test-script/folder-path?folder_type=${encodeURIComponent(folderType)}`
+                    );
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    pathResponse = await response.json();
+                }
+
+                if (pathResponse && pathResponse.success && pathResponse.folder_path) {
+                    extractPath = pathResponse.folder_path;
+                    console.log('📁 Resolved test output folder path:', extractPath);
+                } else {
+                    throw new Error('Failed to resolve test output folder path from backend');
                 }
             } catch (error) {
-                console.warn('⚠️ Could not get extract path from backend, using relative path:', error);
-                // Fallback: use relative path (will be resolved by backend)
-                extractPath = folderPath;
+                console.warn('⚠️ Could not get test folder path from backend:', error);
+                showStatusBar(`Cannot open folder: ${error.message}`, 'error');
+                return;
             }
             
             // Try multiple methods to open the folder
@@ -16818,33 +17392,14 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
     const testModifyBtn = document.getElementById('testModifyBtn');
     if (testModifyBtn) {
         testModifyBtn.addEventListener('click', function() {
-            console.log('🔧 Modify button clicked');
-            const promptEditor = document.getElementById('testPromptTextEditor');
-            const saveTemplateBtn = document.getElementById('testSaveTemplateBtn');
-            
-            if (promptEditor) {
-                console.log('📝 Prompt editor found, enabling modification');
-                // Store original content before modification (like PyQt)
-                if (!window.originalPromptContent) {
-                    window.originalPromptContent = promptEditor.value;
-                    console.log('💾 Original content stored, length:', window.originalPromptContent.length);
-                }
-                
-                // Enable text editing
-                promptEditor.readOnly = false;
-                promptEditor.style.backgroundColor = '#ffffff'; // Change background to indicate editing mode
-                
-                // Enable/disable buttons (like PyQt)
-                testModifyBtn.disabled = true;
-                if (saveTemplateBtn) saveTemplateBtn.style.display = 'block';
-                
-                // Set focus to the text editor (like PyQt)
-                promptEditor.focus();
-                
-                console.log('✅ Prompt editor enabled for modification');
-            } else {
-                console.error('❌ Prompt editor not found');
-            }
+            enterTestPromptEditMode();
+        });
+    }
+
+    const testResetPromptBtn = document.getElementById('testResetPromptBtn');
+    if (testResetPromptBtn) {
+        testResetPromptBtn.addEventListener('click', function() {
+            resetTestPromptEditor();
         });
     }
 
@@ -16967,17 +17522,17 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                         
                         showStatusBar(`Custom template '${name}'saved successfully! It is now available in the dropdown.`, 'success');
                         
-                        if (promptEditor) {
-                            promptEditor.readOnly = true;
-                            promptEditor.style.backgroundColor = '#FAFAFA';
-                        }
-                        if (testModifyBtn) testModifyBtn.disabled = false;
-                        testSaveTemplateBtn.style.display = 'none';
+                        exitTestPromptEditMode({ keepChanges: true });
+                        originalTemplateContent = contentToSave;
+                        testPromptEditBaseline = contentToSave;
+                        testPromptResetContent = contentToSave;
                         
                         console.log('✅ Template saved and added to dropdown:', name);
                     } catch (error) {
                             console.error('❌ Error saving template:', error);
-                        showStatusBar(`Error saving template: ${error.message}`, 'error');
+                        if (!showTsgPromptGuardrailStatus(error)) {
+                            showStatusBar(`Error saving template: ${error.message}`, 'error');
+                        }
                     }
                 }
                 });
@@ -17005,61 +17560,51 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                         
                         const saveResult = await saveTemplateToBackend(currentTestPromptKey, contentToSave);
                         console.log('✅ Template saved to backend:', saveResult);
-                        
-                        // CRITICAL: Reload templates from backend to ensure frontend has the latest version
-                        console.log('🔄 Reloading templates from backend after save...');
-                        const reloadResponse = await window.API.getPromptTemplates();
-                        if (reloadResponse.success) {
-                            testPromptTemplates = reloadResponse.templates;
-                            console.log('✅ Templates reloaded from backend after save');
-                            console.log(`   Template '${currentTestPromptKey}' preview: ${testPromptTemplates[currentTestPromptKey]?.substring(0, 100)}...`);
-                            
-                            // Update the prompt editor with the reloaded template (if it's still the selected one)
-                            if (promptEditor && currentTestPromptKey) {
-                                let templateContent = testPromptTemplates[currentTestPromptKey];
-                                if (typeof templateContent === 'object'&& templateContent['System Prompt']) {
-                                    // Handle Test Case template structure
-                                    const systemPrompt = templateContent['System Prompt'] || '';
-                                    const userPrompt = templateContent['User Prompt'] || '';
-                                    templateContent = systemPrompt ? `${systemPrompt}\n\n${userPrompt}` : userPrompt;
+
+                        try {
+                            console.log('🔄 Reloading templates from backend after save...');
+                            const reloadResponse = await fetchPromptTemplatesFromBackend();
+                            if (reloadResponse.success) {
+                                testPromptTemplates = reloadResponse.templates;
+                                console.log('✅ Templates reloaded from backend after save');
+                                console.log(`   Template '${currentTestPromptKey}' preview: ${getTemplateContentPreview(testPromptTemplates[currentTestPromptKey])}`);
+
+                                if (promptEditor && currentTestPromptKey) {
+                                    const templateContent = normalizeTemplateContentForDisplay(
+                                        testPromptTemplates[currentTestPromptKey]
+                                    );
+                                    if (templateContent && !isTestPromptEditing) {
+                                        promptEditor.value = templateContent;
+                                        updateTestPromptVariables();
+                                    }
                                 }
-                                // Only update if editor is read-only (not in edit mode)
-                                if (promptEditor.readOnly) {
-                                    promptEditor.value = templateContent;
-                                    // Update variables if needed
-                                    updateTestPromptVariables();
-                                }
+                            } else {
+                                console.warn('⚠️ Failed to reload templates from backend, but save was successful');
                             }
-                        } else {
-                            console.warn('⚠️ Failed to reload templates from backend, but save was successful');
+                        } catch (reloadError) {
+                            console.warn('⚠️ Template saved, but reload failed:', reloadError);
                         }
-                        
-                        // Update original template content cache to reflect the saved version
+
+                        showStatusBar(`Template '${currentTestPromptKey}' updated successfully!`, 'success');
+
+                        exitTestPromptEditMode({ keepChanges: true });
                         originalTemplateContent = contentToSave;
-                        
-                        showStatusBar(`Template '${currentTestPromptKey}'updated successfully!`, 'success');
-                        
-                        if (promptEditor) {
-                            promptEditor.readOnly = true;
-                            promptEditor.style.backgroundColor = '#FAFAFA';
-                        }
-                        if (testModifyBtn) testModifyBtn.disabled = false;
-                        testSaveTemplateBtn.style.display = 'none';
+                        testPromptEditBaseline = contentToSave;
+                        testPromptResetContent = contentToSave;
                         
                         console.log(`✅ Template '${currentTestPromptKey}' saved successfully`);
                     } catch (error) {
                         console.error('❌ Error updating template:', error);
                         console.error('   Error details:', error.message);
                         console.error('   Error stack:', error.stack);
-                        showStatusBar(`Error updating template: ${error.message}`, 'error');
+                        if (!showTsgPromptGuardrailStatus(error)) {
+                            showStatusBar(`Error updating template: ${error.message}`, 'error');
+                        }
                     }
                 }
             }
         });
     }
-    // Store original template content for variable replacement
-    let originalTemplateContent = null;
-    
     // Function to update prompt template with selected variable values
     function updateTestPromptVariables() {
         const promptEditor = document.getElementById('testPromptTextEditor');
@@ -17068,33 +17613,14 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             return;
         }
         
-        // CRITICAL: Don't update if editor is in editable mode (user is modifying)
-        // Check if Save Template button is visible, which means user is editing
-        const testSaveTemplateBtn = document.getElementById('testSaveTemplateBtn');
-        if (testSaveTemplateBtn && testSaveTemplateBtn.style.display !== 'none'&& testSaveTemplateBtn.style.display !== '') {
+        if (isTestPromptEditing) {
             console.log('⚠️ Skipping variable update - user is editing the prompt');
             return;
         }
         
-        // Also check if editor is read-only - if not read-only and user might be editing
-        if (!promptEditor.readOnly && promptEditor.style.backgroundColor === '#ffffff') {
-            console.log('⚠️ Skipping variable update - editor is in editable mode');
-            return;
-        }
-        
-        // Get original template content from cache (always use original, not current editor value)
-        let baseContent = null;
-        
-        if (currentTestPromptKey && testPromptTemplates[currentTestPromptKey]) {
-            if (typeof testPromptTemplates[currentTestPromptKey] === 'string') {
-                baseContent = testPromptTemplates[currentTestPromptKey];
-            } else if (typeof testPromptTemplates[currentTestPromptKey] === 'object') {
-                const systemPrompt = testPromptTemplates[currentTestPromptKey]['System Prompt'] || '';
-                const userPrompt = testPromptTemplates[currentTestPromptKey]['User Prompt'] || '';
-                baseContent = systemPrompt ? `${systemPrompt}\n\n${userPrompt}` : userPrompt;
-            }
-        }
-        
+        // Get original template content from factory defaults (built-in templates) or cache
+        let baseContent = getTemplateBaseContentForDisplay(currentTestPromptKey);
+
         // If no template key or template not found, use stored original or current editor value
         if (!baseContent) {
             if (originalTemplateContent) {
@@ -17143,32 +17669,12 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             LANGUAGE: language
         });
         
-        // Replace placeholders in template content (always use baseContent - original template)
-        let updatedContent = baseContent;
-        
-        // Replace {DOMAIN}
-        updatedContent = updatedContent.replace(/\{DOMAIN\}/g, domain || '{DOMAIN}');
-        
-        // Replace {SYSTEM_TYPE}
-        updatedContent = updatedContent.replace(/\{SYSTEM_TYPE\}/g, systemType || '{SYSTEM_TYPE}');
-        
-        // Replace {PRIMARY_FEATURE}
-        updatedContent = updatedContent.replace(/\{PRIMARY_FEATURE\}/g, primaryFeature || '{PRIMARY_FEATURE}');
-        
-        // Replace {CONNECTION_METHOD}
-        updatedContent = updatedContent.replace(/\{CONNECTION_METHOD\}/g, connectionMethod || '{CONNECTION_METHOD}');
-        
-        // Replace {LOGIN_CREDENTIALS}
-        updatedContent = updatedContent.replace(/\{LOGIN_CREDENTIALS\}/g, loginCredentials || '{LOGIN_CREDENTIALS}');
-        
-        // Replace {ACCESS_MODE}
-        updatedContent = updatedContent.replace(/\{ACCESS_MODE\}/g, accessMode || '{ACCESS_MODE}');
-        
-        // Replace {LANGUAGE}
-        updatedContent = updatedContent.replace(/\{LANGUAGE\}/g, language || '{LANGUAGE}');
+        const updatedContent = applyTestPromptVariablesToContent(baseContent);
         
         // Update the prompt editor with the updated content
         promptEditor.value = updatedContent;
+        originalTemplateContent = updatedContent;
+        captureTestPromptResetContent();
         
         console.log('✅ Prompt variables updated');
     }
@@ -17221,7 +17727,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             console.log('Using fallback templates (backend not available)');
         }
         const initialRadio = document.querySelector('.tsg-template-radio:checked');
-        handleTestTemplateSelection(initialRadio ? initialRadio.value : 'Test Script');
+        handleTestTemplateSelection(initialRadio ? initialRadio.value : 'Test Case');
         updateTsgStatusBar();
     });
     // Initialize Test Script Generator when section becomes active

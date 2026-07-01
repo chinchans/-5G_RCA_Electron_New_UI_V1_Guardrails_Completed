@@ -1,0 +1,45 @@
+{
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "fix_suggestion": {
+    "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+    "code_patches": [
+      {
+        "function_name": "rrc_gNB_send_NGAP_NAS_FIRST_REQ",
+        "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB_NGAP.c",
+        "patch_type": "null_check_insertion",
+        "original_code": "void rrc_gNB_send_NGAP_NAS_FIRST_REQ(gNB_RRC_INST *rrc, gNB_RRC_UE_t *UE, NR_RRCSetupComplete_IEs_t *rrcSetupComplete)\n{\n  MessageDef *message_p = itti_alloc_new_message(TASK_RRC_GNB, rrc->module_id, NGAP_NAS_FIRST_REQ);\n      if (!rrcSetupComplete->dedicatedNAS_Message.buf) {\n    LOG_E(NGAP, \"dedicatedNAS_Message buffer is NULL\\n\");\n    return;\n  }\n  req->nas_pdu = create_byte_array(rrcSetupComplete->dedicatedNAS_Message.size, rrcSetupComplete->dedicatedNAS_Message.buf);\n  ngap_nas_first_req_t *req = &NGAP_NAS_FIRST_REQ(message_p);\n  memset(req, 0, sizeof(*req));",
+        "patched_code": "void rrc_gNB_send_NGAP_NAS_FIRST_REQ(gNB_RRC_INST *rrc, gNB_RRC_UE_t *UE, NR_RRCSetupComplete_IEs_t *rrcSetupComplete)\n{\n  if (!rrcSetupComplete) {\n    LOG_E(NGAP, \"rrcSetupComplete pointer is NULL\\n\");\n    return;\n  }\n  if (!rrcSetupComplete->dedicatedNAS_Message.buf) {\n    LOG_E(NGAP, \"dedicatedNAS_Message buffer is NULL\\n\");\n    return;\n  }\n  MessageDef *message_p = itti_alloc_new_message(TASK_RRC_GNB, rrc->module_id, NGAP_NAS_FIRST_REQ);\n  if (!message_p) {\n    LOG_E(NGAP, \"Failed to allocate ITTI message NGAP_NAS_FIRST_REQ\\n\");\n    return;\n  }\n  ngap_nas_first_req_t *req = &NGAP_NAS_FIRST_REQ(message_p);\n  memset(req, 0, sizeof(*req));",
+        "line_numbers": "241",
+        "description": "Add NULL check for rrcSetupComplete pointer before dereferencing and check message allocation before use. Fix order of req initialization to after message allocation."
+      },
+      {
+        "function_name": "rrc_gNB_send_NGAP_NAS_FIRST_REQ",
+        "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB_NGAP.c",
+        "patch_type": "move_statement",
+        "original_code": "  MessageDef *message_p = itti_alloc_new_message(TASK_RRC_GNB, rrc->module_id, NGAP_NAS_FIRST_REQ);\n      if (!rrcSetupComplete->dedicatedNAS_Message.buf) {\n    LOG_E(NGAP, \"dedicatedNAS_Message buffer is NULL\\n\");\n    return;\n  }\n  req->nas_pdu = create_byte_array(rrcSetupComplete->dedicatedNAS_Message.size, rrcSetupComplete->dedicatedNAS_Message.buf);\n  ngap_nas_first_req_t *req = &NGAP_NAS_FIRST_REQ(message_p);\n  memset(req, 0, sizeof(*req));",
+        "patched_code": "  MessageDef *message_p = itti_alloc_new_message(TASK_RRC_GNB, rrc->module_id, NGAP_NAS_FIRST_REQ);\n  if (!message_p) {\n    LOG_E(NGAP, \"Failed to allocate ITTI message NGAP_NAS_FIRST_REQ\\n\");\n    return;\n  }\n  ngap_nas_first_req_t *req = &NGAP_NAS_FIRST_REQ(message_p);\n  memset(req, 0, sizeof(*req));\n  if (!rrcSetupComplete->dedicatedNAS_Message.buf) {\n    LOG_E(NGAP, \"dedicatedNAS_Message buffer is NULL\\n\");\n    return;\n  }",
+        "line_numbers": "241",
+        "description": "Move req initialization to after message allocation and before usage. Remove usage of req before initialization."
+      },
+      {
+        "function_name": "rrc_gNB_process_RRCSetupComplete",
+        "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+        "patch_type": "remove_null_assignment",
+        "original_code": "  UE->Srb[1].Active = 1;\n      rrc_gNB_send_NGAP_NAS_FIRST_REQ(rrc, UE, rrcSetupComplete);\n\n  // REMOVED: rrcSetupComplete=NULL;\n\n  // Removed second call with NULL to prevent crash\n  // rrc_gNB_send_NGAP_NAS_FIRST_REQ(rrc, UE, rrcSetupComplete);\n      if (!rrcSetupComplete) {\n    LOG_E(RRC, \"Invalid param\\n\");\n    return;\n  }\n  rrc_gNB_send_NGAP_NAS_FIRST_REQ(rrc, UE, rrcSetupComplete);\n      // REMOVED: rrcSetupComplete=NULL;\n  UE->Srb[2].Active = 0;\n  \n  rrcSetupComplete=NULL;\n\n  rrc_gNB_send_NGAP_NAS_FIRST_REQ(rrc, UE, rrcSetupComplete);",
+        "patched_code": "  UE->Srb[1].Active = 1;\n  if (!rrcSetupComplete) {\n    LOG_E(RRC, \"Invalid param\\n\");\n    return;\n  }\n  rrc_gNB_send_NGAP_NAS_FIRST_REQ(rrc, UE, rrcSetupComplete);\n\n  UE->Srb[2].Active = 0;\n\n  // REMOVED: rrcSetupComplete=NULL; // This assignment causes crash if used after\n  // Removed call with NULL parameter to prevent crash\n  // rrc_gNB_send_NGAP_NAS_FIRST_REQ(rrc, UE, rrcSetupComplete);",
+        "line_numbers": "1965",
+        "description": "Remove invalid assignment of rrcSetupComplete=NULL before use and remove calls with NULL parameter to prevent crash. Add NULL check before calling crash function."
+      },
+      {
+        "function_name": "rrc_gNB_decode_dcch",
+        "file_path": "openairinterface-5g-develop/openair2/RRC/NR/rrc_gNB.c",
+        "patch_type": "null_check_insertion",
+        "original_code": "  NR_UL_DCCH_Message_t *ul_dcch_msg = NULL;\n  asn_dec_rval_t dec_rval =\n      uper_decode(NULL, &asn_DEF_NR_UL_DCCH_Message, (void **)&ul_dcch_msg, msg->rrc_container, msg->rrc_container_length, 0, 0);\n\n  if ((dec_rval.code != RC_OK) && (dec_rval.consumed == 0)) {\n    LOG_E(NR_RRC, \"UE %d: Failed to decode UL-DCCH (%zu bytes)\\n\", UE->rrc_ue_id, dec_rval.consumed);\n    return -1;\n  }",
+        "patched_code": "  NR_UL_DCCH_Message_t *ul_dcch_msg = NULL;\n  if (!msg->rrc_container) {\n    LOG_E(NR_RRC, \"UE %d: rrc_container is NULL, cannot decode UL-DCCH\\n\", UE->rrc_ue_id);\n    return -1;\n  }\n  asn_dec_rval_t dec_rval =\n      uper_decode(NULL, &asn_DEF_NR_UL_DCCH_Message, (void **)&ul_dcch_msg, msg->rrc_container, msg->rrc_container_length, 0, 0);\n\n  if ((dec_rval.code != RC_OK) && (dec_rval.consumed == 0)) {\n    LOG_E(NR_RRC, \"UE %d: Failed to decode UL-DCCH (%zu bytes)\\n\", UE->rrc_ue_id, dec_rval.consumed);\n    return -1;\n  }",
+        "line_numbers": "1965",
+        "description": "Add NULL check for msg->rrc_container before decoding to prevent passing NULL pointer downstream."
+      }
+    ],
+    "config_patches": []
+  }
+}
