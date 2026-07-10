@@ -1,0 +1,56 @@
+{
+  "error_message": "ERROR MESSAGE:\nSegmentation fault in function rrc_gNB_send_NGAP_NAS_FIRST_REQ at /home/tcs/jayasvi/nov_2025_dev/ue/openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c:241\n\nCONTEXT / STACK TRACE:\nThread 8 \"TASK_RRC_GNB\" received signal SIGSEGV, caused by dereferencing a null pointer rrcSetupComplete (0x0) in the line:\n241\t  req->nas_pdu = create_byte_array(rrcSetupComplete->dedicatedNAS_Message.size, rrcSetupComplete->dedicatedNAS_Message.buf);\n\nBacktrace:\n#0  rrc_gNB_send_NGAP_NAS_FIRST_REQ (rrc=0x555558d94820, UE=0x7fffd80076b0, rrcSetupComplete=0x0) at rrc_gNB_NGAP.c:241  \n#1",
+  "log_file": "segmentation_fault.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/segmentation_fault.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-08T16:49:31.754733",
+  "results": {
+    "error_message": "ERROR MESSAGE:\nSegmentation fault in function rrc_gNB_send_NGAP_NAS_FIRST_REQ at /home/tcs/jayasvi/nov_2025_dev/ue/openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c:241\n\nCONTEXT / STACK TRACE:\nThread 8 \"TASK_RRC_GNB\" received signal SIGSEGV, caused by dereferencing a null pointer rrcSetupComplete (0x0) in the line:\n241\t  req->nas_pdu = create_byte_array(rrcSetupComplete->dedicatedNAS_Message.size, rrcSetupComplete->dedicatedNAS_Message.buf);\n\nBacktrace:\n#0  rrc_gNB_send_NGAP_NAS_FIRST_REQ (rrc=0x555558d94820, UE=0x7fffd80076b0, rrcSetupComplete=0x0) at rrc_gNB_NGAP.c:241  \n#1",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/segmentation_fault.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "grep -n \"rrcSetupComplete\" /home/tcs/jayasvi/nov_2025_dev/ue/openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c",
+            "hint": "Verify if rrcSetupComplete is properly referenced or checked before use in the source code"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test basic network connectivity to the AMF to ensure signaling messages can be exchanged"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "grep -n \"rrcSetupComplete\" /home/tcs/jayasvi/nov_2025_dev/ue/openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c",
+            "explanation": "Verify if rrcSetupComplete is properly referenced or checked before use in the source code"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test basic network connectivity to the AMF to ensure signaling messages can be exchanged"
+          }
+        ],
+        "command_count": 2
+      },
+      "command_count": 2
+    },
+    "timestamp": "2026-07-08T16:49:31.518777"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260708_164931.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

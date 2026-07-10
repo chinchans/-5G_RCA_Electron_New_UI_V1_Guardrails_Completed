@@ -18,9 +18,19 @@ from app.guardrails import (
     validate_tsg_dataset_upload,
 )
 from app.guardrails.tsg_prompt_guardrail import (
+    raise_if_tsg_prompt_blocked,
     should_scan_tsg_prompt,
+    validate_refine_prompt_or_raise,
     validate_tsg_prompt_or_raise,
+    validate_tsg_user_prompt,
 )
+from app.guardrails.bug_discovery_log_guardrail import (
+    raise_if_bug_log_blocked,
+    validate_bug_discovery_log_file,
+    validate_bug_discovery_log_or_raise,
+)
+from app.guardrails.refine_guardrail import validate_refined_output
+from app.guardrails.test_script_guardrail import validate_generated_test_script
 from app.guardrails.config import (
     LEGACY_SPEC_INTEL_EXTRACT_ROOT,
     SPEC_INTEL_DATASETS_DIR,
@@ -886,6 +896,8 @@ class RefineScriptRequest(BaseModel):
     text_content: str
     new_prompt: str
     previous_response: Optional[str] = None
+    dataset_folder: Optional[str] = None
+    refinement_source: Optional[str] = None  # test_case | test_script
 
 class TestScriptSaveRequest(BaseModel):
     content: str
@@ -978,6 +990,30 @@ async def get_prompt_templates():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error retrieving prompts: {str(e)}")
 
+def _should_run_script_guardrails_on_generate(
+    prompt_key: str,
+    text_content: Optional[str],
+    dataset_folder: Optional[str],
+) -> bool:
+    """Apply script guardrails on generate for Test Script and dataset-backed Custom runs."""
+    key = (prompt_key or "").strip().lower()
+    if key == "test script":
+        return True
+    if key != "custom":
+        return False
+    if dataset_folder:
+        return True
+    content_lower = (text_content or "").lower()
+    if "no dataset provided" in content_lower:
+        return False
+    try:
+        from app.guardrails.intent_coverage_service import parse_test_cases_from_generation
+
+        return bool(parse_test_cases_from_generation(text_content or ""))
+    except Exception:
+        return False
+
+
 @router.post("/api/test-script/generate")
 async def generate_test_script(request: TestScriptRequest):
     """Generate test script based on prompt and dataset"""
@@ -1020,7 +1056,10 @@ async def generate_test_script(request: TestScriptRequest):
             
             print(f"✅ Using template from backend (length: {len(selected_prompt)} chars)")
         
-        if should_scan_tsg_prompt(request.prompt_key):
+        if should_scan_tsg_prompt(
+            request.prompt_key,
+            custom_prompt_provided=bool(request.custom_prompt and request.custom_prompt.strip()),
+        ):
             validate_tsg_prompt_or_raise(
                 selected_prompt,
                 context="tsg_generate",
@@ -1035,6 +1074,37 @@ async def generate_test_script(request: TestScriptRequest):
             request.text_content, 
             selected_prompt
         )
+
+        normalized_prompt_key = (request.prompt_key or "").strip().lower()
+        script_guardrails: Optional[Dict[str, Any]] = None
+        if _should_run_script_guardrails_on_generate(
+            request.prompt_key,
+            request.text_content,
+            request.dataset_folder,
+        ):
+            script_verdict = validate_generated_test_script(
+                generated_script,
+                source_text=request.text_content or "",
+                dataset_folder=request.dataset_folder,
+                language=(request.variables.language if request.variables else "python") or "python",
+            )
+            script_guardrails = script_verdict.to_dict()
+            if script_verdict.blocked:
+                raise HTTPException(
+                    status_code=422,
+                    detail={
+                        "error": "generated_script_blocked_by_guardrails",
+                        "message": (
+                            "Generated test script failed guardrails (traceability and/or "
+                            "test-case groundedness). Align script content with source test "
+                            "cases; optionally add # <testCaseID>: <title> above classes or methods."
+                        ),
+                        "reasons": script_verdict.reasons,
+                        "findings": script_verdict.findings,
+                        "guardrails": script_guardrails,
+                        "generated_script": generated_script,
+                    },
+                )
         
         # Save to file
         output_dir = BACKEND_DIR / "resources" / "TestScriptGenerator"
@@ -1054,7 +1124,6 @@ async def generate_test_script(request: TestScriptRequest):
             print(f"⚠️ Logging to SQLite failed: {e}")
         
         history_filename = None
-        normalized_prompt_key = (request.prompt_key or "").strip().lower()
         if normalized_prompt_key == "test case":
             history_filename = "test_case_history.json"
         elif normalized_prompt_key == "test script":
@@ -1103,7 +1172,6 @@ async def generate_test_script(request: TestScriptRequest):
                 coverage_result = validate_intent_coverage(
                     resolved_dataset_folder,
                     generated_script,
-                    use_nli_for_gaps=False,
                 )
                 intent_coverage = coverage_result.to_dict()
                 intent_guardrails = {
@@ -1134,13 +1202,19 @@ async def generate_test_script(request: TestScriptRequest):
                     f"{covered}/{total} mandatory intents)."
                 )
 
+        combined_guardrails: Dict[str, Any] = {}
+        if intent_guardrails:
+            combined_guardrails.update(intent_guardrails)
+        if script_guardrails:
+            combined_guardrails["generated_script_static_validation"] = script_guardrails
+
         return TestScriptResponse(
             success=True,
             generated_script=generated_script,
             file_path=file_path if success else None,
             message=response_message,
             intent_coverage=intent_coverage,
-            guardrails=intent_guardrails,
+            guardrails=combined_guardrails or None,
             dataset_folder=resolved_dataset_folder,
             truncated=bool(getattr(test_script_generator, "last_generation_truncated", False)),
         )
@@ -1494,9 +1568,20 @@ async def get_user_history(request: UserHistoryRequest):
 async def refine_test_script(request: RefineScriptRequest):
     """Refine existing test script with new prompt"""
     try:
-        validate_tsg_prompt_or_raise(
+        prompt_verdict = validate_tsg_user_prompt(
             request.new_prompt,
             context="tsg_refine",
+            template_key="Refine",
+        )
+        raise_if_tsg_prompt_blocked(
+            prompt_verdict,
+            template_key="Refine",
+            context="tsg_refine",
+        )
+        validate_refine_prompt_or_raise(
+            request.new_prompt,
+            text_content=request.text_content or "",
+            previous_response=request.previous_response,
             template_key="Refine",
         )
 
@@ -1505,6 +1590,43 @@ async def refine_test_script(request: RefineScriptRequest):
             request.new_prompt,
             request.previous_response
         )
+
+        refine_verdict = validate_refined_output(
+            refined_script,
+            source_text=request.text_content or "",
+            dataset_folder=request.dataset_folder,
+            new_prompt=request.new_prompt,
+            previous_response=request.previous_response,
+            refinement_source=request.refinement_source,
+        )
+        if refine_verdict.blocked:
+            error_code = "generated_script_blocked_by_guardrails"
+            if refine_verdict.refinement_source == "test_case":
+                message = (
+                    "Refined test cases failed guardrails "
+                    "(structured JSON and/or intent coverage)."
+                )
+            elif any(f.get("check") == "traceability" for f in refine_verdict.findings):
+                message = "Refined script failed traceability guardrail."
+            elif any(f.get("check") == "groundedness" for f in refine_verdict.findings):
+                message = "Refined script failed groundedness guardrail."
+            elif any(f.get("check") == "dataset_scope" for f in refine_verdict.findings):
+                message = "Refined script is off-topic for the loaded dataset."
+            else:
+                message = "Refined output failed guardrails."
+
+            raise HTTPException(
+                status_code=422,
+                detail={
+                    "error": error_code,
+                    "message": message,
+                    "reasons": refine_verdict.reasons,
+                    "findings": refine_verdict.findings,
+                    "guardrails": refine_verdict.to_dict(),
+                    "generated_script": refined_script,
+                    "intent_coverage": refine_verdict.intent_coverage,
+                },
+            )
         
         # Log to SQLite
         try:
@@ -1520,6 +1642,11 @@ async def refine_test_script(request: RefineScriptRequest):
             success=True,
             generated_script=refined_script,
             message="Test script refined successfully",
+            guardrails={
+                "refine_prompt_validation": prompt_verdict.to_dict(),
+                "refine_output_validation": refine_verdict.to_dict(),
+            },
+            intent_coverage=refine_verdict.intent_coverage,
             truncated=bool(getattr(test_script_generator, "last_generation_truncated", False)),
         )
         
@@ -1652,6 +1779,17 @@ async def load_test_dataset(files: List[UploadFile] = File(...)):
                     ).is_file()
                 except Exception:
                     response_payload["intent_graph_available"] = False
+                try:
+                    from app.guardrails.test_script_traceability import build_and_save_traceability_matrix
+
+                    matrix_info = build_and_save_traceability_matrix(
+                        dataset_content,
+                        dataset_folder,
+                    )
+                    if matrix_info:
+                        response_payload["traceability_matrix"] = matrix_info
+                except Exception:
+                    pass
             upload_type = details.get("upload_type", "file")
             dataset_title = details.get("dataset_title", "unknown")
             if details.get("dataset_matched"):
@@ -1793,7 +1931,7 @@ async def save_template(request: TemplateSaveRequest):
         print(f"💾 Template content length: {len(request.template_content)} chars")
         print(f"💾 Template preview (first 100 chars): {request.template_content[:100]}...")
 
-        if should_scan_tsg_prompt(request.template_name):
+        if should_scan_tsg_prompt(request.template_name, save_template=True):
             validate_tsg_prompt_or_raise(
                 request.template_content,
                 context="tsg_save_template",
@@ -2565,6 +2703,27 @@ class RCARequest(BaseModel):
     log_file_name: str
     analysis_type: str = "error"  # error, function, impact, kt, ai - default to error
 
+class ValidateLogFileRequest(BaseModel):
+    log_file_path: str
+
+@router.post("/api/rca/validate-log")
+async def validate_rca_log_file(request: ValidateLogFileRequest):
+    """Scan a selected log file with telecom, historical, data-quality, and security guardrails."""
+    verdict = validate_bug_discovery_log_file(request.log_file_path)
+    layers = verdict.layers or {}
+    quality = layers.get("telecom_domain")
+    historical = layers.get("historical_pattern")
+    data_quality = layers.get("data_quality")
+    return {
+        "success": True,
+        "passed": verdict.passed and not verdict.blocked,
+        "blocked": verdict.blocked,
+        "guardrails": verdict.to_dict(),
+        "quality": quality,
+        "historical_pattern": historical,
+        "data_quality": data_quality,
+    }
+
 @router.post("/api/rca/upload-logs")
 async def upload_rca_logs(files: List[UploadFile] = File(...)):
     """Upload log files for RCA analysis"""
@@ -2593,7 +2752,16 @@ async def upload_rca_logs(files: List[UploadFile] = File(...)):
             
             with open(file_path, "wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
-            
+
+            verdict = validate_bug_discovery_log_file(str(file_path))
+            if verdict.blocked:
+                try:
+                    file_path.unlink(missing_ok=True)
+                except OSError:
+                    pass
+                raise_if_bug_log_blocked(verdict)
+
+            layers = verdict.layers or {}
             # Store metadata mapping
             file_metadata[file.filename] = {
                 "file_id": file_id,
@@ -2601,16 +2769,19 @@ async def upload_rca_logs(files: List[UploadFile] = File(...)):
                 "file_path": str(file_path),
                 "upload_date": datetime.now().isoformat()
             }
-            
+
             uploaded_files.append({
                 "file_id": file_id,
                 "original_name": file.filename,
                 "saved_name": safe_filename,
                 "file_path": str(file_path),
-                "size": file_path.stat().st_size
+                "size": file_path.stat().st_size,
+                "passed": verdict.passed and not verdict.blocked,
+                "guardrails": verdict.to_dict(),
+                "quality": layers.get("telecom_domain"),
+                "historical_pattern": layers.get("historical_pattern"),
+                "data_quality": layers.get("data_quality"),
             })
-        
-        # Save metadata
         with open(metadata_file, 'w') as f:
             json.dump(file_metadata, f, indent=2)
         
@@ -2651,6 +2822,8 @@ async def start_rca_analysis(background_tasks: BackgroundTasks, request: RCARequ
         
         if not log_file_path.exists():
             raise HTTPException(status_code=404, detail=f"Log file path does not exist: {log_file_path}")
+
+        validate_bug_discovery_log_or_raise(str(log_file_path))
         
         # Path to RCA code
         rca_dir = BACKEND_DIR / "app" / "services" / "RCA-Code-Updated" / "RCA-Code-Updated"
@@ -3202,6 +3375,21 @@ async def save_rca_analysis(request: SaveAnalysisRequest):
             json.dump(history_data, f, indent=2)
         
         try:
+            from app.guardrails.log_pattern_store import promote_log_pattern
+            from app.guardrails.historical_pattern_check import reload_learned_patterns
+
+            summary = (results or {}).get("summary") or {}
+            if summary.get("analysis_completed"):
+                promote_log_pattern(
+                    request.log_path or request.log_file,
+                    log_file=request.log_file,
+                    history_file=history_file.name,
+                )
+                reload_learned_patterns()
+        except Exception as pattern_error:
+            print(f"⚠️ Failed to promote learned log pattern: {pattern_error}")
+
+        try:
             bug_history_record = {
                 "log_file": request.log_file,
                 "output": request.fix_suggestions or results,
@@ -3270,6 +3458,8 @@ async def analyze_error(request: ErrorAnalysisRequest):
         raise HTTPException(status_code=503, detail="Error fixing pipeline not available")
     
     try:
+        validate_bug_discovery_log_or_raise(request.log_file_path)
+
         # Change to the error fixing pipeline directory for proper execution
         original_cwd = os.getcwd()
         # The pipeline directory is app/services/Error_fixing_pipelin (no nested subdirectory)
@@ -3732,6 +3922,14 @@ async def upload_log_file(file: UploadFile = File(...)):
         with open(file_path, "wb") as buffer:
             content = await file.read()
             buffer.write(content)
+
+        verdict = validate_bug_discovery_log_file(str(file_path))
+        if verdict.blocked:
+            try:
+                file_path.unlink(missing_ok=True)
+            except OSError:
+                pass
+            raise_if_bug_log_blocked(verdict)
         
         # Return path relative to pipeline directory
         relative_path = f"log_files/{unique_filename}"

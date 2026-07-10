@@ -1,0 +1,90 @@
+import unittest
+
+class TestGeopoliticalShiftsEasternEuropePostColdWar(unittest.TestCase):
+
+    def setUp(self):
+        # Setup initial conditions or data if needed
+        self.post_cold_war_period = (1990, 2000)
+        self.eastern_europe_countries = [
+            "Poland", "Czech Republic", "Slovakia", "Hungary", "Romania",
+            "Bulgaria", "Ukraine", "Belarus", "Baltic States", "Former Yugoslav republics"
+        ]
+        self.border_changes = {
+            "Czechoslovakia split": (1993, ["Czech Republic", "Slovakia"]),
+            "Soviet Union dissolution": (1991, ["Ukraine", "Belarus", "Baltic States", "Others"]),
+            "Yugoslavia breakup": (1990, ["Slovenia", "Croatia", "Bosnia & Herzegovina", "Serbia", "Montenegro", "Macedonia"]),
+        }
+
+    def test_geopolitical_shifts_identification(self):
+        # Validate key geopolitical events and border changes
+        self.assertIn("Czechoslovakia split", self.border_changes)
+        self.assertIn("Soviet Union dissolution", self.border_changes)
+        self.assertIn("Yugoslavia breakup", self.border_changes)
+
+    def test_economic_impact_of_border_changes(self):
+        # Analytical breakdown of economic impacts due to border changes
+        economic_impacts = {}
+
+        # Example impact for Czechoslovakia split
+        economic_impacts["Czechoslovakia split"] = {
+            "trade_disruption": True,
+            "initial_GDP_decline_percent": 5,
+            "new_trade_barriers": True,
+            "currency_separation": True,
+            "foreign_investment_fluctuation": "moderate"
+        }
+
+        # Example impact for Soviet Union dissolution
+        economic_impacts["Soviet Union dissolution"] = {
+            "massive_restructuring": True,
+            "loss_of_integrated_market": True,
+            "GDP_decline_percent": 10,
+            "infrastructure_division": True,
+            "transition_to_market_economies": True,
+            "new_customs_borders": True
+        }
+
+        # Example impact for Yugoslavia breakup
+        economic_impacts["Yugoslavia breakup"] = {
+            "war_economy_effects": True,
+            "severe_GDP_decline_percent": 15,
+            "massive_population_displacement": True,
+            "trade_routes_reconfiguration": True,
+            "international_aid_dependency": True,
+            "long_term_integration_challenges": True
+        }
+
+        # Validate economic impacts have correct keys and logical values
+        for event, impacts in economic_impacts.items():
+            self.assertIn("GDP_decline_percent", impacts)
+            self.assertIsInstance(impacts["GDP_decline_percent"], int)
+            self.assertGreaterEqual(impacts["GDP_decline_percent"], 0)
+            self.assertIn("trade_disruption", impacts.keys() | {"trade_routes_reconfiguration", "loss_of_integrated_market"})
+            self.assertIn("currency_separation", impacts.keys() | {"transition_to_market_economies"})
+
+    def test_border_change_effects_on_trade(self):
+        # Simulate trade volume impact due to new borders
+        pre_change_trade_volume = 100  # arbitrary units
+        trade_volume_after_border_change = {
+            "Czechoslovakia split": pre_change_trade_volume * 0.85,
+            "Soviet Union dissolution": pre_change_trade_volume * 0.75,
+            "Yugoslavia breakup": pre_change_trade_volume * 0.65,
+        }
+        for event, volume in trade_volume_after_border_change.items():
+            self.assertLess(volume, pre_change_trade_volume)
+            self.assertGreater(volume, 0)
+
+    def test_long_term_economic_recovery_trends(self):
+        # Economic recovery and integration trends post border changes
+        recovery_trends = {
+            "Czechoslovakia split": {"EU_integration": True, "GDP_growth_rate_avg": 3},
+            "Soviet Union dissolution": {"EU_integration": False, "GDP_growth_rate_avg": 2},
+            "Yugoslavia breakup": {"EU_integration": True, "GDP_growth_rate_avg": 1},
+        }
+        for event, trends in recovery_trends.items():
+            self.assertIn("GDP_growth_rate_avg", trends)
+            self.assertGreaterEqual(trends["GDP_growth_rate_avg"], 0)
+            self.assertIsInstance(trends["EU_integration"], bool)
+
+if __name__ == "__main__":
+    unittest.main()

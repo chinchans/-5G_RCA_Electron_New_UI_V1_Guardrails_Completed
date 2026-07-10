@@ -1,13 +1,17 @@
 Error Fix Summary Report
 ============================================================
 
-Error: ERROR MESSAGE: 
-/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_ProtocolIE-Field.c.o):(.data.rel.ro+0xaf0): undefined reference to `asn_DEF_F1AP_LTMCellSwitchInformation'
-/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfiguration.c.o):(.data.rel+0x168): undefined reference to `asn_DEF_F1AP_LTMCFRAResourceConfig'
-/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfiguration.c.o):(.data.rel+0x1b8): undefined reference to `asn_DEF_F1AP_LTMCFRAResourceConfig'
-/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMCFRAResourceConfig-
-Log File: /home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/app/services/Error_fixing_pipelin/log_files/CMake_error_4.log
-Analysis Date: 2026-06-16 16:19:09
+Error: ERROR MESSAGE:
+"error: request for member ‘lTMCellID’ in something not a structure or union" in function at openair2/F1AP/lib/f1ap_ue_context.c line 1220, specifically:
+NR_CELL_ID_TO_BIT_STRING(src_item->lTMCellID_nr_cellid, &item->lTMCellID.nRCellIdentity);
+
+Additional critical errors in the same function/context include:
+- "error: request for member ‘lTMConfigurationID’ in something not a structure or union" at line 1221
+- "error: unknown type name ‘F1AP_LTMgNB_DU_IDs_Item’; use ‘struct’ keyword to refer to the type" at line 1253
+- "error: ‘F1AP_LTMgNB_DU_IDs_Item’ undeclared (first use in this function)" at line 1253
+- "error: request for member ‘lTMgNB_DU_ID’
+Log File: /home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Bug Discovery/Testing/New_log_files/all.txt
+Analysis Date: 2026-07-10 15:41:22
 
 Deployment Context:
 - Role: CU
@@ -15,10 +19,10 @@ Deployment Context:
 - Network: gNB=None, AMF=None
 
 Phase 2 Results:
-- Retrieval Method: cmake_build_system_embeddings
-- Functions: 0
+- Retrieval Method: compiler_ground_truth_primary_only
+- Functions: 2
 - Configs: 0
 
 Phase 3 Results:
-- Root Cause: Missing ASN.1 generated source files F1AP_LTMCellSwitchInformation.c and F1AP_LTMCFRAResourceConfig.c in the f1ap ASN.1 source list causes undefined references at link time....
-- Fix Available: Yes
+- Root Cause: The root cause of the compilation errors is that the code references types 'F1AP_LTMConfigurationIDMapping_Item' and 'F1AP_LTMgNB_DU_IDs_Item' without the 'struct' keyword, and attempts to access memb...
+- Fix Available: No

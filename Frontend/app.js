@@ -29,7 +29,7 @@ window.capitalize = function(text) {
 // Global variable to store timeout ID for clearing previous timeouts
 let statusBarTimeout = null;
 
-function showStatusBar(message, type = 'info', title = null) {
+function showStatusBar(message, type = 'info', title = null, durationMs = 10000) {
     const statusBar = document.getElementById('statusBar');
     const statusTitle = document.getElementById('statusTitle');
     const statusMessage = document.getElementById('statusMessage');
@@ -48,14 +48,16 @@ function showStatusBar(message, type = 'info', title = null) {
     // Set content
     statusTitle.textContent = title || getStatusTitle(type);
     statusMessage.textContent = message;
-    
-    // Reset icons
-    statusSpinner.style.display = 'none';
-    statusCheck.style.display = 'none';
-    statusError.style.display = 'none';
+    if (statusMessage) {
+        statusMessage.style.whiteSpace = (type === 'error' || type === 'warning') ? 'pre-wrap' : '';
+        statusMessage.style.wordBreak = 'break-word';
+    }
     
     // Set type and show appropriate icon
     statusBar.className = `status-bar ${type}`;
+    if (type === 'error' && title && String(title).toLowerCase().includes('blocked')) {
+        statusBar.classList.add('guardrail-error');
+    }
     statusBar.style.display = 'block';
     
     if (type === 'success') {
@@ -66,11 +68,13 @@ function showStatusBar(message, type = 'info', title = null) {
         statusSpinner.style.display = 'inline';
     }
     
-    // Auto-hide after 10 seconds for all message types
-    statusBarTimeout = setTimeout(() => {
-        hideStatusBar();
-        statusBarTimeout = null;
-    }, 10000);  // 10 seconds = 10000 milliseconds
+    // Auto-hide after delay; durationMs <= 0 keeps the popup open until dismissed
+    if (durationMs > 0) {
+        statusBarTimeout = setTimeout(() => {
+            hideStatusBar();
+            statusBarTimeout = null;
+        }, durationMs);
+    }
 }
 
 function hideStatusBar() {
@@ -90,19 +94,116 @@ function hideStatusBar() {
     }
 }
 
+function firstNonEmptyArray(...candidates) {
+    for (const candidate of candidates) {
+        if (Array.isArray(candidate) && candidate.length) {
+            return candidate;
+        }
+    }
+    return [];
+}
+
+function collectGuardrailFindingsAndReasons(error, detail) {
+    const findings = [];
+    const reasons = [];
+    const seenFindings = new Set();
+    const seenReasons = new Set();
+
+    const pushFinding = (item) => {
+        if (!item || typeof item !== 'object') {
+            return;
+        }
+        const key = JSON.stringify(item);
+        if (seenFindings.has(key)) {
+            return;
+        }
+        seenFindings.add(key);
+        findings.push(item);
+    };
+
+    const pushReason = (item) => {
+        const text = String(item || '').trim();
+        if (!text || seenReasons.has(text)) {
+            return;
+        }
+        if (text.startsWith('{"detail"') || text.startsWith('HTTP error!') || text.startsWith('{')) {
+            return;
+        }
+        seenReasons.add(text);
+        reasons.push(text);
+    };
+
+    const absorb = (source) => {
+        if (!source || typeof source !== 'object') {
+            return;
+        }
+        (source.findings || []).forEach(pushFinding);
+        (source.reasons || []).forEach(pushReason);
+        (source.warnings || []).forEach((w) => pushReason(`Warning: ${w}`));
+
+        const metadata = source.metadata || {};
+        const trace = metadata.traceability || {};
+        const groundedness = metadata.groundedness || {};
+        (trace.findings || []).forEach(pushFinding);
+        (trace.reasons || []).forEach(pushReason);
+        (groundedness.findings || []).forEach(pushFinding);
+        (groundedness.reasons || []).forEach(pushReason);
+
+        (trace.missing_test_case_ids || []).forEach((id) => {
+            pushReason(`Missing traceability for test case: ${id}`);
+        });
+        (trace.unmapped_test_functions || []).forEach((name) => {
+            pushReason(`Unmapped traced unit: ${name}`);
+        });
+        (groundedness.per_function || []).forEach((row) => {
+            if (!row || typeof row !== 'object') {
+                return;
+            }
+            if (Array.isArray(row.contradicted_claims) && row.contradicted_claims.length) {
+                pushReason(
+                    `${row.function_name || row.test_case_id}: contradicted claim(s) — ${row.contradicted_claims.slice(0, 2).join('; ')}`
+                );
+            }
+            if (Array.isArray(row.missing_requirements) && row.missing_requirements.length) {
+                pushReason(
+                    `${row.function_name || row.test_case_id}: missing step/expected — ${row.missing_requirements.slice(0, 2).join('; ')}`
+                );
+            }
+            if (typeof row.grounded_percent === 'number' && row.grounded_percent < 70) {
+                pushReason(
+                    `${row.function_name || row.test_case_id}: groundedness ${row.grounded_percent}%`
+                );
+            }
+        });
+    };
+
+    firstNonEmptyArray(
+        error?.guardrailFindings,
+        detail?.findings,
+        detail?.guardrails?.findings
+    ).forEach(pushFinding);
+
+    firstNonEmptyArray(
+        error?.guardrailReasons,
+        detail?.reasons,
+        detail?.guardrails?.reasons
+    ).forEach(pushReason);
+
+    absorb(detail);
+    absorb(detail?.guardrails);
+
+    return { findings, reasons };
+}
+
 function extractGuardrailPayload(error) {
     if (!error) {
         return { findings: [], reasons: [], detail: null, isGuardrailBlock: false };
     }
     const detail = error.guardrailDetail || null;
-    let findings = error.guardrailFindings
-        || detail?.findings
-        || detail?.guardrails?.scan?.findings
-        || [];
-    let reasons = error.guardrailReasons
-        || detail?.reasons
-        || [];
-    if ((!findings || !findings.length) && reasons.length) {
+    const collected = collectGuardrailFindingsAndReasons(error, detail);
+    let findings = collected.findings;
+    let reasons = collected.reasons;
+    if (!findings.length && reasons.length) {
         findings = reasons.map((reason) => ({
             layer: 'summary',
             pattern: 'guardrail_block',
@@ -114,63 +215,515 @@ function extractGuardrailPayload(error) {
             reason,
         }));
     }
+    const inferredCode = inferGuardrailErrorCode(error, detail);
+    const isGuardrailBlock = Boolean(
+        error.isGuardrailBlock
+        || detail?.error === 'document_blocked_by_guardrails'
+        || detail?.error === 'prompt_blocked_by_guardrails'
+        || detail?.error === 'dataset_output_guardrails_failed'
+        || detail?.error === 'generated_script_blocked_by_guardrails'
+        || detail?.error === 'log_blocked_by_telecom_domain'
+        || detail?.error === 'log_blocked_by_historical_pattern'
+        || detail?.error === 'log_blocked_by_data_quality'
+        || inferredCode
+    );
     return {
-        findings: Array.isArray(findings) ? findings : [],
-        reasons: Array.isArray(reasons) ? reasons : [],
-        detail,
-        isGuardrailBlock: Boolean(
-            error.isGuardrailBlock
-            || detail?.error === 'document_blocked_by_guardrails'
-            || detail?.error === 'prompt_blocked_by_guardrails'
-        ),
+        findings,
+        reasons,
+        detail: detail || (inferredCode ? { error: inferredCode, message: '' } : null),
+        isGuardrailBlock,
     };
 }
 
 window.extractGuardrailPayload = extractGuardrailPayload;
 
-function formatGuardrailRejectionStatus(findings, reasons) {
-    const reasonLines = Array.isArray(reasons) ? reasons.filter(Boolean) : [];
-    if (reasonLines.length) {
-        return reasonLines.join('; ');
+const SCRIPT_GUARDRAIL_CHECK_LABELS = {
+    ast_parse: 'AST / syntax parsing',
+    forbidden_imports: 'Forbidden imports',
+    forbidden_calls: 'Forbidden function calls',
+    assertion_present: 'Assertions',
+    test_case_contract: 'Test case ID contract',
+    traceability: 'Test case traceability',
+    groundedness: 'Test case groundedness (NLI)',
+    intent_contract: 'Intent graph contract',
+    non_empty_script: 'Empty script',
+    import_whitelist: 'Import policy',
+};
+
+const PROMPT_GUARDRAIL_LAYER_LABELS = {
+    layer1: 'Layer 1 regex',
+    layer2: 'Layer 2 Llama Prompt Guard',
+    summary: 'Guardrail summary',
+};
+
+function formatGuardrailFindingLine(finding) {
+    if (!finding || typeof finding !== 'object') {
+        return '';
     }
-    const rows = Array.isArray(findings) ? findings : [];
-    if (rows.length) {
-        const parts = rows.slice(0, 3).map((f) => {
-            const loc = [];
-            if (f.page != null) loc.push(`page ${f.page}`);
-            if (f.line != null) loc.push(`line ${f.line}`);
-            const where = loc.length ? ` (${loc.join(', ')})` : '';
-            return `${f.matched_text || f.pattern || 'match'}${where}`;
+    const check = finding.check || finding.pattern || finding.layer || 'guardrail';
+    const layer = finding.layer || '';
+    let label = SCRIPT_GUARDRAIL_CHECK_LABELS[check]
+        || PROMPT_GUARDRAIL_LAYER_LABELS[layer]
+        || String(check).replace(/_/g, ' ');
+    const detail = finding.detail || finding.reason || finding.matched_text || finding.snippet || '';
+    if (detail) {
+        return `${label}: ${detail}`;
+    }
+    return label;
+}
+
+function formatGuardrailBlockCategories(findings, reasons, detail) {
+    const categories = new Set();
+    const scriptFindings = (findings || []).filter((f) => f?.layer === 'script_guardrail' && f?.check);
+    if (scriptFindings.length) {
+        scriptFindings.forEach((f) => {
+            categories.add(SCRIPT_GUARDRAIL_CHECK_LABELS[f.check] || f.check.replace(/_/g, ' '));
         });
-        const suffix = rows.length > 3 ? ` (+${rows.length - 3} more)` : '';
-        return parts.join('; ') + suffix;
+        return Array.from(categories);
     }
-    return 'The content was blocked because the guardrails detected instruction-like or malicious prompt content.';
+
+    if (detail?.error === 'generated_script_blocked_by_guardrails') {
+        const reasonsText = (reasons || []).join(' ').toLowerCase();
+        if (reasonsText.includes('syntax')) {
+            categories.add('AST / syntax parsing');
+            return Array.from(categories);
+        }
+    }
+
+    (findings || []).forEach((f) => {
+        if (f?.check && SCRIPT_GUARDRAIL_CHECK_LABELS[f.check]) {
+            categories.add(SCRIPT_GUARDRAIL_CHECK_LABELS[f.check]);
+        } else if (f?.layer === 'layer1') {
+            categories.add('Layer 1 regex (prompt)');
+        } else if (f?.layer === 'layer2') {
+            categories.add('Layer 2 Llama Prompt Guard (prompt)');
+        } else if (f?.layer === 'script_guardrail' && f?.check) {
+            categories.add(SCRIPT_GUARDRAIL_CHECK_LABELS[f.check] || f.check);
+        }
+    });
+    (reasons || []).forEach((r) => {
+        const text = String(r).toLowerCase();
+        if (text.includes('syntax')) categories.add('AST / syntax parsing');
+        if (text.includes('forbidden import')) categories.add('Forbidden imports');
+        if (text.includes('forbidden runtime') || text.includes('forbidden call')) categories.add('Forbidden function calls');
+        if (text.includes('traceability')) categories.add('Test case traceability');
+        if (text.includes('groundedness') || text.includes('contradict')) categories.add('Test case groundedness (NLI)');
+        if (text.includes('intent') || text.includes('knowledge-graph')) categories.add('Intent graph contract');
+        if (text.includes('layer 1')) categories.add('Layer 1 regex (prompt)');
+        if (text.includes('layer 2') || text.includes('llama guard')) categories.add('Layer 2 Llama Prompt Guard (prompt)');
+    });
+    if (detail?.blocked_by === 'layer1') categories.add('Layer 1 regex (prompt)');
+    if (detail?.blocked_by === 'layer2') categories.add('Layer 2 Llama Prompt Guard (prompt)');
+    if (detail?.error === 'generated_script_blocked_by_guardrails' && categories.size === 0) {
+        categories.add('Generated script static/structural checks');
+    }
+    return Array.from(categories);
+}
+
+function formatGuardrailRejectionStatus(findings, reasons, detailMessage, detail) {
+    const buildFn = window.API?.buildConciseGuardrailSummary;
+    if (typeof buildFn === 'function') {
+        return buildFn(detail || {}, findings, reasons);
+    }
+
+    const backendMessage = String(detail?.message || detailMessage || '').trim();
+    if (detail?.error === 'log_blocked_by_telecom_domain') {
+        const quality = detail?.quality || {};
+        const domainMessages = (quality.messages || reasons || []).filter(Boolean);
+        return domainMessages[0]
+            || 'Provided logs do not appear to be from a supported 5G network component.';
+    }
+    if (detail?.error === 'log_blocked_by_historical_pattern') {
+        const historical = detail?.historical_pattern
+            || detail?.guardrails?.layers?.historical_pattern
+            || {};
+        const histMessages = (historical.messages || reasons || []).filter(Boolean);
+        return histMessages[0]
+            || 'This log appears to be new — human review is recommended.';
+    }
+    if (detail?.error === 'log_blocked_by_data_quality') {
+        const dataQuality = detail?.data_quality
+            || detail?.guardrails?.layers?.data_quality
+            || {};
+        const dqMessages = (dataQuality.messages || reasons || []).filter(Boolean);
+        return dqMessages[0]
+            || 'Log file appears incomplete; expected events are missing.';
+    }
+    if (backendMessage && backendMessage.length < 300 && !backendMessage.startsWith('{')) {
+        return backendMessage;
+    }
+    return 'Request blocked by security guardrails.';
+}
+
+function inferGuardrailErrorCode(error, detail) {
+    if (detail?.error) {
+        return detail.error;
+    }
+    const msg = String(error?.message || '').toLowerCase();
+    if (msg.includes('log_blocked_by_telecom_domain')) {
+        return 'log_blocked_by_telecom_domain';
+    }
+    if (msg.includes('log_blocked_by_historical_pattern') || msg.includes('differs significantly')) {
+        return 'log_blocked_by_historical_pattern';
+    }
+    if (msg.includes('log_blocked_by_data_quality') || msg.includes('appears incomplete')) {
+        return 'log_blocked_by_data_quality';
+    }
+    if (msg.includes('5g network component') || msg.includes('openairinterface log')) {
+        return 'log_blocked_by_telecom_domain';
+    }
+    if (msg.includes('generated_script_blocked_by_guardrails')) {
+        return 'generated_script_blocked_by_guardrails';
+    }
+    if (msg.includes('prompt_blocked_by_guardrails')) {
+        return 'prompt_blocked_by_guardrails';
+    }
+    if (msg.includes('document_blocked_by_guardrails')) {
+        return 'document_blocked_by_guardrails';
+    }
+    if (msg.includes('dataset_output_guardrails_failed')) {
+        return 'dataset_output_guardrails_failed';
+    }
+    return '';
+}
+
+function hydrateReasonsFromErrorMessage(error) {
+    if (!error) {
+        return;
+    }
+    const msg = String(error.message || '');
+    if (!msg) {
+        return;
+    }
+
+    if (!error.guardrailDetail) {
+        const code = inferGuardrailErrorCode(error, null);
+        if (code) {
+            error.guardrailDetail = { error: code, message: '' };
+        }
+    } else if (!error.guardrailDetail.error) {
+        const code = inferGuardrailErrorCode(error, error.guardrailDetail);
+        if (code) {
+            error.guardrailDetail.error = code;
+        }
+    }
+
+    const detail = error.guardrailDetail || null;
+    if (!firstNonEmptyArray(error.guardrailReasons).length) {
+        const detailReasons = firstNonEmptyArray(
+            detail?.reasons,
+            detail?.guardrails?.reasons
+        );
+        if (detailReasons.length) {
+            error.guardrailReasons = detailReasons;
+            return;
+        }
+    } else {
+        return;
+    }
+
+    const parenMatch = msg.match(/\(([^)]+)\)\s*$/);
+    if (parenMatch && parenMatch[1]) {
+        const inner = parenMatch[1].trim();
+        if (inner.length > 10) {
+            error.guardrailReasons = inner.split(';').map((part) => part.trim()).filter(Boolean);
+            return;
+        }
+    }
+
+    const codePrefixMatch = msg.match(/(?:prompt_blocked_by_guardrails|generated_script_blocked_by_guardrails|document_blocked_by_guardrails|dataset_output_guardrails_failed):\s*(.+?)(?:\s*\(|$)/i);
+    if (codePrefixMatch && codePrefixMatch[1]) {
+        const body = codePrefixMatch[1].trim();
+        if (body.length > 5) {
+            error.guardrailReasons = [body];
+            return;
+        }
+    }
+
+    const dashIdx = msg.indexOf(' - ');
+    if (dashIdx >= 0) {
+        let body = msg.slice(dashIdx + 3).trim();
+        const parenIdx = body.indexOf('(');
+        if (parenIdx > 0) {
+            body = body.slice(0, parenIdx).trim();
+        }
+        if (body && !body.startsWith('HTTP error') && !body.startsWith('{')) {
+            error.guardrailReasons = [body];
+        }
+    }
+}
+
+function enrichGuardrailError(error) {
+    if (!error) {
+        return error;
+    }
+    const attachFn = window.API?.attachGuardrailFieldsToError;
+    const parseFn = window.API?.parseGuardrailHttpErrorBody;
+
+    const tryAttach = (rawText) => {
+        if (!rawText || typeof attachFn !== 'function') {
+            return;
+        }
+        attachFn(error, rawText);
+    };
+
+    if (error.guardrailRawBody) {
+        tryAttach(error.guardrailRawBody);
+    }
+
+    if (!error.guardrailDetail && typeof attachFn === 'function') {
+        const msg = String(error.message || '');
+        const jsonStart = msg.indexOf('{"detail"');
+        if (jsonStart >= 0) {
+            tryAttach(msg.slice(jsonStart));
+        } else {
+            const alt = msg.indexOf('{"');
+            if (alt >= 0) {
+                tryAttach(msg.slice(alt));
+            }
+        }
+    }
+
+    hydrateReasonsFromErrorMessage(error);
+
+    const payload = extractGuardrailPayload(error);
+    if ((!payload.reasons.length && !payload.findings.length) && error.guardrailRawBody) {
+        tryAttach(error.guardrailRawBody);
+        hydrateReasonsFromErrorMessage(error);
+    } else if (
+        (!payload.reasons.length && !payload.findings.length)
+        && typeof parseFn === 'function'
+        && error.guardrailRawBody
+    ) {
+        const info = parseFn(error.guardrailRawBody);
+        if (info.guardrailDetail) {
+            error.guardrailDetail = info.guardrailDetail;
+        }
+        if (firstNonEmptyArray(info.guardrailFindings).length) {
+            error.guardrailFindings = info.guardrailFindings;
+        }
+        if (firstNonEmptyArray(info.guardrailReasons).length) {
+            error.guardrailReasons = info.guardrailReasons;
+        }
+        if (info.isGuardrailBlock) {
+            error.isGuardrailBlock = true;
+        }
+        hydrateReasonsFromErrorMessage(error);
+    }
+
+    return error;
 }
 
 function isTsgPromptGuardrailError(errorMsg) {
     const msg = String(errorMsg || '').toLowerCase();
     return msg.includes('prompt_blocked_by_guardrails')
+        || msg.includes('document_blocked_by_guardrails')
+        || msg.includes('dataset_output_guardrails_failed')
+        || msg.includes('generated_script_blocked_by_guardrails')
         || msg.includes('input security guardrails')
         || msg.includes('prompt injection')
-        || msg.includes('jailbreak detected')
-        || (msg.includes('422') && msg.includes('guardrail'));
+        || msg.includes('jailbreak')
+        || msg.includes('malicious')
+        || msg.includes('blocked by guardrails')
+        || msg.includes('unsafe_chunks')
+        || (msg.includes('422') && (msg.includes('guardrail') || msg.includes('injection') || msg.includes('jailbreak')));
 }
 
-function showTsgPromptGuardrailStatus(error, title) {
+function isGuardrailBlockedError(error) {
+    enrichGuardrailError(error);
     const payload = extractGuardrailPayload(error);
-    const rejected = payload.isGuardrailBlock || isTsgPromptGuardrailError(error?.message);
+    if (payload.isGuardrailBlock) {
+        return true;
+    }
+    if (isTsgPromptGuardrailError(error?.message)) {
+        return true;
+    }
+    if (error?.status === 422 && (payload.reasons.length || payload.findings.length)) {
+        return true;
+    }
+    return false;
+}
+
+function clearTsgInlineGuardrailError() {
+    ['tsgGuardrailErrorBanner', 'tsgGuardrailResultBanner', 'tsgGuardrailRefineBanner'].forEach((id) => {
+        const banner = document.getElementById(id);
+        if (banner) {
+            banner.style.display = 'none';
+            banner.innerHTML = '';
+        }
+    });
+}
+
+function renderTsgGuardrailBanner(bannerId, anchorElement, message, title) {
+    let banner = document.getElementById(bannerId);
+    if (!banner && anchorElement?.parentElement) {
+        banner = document.createElement('div');
+        banner.id = bannerId;
+        banner.setAttribute('role', 'alert');
+        banner.style.cssText = [
+            'display:none',
+            'margin:0 0 10px 0',
+            'padding:12px 14px',
+            'border:1px solid #dc3545',
+            'border-radius:8px',
+            'background:#fff5f5',
+            'color:#842029',
+            'font-size:13px',
+            'line-height:1.45',
+            'white-space:pre-wrap',
+        ].join(';');
+        anchorElement.parentElement.insertBefore(banner, anchorElement);
+    }
+    if (!banner) {
+        return;
+    }
+    const safeTitle = window.escapeHtml ? window.escapeHtml(title || 'Security guardrail blocked this action') : (title || 'Security guardrail blocked this action');
+    const safeMessage = window.escapeHtml ? window.escapeHtml(message || '') : (message || '');
+    const formattedMessage = safeMessage.replace(/\n/g, '<br>');
+    banner.innerHTML = `<strong style="display:block;margin-bottom:6px;">${safeTitle}</strong><span>${formattedMessage}</span>`;
+    banner.style.display = 'block';
+}
+
+function showTsgInlineGuardrailError(message, title) {
+    const promptEditor = document.getElementById('testPromptTextEditor')
+        || document.getElementById('testNewPromptEditor');
+    renderTsgGuardrailBanner('tsgGuardrailErrorBanner', promptEditor, message, title);
+}
+
+function showTsgRefinePromptGuardrailError(message, title) {
+    const refineEditor = document.getElementById('testNewPromptEditor');
+    renderTsgGuardrailBanner('tsgGuardrailRefineBanner', refineEditor, message, title);
+}
+
+function showTsgResultGuardrailError(message, title) {
+    const resultEditor = document.getElementById('testResponseTextEditor');
+    renderTsgGuardrailBanner('tsgGuardrailResultBanner', resultEditor, message, title);
+}
+
+function guardrailBlockTitle(detail, error, findings = []) {
+    const code = detail?.error || inferGuardrailErrorCode(error, detail) || '';
+    const allFindings = findings.length
+        ? findings
+        : [
+            ...(detail?.findings || []),
+            ...(detail?.guardrails?.findings || []),
+        ];
+    const reasonsText = [
+        ...(detail?.reasons || []),
+        ...(detail?.guardrails?.reasons || []),
+    ].join(' ').toLowerCase();
+    const hasSyntax = allFindings.some((f) => f?.check === 'ast_parse')
+        || reasonsText.includes('syntax');
+    if (code === 'generated_script_blocked_by_guardrails' && hasSyntax) {
+        return 'Generated script blocked — Python syntax error';
+    }
+    if (code === 'document_blocked_by_guardrails') {
+        return 'Dataset blocked — malicious or jailbreak content detected';
+    }
+    if (code === 'log_blocked_by_telecom_domain') {
+        return 'Domain — log file not from a supported 5G component';
+    }
+    if (code === 'log_blocked_by_historical_pattern') {
+        return 'Historical pattern — log sequence mismatch';
+    }
+    if (code === 'log_blocked_by_data_quality') {
+        return 'Data quality — log file incomplete or truncated';
+    }
+    if (code === 'dataset_output_guardrails_failed') {
+        return 'Dataset blocked — validation failed';
+    }
+    if (code === 'prompt_blocked_by_guardrails') {
+        const blockedBy = detail?.blocked_by || '';
+        if (blockedBy === 'refine_scope') {
+            return 'New prompt blocked — off-topic for loaded dataset';
+        }
+        return 'Prompt blocked — injection / jailbreak detected';
+    }
+    if (code === 'generated_script_blocked_by_guardrails') {
+        if (allFindings.some((f) => f?.check === 'groundedness') || reasonsText.includes('groundedness') || reasonsText.includes('contradict')) {
+            return 'Generated script blocked — groundedness check failed';
+        }
+        if (allFindings.some((f) => f?.check === 'traceability') || reasonsText.includes('traceab')) {
+            return 'Generated script blocked — traceability check failed';
+        }
+        if (allFindings.some((f) => f?.check === 'dataset_scope')) {
+            return 'Generated script blocked — off-topic content';
+        }
+        return 'Generated script blocked';
+    }
+    return 'Blocked by security guardrails';
+}
+
+function displayGuardrailBlockedScript(error) {
+    const detail = error?.guardrailDetail || {};
+    const script = detail.generated_script
+        || detail.guardrails?.generated_script
+        || detail.response;
+    if (script && typeof displayGeneratedTestResult === 'function') {
+        displayGeneratedTestResult(script, {
+            truncated: false,
+            templateKey: typeof currentTestPromptKey !== 'undefined' ? currentTestPromptKey : null,
+        });
+        return true;
+    }
+    return false;
+}
+
+function showGuardrailBlockOnScreen(error, options = {}) {
+    enrichGuardrailError(error);
+    const payload = extractGuardrailPayload(error);
+    const rejected = options.forceGuardrail || isGuardrailBlockedError(error);
     if (!rejected) {
         return false;
     }
-    showStatusBar(
-        formatGuardrailRejectionStatus(payload.findings, payload.reasons),
-        'error',
-        title || 'Prompt blocked — prompt injection / jailbreak detected'
+
+    const detail = payload.detail || {};
+    const summary = formatGuardrailRejectionStatus(
+        payload.findings,
+        payload.reasons,
+        detail.message || options.fallbackMessage,
+        detail
     );
+    const title = options.title || guardrailBlockTitle(detail, error, payload.findings);
+    const errorCode = detail?.error || inferGuardrailErrorCode(error, detail) || '';
+    const refineContext = Boolean(options.refineContext);
+    const isPromptBlock = errorCode === 'prompt_blocked_by_guardrails';
+    const isScriptBlock = errorCode === 'generated_script_blocked_by_guardrails';
+
+    showStatusBar(summary, 'error', title, options.durationMs ?? 0);
+    if (options.showInline !== false) {
+        if (refineContext && isPromptBlock) {
+            showTsgRefinePromptGuardrailError(summary, title);
+        } else if (refineContext && isScriptBlock) {
+            showTsgResultGuardrailError(summary, title);
+            displayGuardrailBlockedScript(error);
+        } else if (!refineContext && isPromptBlock) {
+            showTsgInlineGuardrailError(summary, title);
+        } else if (!refineContext && isScriptBlock) {
+            showTsgResultGuardrailError(summary, title);
+            displayGuardrailBlockedScript(error);
+        } else {
+            showTsgInlineGuardrailError(summary, title);
+            showTsgResultGuardrailError(summary, title);
+            if (!displayGuardrailBlockedScript(error)) {
+                showTsgResultGuardrailError(
+                    `${summary}\n\n(No script returned — refine again or check the prompt.)`,
+                    title
+                );
+            }
+        }
+    }
     return true;
 }
 
+function showTsgPromptGuardrailStatus(error, title) {
+    return showGuardrailBlockOnScreen(error, { title });
+}
+
+window.enrichGuardrailError = enrichGuardrailError;
+window.isGuardrailBlockedError = isGuardrailBlockedError;
+window.showGuardrailBlockOnScreen = showGuardrailBlockOnScreen;
+window.clearTsgInlineGuardrailError = clearTsgInlineGuardrailError;
 window.isTsgPromptGuardrailError = isTsgPromptGuardrailError;
 window.showTsgPromptGuardrailStatus = showTsgPromptGuardrailStatus;
 
@@ -1599,6 +2152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let bugWorkingDir = '';
     let bugLogDir = '';
     let bugLogFilesArr = [];
+    let bugLogGuardrailPassed = true;
     const bugCodeDirText = document.getElementById('bugCodeDirText');
     const bugLogDirText = document.getElementById('bugLogDirText');
     
@@ -1612,9 +2166,338 @@ document.addEventListener('DOMContentLoaded', () => {
     const logFileDropdown = document.getElementById('bugLogFileDropdownContainer');
     const crashAnalysisToggle = document.getElementById('crashAnalysisToggle');
 
+    function clearBugLogGuardrailBanner() {
+        const banner = document.getElementById('bugLogGuardrailBanner');
+        if (banner) {
+            banner.style.display = 'none';
+            banner.innerHTML = '';
+        }
+    }
+
+    function showBugLogGuardrailBanner(message, title, tone) {
+        const banner = document.getElementById('bugLogGuardrailBanner');
+        if (!banner) {
+            return;
+        }
+        const isWarning = tone === 'warning';
+        const safeTitle = window.escapeHtml ? window.escapeHtml(title || 'Log file blocked by guardrails') : (title || 'Log file blocked by guardrails');
+        const safeMessage = window.escapeHtml ? window.escapeHtml(message || '') : (message || '');
+        banner.innerHTML = `<strong style="display:block;margin-bottom:6px;">${safeTitle}</strong><span>${safeMessage.replace(/\n/g, '<br>')}</span>`;
+        banner.style.cssText = [
+            'display:block',
+            'margin:8px 0 0 0',
+            'padding:12px 14px',
+            isWarning ? 'border:1px solid #ffc107' : 'border:1px solid #dc3545',
+            'border-radius:8px',
+            isWarning ? 'background:#fff9e6' : 'background:#fff5f5',
+            isWarning ? 'color:#664d03' : 'color:#842029',
+            'font-size:13px',
+            'line-height:1.45',
+        ].join(';');
+    }
+
+    function getBugDiscoveryTelecomQuality(source) {
+        if (!source || typeof source !== 'object') {
+            return null;
+        }
+        return source.quality
+            || source.guardrails?.layers?.telecom_domain
+            || source.guardrails?.telecom_domain
+            || null;
+    }
+
+    function isBugDiscoveryTelecomBlocked(source, detail) {
+        const quality = getBugDiscoveryTelecomQuality(source)
+            || getBugDiscoveryTelecomQuality(detail)
+            || detail?.quality
+            || null;
+        if (quality?.blocked) {
+            return true;
+        }
+        if (detail?.error === 'log_blocked_by_telecom_domain') {
+            return true;
+        }
+        const messages = []
+            .concat(quality?.messages || [])
+            .concat(detail?.reasons || [])
+            .concat(source?.reasons || []);
+        return messages.some((message) => /5g network component|openairinterface/i.test(String(message)));
+    }
+
+    function formatTelecomDomainSummary(quality) {
+        const messages = Array.isArray(quality?.messages) ? quality.messages.filter(Boolean) : [];
+        const headline = messages.find((message) => /5g network component|openairinterface/i.test(String(message)))
+            || messages[0]
+            || 'Provided logs do not appear to be from a supported 5G network component.';
+        const scores = quality?.context_scores || {};
+        const overall = typeof scores.overall === 'number'
+            ? scores.overall
+            : (typeof quality?.telecom_relevance === 'number' ? quality.telecom_relevance : null);
+        if (overall === null) {
+            return headline;
+        }
+        return `${headline}\nOverall telecom relevance: ${Math.round(overall * 100)}%`;
+    }
+
+    function getBugDiscoveryHistoricalPattern(source) {
+        if (!source || typeof source !== 'object') {
+            return null;
+        }
+        return source.historical_pattern
+            || source.guardrails?.layers?.historical_pattern
+            || null;
+    }
+
+    function formatHistoricalPatternSummary(historical) {
+        const messages = Array.isArray(historical?.messages) ? historical.messages.filter(Boolean) : [];
+        if (historical?.is_known_log) {
+            const headline = messages[0]
+                || (historical?.matched_log_file
+                    ? `Recognized as similar to a previously analyzed log (${historical.matched_log_file}).`
+                    : 'Recognized from previous RCA history.');
+            const score = historical?.similarity_score;
+            if (typeof score === 'number') {
+                return `${headline}\nSequence similarity: ${Math.round(score * 100)}%`;
+            }
+            return headline;
+        }
+        const headline = messages.find((message) => /new log file|human review/i.test(String(message)))
+            || messages[0]
+            || 'This appears to be a new log file — human review is recommended.';
+        const score = historical?.similarity_score;
+        if (typeof score === 'number' && historical?.is_new_log) {
+            return `${headline}\nClosest prior match: ${Math.round(score * 100)}%`;
+        }
+        return headline;
+    }
+
+    function formatDataQualitySummary(dataQuality) {
+        const messages = Array.isArray(dataQuality?.messages) ? dataQuality.messages.filter(Boolean) : [];
+        const headline = messages.find((message) => /incomplete|truncated|empty|timestamp/i.test(String(message)))
+            || messages[0]
+            || 'Log file appears incomplete; expected events are missing.';
+        const score = dataQuality?.completeness_score;
+        if (typeof score === 'number') {
+            return `${headline}\nCompleteness: ${Math.round(score * 100)}%`;
+        }
+        return headline;
+    }
+
+    function presentBugDiscoveryGuardrailBlock({ quality, historical, dataQuality, detail, error, findings, reasons }) {
+        const isDataQualityBlock = Boolean(
+            dataQuality?.blocked
+            || detail?.error === 'log_blocked_by_data_quality'
+            || error?.guardrailDetail?.error === 'log_blocked_by_data_quality'
+        );
+        if (isDataQualityBlock) {
+            const resolved = dataQuality
+                || detail?.data_quality
+                || detail?.guardrails?.layers?.data_quality
+                || error?.guardrailDetail?.data_quality;
+            return {
+                title: 'Data quality',
+                summary: formatDataQualitySummary(resolved),
+                statusTitle: 'Data quality validation failed',
+            };
+        }
+
+        const isHistoricalBlock = Boolean(
+            historical?.blocked
+            || detail?.error === 'log_blocked_by_historical_pattern'
+            || error?.guardrailDetail?.error === 'log_blocked_by_historical_pattern'
+        );
+        if (isHistoricalBlock) {
+            const resolvedHistorical = historical
+                || getBugDiscoveryHistoricalPattern(detail)
+                || getBugDiscoveryHistoricalPattern(error?.guardrailDetail)
+                || detail?.historical_pattern
+                || error?.guardrailDetail?.historical_pattern;
+            return {
+                title: 'Historical pattern',
+                summary: formatHistoricalPatternSummary(resolvedHistorical),
+                statusTitle: 'Historical pattern validation failed',
+            };
+        }
+
+        const isTelecomBlock = isBugDiscoveryTelecomBlocked({ quality }, detail || error?.guardrailDetail);
+        if (isTelecomBlock) {
+            const resolvedQuality = quality
+                || getBugDiscoveryTelecomQuality(detail)
+                || getBugDiscoveryTelecomQuality(error?.guardrailDetail)
+                || detail?.quality
+                || error?.guardrailDetail?.quality;
+            return {
+                title: 'Domain',
+                summary: formatTelecomDomainSummary(resolvedQuality),
+                statusTitle: 'Domain validation failed',
+            };
+        }
+        return {
+            title: 'Log file blocked — input guardrails',
+            summary: typeof formatGuardrailRejectionStatus === 'function'
+                ? formatGuardrailRejectionStatus(findings || [], reasons || [], error?.message, detail || error?.guardrailDetail)
+                : (error?.message || 'Log file rejected: possible prompt injection or jailbreak content detected.'),
+            statusTitle: 'Log file blocked',
+        };
+    }
+
+    function applyBugDiscoveryGuardrailResult(result) {
+        const quality = result?.quality || result?.guardrails?.layers?.telecom_domain;
+        const historical = result?.historical_pattern || result?.guardrails?.layers?.historical_pattern;
+        const dataQuality = result?.data_quality || result?.guardrails?.layers?.data_quality;
+
+        if (!result?.passed) {
+            bugLogGuardrailPassed = false;
+            const presentation = presentBugDiscoveryGuardrailBlock({
+                quality,
+                historical,
+                dataQuality,
+                detail: result,
+            });
+            showBugLogGuardrailBanner(presentation.summary, presentation.title);
+            showStatusBar(presentation.summary.split('\n')[0], 'error', presentation.statusTitle, 0);
+            return false;
+        }
+
+        const warningParts = [];
+        let warningTitle = 'Log file warning';
+
+        if (dataQuality?.warned && Array.isArray(dataQuality.messages) && dataQuality.messages.length) {
+            warningParts.push(formatDataQualitySummary(dataQuality));
+            warningTitle = 'Log file warning — data quality';
+        }
+        if (historical?.warned || historical?.is_new_log) {
+            warningParts.push(formatHistoricalPatternSummary(historical));
+            if (warningTitle === 'Log file warning') {
+                warningTitle = historical?.is_new_log
+                    ? 'Log file warning — new log detected'
+                    : 'Log file warning — historical pattern';
+            }
+        }
+        if (quality?.warned && Array.isArray(quality.messages) && quality.messages.length) {
+            warningParts.push(formatTelecomDomainSummary(quality));
+            if (warningTitle === 'Log file warning') {
+                warningTitle = 'Log file warning — telecom domain validation';
+            }
+        }
+
+        if (warningParts.length) {
+            showBugLogGuardrailBanner(warningParts.join('\n\n'), warningTitle, 'warning');
+            const statusLine = dataQuality?.warned
+                ? 'Log file may be incomplete — review data quality'
+                : (historical?.is_new_log
+                    ? 'New log file — human review recommended'
+                    : 'Log file passed with guardrail warnings');
+            showStatusBar(statusLine, 'warning', 'Bug Discovery');
+            bugLogGuardrailPassed = true;
+            return true;
+        }
+
+        const overall = quality?.context_scores?.overall ?? quality?.telecom_relevance;
+        const scoreText = typeof overall === 'number' ? ` (${Math.round(overall * 100)}% relevance)` : '';
+        showStatusBar(`Log file passed guardrails${scoreText}`, 'success', 'Bug Discovery');
+        bugLogGuardrailPassed = true;
+        return true;
+    }
+
+    function showUploadGuardrailWarnings(uploadResult) {
+        const files = Array.isArray(uploadResult?.files) ? uploadResult.files : [];
+        const warnedFiles = files.filter((file) => {
+            const historical = file?.historical_pattern || file?.guardrails?.layers?.historical_pattern;
+            const dataQuality = file?.data_quality || file?.guardrails?.layers?.data_quality;
+            return historical?.warned || historical?.is_new_log || dataQuality?.warned;
+        });
+        if (!warnedFiles.length) {
+            return;
+        }
+        const first = warnedFiles[0];
+        const dataQuality = first.data_quality || first.guardrails?.layers?.data_quality;
+        const historical = first.historical_pattern || first.guardrails?.layers?.historical_pattern;
+        const summary = dataQuality?.warned
+            ? formatDataQualitySummary(dataQuality)
+            : formatHistoricalPatternSummary(historical);
+        const title = dataQuality?.warned
+            ? 'Log file warning — data quality'
+            : 'Log file warning — new log detected';
+        const countText = warnedFiles.length > 1 ? ` (${warnedFiles.length} files)` : '';
+        showBugLogGuardrailBanner(summary, `${title}${countText}`, 'warning');
+        showStatusBar(
+            dataQuality?.warned
+                ? 'Uploaded log(s) may be incomplete — review data quality'
+                : 'Uploaded log(s) include new files — human review recommended',
+            'warning',
+            'Bug Discovery'
+        );
+    }
+
+    async function scanSelectedBugLogFile() {
+        const logPath = getSelectedBugLogFilePath();
+        clearBugLogGuardrailBanner();
+        bugLogGuardrailPassed = true;
+
+        if (!logPath) {
+            syncBdPlaceholderVisibility();
+            validateDirs();
+            return;
+        }
+
+        if (!window.API?.validateBugDiscoveryLog) {
+            syncBdPlaceholderVisibility();
+            validateDirs();
+            return;
+        }
+
+        try {
+            showStatusBar('Scanning log file (telecom domain + historical pattern + security guardrails)...', 'info', 'Bug Discovery');
+            const result = await window.API.validateBugDiscoveryLog(logPath);
+            applyBugDiscoveryGuardrailResult(result);
+        } catch (error) {
+            if (typeof enrichGuardrailError === 'function') {
+                enrichGuardrailError(error);
+            }
+            const payload = typeof extractGuardrailPayload === 'function'
+                ? extractGuardrailPayload(error)
+                : { findings: [], reasons: [], detail: null, isGuardrailBlock: false };
+            const isBlocked = payload.isGuardrailBlock
+                || (typeof isGuardrailBlockedError === 'function' && isGuardrailBlockedError(error));
+            if (isBlocked) {
+                bugLogGuardrailPassed = false;
+                const detail = payload.detail || error?.guardrailDetail || {};
+                const quality = detail.quality || detail.guardrails?.layers?.telecom_domain;
+                const historical = detail.historical_pattern || detail.guardrails?.layers?.historical_pattern;
+                const dataQuality = detail.data_quality || detail.guardrails?.layers?.data_quality;
+                const presentation = presentBugDiscoveryGuardrailBlock({
+                    quality,
+                    historical,
+                    dataQuality,
+                    detail,
+                    error,
+                    findings: payload.findings,
+                    reasons: payload.reasons,
+                });
+                showBugLogGuardrailBanner(presentation.summary, presentation.title);
+                showStatusBar(presentation.summary.split('\n')[0], 'error', presentation.statusTitle, 0);
+            } else {
+                bugLogGuardrailPassed = false;
+                showBugLogGuardrailBanner(error.message || 'Log file guardrail scan failed.', 'Log file scan failed');
+                showStatusBar(error.message || 'Log file guardrail scan failed.', 'error', 'Bug Discovery');
+            }
+        } finally {
+            syncBdPlaceholderVisibility();
+            validateDirs();
+        }
+    }
+
     function getSelectedBugLogFilePath() {
         if (bugLogFilePathInput && bugLogFilePathInput.value) {
             return bugLogFilePathInput.value;
+        }
+        const selectedName = (logFileCombo && logFileCombo.value) || selectedLogFile || '';
+        if (selectedName && selectedName !== 'Select a log file' && typeof logFileContentsMap !== 'undefined') {
+            const uploaded = logFileContentsMap.get(selectedName);
+            if (uploaded?.file_path) {
+                return uploaded.file_path;
+            }
         }
         const logFileName = logFileCombo ? logFileCombo.value : '';
         if (!logFileName || logFileName === 'Select a log file') return '';
@@ -1645,6 +2528,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (bugLogFilePathInput) {
                 bugLogFilePathInput.value = item.getAttribute('data-path') || '';
             }
+            // change listener on bugLogFileCombo runs scanSelectedBugLogFile()
         }
     });
 
@@ -1736,8 +2620,24 @@ document.addEventListener('DOMContentLoaded', () => {
             bdAnalysisColumns.style.display = show ? 'grid': 'none';
         }
         if (bdAnalysisPlaceholder) {
-            bdAnalysisPlaceholder.style.display = show ? 'none': 'block';
+            if (show) {
+                bdAnalysisPlaceholder.style.display = 'none';
+            } else {
+                syncBdPlaceholderVisibility();
+            }
         }
+    }
+
+    function syncBdPlaceholderVisibility() {
+        if (!bdAnalysisPlaceholder) return;
+        const isResultsVisible = !!(bdAnalysisColumns && bdAnalysisColumns.style.display === 'grid');
+        if (isResultsVisible) {
+            bdAnalysisPlaceholder.style.display = 'none';
+            return;
+        }
+        const hasSelectedLog = !!(logFileCombo && logFileCombo.value && logFileCombo.value !== 'Select a log file');
+        const shouldShowPlaceholder = hasSelectedLog && bugLogGuardrailPassed;
+        bdAnalysisPlaceholder.style.display = shouldShowPlaceholder ? 'block' : 'none';
     }
 
     function setBugAnalysisDetailContent(html) {
@@ -2373,6 +3273,14 @@ document.addEventListener('DOMContentLoaded', () => {
         updateBdExportReportButton();
     }
 
+    function hideBdResultsForGuardrailBlock() {
+        showBdAnalysisResultsPanel(false);
+        showViewArtifactsSection(false);
+        setBdProgressTrackerState('pending');
+        progressBar.style.display = 'none';
+        syncBdPlaceholderVisibility();
+    }
+
     function normalizeTerminalCommands(rawCommands) {
         if (!Array.isArray(rawCommands)) return [];
         return rawCommands
@@ -2624,6 +3532,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function validateDirs() {
+        syncBdPlaceholderVisibility();
         // Check actual state variables, not input elements (since we use Electron folder picker)
         if (!bugWorkingDir || !bugLogDir) {
             startRCAButton.disabled = true;
@@ -2631,6 +3540,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // A log file must be selected
         if (!logFileCombo.value || logFileCombo.value === 'Select a log file'|| logFileCombo.value === '') {
+            startRCAButton.disabled = true;
+            return;
+        }
+        if (!bugLogGuardrailPassed) {
             startRCAButton.disabled = true;
             return;
         }
@@ -2708,6 +3621,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         setBugLogFileSelection('', 'Select a log file', '');
+        bugLogGuardrailPassed = true;
+        clearBugLogGuardrailBanner();
         validateDirs();
     }
     // --- Crash Analysis Toggle ---
@@ -3551,6 +4466,9 @@ document.addEventListener('DOMContentLoaded', () => {
             crashAnalysisToggle.style.backgroundColor = '#AAAAAA';
             crashAnalysisToggle.style.borderColor = '#999999';
         }
+        
+        // Run telecom + historical pattern guardrails when a log file is selected
+        scanSelectedBugLogFile();
         
         // Check for existing fixes when log file is selected
         checkForExistingFix();
@@ -4563,6 +5481,12 @@ document.addEventListener('DOMContentLoaded', () => {
             showStatusBar('Please select a log file', 'error');
             return;
         }
+
+        if (!bugLogGuardrailPassed) {
+            hideBdResultsForGuardrailBlock();
+            showStatusBar('Log file blocked by input guardrails. Please select a safe log file.', 'error', 'Log file blocked');
+            return;
+        }
         
         console.log('✅ Validation passed, starting RCA analysis...');
         
@@ -4571,8 +5495,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 startRCAButton.disabled = true;
         progressBar.style.display = 'block';
         progressFill.style.width = '0%';
-                showBdAnalysisResultsPanel(true);
- setBugAnalysisDetailContent('<p style="color: #374151; text-align: center; padding: 2rem;">Starting Bug Discovery RCA Analysis...<br>Please wait...</p>');
                 
                 showStatusBar('Running Bug Discovery RCA analysis on backend...', 'info');
                 
@@ -4585,18 +5507,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Use absolute path - backend will convert to relative when needed (matching PyQt UI_v3.py)
                 progressFill.style.width = '20%';
- setBugAnalysisDetailContent('<p style="color: #374151; text-align: center; padding: 2rem;">Preparing log file...</p>');
                 
                 // Use absolute path directly - backend handles conversion to relative path
                 const serverLogPath = logFilePath;
                 
                 // Call the backend error fixing API (matching PyQt UI_v3.py)
                 progressFill.style.width = '40%';
-                if (crashAnalysisEnabled) {
- setBugAnalysisDetailContent('<p style="color: #374151; text-align: center; padding: 2rem;">Crash Analysis Mode Enabled<br>Running complete crash analysis pipeline...</p>');
-                } else {
- setBugAnalysisDetailContent('<p style="color: #374151; text-align: center; padding: 2rem;">Analyzing error using complete error fixing pipeline...</p>');
-                }
             
             const analyzeResponse = await fetch('http://127.0.0.1:8000/api/error-fixing/analyze', {
                 method: 'POST',
@@ -4614,11 +5530,20 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (!analyzeResponse.ok) {
                 const errorText = await analyzeResponse.text();
-                throw new Error(`Backend error: ${analyzeResponse.status} - ${errorText}`);
+                const parseFn = window.API?.parseGuardrailHttpErrorBody;
+                const attachFn = window.API?.attachGuardrailFieldsToError;
+                const info = typeof parseFn === 'function'
+                    ? parseFn(errorText)
+                    : { message: errorText, isGuardrailBlock: false };
+                const fetchErr = new Error(info.message || `Backend error: ${analyzeResponse.status}`);
+                fetchErr.status = analyzeResponse.status;
+                if (typeof attachFn === 'function') {
+                    attachFn(fetchErr, errorText);
+                }
+                throw fetchErr;
             }
             
                 progressFill.style.width = '80%';
- setBugAnalysisDetailContent('<p style="color: #374151; text-align: center; padding: 2rem;">Processing analysis results...</p>');
             
             const result = await analyzeResponse.json();
             
@@ -5069,22 +5994,50 @@ document.addEventListener('DOMContentLoaded', () => {
             
         } catch (error) {
             console.error('Bug Discovery RCA Analysis error:', error);
-            showBdAnalysisResultsPanel(true);
-            setBugAnalysisDetailContent(`
-                <div class="error-summary-box">
-                    <h4>Error</h4>
-                    <p>${escapeHtml(error.message)}</p>
-                    <p style="margin-top: 0.5rem; font-size: 0.875rem;">Please check:<br>
-                    1. Backend server is running<br>
-                    2. Log file is valid<br>
-                    3. Codebase directory is correct</p>
-                </div>
-            `);
-            showStatusBar(`Bug Discovery RCA analysis failed: ${error.message}`, 'error');
+            if (typeof enrichGuardrailError === 'function') {
+                enrichGuardrailError(error);
+            }
+            const payload = typeof extractGuardrailPayload === 'function'
+                ? extractGuardrailPayload(error)
+                : { findings: [], reasons: [], detail: null, isGuardrailBlock: false };
+            const isBlocked = payload.isGuardrailBlock
+                || (typeof isGuardrailBlockedError === 'function' && isGuardrailBlockedError(error));
+            if (isBlocked) {
+                bugLogGuardrailPassed = false;
+                const detail = payload.detail || error?.guardrailDetail || {};
+                const quality = detail.quality || detail.guardrails?.layers?.telecom_domain;
+                const historical = detail.historical_pattern || detail.guardrails?.layers?.historical_pattern;
+                const dataQuality = detail.data_quality || detail.guardrails?.layers?.data_quality;
+                const presentation = presentBugDiscoveryGuardrailBlock({
+                    quality,
+                    historical,
+                    dataQuality,
+                    detail,
+                    error,
+                    findings: payload.findings,
+                    reasons: payload.reasons,
+                });
+                showBugLogGuardrailBanner(presentation.summary, presentation.title);
+                hideBdResultsForGuardrailBlock();
+                showStatusBar(presentation.summary.split('\n')[0], 'error', presentation.statusTitle, 0);
+            } else {
+                showBdAnalysisResultsPanel(true);
+                setBugAnalysisDetailContent(`
+                    <div class="error-summary-box">
+                        <h4>Error</h4>
+                        <p>${escapeHtml(error.message)}</p>
+                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">Please check:<br>
+                        1. Backend server is running<br>
+                        2. Log file is valid<br>
+                        3. Codebase directory is correct</p>
+                    </div>
+                `);
+                showStatusBar(`Bug Discovery RCA analysis failed: ${error.message}`, 'error');
+            }
             setBdProgressTrackerState('pending');
             progressBar.style.display = 'none';
         } finally {
-            startRCAButton.disabled = false;
+            validateDirs();
         }
     });
 
@@ -7357,7 +8310,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             const info = typeof parseFn === 'function'
                                 ? parseFn(errorText)
                                 : { message: errorText, guardrailFindings: [], isGuardrailBlock: false };
-                            const err = new Error(`HTTP error! status: ${response.status} - ${info.message}`);
+                            const err = new Error(info.message || `Request failed (${response.status})`);
                             err.guardrailDetail = info.guardrailDetail || null;
                             err.guardrailFindings = info.guardrailFindings || [];
                             err.guardrailReasons = info.guardrailReasons || [];
@@ -7448,6 +8401,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     hideSubsectionProgress();
 
                     const errorMsg = error.message || String(error);
+                    enrichGuardrailError(error);
                     const guardrailPayload = extractGuardrailPayload(error);
                     const guardrailRejected = guardrailPayload.isGuardrailBlock
                         || isSpecIntelGuardrailUploadError(errorMsg);
@@ -7464,9 +8418,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Provide specific error messages
                     if (guardrailRejected) {
                         showStatusBar(
-                            formatGuardrailRejectionStatus(guardrailPayload.findings, guardrailPayload.reasons),
+                            formatGuardrailRejectionStatus(
+                                guardrailPayload.findings,
+                                guardrailPayload.reasons,
+                                guardrailPayload.detail?.message,
+                                guardrailPayload.detail
+                            ),
                             'error',
-                            'Document blocked — prompt injection / jailbreak detected'
+                            guardrailBlockTitle(guardrailPayload.detail, error)
                         );
                     } else if (errorMsg.includes('Failed to fetch') || errorMsg.includes('NetworkError')) {
                         const apiUrl = (window.API && window.API.API_BASE_URL) || 'http://127.0.0.1:8000';
@@ -9352,6 +10311,17 @@ ${escapeHtml(output)}
         const promptEditor = document.getElementById('testPromptTextEditor');
         if (!promptEditor) return;
 
+        if (currentTestPromptKey === 'Custom') {
+            promptEditor.value = '';
+            originalTemplateContent = '';
+            testPromptResetContent = '';
+            isTestPromptEditing = true;
+            setTestPromptEditorReadOnly(false);
+            updateTestPromptActionButtons();
+            showStatusBar('Custom prompt cleared', 'success');
+            return;
+        }
+
         const resetContent = getFactoryTestPromptContent();
         if (!resetContent) {
             showStatusBar('Unable to restore the default template prompt', 'error');
@@ -9403,10 +10373,119 @@ ${escapeHtml(output)}
                 configSubtitle.textContent = 'Language and optional reference code';
             } else if (templateKey === 'Custom') {
                 configSubtitle.textContent = 'Custom prompt configuration';
+            } else if (templateKey === 'more-templates') {
+                configSubtitle.textContent = 'Additional templates';
             } else {
                 configSubtitle.textContent = 'Additional templates';
             }
         }
+        if (templateKey === 'more-templates') {
+            renderTsgMoreTemplatesPanel();
+        }
+    }
+
+    const TSG_MORE_BUILTIN_TEMPLATES = [
+        { name: 'Bug Analysis', description: 'Analyze and fix issues', iconKey: 'bug-analysis' },
+        { name: 'Performance Test', description: 'Design performance tests', iconKey: 'performance-test' },
+    ];
+
+    function getTsgMoreTemplateIconSvg(iconKey) {
+        const sw = '1.75';
+        const icons = {
+            'bug-analysis': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2"/><path d="M5 9H3a2 2 0 0 0-2 2v1h20v-1a2 2 0 0 0-2-2h-2"/><path d="M7 14v5"/><path d="M17 14v5"/><path d="M9 22h6"/><path d="M8 8h8"/></svg>`,
+            'performance-test': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M7 20h10"/><path d="M9 16v4"/><path d="M15 16v4"/><path d="M8 12l3-4 2 2 3-4"/></svg>`,
+            'add-template': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>`,
+            'default': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`,
+        };
+        return icons[iconKey] || icons.default;
+    }
+
+    function buildTsgMoreTemplateCardHtml(name, description, options = {}) {
+        const { isAdd = false, isUser = false, isActive = false } = options;
+        const safeName = window.escapeHtml ? window.escapeHtml(name) : name;
+        const safeDesc = window.escapeHtml ? window.escapeHtml(description) : description;
+        const addClass = isAdd ? ' prompt-studio-category-card--add add-template-card' : '';
+        const activeClass = isActive ? ' is-active' : '';
+        const iconKey = isAdd ? 'add-template' : (isUser ? 'default' : (name === 'Performance Test' ? 'performance-test' : name === 'Bug Analysis' ? 'bug-analysis' : 'default'));
+        const iconSvg = getTsgMoreTemplateIconSvg(iconKey);
+        const dataAdd = isAdd ? ' data-is-add="true"' : '';
+        return `
+            <button type="button"
+                class="prompt-studio-category-card tsg-more-template-card${addClass}${activeClass}"
+                data-template-name="${safeName}"${dataAdd}
+                role="listitem">
+                <span class="prompt-studio-category-card-icon prompt-studio-category-card-icon--${iconKey}" aria-hidden="true">${iconSvg}</span>
+                <span class="prompt-studio-category-card-body">
+                    <span class="prompt-studio-category-card-title">${safeName}</span>
+                    <span class="prompt-studio-category-card-sub">${safeDesc}</span>
+                </span>
+                <span class="prompt-studio-category-card-chevron" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                </span>
+            </button>
+        `;
+    }
+
+    function highlightTsgMoreTemplateCard(templateName) {
+        const list = document.getElementById('tsgMoreTemplateList');
+        if (!list) return;
+        list.querySelectorAll('.tsg-more-template-card').forEach((card) => {
+            const isMatch = card.getAttribute('data-template-name') === templateName;
+            card.classList.toggle('is-active', isMatch);
+            card.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+        });
+    }
+
+    function renderTsgMoreTemplatesPanel() {
+        const list = document.getElementById('tsgMoreTemplateList');
+        if (!list) return;
+
+        let html = '';
+        TSG_MORE_BUILTIN_TEMPLATES.forEach((item) => {
+            html += buildTsgMoreTemplateCardHtml(item.name, item.description, {
+                isActive: currentTestPromptKey === item.name,
+            });
+        });
+
+        (window.customTemplateNames || []).forEach((name) => {
+            html += buildTsgMoreTemplateCardHtml(name, 'Saved custom template', {
+                isUser: true,
+                isActive: currentTestPromptKey === name,
+            });
+        });
+
+        html += buildTsgMoreTemplateCardHtml('Add template', 'Create a new custom template', { isAdd: true });
+
+        list.innerHTML = html;
+
+        list.querySelectorAll('.tsg-more-template-card').forEach((card) => {
+            card.addEventListener('click', async (event) => {
+                event.preventDefault();
+                const templateName = card.getAttribute('data-template-name');
+                const isAdd = card.getAttribute('data-is-add') === 'true';
+                if (isAdd) {
+                    const customRadio = document.querySelector('.tsg-template-radio[value="Custom"]');
+                    if (customRadio) {
+                        customRadio.checked = true;
+                        await handleTestTemplateSelection('Custom');
+                    }
+                    return;
+                }
+                await selectTsgMoreTemplate(templateName);
+            });
+        });
+    }
+
+    async function selectTsgMoreTemplate(templateName) {
+        if (!templateName) return;
+        highlightTsgMoreTemplateCard(templateName);
+        if (window.customTemplateNames && window.customTemplateNames.includes(templateName)) {
+            await handleTestTemplateSelection(templateName);
+        } else {
+            await handleMoreTemplateSelection(templateName);
+        }
+        updateTsgStatusBar();
+        showStatusBar(`Template "${templateName}" loaded`, 'success');
     }
 
     function syncTsgTemplateRadio(templateKey) {
@@ -9493,6 +10572,19 @@ ${escapeHtml(output)}
                 'warning'
             );
         }
+    }
+
+    function clearGeneratedTestResult({ clearCoverage = true } = {}) {
+        const responseEditor = document.getElementById('testResponseTextEditor');
+        if (responseEditor) {
+            responseEditor.value = '';
+            syncTestResultEditorHeight();
+        }
+        previousTestResponse = '';
+        if (clearCoverage) {
+            clearTsgIntentCoveragePanel();
+        }
+        updateTsgStatusBar();
     }
 
     // Load Test Script Generator prompt templates
@@ -9904,17 +10996,26 @@ Provide a comprehensive, actionable bug analysis that helps resolve the issue an
 
 Requirements:
 - First, trigger the UE attach procedure using the provided reference code.
-- For each message in the attach sequence (RRC and NAS), generate a {LANGUAGE} function that:
+- For each message in the attach sequence (RRC and NAS), generate validation logic that:
     - Simulates the message exchange.
     - Extracts and validates all Information Elements (IEs) for that message.
-    - Logs results and assertions for traceability.
+    - Logs results for traceability.
 - Ensure:
     - Every message in the attach procedure is covered, in correct sequence, with no skipped steps.
     - All IEs per message are explicitly validated.
     - Scripts are modular, readable, and maintainable.
-    - No placeholder comments or "add your code here"lines—provide full logic.
+    - No placeholder comments or "add your code here" lines—provide full logic.
     - Output is only {LANGUAGE} code (no explanations, no markdown, no extra text).
--Make sure the generated scripts covers the testcases which are in {self.testcases_name}
+- Make sure the generated scripts cover the test cases which are in {self.testcases_name}
+
+Test Framework Structure:
+- Use a Python test automation class (e.g. UEAttachTest, UETestAutomation) with validation methods per message/procedure.
+- Method names should be descriptive (e.g. validate_attach_request) — pytest \`test_*\` naming is NOT required.
+- Helper/setup logic may live in \`__init__\`, fixtures, or module-level functions.
+
+Traceability (recommended):
+- Above mapped classes or methods add: # <testCaseID>: <title>
+  Example: # TC_POS_001: Validate successful LTE Attach and Detach
 
 Dataset Summary:
 [Attach procedure dataset including all messages in sequence and their respective Information Elements]
@@ -9922,7 +11023,7 @@ Dataset Summary:
 Expected Output:
 - {LANGUAGE} automation scripts that:
     - Trigger the UE attach.
-    - Validate each message and all IEs.
+    - Validate each message and all IEs inside the test automation class methods.
     - Log results for each step.
     - Ensure full message and IE validation coverage.
 
@@ -9931,7 +11032,8 @@ Must use this reference code for triggering the attach procedure and validating 
 
 Instructions:
 - Use the above reference code for triggering the attach procedure and validating attach status.
-- For each message in the dataset, generate a function that validates all IEs, logs results, and asserts correctness.
+- For each message in the dataset, generate a validation method that validates all IEs and logs results.
+- Optionally add \`# <testCaseID>: <title>\` above mapped classes or methods.
 - Do not output any explanations, markdown, or placeholder comments—only complete {LANGUAGE} code.`,
             "Test Case": {
                 "System Prompt": `You are a test case generation expert for {SYSTEM_TYPE} systems with adaptive testing approach expertise.
@@ -10030,34 +11132,36 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 "Test Script": `You are an expert in 5G network testing and automation, with deep knowledge of RRC and NAS protocols. Given the dataset containing the complete 5G NSA attach procedure—including all signaling messages and their respective Information Elements (IEs)—generate comprehensive, production-ready {LANGUAGE} test automation scripts.
 Requirements:
 - First, trigger the UE attach procedure using the provided reference code.
-- For each message in the attach sequence (RRC and NAS), generate a {LANGUAGE} function that:
+- For each message in the attach sequence (RRC and NAS), generate validation logic that:
     - Simulates the message exchange.
     - Extracts and validates all Information Elements (IEs) for that message.
-    - Logs results and assertions for traceability.
+    - Logs results for traceability.
 - Ensure:
     - Every message in the attach procedure is covered, in correct sequence, with no skipped steps.
     - All IEs per message are explicitly validated.
     - Scripts are modular, readable, and maintainable.
-    - No placeholder comments or "add your code here"lines—provide full logic.
+    - No placeholder comments or "add your code here" lines—provide full logic.
     - Output is only {LANGUAGE} code (no explanations, no markdown, no extra text).
--Make sure the generated scripts covers the testcases which are in {self.testcases_name}
+- Make sure the generated scripts cover the test cases which are in {self.testcases_name}
+
+Test Framework Structure:
+- Use a Python test automation class (e.g. UEAttachTest) with validation methods per message — \`test_*\` naming is NOT required.
+
+Traceability (recommended):
+- Above mapped classes or methods add: # <testCaseID>: <title>
 
 Dataset Summary:
 [Attach procedure dataset including all messages in sequence and their respective Information Elements]
 
 Expected Output:
-- {LANGUAGE} automation scripts that:
-    - Trigger the UE attach.
-    - Validate each message and all IEs.
-    - Log results for each step.
-    - Ensure full message and IE validation coverage.
+- {LANGUAGE} automation scripts that trigger UE attach and validate each message/IE inside class validation methods.
 
 Must use this reference code for triggering the attach procedure and validating attach and every message in the attach procedure, use logic from this code:
 {self.ue_attach_utils}
 
 Instructions:
 - Use the above reference code for triggering the attach procedure and validating attach status.
-- For each message in the dataset, generate a function that validates all IEs, logs results, and asserts correctness.
+- For each message in the dataset, generate a validation method that validates all IEs and logs results.
 - Do not output any explanations, markdown, or placeholder comments—only complete {LANGUAGE} code.`,
                 "Test Case": {
                     "System Prompt": `You are a test case generation expert for {SYSTEM_TYPE} systems with adaptive testing approach expertise.
@@ -10200,7 +11304,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     const info = typeof parseFn === 'function'
                         ? parseFn(errorText)
                         : { message: errorText, guardrailFindings: [], isGuardrailBlock: false };
-                    const fetchErr = new Error(`HTTP error! status: ${response.status} - ${info.message}`);
+                    const fetchErr = new Error(info.message || `Request failed (${response.status})`);
                     fetchErr.status = response.status;
                     if (typeof attachFn === 'function') {
                         attachFn(fetchErr, errorText);
@@ -10446,6 +11550,9 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                         });
                     }
                     console.log('✅ Custom templates loaded successfully from JSON file');
+                    if (document.querySelector('.tsg-template-radio[value="more-templates"]')?.checked) {
+                        renderTsgMoreTemplatesPanel();
+                    }
                     return true;
                 } else {
                     console.log('ℹ️ No custom templates found in JSON file');
@@ -10616,6 +11723,9 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         const mappings = Array.isArray(intentCoverage.test_case_mappings) ? intentCoverage.test_case_mappings : [];
         const warnings = (Array.isArray(intentCoverage.warnings) ? intentCoverage.warnings : [])
             .filter((w) => !String(w).toLowerCase().includes('test categor'));
+        const errors = Array.isArray(intentCoverage.errors) ? intentCoverage.errors : [];
+        const failed = intentCoverage.passed === false;
+        const blocked = failed && intentCoverage.advisory_only === false;
 
         let html = '<div class="tsg-nli-panel__inner tsg-intent-panel__inner">';
 
@@ -10626,13 +11736,19 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             html += '<div class="tsg-nli-panel__header-main">';
             html += '<h3 class="tsg-nli-panel__title">Intent coverage guardrail</h3>';
             html += `<p class="tsg-nli-panel__meta tsg-nli-panel__meta--${passed ? 'ok' : 'warn'}">`;
-            html += passed
-                ? 'All mandatory intents from the dataset knowledge graph are covered.'
-                : 'Some mandatory intents from the dataset knowledge graph are not covered yet.';
+            if (failed && errors.length) {
+                html += escapeHtml(errors[0]);
+            } else if (passed) {
+                html += 'All mandatory intents from the dataset knowledge graph are covered.';
+            } else {
+                html += 'Generated test cases do not cover mandatory intents from the dataset knowledge graph.';
+            }
             html += '</p></div>';
             html += '<div class="tsg-nli-panel__header-actions">';
-            html += `<span class="tsg-nli-panel__badge tsg-nli-panel__badge--${passed ? 'pass' : 'warn'}">${passed ? 'PASS' : 'REVIEW'}</span>`;
-            html += `<span class="tsg-nli-panel__badge tsg-nli-panel__badge--${passed ? 'pass' : 'warn'}">${pct}%</span>`;
+            const badgeLabel = blocked ? 'BLOCKED' : (passed ? 'PASS' : 'REVIEW');
+            const badgeClass = blocked ? 'fail' : (passed ? 'pass' : 'warn');
+            html += `<span class="tsg-nli-panel__badge tsg-nli-panel__badge--${badgeClass}">${badgeLabel}</span>`;
+            html += `<span class="tsg-nli-panel__badge tsg-nli-panel__badge--${badgeClass}">${pct}%</span>`;
             html += '</div></div>';
 
             html += '<div class="tsg-intent-panel__body">';
@@ -10640,8 +11756,16 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             html += `Mandatory intents: <strong>${mandatoryCovered}/${mandatoryTotal}</strong>`;
             if (intentCoverage.advisory_only !== false) {
                 html += ' · <em>Advisory — generation not blocked</em>';
+            } else if (blocked) {
+                html += ' · <em>Refinement blocked — output failed intent coverage</em>';
             }
             html += '</p>';
+
+            if (errors.length > 1) {
+                html += '<div class="tsg-nli-panel__preview-title">Issues</div><ul class="tsg-intent-panel__list">';
+                errors.slice(0, 6).forEach((err) => { html += `<li>${escapeHtml(err)}</li>`; });
+                html += '</ul>';
+            }
 
             if (uncovered.length) {
                 html += '<div class="tsg-nli-panel__preview-title">Uncovered mandatory intents</div>';
@@ -11451,6 +12575,9 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         
         console.log('✅ Template content loaded:', templateContent.length, 'characters');
         console.log('✅ Template preview:', templateContent.substring(0, 100) + '...');
+        if (document.querySelector('.tsg-template-radio[value="more-templates"]')?.checked) {
+            highlightTsgMoreTemplateCard(templateKey);
+        }
     }
     async function handleTestTemplateSelection(templateKey) {
         const promptEditor = document.getElementById('testPromptTextEditor');
@@ -11479,35 +12606,36 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             if (templateKey === 'more-templates') {
                 promptEditor.value = '';
                 setTestPromptEditorReadOnly(true);
+                promptEditor.placeholder = 'Select a template from the list on the right…';
                 if (modifyBtn) modifyBtn.disabled = true;
                 if (saveTemplateBtn) saveTemplateBtn.style.display = 'none';
                 currentTestPromptKey = 'more-templates';
+                originalTemplateContent = '';
+                if (testCaseVariables) testCaseVariables.style.display = 'none';
+                if (testScriptVariables) testScriptVariables.style.display = 'none';
+                renderTsgMoreTemplatesPanel();
                 updateTestPromptActionButtons();
                 updateTsgStatusBar();
                 return;
             } else if (templateKey === 'Custom') {
-                // For Custom template: empty box, editable after clicking Modify button
                 promptEditor.value = '';
-                setTestPromptEditorReadOnly(true);
-                promptEditor.placeholder = 'Click Modify button to enter your custom prompt...';
+                originalTemplateContent = '';
+                testPromptResetContent = '';
+                isTestPromptEditing = true;
+                setTestPromptEditorReadOnly(false);
+                promptEditor.placeholder = 'Enter your custom prompt for generation...';
                 
-                // Enable Modify button for Custom template
                 if (modifyBtn) modifyBtn.disabled = false;
                 
-                // Hide Save Template button initially (only show after user enters prompt)
                 if (saveTemplateBtn) {
                     saveTemplateBtn.style.display = 'none';
                     saveTemplateBtn.disabled = false;
                 }
                 
-                // Clear original template content since it's custom
-                originalTemplateContent = '';
-                
-                // Hide variable sections for Custom template
                 if (testCaseVariables) testCaseVariables.style.display = 'none';
                 if (testScriptVariables) testScriptVariables.style.display = 'none';
                 
-                // Update button text to show Custom
+                const templateBtn = document.getElementById('templateBtn');
                 if (templateBtn) {
                     templateBtn.innerHTML = `
                         <span>Custom</span>
@@ -11515,7 +12643,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     `;
                 }
                 
-                console.log('✅ Custom template selected - empty box ready for user input');
+                console.log('✅ Custom template selected - prompt editor ready for input');
             } else if (window.customTemplateNames && window.customTemplateNames.includes(templateKey)) {
                 // Handle custom saved templates - Load the user's saved prompt
                 console.log('📝 Custom saved template selected:', templateKey);
@@ -11701,6 +12829,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         try {
             // Create and show progress dialog like PyQt
             const progressDialog = createProgressDialog('Loading dataset...', 'Cancel');
+            clearTsgInlineGuardrailError();
             
             // Disable button and update status
             if (loadBtn) {
@@ -11749,27 +12878,23 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 
                 if (!apiResponse.ok) {
                     const errorText = await apiResponse.text();
-                    let detailMessage = errorText;
-                    let outputGuardrails = null;
-                    try {
-                        const parsed = JSON.parse(errorText);
-                        const detail = parsed.detail;
-                        if (typeof detail === 'string') {
-                            detailMessage = detail;
-                        } else if (typeof detail === 'object' && detail?.message) {
-                            detailMessage = detail.message;
-                            if (detail.error === 'document_blocked_by_guardrails' && Array.isArray(detail.reasons) && detail.reasons.length) {
-                                detailMessage = `${detail.message} ${detail.reasons.slice(0, 3).join('; ')}`;
-                            }
-                            if (detail.error === 'dataset_output_guardrails_failed' && Array.isArray(detail.reasons) && detail.reasons.length) {
-                                detailMessage = `${detail.message} ${detail.reasons.slice(0, 3).join('; ')}`;
-                            }
-                            outputGuardrails = detail.output_guardrails || null;
-                        }
-                    } catch (_e) { /* use raw */ }
-                    const fetchErr = new Error(`HTTP error! status: ${apiResponse.status}, message: ${detailMessage}`);
-                    if (outputGuardrails) {
-                        fetchErr.outputGuardrails = outputGuardrails;
+                    const parseFn = window.API?.parseGuardrailHttpErrorBody;
+                    const attachFn = window.API?.attachGuardrailFieldsToError;
+                    const info = typeof parseFn === 'function'
+                        ? parseFn(errorText)
+                        : { message: errorText, guardrailFindings: [], isGuardrailBlock: false };
+                    const fetchErr = new Error(info.message || `Request failed (${apiResponse.status})`);
+                    fetchErr.status = apiResponse.status;
+                    if (typeof attachFn === 'function') {
+                        attachFn(fetchErr, errorText);
+                    } else {
+                        fetchErr.guardrailDetail = info.guardrailDetail || null;
+                        fetchErr.guardrailFindings = info.guardrailFindings || [];
+                        fetchErr.guardrailReasons = info.guardrailReasons || [];
+                        fetchErr.isGuardrailBlock = Boolean(info.isGuardrailBlock);
+                    }
+                    if (info.guardrailDetail?.output_guardrails) {
+                        fetchErr.outputGuardrails = info.guardrailDetail.output_guardrails;
                     }
                     throw fetchErr;
                 }
@@ -11830,32 +12955,27 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             }
         } catch (error) {
             console.error('Error loading dataset:', error);
-            const errMsg = error.message || String(error);
             if (statusDiv) {
                 statusDiv.textContent = 'Error loading dataset';
                 statusDiv.style.color = '#dc3545';
             }
-            if (isTsgDatasetGuardrailError(errMsg)) {
-                const cleaned = errMsg
-                    .replace(/^HTTP error! status: \d+, message: /, '')
-                    .replace(/^HTTP error! status: \d+ - /, '');
+            if (showGuardrailBlockOnScreen(error, { showInline: false })) {
                 if (error.outputGuardrails) {
                     renderTsgNliPanel(error.outputGuardrails, null, currentTestDataset);
                     if (statusDiv) {
                         statusDiv.textContent = 'Dataset blocked — NLI/output guardrails failed';
                         statusDiv.style.color = '#dc3545';
                     }
+                } else if (statusDiv) {
+                    statusDiv.textContent = 'Dataset blocked — security guardrails';
+                    statusDiv.style.color = '#dc3545';
                 }
-                showStatusBar(
-                    cleaned || 'Dataset blocked by security guardrails.',
-                    'error',
-                    'Dataset upload blocked'
-                );
                 if (fileInput) {
                     fileInput.value = '';
                 }
                 clearTestDatasetSelection();
             } else {
+                const errMsg = error.message || String(error);
                 showStatusBar('Error loading dataset: ' + errMsg, 'error');
             }
         } finally {
@@ -11918,6 +13038,8 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         
         try {
             closeAllOpenDropdowns();
+            clearTsgInlineGuardrailError();
+            clearGeneratedTestResult({ clearCoverage: true });
 
             // Create and show progress dialog like PyQt
             const progressDialog = createProgressDialog('Generating response...', 'Cancel');
@@ -12032,7 +13154,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     const info = typeof parseFn === 'function'
                         ? parseFn(errorText)
                         : { message: errorText, guardrailFindings: [], isGuardrailBlock: false };
-                    const fetchErr = new Error(`HTTP error! status: ${apiResponse.status} - ${info.message}`);
+                    const fetchErr = new Error(info.message || `Request failed (${apiResponse.status})`);
                     fetchErr.status = apiResponse.status;
                     if (typeof attachFn === 'function') {
                         attachFn(fetchErr, errorText);
@@ -12057,6 +13179,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     truncated: Boolean(response.truncated),
                     templateKey: currentTestPromptKey
                 });
+                clearTsgInlineGuardrailError();
                 if (response.dataset_folder) {
                     setActiveTestDatasetFolder(response.dataset_folder);
                 }
@@ -12144,7 +13267,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 promptLength: selectedPrompt.length
             });
 
-            if (showTsgPromptGuardrailStatus(error)) {
+            if (showGuardrailBlockOnScreen(error)) {
                 return;
             }
             
@@ -12202,6 +13325,8 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         
         try {
             closeAllOpenDropdowns();
+            clearTsgInlineGuardrailError();
+            clearTsgIntentCoveragePanel();
 
             // Create and show progress dialog like PyQt
             const progressDialog = createProgressDialog('Generating refined response...', 'Cancel');
@@ -12255,7 +13380,13 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     body: JSON.stringify({
                         text_content: datasetForRefinement,
                         new_prompt: newPrompt,
-                        previous_response: previousTestResponse || null
+                        previous_response: previousTestResponse || null,
+                        dataset_folder: typeof getActiveTestDatasetFolder === 'function'
+                            ? getActiveTestDatasetFolder()
+                            : null,
+                        refinement_source: currentTestPromptKey === 'Test Case'
+                            ? 'test_case'
+                            : 'test_script',
                     })
                 });
                 
@@ -12270,7 +13401,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     const info = typeof parseFn === 'function'
                         ? parseFn(errorText)
                         : { message: errorText, guardrailFindings: [], isGuardrailBlock: false };
-                    const fetchErr = new Error(`HTTP error! status: ${fetchResponse.status} - ${info.message}`);
+                    const fetchErr = new Error(info.message || `Request failed (${fetchResponse.status})`);
                     fetchErr.status = fetchResponse.status;
                     if (typeof attachFn === 'function') {
                         attachFn(fetchErr, errorText);
@@ -12292,8 +13423,8 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 console.error('  - Error message:', fetchError.message);
                 console.error('  - Error stack:', fetchError.stack);
 
-                if (showTsgPromptGuardrailStatus(fetchError)) {
-                    throw fetchError;
+                if (showGuardrailBlockOnScreen(fetchError, { refineContext: true })) {
+                    return;
                 }
                 
                 // Extract and show error message
@@ -12317,9 +13448,39 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                         templateKey: currentTestPromptKey
                     }
                 );
+
+                const coverage = response.intent_coverage
+                    || response.guardrails?.refine_output_validation?.intent_coverage;
+                if (currentTestPromptKey === 'Test Case' && getActiveTestDatasetFolder()) {
+                    try {
+                        if (window.API?.validateIntentCoverage) {
+                            const coverageResponse = await window.API.validateIntentCoverage(
+                                getActiveTestDatasetFolder(),
+                                response.generated_script || responseEditor?.value || ''
+                            );
+                            if (coverageResponse?.intent_coverage) {
+                                renderTsgIntentCoveragePanel(coverageResponse.intent_coverage);
+                            } else if (coverage) {
+                                renderTsgIntentCoveragePanel(coverage);
+                            }
+                        } else if (coverage) {
+                            renderTsgIntentCoveragePanel(coverage);
+                        }
+                    } catch (coverageErr) {
+                        console.warn('Intent coverage re-validation after refine failed:', coverageErr);
+                        if (coverage) {
+                            renderTsgIntentCoveragePanel(coverage);
+                        }
+                    }
+                } else if (coverage && currentTestPromptKey === 'Test Case') {
+                    renderTsgIntentCoveragePanel(coverage);
+                } else if (currentTestPromptKey !== 'Test Case') {
+                    clearTsgIntentCoveragePanel();
+                }
                 
                 updateProgressDialog(progressDialog, 100, 'Complete!');
-                showStatusBar('Test script refined successfully', 'success');
+                clearTsgInlineGuardrailError();
+                showStatusBar(response.message || 'Refined successfully', 'success');
             } else {
                 const errorMessage = response?.message || response?.detail || response?.error || 'Failed to refine test script';
                 console.error('❌ Refinement failed:', errorMessage);
@@ -12330,7 +13491,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         } catch (error) {
             console.error('❌ Error refining test script:', error);
             console.error('  - Error message:', error.message);
-            if (showTsgPromptGuardrailStatus(error)) {
+            if (showGuardrailBlockOnScreen(error, { refineContext: true })) {
                 return;
             }
             console.error('  - Error stack:', error.stack);
@@ -12546,7 +13707,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                         // Populate buttons with file names
                         populateLogFileButtons(selectedLogFiles);
                         
-                        
+                        showUploadGuardrailWarnings(uploadResult);
                         showStatusBar(`Successfully uploaded folder with ${logFiles.length} log file(s)`, 'success');
                     } else {
                         // Even if upload fails, still show the dropdown with local files
@@ -13418,8 +14579,12 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     
                     // Update selected log file
                     selectedLogFile = file.name;
+                    const fileInfo = logFileContentsMap.get(file.name);
+                    if (bugLogFilePathInput) {
+                        bugLogFilePathInput.value = fileInfo?.file_path || file.path || '';
+                    }
                     console.log('📁 Selected log file:', file.name);
-                    showStatusBar(`Selected: ${file.name}`, 'success');
+                    scanSelectedBugLogFile();
                 });
                 
                 logFileButtonsContainer.appendChild(button);
@@ -13615,6 +14780,10 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 const fileInfo = logFileContentsMap.get(filename);
                 console.log('🔍 Selected log file:', filename);
                 console.log('🔍 File info from map:', fileInfo);
+
+                if (bugLogFilePathInput) {
+                    bugLogFilePathInput.value = fileInfo?.file_path || '';
+                }
                 
                 // Update dropdown button text
                 if (logFileDropdownBtn) {
@@ -13627,7 +14796,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 }
                 
                 console.log('✅ Selected log file:', filename);
-                showStatusBar(`Selected: ${filename}`, 'success');
+                scanSelectedBugLogFile();
             }
         });
     }
@@ -13700,6 +14869,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                         // Populate dropdown with file names
                         populateLogFileDropdown(selectedLogFiles);
                         
+                        showUploadGuardrailWarnings(uploadResult);
                         showStatusBar(`Successfully uploaded folder with ${logFiles.length} log file(s)`, 'success');
                     } else {
                         // Even if upload fails, still show the dropdown with local files
@@ -16776,7 +17946,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                             const info = typeof parseFn === 'function'
                                 ? parseFn(errorText)
                                 : { message: errorText, guardrailFindings: [], isGuardrailBlock: false };
-                            const fetchErr = new Error(`HTTP error! status: ${fetchResponse.status} - ${info.message}`);
+                            const fetchErr = new Error(info.message || `Request failed (${fetchResponse.status})`);
                             fetchErr.status = fetchResponse.status;
                             if (typeof attachFn === 'function') {
                                 attachFn(fetchErr, errorText);
@@ -16812,7 +17982,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                         console.error('  - Error message:', error.message);
                         console.error('  - Error stack:', error.stack);
                         
-                        if (showTsgPromptGuardrailStatus(error)) {
+                        if (showGuardrailBlockOnScreen(error)) {
                             this.disabled = false;
                             this.textContent = 'Save Prompt';
                             return;
@@ -17530,7 +18700,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                         console.log('✅ Template saved and added to dropdown:', name);
                     } catch (error) {
                             console.error('❌ Error saving template:', error);
-                        if (!showTsgPromptGuardrailStatus(error)) {
+                        if (!showGuardrailBlockOnScreen(error)) {
                             showStatusBar(`Error saving template: ${error.message}`, 'error');
                         }
                     }
@@ -17597,7 +18767,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                         console.error('❌ Error updating template:', error);
                         console.error('   Error details:', error.message);
                         console.error('   Error stack:', error.stack);
-                        if (!showTsgPromptGuardrailStatus(error)) {
+                        if (!showGuardrailBlockOnScreen(error)) {
                             showStatusBar(`Error updating template: ${error.message}`, 'error');
                         }
                     }

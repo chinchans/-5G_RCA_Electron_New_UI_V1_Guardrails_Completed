@@ -52,5 +52,11 @@
     "saved_name": "f957d5d4-e70c-4a38-b95b-0bff0f53bbb9_cu_ngap_failure.log",
     "file_path": "resources\\rca_logs\\f957d5d4-e70c-4a38-b95b-0bff0f53bbb9_cu_ngap_failure.log",
     "upload_date": "2025-10-16T11:50:14.941616"
+  },
+  "version_err.log": {
+    "file_id": "99b4317e-2b56-481f-8156-40d59300e0ef",
+    "saved_name": "99b4317e-2b56-481f-8156-40d59300e0ef_version_err.log",
+    "file_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/resources/rca_logs/99b4317e-2b56-481f-8156-40d59300e0ef_version_err.log",
+    "upload_date": "2026-07-10T12:33:36.804842"
   }
 }

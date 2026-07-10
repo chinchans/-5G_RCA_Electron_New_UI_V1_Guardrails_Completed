@@ -309,6 +309,30 @@
         "Validate the PATH environment variable within the build environment to ensure cmake's directory is included.",
         "Review the build environment setup steps or Docker/container configuration to confirm cmake installation and accessibility."
       ]
+    },
+    "dynamic_error_message\n\"[hw]___lost_soc": {
+      "keywords": [
+        "Lost socket",
+        "Hardware failure",
+        "Communication failure",
+        "Socket error"
+      ],
+      "root_cause_template": "This error indicates a critical failure in the hardware or communication interface where a socket connection was unexpectedly lost. Common causes include hardware malfunction, network interface issues, driver faults, or abrupt termination of the socket by the remote endpoint or local system.",
+      "suggested_fixes": [
+        "1. Verify physical hardware connections and replace any faulty network interface cards or cables.",
+        "2. Check system logs for related hardware or driver errors and update or reinstall network drivers.",
+        "3. Implement socket keep-alive mechanisms and timeout handling to detect and recover from lost connections.",
+        "4. Review and enhance error handling in the socket communication code to gracefully handle unexpected disconnections."
+      ],
+      "specifications": [
+        "3GPP TS 23.501 - System Architecture for the 5G System (5GS)",
+        "3GPP TS 36.300 - E-UTRA and E-UTRAN Overall Description"
+      ],
+      "function_analysis": [
+        "Check the socket initialization and teardown functions to ensure proper resource allocation and release.",
+        "Trace socket read/write operations to identify where the connection is lost or closed unexpectedly.",
+        "Analyze retry and error handling logic around socket communication to confirm robustness against transient failures."
+      ]
     }
   },
   "metadata": {

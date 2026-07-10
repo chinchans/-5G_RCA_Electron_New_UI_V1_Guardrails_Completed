@@ -1,0 +1,64 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[HW]   Lost socket\" \n\nThis indicates a critical hardware or communication failure likely affecting system operation. It is the most recent and critical error in the log, potentially preventing further data exchange or connectivity. No stack trace or function call details are provided.",
+  "log_file": "success_du_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-10T12:22:31.881432",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[HW]   Lost socket\" \n\nThis indicates a critical hardware or communication failure likely affecting system operation. It is the most recent and critical error in the log, potentially preventing further data exchange or connectivity. No stack trace or function call details are provided.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "dmesg | grep -iE \"socket|eth|hw|error\"",
+            "hint": "Check kernel logs for hardware or socket-related errors indicating NIC or driver issues"
+          },
+          {
+            "command": "ethtool eth0",
+            "hint": "Verify network interface status and hardware link parameters on the primary NIC"
+          },
+          {
+            "command": "ping -I eth0 192.168.70.132 -c 4",
+            "hint": "Test connectivity from DU/gNB to AMF IP to verify network reachability and socket communication path"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "dmesg | grep -iE \"socket|eth|hw|error\"",
+            "explanation": "Check kernel logs for hardware or socket-related errors indicating NIC or driver issues"
+          },
+          {
+            "command": "ethtool eth0",
+            "explanation": "Verify network interface status and hardware link parameters on the primary NIC"
+          },
+          {
+            "command": "ping -I eth0 192.168.70.132 -c 4",
+            "explanation": "Test connectivity from DU/gNB to AMF IP to verify network reachability and socket communication path"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    },
+    "timestamp": "2026-07-10T12:22:30.768676"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260710_122231.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

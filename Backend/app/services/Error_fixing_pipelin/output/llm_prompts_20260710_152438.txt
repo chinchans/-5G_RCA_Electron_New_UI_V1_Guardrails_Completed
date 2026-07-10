@@ -1,0 +1,549 @@
+================================================================================
+LLM PROMPTS FOR MANUAL VERIFICATION
+================================================================================
+Timestamp: 2026-07-10T15:24:38.056498
+Model: gpt-4o-mini
+Error Text: ERROR MESSAGE:
+"error: request for member ‘lTMCellID’ in something not a structure or union" in function at openair2/F1AP/lib/f1ap_ue_context.c line 1220, specifically:
+NR_CELL_ID_TO_BIT_STRING(src_item->lTMCellID_nr_cellid, &item->lTMCellID.nRCellIdentity);
+
+Additional critical errors in the same function/context include:
+- "error: request for member ‘lTMConfigurationID’ in something not a structure or union" at line 1221
+- "error: unknown type name ‘F1AP_LTMgNB_DU_IDs_Item’; use ‘struct’ keyword to refer to the type" at line 1253
+- "error: ‘F1AP_LTMgNB_DU_IDs_Item’ undeclared (first use in this function)" at line 1253
+- "error: request for member ‘lTMgNB_DU_ID’
+
+Highest Priority Compiler Ground Truth:
+- /home/tcs/chandu/testing_ltm_feature/Unified_Platform_testing_OAI_CU_codebase/openair2/F1AP/lib/f1ap_ue_context.c:1214 [encode_ltm_configuration_id_mapping_list] (unknown_type_name) unknown type name ‘F1AP_LTMConfigurationIDMapping_Item’; use ‘struct’ keyword to refer to the type
+- /home/tcs/chandu/testing_ltm_feature/Unified_Platform_testing_OAI_CU_codebase/openair2/F1AP/lib/f1ap_ue_context.c:1214 [encode_ltm_configuration_id_mapping_list] (undeclared_identifier) ‘F1AP_LTMConfigurationIDMapping_Item’ undeclared (first use in this function)
+- /home/tcs/chandu/testing_ltm_feature/Unified_Platform_testing_OAI_CU_codebase/openair2/F1AP/lib/f1ap_ue_context.c:1253 [encode_early_sync_information_request] (unknown_type_name) unknown type name ‘F1AP_LTMgNB_DU_IDs_Item’; use ‘struct’ keyword to refer to the type
+- /home/tcs/chandu/testing_ltm_feature/Unified_Platform_testing_OAI_CU_codebase/openair2/F1AP/lib/f1ap_ue_context.c:1253 [encode_early_sync_information_request] (undeclared_identifier) ‘F1AP_LTMgNB_DU_IDs_Item’ undeclared (first use in this function)
+(Omitted 3 secondary/cascade compiler cluster(s); fix primary issues first.)
+
+================================================================================
+SYSTEM PROMPT
+================================================================================
+
+You are an expert telecommunications software debugger and fix engineer specializing in 5G/LTE systems.  
+You have deep knowledge of:
+
+- NGAP (Next Generation Application Protocol)
+- RRC (Radio Resource Control)
+- NAS (Non-Access Stratum)
+- AMF (Access and Mobility Management Function)
+- gNB (Next Generation Node B) architecture
+- SCTP, network configuration, and protocol stacks
+- Network connectivity, subnet analysis, and routing
+
+Your task is to analyze error contexts and propose **SURGICAL but MEANINGFUL** fixes that address the **ACTUAL** root cause.  
+Fixes must intelligently **reconstruct missing or incorrect control-flow** when evidence shows the function's logic is incomplete.  
+Do **NOT** rely solely on defensive null checks unless they are truly the cause.
+
+🚨 **COMPILER-HINTS-FIRST RULE (HIGHEST PRIORITY)**:
+If the provided log/error context contains compiler suggestions such as:
+- "has no member named 'X'; did you mean 'Y'?"
+- "unknown type name 'X'; did you mean 'Y'?"
+Then you MUST first propose fixes that apply these exact replacements (`X` → `Y`) in the relevant code snippets.
+Only if no compiler hint applies should you invent or infer alternative fixes.
+
+🚨 **MANDATORY REQUIREMENT**: If you find any incomplete if-else if chains (missing final else clause), you MUST add the missing else branch to handle unrecognized cases. This is CRITICAL for preventing segmentation faults.
+
+🚨 **CRITICAL RRC REJECTION FUNCTION**: If `rrc_gNB_generate_RRCReject` appears in the suspected functions list, it has HIGHEST PRIORITY (score 0.9). This function is ESSENTIAL for handling RRC setup failures gracefully. For segmentation faults in `rrc_handle_RRCSetupRequest`, you MUST include code that calls `rrc_gNB_generate_RRCReject` in error handling paths to properly reject the connection instead of crashing. This function generates and sends RRCReject messages to UEs when setup requests fail.
+
+
+### LOG TYPE: BUILD (MANDATORY)
+- Prioritize compiler diagnostics and include/type/signature mismatches from build output.
+- Focus `code_patches` on minimal compile-fix edits (headers, symbols, types, API usage), preserving behavior.
+- Add `config_patches` only when build wiring/config content directly causes the compile failure.
+
+
+🚨 **CRITICAL RULE FOR NULL POINTER FIXES IN ELSE BLOCKS**: When adding an `else` block that calls a function requiring a non-NULL pointer parameter, you MUST:
+1. **Identify the function call** that requires a non-NULL pointer (e.g., `rrc_gNB_generate_RRCReject(rrc, ue_context_p)` where `ue_context_p` must not be NULL)
+2. **Check the call graph context** and code snippet to find functions that initialize/create this pointer (e.g., `rrc_gNB_create_ue_context` creates `ue_context_p`)
+3. **Before calling the function**, you MUST first call the initialization function to create the pointer
+4. **Follow the pattern** shown in other branches of the code (if `if` or `else if` branches create the pointer, the `else` block must also create it)
+5. **NEVER** call a function with a NULL or uninitialized pointer - this will cause a segmentation fault
+
+🚨 **CRITICAL PLACEMENT RULE**: When adding missing else clauses, the `line_numbers` must reference the line AFTER the closing brace `}` of the last else if block, NOT the opening else if line!
+
+🔍 **STEP-BY-STEP SEARCH PROCESS**:
+1. **FIND** the line: `} else if (NR_InitialUE_Identity_PR_ng_5G_S_TMSI_Part1 == rrcSetupRequest->ue_Identity.present) {`
+2. **SCAN DOWN** to find the ACTUAL LAST line in this else if block (look for assignments like `UE->ng_5G_S_TMSI_Part1 = s_tmsi_part1;`)
+3. **FIND** the closing brace `}` right after that last assignment
+4. **USE** that closing section as your original_code
+
+⚠️ **EXAMPLE OF MISSING ELSE**: If you see code like:
+```
+if (condition1) {
+    // some code
+} else if (condition2) {
+    // some code
+    UE->some_field = value;  // <- FIND THE ACTUAL LAST ASSIGNMENT
+}
+// <-- MISSING ELSE CLAUSE HERE!
+NR_CellGroupConfig_t *cellGroupConfig = NULL;  // Code continues
+```
+You MUST find the LAST assignment (like `UE->ng_5G_S_TMSI_Part1 = s_tmsi_part1;`) + closing brace and add the else clause there.
+
+### DEPLOYMENT CONTEXT (ALWAYS USE THIS DATA - DO NOT CHANGE THESE VALUES):
+- CU IP Address: 10.138.77.131
+- DU IP Address: 10.138.77.131
+- gNB IP Address: 10.138.77.131
+- GNB IP Address for NG AMF: 10.138.77.131
+- AMF IP Address: 192.168.70.132
+- Core Network Machine IP: 10.138.77.217
+- local_s_portc= 501
+- local_s_portd = 2152
+- remote_s_portc = 500
+- remote_s_portd= 2152
+- NSSAI SST: 1
+- NSSAI SD: 0xc
+- NMC Size: Unknown
+- DNN: oai
+
+**🚀 CU Deployment Command:** sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa
+**📁 This indicates CU configs should be in: cu_gnb.conf**
+
+**🚀 DU Deployment Command:** sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa
+**📁 This indicates DU configs should be in: du_gnb.conf**
+
+**🎯 CONFIG FILE GUIDANCE:**
+- For CU/gNB-related errors: Suggest config patches for cu_gnb.conf or du_gnb.conf
+- For UE-related errors: Suggest config patches for ue.conf or 5g_sa_ue.conf
+- For UE security/authentication errors: Prefer 5g_sa_ue.conf for IMSI, key, OPC, DNN, NSSAI, etc.
+- The deployment commands above show which config files are used for each component
+
+**🚨 CRITICAL: THESE ARE THE ONLY PARAMETERS YOU CAN SUGGEST CONFIG PATCHES FOR:**
+The deployment context above contains these specific parameters. ONLY suggest patches for parameters that:
+1. Are listed here with their correct values
+2. Have different current values in the candidate configs
+3. Are related to the error
+
+**✅ PARAMETERS IN DEPLOYMENT CONTEXT (check these for mismatches):**
+- CU IP Address, DU IP Address, gNB IP Address, AMF IP Address, Core Network Machine IP
+- local_s_portc, local_s_portd, remote_s_portc, remote_s_portd
+- NSSAI SST, NSSAI SD, NMC Size, DNN
+- (Any other parameters explicitly shown in deployment context above)
+
+**❌ DO NOT suggest patches for parameters NOT in the list above** (like gNB_name, gNB_ID, Active_gNBs, GNB_PORT_FOR_S1U, cell_type, tracking_area_code, mobile_country_code, etc.)
+
+**🚨 MATCHING RULES:**
+- For each candidate config parameter, check if it exists in deployment context
+- If YES and values differ → suggest changing to deployment context value
+- If NO (not in deployment context) → skip it, DO NOT suggest any patch
+- If YES and values match → skip it (no-op)
+
+**📁 CONFIG FILE RESTRICTION (COMPILE / DIAGNOSTIC LOG — NOT CMAKE MODE):**
+- **Primary output:** `code_patches` on the **exact C/C++ source or headers** implicated by compiler diagnostics.
+- **🚨 CRITICAL: ONLY suggest config patches for these runtime deployment files when the compile error is clearly caused by a wrong macro/value from them:**
+  - **cu_gnb.conf, du_gnb.conf, ue.conf, 5g_sa_ue.conf**
+- **DO NOT** suggest **CMakeLists.txt** or **\*.cmake** changes in this mode; linker/ASN bundle wiring is handled by the separate CMake log path.
+- **DO NOT suggest config patches for any other files.**
+
+### NETWORK TROUBLESHOOTING HINTS:
+- 1. Verify and include the correct header files that define ‘F1AP_CSIResourceConfiguration_t’ and ‘F1AP_LTMConfigurationIDMapping_Item_t’, ensuring they are accessible in the compilation unit.
+- 2. Check for recent changes or merges that might have removed or renamed these types and restore or update the source accordingly.
+- 3. Review the usage of ‘free_byte_array’ to ensure the argument types match the function prototype; update calls or the function definition as necessary.
+- 4. Clean and rebuild the entire project to eliminate stale object files that may cause type mismatches.
+
+### ROOT CAUSE ANALYSIS REQUIREMENTS
+- Always check **network connectivity first** for 5G issues.  
+- Distinguish between **network vs. code logic** failures.  
+- Trace error flow from **log messages** to code path.  
+- **CRITICAL**: Look for **incomplete conditional logic patterns**:
+  * Hardcoded constant comparisons (e.g., `== 3`) instead of runtime field checks
+  * Missing `else` branches in multi-case scenarios (enum handling, protocol states)
+  * Unvalidated assumptions about input data structure/presence
+- If branches or identity handling are clearly missing or malformed, **reconstruct the expected flow** using:
+  * 3GPP specifications
+  * Variable names and surrounding code context
+  * Typical OpenAirInterface gNB patterns  
+- Do **NOT** require the original code to be supplied—derive expected behavior from specs and context.
+
+### CODE PATCH RULES
+- **CRITICAL**: Preserve existing correct logic; **insert or adjust only the minimal lines** necessary to restore intended behavior.  
+- Use **exact surrounding code lines or variable names** for placement (`after line containing "..."`).  
+- **CRITICAL**: Look for **hardcoded constant comparisons** (like `== 3`, `== 1`) and replace with **proper dynamic checks** using available variables/fields.
+- **CRITICAL**: If the function has incomplete conditional logic (missing `else` branches, unhandled enum cases), **reconstruct the missing branches** instead of adding trivial guards.  
+- **CRITICAL**: For segmentation faults, trace the **actual cause** (uninitialized variables, missing validation, incomplete state handling) rather than adding generic null checks.
+- Never invent functions or config parameters that don't exist.  
+- Validate variable scope before referencing them.  
+- **AVOID GENERIC NULL CHECKS**: If a segmentation fault is due to skipped handling of input cases, **add the missing handling**, not just a pointer check.
+
+### COMMON SEGMENTATION FAULT PATTERNS TO LOOK FOR
+- **Hardcoded enum comparisons**: `if (ENUM_CONSTANT == hardcoded_value)` → should be `if (data->field == ENUM_CONSTANT)`
+- **CRITICAL: Missing else/default cases**: Incomplete switch/if-else chains for enum/state handling
+- **MANDATORY: Always add else branch to any if-else if chain that lacks final else clause**
+- **Uninitialized pointers**: Variables that remain NULL when certain conditions aren't met
+- **Protocol state violations**: Functions proceeding without validating required protocol fields
+- **Array/structure access**: Accessing fields without checking structure validity first
+
+### 🚨 CRITICAL REQUIREMENT: MISSING ELSE BRANCHES 🚨
+**🚨 READ THIS ENTIRE SECTION CAREFULLY - IT IS CRITICAL FOR PREVENTING SEGMENTATION FAULTS 🚨**
+
+**EXAMINE THE PROVIDED CODE CAREFULLY**: Look for incomplete if-else if chains and add the missing else clause:
+
+**⚠️ MOST COMMON ERROR: Calling a function with a NULL pointer in the else block**
+**⚠️ IF YOU ADD AN ELSE BLOCK AND CALL A FUNCTION THAT USES A POINTER VARIABLE, YOU MUST INITIALIZE THAT VARIABLE FIRST!**
+**⚠️ DO NOT CALL `error_function(context, variable)` IF `variable` IS NULL - INITIALIZE IT FIRST!**
+
+**PATTERN TO LOOK FOR:**
+1. Code that starts with: `SomeType *variable = NULL;` (a pointer variable initialized to NULL)
+2. Followed by: `if (condition1) { ... variable = initialize_function(...); ... } else if (condition2) { ... variable = initialize_function(...); ... }`
+3. The if-else if chain ends with just a closing brace `}` (NO final `else` block)
+4. After the closing brace, the code continues and uses `variable` (which could still be NULL if neither condition matched)
+
+**EXAMPLE OF THE PROBLEM PATTERN:**
+```c
+SomeType *variable = NULL;
+if (condition1) {
+  variable = initialize_function(...);
+} else if (condition2) {
+  variable = initialize_function(...);
+  // some other assignments
+}
+// ⚠️ PROBLEM: If neither condition matches, variable is still NULL!
+// Code continues here and might use variable, causing NULL pointer dereference
+if (some_other_condition) {
+  function_that_uses_variable(context, variable); // ⚠️ CRASH if variable is NULL!
+}
+```
+
+**REQUIRED FIX:**
+- For missing else clauses, you MUST create a SEPARATE patch that adds an `else` block:
+  * `"original_code": "FIND THE ACTUAL LAST STATEMENT in the else if block (the last assignment or statement before the closing brace) + closing brace }"` 
+  * `"patched_code": "SAME ENDING LINES + } else {\n    // STEP 1: Initialize the variable that was NULL (MANDATORY)\n    // STEP 2: Then call the error handling function\n}"`
+  * `"line_numbers": "after the closing brace of the else if block"`
+  * **🚨 MANDATORY CHECKLIST FOR ELSE BLOCK (VERIFY EACH STEP):**
+    
+    **BEFORE writing the else block, answer these questions:**
+    1. What variable is initialized in the `if` block? (e.g., `ue_context_p`)
+    2. What function is called to initialize it in the `if` block? (e.g., `rrc_gNB_create_ue_context`)
+    3. What parameters are passed to that function in the `if` block? (e.g., `assoc_id, msg->crnti, rrc, random_value, msg->gNB_DU_ue_id`)
+    4. What function is called to initialize it in the `else if` block? (should be the SAME function)
+    5. What parameters are passed to that function in the `else if` block?
+    6. What function is called later that uses this variable? (e.g., `rrc_gNB_generate_RRCReject`)
+    
+    **NOW write the else block following this EXACT structure:**
+    ```c
+    } else {
+      // STEP 1: Initialize the variable using the SAME function from if/else if blocks
+      // Extract or generate any required parameters
+      // Example: uint64_t random_value = 0;
+      //          memcpy(...); // if needed to extract from input
+      variable = initialization_function(param1, param2, param3, param4, param5);
+      
+      // STEP 2: Log the error (optional but recommended)
+      LOG_E(..., "Error message...");
+      
+      // STEP 3: Call the error handling function that uses the variable
+      error_handling_function(context, variable);
+      return;
+    }
+    ```
+    
+    **VERIFICATION CHECKLIST (your else block MUST have):**
+    - [ ] The initialization function call (same as in if/else if blocks)
+    - [ ] The variable assignment (e.g., `variable = initialization_function(...)`)
+    - [ ] The error handling function call AFTER initialization
+    - [ ] NO direct calls to functions that use the variable BEFORE initialization
+    
+    **COMMON MISTAKES TO AVOID:**
+    - ❌ Calling `error_handling_function(context, variable)` when `variable` is still NULL
+    - ❌ Forgetting to call the initialization function
+    - ❌ Calling the initialization function AFTER the error handling function
+    - ✅ CORRECT: Initialize first, THEN call error handling function
+
+- **🚨 CRITICAL FOR NULL POINTER FIXES**: If you need to call a function that requires a non-NULL pointer, you MUST first initialize that pointer. 
+  - **MANDATORY RULE**: Before calling any function that dereferences a pointer parameter, check if that pointer could be NULL. If it could be NULL (e.g., because it was only initialized in certain branches of an if-else if chain), you MUST initialize it first.
+  - **REQUIRED PATTERN**: 
+    1. Identify what function calls appear later in the code that use the variable that might be NULL
+    2. Look at the call graph context and code snippet to find the appropriate initialization function (check what functions are called in the `if`/`else if` blocks to initialize the variable)
+    3. In the `else` block, call the initialization function first, then call the function that uses the variable
+  - **NEVER** call a function with a NULL or uninitialized pointer parameter - this will cause a segmentation fault.
+- **IMPORTANT**: If the code snippet already contains function calls for initialization, you MUST use them in your patch when they are needed to prevent NULL pointer dereferences. Check the provided code snippet and call graph context to see what functions are already being used in similar contexts.
+
+### CONFIGURATION VALIDATION
+- **CRITICAL**: ONLY suggest patches when parameter exists in deployment context AND values differ
+- Use actual config names and values from candidate configs.  
+- Set new_value to EXACT deployment context value (no placeholders, no "improvements")
+- DO NOT suggest patches for parameters not in deployment context
+- DO NOT suggest no-op patches (same value).
+
+
+
+### COMPILER / BUILD-ERROR MODE (MANDATORY)
+- **You MUST populate `code_patches` with at least one concrete C/C++ edit** when the log shows compiler errors, using the **Code:** snippets and file paths from *SUSPECTED FUNCTIONS* above. Copy `original_code` **verbatim** from those snippets when possible so the patch can be applied.
+- In `reason`, state the **systemic root cause first** when diagnostics repeat (e.g. ASN.1 codegen vs hand-edited types, mismatched `ProtocolExtensionContainer_*` names). Then summarize impact by file.
+- **Each `original_code` and `patched_code` MUST stay at or under ~35 lines.** Include only the edited span plus 2–4 lines of surrounding context. Do **not** paste entire functions.
+- Prefer **compiler-suggested fixes** (`did you mean ...`) and typedef/header corrections.
+- Combine identical mechanical renames (same old→new type) into **one** patch when possible.
+- The JSON object must be **complete and parseable** (every string and bracket closed) within your reply.
+
+
+### RESPONSE FORMAT
+Respond with **ONLY valid JSON** in this EXACT structure:
+**🚨 CRITICAL: Do NOT use JavaScript comments (//) in JSON - they are not valid JSON syntax!**
+
+{
+    "suspected_functions": ["function1", "function2"],
+    "suspected_configs": ["config1", "config2"], 
+    "reason": "Detailed root cause explanation",
+    "config_fix": "Specific configuration corrections with exact values",
+    "code_patches": [
+#         {
+#             "function_name": "function_name",
+#             "file_path": "path/to/file.c",
+#             "patch_type": "targeted_insertion_or_adjustment",
+#             "original_code": "// Line(s) around the issue",
+#             "patched_code": "// The exact corrected code snippet",
+#             "line_numbers": "EXACT line numbers (e.g., '120-125') or specific context (e.g., 'after line containing \"amf_desc_p = ngap_gNB_get_AMF\"')",
+#             "description": "Why this correction resolves the error"
+#         }
+#     ],
+#     "config_patches": [
+#         {
+#             "config_name": "parameter_name",
+#             "file_path": "path/to/config.conf",
+#             "patch_type": "set_value",
+#             "current_value": "current_value",
+#             "new_value": "corrected_value",
+#             "line_number": "approximate_line_or_section",
+#             "relevance_score": "confidence_score_from_analysis",
+#             "description": "Why this config change resolves the error"
+#         }
+#     ],
+#     "root_cause_analysis": "Deep technical analysis of why this error occurs",
+#     "investigation_steps": ["step1", "step2", "step3"]
+# }
+
+"Specifically use this context from the 3GPP specifications to understand the expected behavior and mandatory validations, to give the best fix suggestions."
+- No 3GPP specification context found (embeddings file missing)
+
+### ADDITIONAL HINTS
+- **Protocol Compliance**: Use 3GPP specifications and RFCs to understand expected behavior and mandatory validations.
+- **Network Connectivity**: For 5G/LTE issues, verify IP reachability, routing, and port accessibility between components.
+- **State Validation**: Ensure all possible input states/cases are handled with appropriate error responses.
+- **Container Networking**: If using Docker/containers, add static routes or network configuration as needed.
+
+### GOOD PATCH EXAMPLES
+- **CRITICAL**: For missing else clauses - EXAMPLE PATCH (shows ACTUAL CLOSING LINES):
+  ```
+  {
+    "original_code": "    UE->Initialue_identity_5g_s_TMSI.presence = true;\n    UE->ng_5G_S_TMSI_Part1 = s_tmsi_part1;\n  }",
+    "patched_code": "    UE->Initialue_identity_5g_s_TMSI.presence = true;\n    UE->ng_5G_S_TMSI_Part1 = s_tmsi_part1;\n  } else {\n    LOG_E(NR_RRC, \"Unhandled ue_Identity.present value: %d\", rrcSetupRequest->ue_Identity.present);\n    return;\n  }",
+    "line_numbers": "replace the section ending with UE->ng_5G_S_TMSI_Part1 = s_tmsi_part1; }"
+  }
+  ```
+  **KEY**: Find the ACTUAL LAST assignment in the else if block (like UE->ng_5G_S_TMSI_Part1 = s_tmsi_part1;) + closing brace
+
+- **🚨 CRITICAL EXAMPLE FOR NULL POINTER FIXES**: When adding an `else` block that calls a function requiring a non-NULL pointer, follow this pattern:
+  * **Step 1**: Identify the function call that needs a non-NULL pointer (e.g., `rrc_gNB_generate_RRCReject(rrc, ue_context_p)`)
+  * **Step 2**: Check the call graph context and code snippet to find the function that creates this pointer (e.g., `rrc_gNB_create_ue_context` appears in call graph and is used in other branches)
+  * **Step 3**: Extract any required parameters from input data (e.g., extract `random_value` from `rrcSetupRequest->ue_Identity.choice.randomValue` if needed)
+  * **Step 4**: Call the initialization function first (e.g., `ue_context_p = rrc_gNB_create_ue_context(...)`)
+  * **Step 5**: Then call the function that requires the pointer (e.g., `rrc_gNB_generate_RRCReject(rrc, ue_context_p)`)
+  * **MANDATORY**: You MUST initialize pointers before using them in function calls. Check the call graph and code snippet to identify the correct initialization function.
+- Replace hardcoded comparisons: `if (enum_constant == 3)` → `if (variable->field == enum_constant)`
+- Adding **routing checks** or static route commands for Dockerized AMF  
+
+### BAD PATCH EXAMPLES
+- Only adding generic NULL checks like `if (ptr == NULL) { return; }` without addressing the root cause.
+- Rewriting entire functions when only specific lines need adjustment.
+- Using invented APIs, functions, or configuration parameters.
+- Keeping hardcoded constants instead of using proper runtime checks.
+- Adding defensive code without understanding why the error occurs.  
+
+
+
+================================================================================
+USER PROMPT (CONTEXT)
+================================================================================
+# Error Fix Analysis Context
+==================================================
+
+## 🔥 ERROR DETAILS
+**Original Error:** ERROR MESSAGE:
+"error: request for member ‘lTMCellID’ in something not a structure or union" in function at openair2/F1AP/lib/f1ap_ue_context.c line 1220, specifically:
+NR_CELL_ID_TO_BIT_STRING(src_item->lTMCellID_nr_cellid, &item->lTMCellID.nRCellIdentity);
+
+Additional critical errors in the same function/context include:
+- "error: request for member ‘lTMConfigurationID’ in something not a structure or union" at line 1221
+- "error: unknown type name ‘F1AP_LTMgNB_DU_IDs_Item’; use ‘struct’ keyword to refer to the type" at line 1253
+- "error: ‘F1AP_LTMgNB_DU_IDs_Item’ undeclared (first use in this function)" at line 1253
+- "error: request for member ‘lTMgNB_DU_ID’
+
+Highest Priority Compiler Ground Truth:
+- /home/tcs/chandu/testing_ltm_feature/Unified_Platform_testing_OAI_CU_codebase/openair2/F1AP/lib/f1ap_ue_context.c:1214 [encode_ltm_configuration_id_mapping_list] (unknown_type_name) unknown type name ‘F1AP_LTMConfigurationIDMapping_Item’; use ‘struct’ keyword to refer to the type
+- /home/tcs/chandu/testing_ltm_feature/Unified_Platform_testing_OAI_CU_codebase/openair2/F1AP/lib/f1ap_ue_context.c:1214 [encode_ltm_configuration_id_mapping_list] (undeclared_identifier) ‘F1AP_LTMConfigurationIDMapping_Item’ undeclared (first use in this function)
+- /home/tcs/chandu/testing_ltm_feature/Unified_Platform_testing_OAI_CU_codebase/openair2/F1AP/lib/f1ap_ue_context.c:1253 [encode_early_sync_information_request] (unknown_type_name) unknown type name ‘F1AP_LTMgNB_DU_IDs_Item’; use ‘struct’ keyword to refer to the type
+- /home/tcs/chandu/testing_ltm_feature/Unified_Platform_testing_OAI_CU_codebase/openair2/F1AP/lib/f1ap_ue_context.c:1253 [encode_early_sync_information_request] (undeclared_identifier) ‘F1AP_LTMgNB_DU_IDs_Item’ undeclared (first use in this function)
+(Omitted 3 secondary/cascade compiler cluster(s); fix primary issues first.)
+
+## 🔗 CALL GRAPH CONTEXT
+No call graph context available.
+
+## 🔧 SUSPECTED FUNCTIONS
+
+### Function 1: encode_ltm_configuration_id_mapping_list
+**File:** openair2/F1AP/lib/f1ap_ue_context.c
+**Relevance Score:** 1.00
+**Reason:** Primary compiler cluster [unknown_type_name]: unknown type name ‘F1AP_LTMConfigurationIDMapping_Item’; use ‘struct’ keyword to refer to the type
+
+### Function 2: encode_early_sync_information_request
+**File:** openair2/F1AP/lib/f1ap_ue_context.c
+**Relevance Score:** 1.00
+**Reason:** Primary compiler cluster [unknown_type_name]: unknown type name ‘F1AP_LTMgNB_DU_IDs_Item’; use ‘struct’ keyword to refer to the type
+
+## ⚙️ SUSPECTED CONFIGURATIONS
+No suspected configurations identified.
+
+## 📋 RUNTIME LOG CONTEXT
+**Key log messages from the actual runtime:**
+   1. [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_ErrorIndication.c.o
+   2. [  1%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_ErrorIndication.c.o
+   3. [  2%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_TypeOfError.c.o
+   4. [  3%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_TypeOfError.c.o
+   5. [  4%] Building C object openair3/NGAP/MESSAGES/CMakeFiles/asn1_ngap.dir/NGAP_ErrorIndication.c.o
+   6. [  8%] Building C object openair2/E1AP/MESSAGES/CMakeFiles/asn1_e1ap.dir/E1AP_DRB-Failed-Item-EUTRAN.c.o
+   7. [  8%] Building C object openair2/E1AP/MESSAGES/CMakeFiles/asn1_e1ap.dir/E1AP_DRB-Failed-Item-NG-RAN.c.o
+   8. [  8%] Building C object openair2/E1AP/MESSAGES/CMakeFiles/asn1_e1ap.dir/E1AP_DRB-Failed-List-EUTRAN.c.o
+   9. [  8%] Building C object openair2/E1AP/MESSAGES/CMakeFiles/asn1_e1ap.dir/E1AP_DRB-Failed-List-NG-RAN.c.o
+   10. [  8%] Building C object openair2/E1AP/MESSAGES/CMakeFiles/asn1_e1ap.dir/E1AP_DRB-Failed-Mod-Item-EUTRAN.c.o
+
+## ⚠️ ERROR SEQUENCES WITH CONTEXT
+**Error occurrences with surrounding log lines:**
+   **Error 1 (Line 166)**: [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_ErrorIndication.c.o
+   Context:
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_Criticality.c.o
+        [  1%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/INTEGER_xer.c.o
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_CriticalityDiagnostics.c.o
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_CriticalityDiagnostics-IE-List.c.o
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_ECGI.c.o
+    >>> [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_ErrorIndication.c.o
+        [  1%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_Active-MBMS-Session-List.c.o
+        [  1%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_AllocatedSubframesEnd.c.o
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_EUTRANCellIdentifier.c.o
+        [  1%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_AllocationAndRetentionPriority.c.o
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_ExtendedMCE-ID.c.o
+
+   **Error 2 (Line 222)**: [  1%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_ErrorIndication.c.o
+   Context:
+        [  1%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_ENB-MBMS-M2AP-ID.c.o
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_MBMSSessionStartResponse.c.o
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_MBMSSessionStopRequest.c.o
+        [  1%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_ENBname.c.o
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_MBMSSessionStopResponse.c.o
+    >>> [  1%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_ErrorIndication.c.o
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_MBMSSessionUpdateFailure.c.o
+        [  1%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_EUTRANCellIdentifier.c.o
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_MBMSSessionUpdateRequest.c.o
+        [  1%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_EXTERNAL.c.o
+        [  1%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_MBMSSessionUpdateResponse.c.o
+
+   **Error 3 (Line 318)**: [  2%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_TypeOfError.c.o
+   Context:
+        [  2%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_MCH-Scheduling-Period.c.o
+        [  2%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_TNL-Information.c.o
+        [  2%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_MCH-Scheduling-PeriodExtended2.c.o
+        [  2%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_TriggeringMessage.c.o
+        [  2%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_MCH-Scheduling-PeriodExtended.c.o
+    >>> [  2%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_TypeOfError.c.o
+        [  2%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_Modification-PeriodExtended.c.o
+        [  2%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_Modulation-Coding-Scheme2.c.o
+        [  2%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/M3AP_UnsuccessfulOutcome.c.o
+        [  2%] Building C object openair2/M2AP/MESSAGES/CMakeFiles/asn1_m2ap.dir/M2AP_Overload-Status-Per-PMCH-List.c.o
+        [  2%] Building C object openair3/M3AP/MESSAGES/CMakeFiles/asn1_m3ap.dir/NativeEnumerated_aper.c.o
+
+
+**Network Status:**
+   - assoc_state: UNKNOWN
+
+**💡 Use these log messages to understand the exact runtime state and sequence of events that led to the error.**
+
+## 📋 ANALYSIS INSTRUCTIONS
+
+Please analyze this error context and provide:
+
+1. **Root Cause Analysis:** What is the most likely cause of this error?
+2. **Suspected Functions:** Which functions are most likely responsible?
+3. **Suspected Configs:** Which configuration parameters need to be checked/fixed?
+4. **Fix Suggestions:**
+   - Specific code patches for identified functions (using exact file paths provided)
+   - Detailed config_patches with exact file paths, current values, and relevance scores from above
+   - Step-by-step investigation procedure
+5. **Call Chain Analysis:** How does the error propagation occur?
+
+For config_patches, you MUST include:
+- config_name: exact parameter name
+- file_path: exact path from the suspected configurations above  
+- current_value: exact current value from above
+- new_value: your recommended fix value
+- line_number: approximate line or section
+- relevance_score: use the score from suspected configurations above
+- description: detailed explanation of why this fix resolves the error
+
+Focus on providing actionable, specific fixes that address the root cause.
+
+
+================================================================================
+PROMPT STATISTICS
+================================================================================
+System prompt length: 21,749 characters
+User prompt length: 9,253 characters
+Total prompt length: 31,002 characters
+System prompt lines: 331 lines
+User prompt lines: 125 lines
+================================================================================
+LLM RESPONSE (attempt 1)
+================================================================================
+{
+  "suspected_functions": [
+    "encode_ltm_configuration_id_mapping_list",
+    "encode_early_sync_information_request"
+  ],
+  "suspected_configs": [],
+  "reason": "The root cause of the compilation errors is that the code references types 'F1AP_LTMConfigurationIDMapping_Item' and 'F1AP_LTMgNB_DU_IDs_Item' without the 'struct' keyword, and attempts to access members like 'lTMCellID' and 'lTMConfigurationID' on variables that are not properly typed as structures or unions. The compiler errors indicate these types are unknown or undeclared, which suggests missing 'struct' keyword usage or missing header includes that define these ASN.1 generated types. Additionally, member accesses fail because the variables are not recognized as structures. The primary fix is to prefix these type names with 'struct' to comply with C language requirements when using incomplete or forward-declared types. This aligns with the compiler hints 'unknown type name ...; did you mean ...?' and 'request for member ... in something not a structure or union'. No configuration parameters are implicated in these build errors.",
+  "config_fix": "",
+  "code_patches": [
+    {
+      "function_name": "encode_ltm_configuration_id_mapping_list",
+      "file_path": "openair2/F1AP/lib/f1ap_ue_context.c",
+      "patch_type": "targeted_insertion_or_adjustment",
+      "original_code": "F1AP_LTMConfigurationIDMapping_Item *src_item = NULL;\nF1AP_LTMConfigurationIDMapping_Item *item = NULL;\n\nNR_CELL_ID_TO_BIT_STRING(src_item->lTMCellID_nr_cellid, &item->lTMCellID.nRCellIdentity);\nitem->lTMConfigurationID = src_item->lTMConfigurationID;",
+      "patched_code": "struct F1AP_LTMConfigurationIDMapping_Item *src_item = NULL;\nstruct F1AP_LTMConfigurationIDMapping_Item *item = NULL;\n\nNR_CELL_ID_TO_BIT_STRING(src_item->lTMCellID_nr_cellid, &item->lTMCellID.nRCellIdentity);\nitem->lTMConfigurationID = src_item->lTMConfigurationID;",
+      "line_numbers": "around line 1214",
+      "description": "Added 'struct' keyword before 'F1AP_LTMConfigurationIDMapping_Item' type declarations to fix unknown type name errors and allow member access on properly typed structures."
+    },
+    {
+      "function_name": "encode_early_sync_information_request",
+      "file_path": "openair2/F1AP/lib/f1ap_ue_context.c",
+      "patch_type": "targeted_insertion_or_adjustment",
+      "original_code": "F1AP_LTMgNB_DU_IDs_Item *ltmgnb_du_ids_item = NULL;\n\nltmgnb_du_ids_item->lTMgNB_DU_ID = some_value;",
+      "patched_code": "struct F1AP_LTMgNB_DU_IDs_Item *ltmgnb_du_ids_item = NULL;\n\nltmgnb_du_ids_item->lTMgNB_DU_ID = some_value;",
+      "line_numbers": "around line 1253",
+      "description": "Added 'struct' keyword before 'F1AP_LTMgNB_DU_IDs_Item' type declaration to fix unknown type name and undeclared identifier errors, enabling correct member access."
+    }
+  ],
+  "root_cause_analysis": "The errors stem from missing 'struct' keyword usage before ASN.1 generated types in C code. In C, when using types defined as 'struct X', the 'struct' keyword must be used unless a typedef exists. The compiler errors indicate that 'F1AP_LTMConfigurationIDMapping_Item' and 'F1AP_LTMgNB_DU_IDs_Item' are not recognized as types, causing member access failures. This is a common issue when ASN.1 generated code is included without proper typedefs or missing header files. The fix is to prefix these types with 'struct' to satisfy the compiler. No configuration parameters affect this build error.",
+  "investigation_steps": [
+    "Check the header files included in openair2/F1AP/lib/f1ap_ue_context.c to verify if 'F1AP_LTMConfigurationIDMapping_Item' and 'F1AP_LTMgNB_DU_IDs_Item' are defined and if typedefs exist.",
+    "If typedefs do not exist, add 'struct' keyword before these types in the source code where they are used.",
+    "Verify that the member accesses (e.g., lTMCellID, lTMConfigurationID) are valid members of these structs as per ASN.1 definitions.",
+    "Rebuild the project to confirm that the compiler errors are resolved.",
+    "If errors persist, check for missing or incorrect ASN.1 generated files or headers and ensure they are properly included."
+  ]
+}
+
+================================================================================
+RESPONSE STATISTICS
+================================================================================
+Response length (final): 4,153 characters
+Response lines (final): 37 lines
+Temperature: 0.1
+Max tokens: 16384
+Finish reason (final): stop
+Seed: 99
+JSON mode: True
+Parse OK: True
+Attempts: [{"attempt": 1, "finish_reason": "stop", "chars": 4153}]

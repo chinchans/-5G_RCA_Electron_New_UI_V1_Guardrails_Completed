@@ -4,13 +4,136 @@
 // Backend API Configuration
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
+function isRawJsonPayload(text) {
+    const trimmed = String(text || '').trim();
+    return trimmed.startsWith('{') || trimmed.startsWith('{"detail"');
+}
+
+function sanitizeGuardrailReasonText(text) {
+    const value = String(text || '').trim();
+    if (!value || value.length > 400 || isRawJsonPayload(value)) {
+        return '';
+    }
+    return value;
+}
+
+/**
+ * One or two short lines for guardrail popups/banners (never the full HTTP body).
+ */
+function buildConciseGuardrailSummary(detail, findings = [], reasons = []) {
+    const errorCode = detail?.error || '';
+    const rows = Array.isArray(findings) ? findings : [];
+    const reasonLines = (Array.isArray(reasons) ? reasons : [])
+        .map(sanitizeGuardrailReasonText)
+        .filter(Boolean);
+    const checks = new Set(rows.map((f) => f?.check).filter(Boolean));
+    const firstFinding = rows.find((f) => f?.severity === 'error') || rows[0];
+    const firstReason = reasonLines[0] || '';
+    const reasonsJoined = reasonLines.join(' ').toLowerCase();
+
+    if (errorCode === 'prompt_blocked_by_guardrails') {
+        if (detail?.blocked_by === 'refine_scope') {
+            return sanitizeGuardrailReasonText(detail?.message)
+                || 'New prompt is off-topic for the loaded dataset.';
+        }
+        if (detail?.blocked_by === 'layer1') {
+            return 'Prompt blocked: suspicious instruction-override pattern detected.';
+        }
+        return 'Prompt blocked: possible prompt injection or jailbreak detected.';
+    }
+    if (errorCode === 'log_blocked_by_telecom_domain') {
+        const quality = detail?.quality || {};
+        const messages = (Array.isArray(quality.messages) ? quality.messages : [])
+            .concat(Array.isArray(detail?.reasons) ? detail.reasons : [])
+            .map(sanitizeGuardrailReasonText)
+            .filter(Boolean);
+        const headline = messages.find((m) => /5g network component|openairinterface/i.test(m))
+            || 'Provided logs do not appear to be from a supported 5G network component.';
+        const overall = quality?.context_scores?.overall ?? quality?.telecom_relevance;
+        if (typeof overall === 'number') {
+            return `${headline} Overall telecom relevance: ${Math.round(overall * 100)}%.`;
+        }
+        return headline;
+    }
+    if (errorCode === 'log_blocked_by_historical_pattern') {
+        const historical = detail?.historical_pattern
+            || detail?.guardrails?.layers?.historical_pattern
+            || {};
+        const messages = (Array.isArray(historical.messages) ? historical.messages : [])
+            .concat(Array.isArray(detail?.reasons) ? detail.reasons : [])
+            .map(sanitizeGuardrailReasonText)
+            .filter(Boolean);
+        const headline = messages.find((m) => /new log file|human review/i.test(m))
+            || messages.find((m) => /differs significantly/i.test(m))
+            || 'This log appears to be new — human review is recommended.';
+        const score = historical?.similarity_score;
+        if (typeof score === 'number' && historical?.is_new_log) {
+            return `${headline} Closest prior match: ${Math.round(score * 100)}%.`;
+        }
+        return headline;
+    }
+    if (errorCode === 'log_blocked_by_data_quality') {
+        const dataQuality = detail?.data_quality
+            || detail?.guardrails?.layers?.data_quality
+            || {};
+        const messages = (Array.isArray(dataQuality.messages) ? dataQuality.messages : [])
+            .concat(Array.isArray(detail?.reasons) ? detail.reasons : [])
+            .map(sanitizeGuardrailReasonText)
+            .filter(Boolean);
+        const headline = messages.find((m) => /incomplete|truncated|empty|timestamp/i.test(m))
+            || 'Log file appears incomplete; expected events are missing.';
+        const score = dataQuality?.completeness_score;
+        if (typeof score === 'number') {
+            return `${headline} Completeness: ${Math.round(score * 100)}%.`;
+        }
+        return headline;
+    }
+    if (errorCode === 'document_blocked_by_guardrails') {
+        return 'Dataset blocked: malicious or jailbreak content detected.';
+    }
+    if (errorCode === 'dataset_output_guardrails_failed') {
+        return 'Dataset blocked: output validation failed.';
+    }
+    if (errorCode === 'generated_script_blocked_by_guardrails') {
+        if (checks.has('ast_parse') || reasonsJoined.includes('syntax')) {
+            const syntaxDetail = sanitizeGuardrailReasonText(
+                firstFinding?.detail
+                || firstReason.replace(/^Syntax validation failed:\s*/i, '')
+            );
+            return syntaxDetail
+                ? `Generated script blocked: Python syntax error (${syntaxDetail}).`
+                : 'Generated script blocked: Python syntax error.';
+        }
+        if (checks.has('dataset_scope')) {
+            return sanitizeGuardrailReasonText(firstReason)
+                || 'Generated script blocked: content is off-topic for the loaded dataset.';
+        }
+        if (checks.has('traceability') || reasonsJoined.includes('traceab')) {
+            return 'Generated script blocked: test case traceability check failed.';
+        }
+        if (checks.has('groundedness') || reasonsJoined.includes('groundedness') || reasonsJoined.includes('contradict')) {
+            return 'Generated script blocked: script content does not match linked test cases.';
+        }
+        if (firstReason) {
+            return `Generated script blocked: ${firstReason}`;
+        }
+        return 'Generated script blocked: failed syntax, traceability, or groundedness checks.';
+    }
+
+    const backendMessage = sanitizeGuardrailReasonText(detail?.message);
+    if (backendMessage) {
+        return backendMessage;
+    }
+    return 'Request blocked by security guardrails.';
+}
+
 /**
  * Parse FastAPI 422 guardrail rejection bodies (upload / dataset load).
  * Returns structured fields for UI modals regardless of which upload code path ran.
  */
 function parseGuardrailHttpErrorBody(errorText) {
     const result = {
-        message: errorText,
+        message: 'Request blocked by security guardrails.',
         guardrailDetail: null,
         guardrailFindings: [],
         guardrailReasons: [],
@@ -22,33 +145,73 @@ function parseGuardrailHttpErrorBody(errorText) {
         if (typeof detail === 'object' && detail !== null) {
             result.guardrailDetail = detail;
             result.guardrailFindings = detail.findings
+                || detail.guardrails?.findings
                 || detail.guardrails?.scan?.findings
                 || [];
-            result.guardrailReasons = Array.isArray(detail.reasons) ? detail.reasons : [];
-            result.message = detail.message || result.message;
+            result.guardrailReasons = Array.isArray(detail.reasons)
+                ? detail.reasons
+                : (Array.isArray(detail.guardrails?.reasons) ? detail.guardrails.reasons : []);
+
+            const metadata = detail.guardrails?.metadata || {};
+            const trace = metadata.traceability || {};
+            const groundedness = metadata.groundedness || {};
+            if (!result.guardrailFindings.length) {
+                result.guardrailFindings = [
+                    ...(trace.findings || []),
+                    ...(groundedness.findings || []),
+                ];
+            }
+            if (!result.guardrailReasons.length) {
+                const nestedReasons = [
+                    ...(trace.reasons || []),
+                    ...(groundedness.reasons || []),
+                ];
+                if (nestedReasons.length) {
+                    result.guardrailReasons = nestedReasons;
+                }
+            }
             if (detail.error) {
                 result.isGuardrailBlock = detail.error === 'document_blocked_by_guardrails'
-                    || detail.error === 'prompt_blocked_by_guardrails';
-                result.message = `${detail.error}: ${result.message}`;
+                    || detail.error === 'prompt_blocked_by_guardrails'
+                    || detail.error === 'dataset_output_guardrails_failed'
+                    || detail.error === 'generated_script_blocked_by_guardrails'
+                    || detail.error === 'log_blocked_by_telecom_domain'
+                    || detail.error === 'log_blocked_by_historical_pattern'
+                    || detail.error === 'log_blocked_by_data_quality';
+            } else if (detail.guardrails?.blocked || detail.guardrails?.scan?.safe === false) {
+                result.isGuardrailBlock = true;
             }
-            if (result.guardrailReasons.length) {
-                result.message += ` (${result.guardrailReasons.join('; ')})`;
-            }
+            result.message = buildConciseGuardrailSummary(
+                detail,
+                result.guardrailFindings,
+                result.guardrailReasons
+            );
         } else if (typeof detail === 'string') {
-            result.message = detail;
+            result.message = sanitizeGuardrailReasonText(detail) || result.message;
         }
     } catch (_e) {
-        /* use raw errorText */
+        if (!isRawJsonPayload(errorText)) {
+            result.message = String(errorText).trim().slice(0, 300);
+        }
     }
     return result;
 }
 
 function attachGuardrailFieldsToError(err, errorText) {
     const info = parseGuardrailHttpErrorBody(errorText);
+    err.guardrailRawBody = errorText;
     err.guardrailDetail = info.guardrailDetail;
-    err.guardrailFindings = info.guardrailFindings;
-    err.guardrailReasons = info.guardrailReasons;
-    err.isGuardrailBlock = info.isGuardrailBlock;
+    if (Array.isArray(info.guardrailFindings) && info.guardrailFindings.length) {
+        err.guardrailFindings = info.guardrailFindings;
+    } else if (!Array.isArray(err.guardrailFindings)) {
+        err.guardrailFindings = info.guardrailFindings || [];
+    }
+    if (Array.isArray(info.guardrailReasons) && info.guardrailReasons.length) {
+        err.guardrailReasons = info.guardrailReasons;
+    } else if (!Array.isArray(err.guardrailReasons)) {
+        err.guardrailReasons = info.guardrailReasons || [];
+    }
+    err.isGuardrailBlock = Boolean(err.isGuardrailBlock || info.isGuardrailBlock);
     return err;
 }
 
@@ -56,6 +219,7 @@ if (typeof window !== 'undefined') {
     if (!window.API) window.API = {};
     window.API.parseGuardrailHttpErrorBody = parseGuardrailHttpErrorBody;
     window.API.attachGuardrailFieldsToError = attachGuardrailFieldsToError;
+    window.API.buildConciseGuardrailSummary = buildConciseGuardrailSummary;
 }
 
 // Generic API call helper
@@ -87,7 +251,7 @@ async function makeAPICall(endpoint, method = 'GET', data = null) {
 
             if (errorText && errorText.trim()) {
                 const info = parseGuardrailHttpErrorBody(errorText);
-                errorMessage = info.message || errorText.trim();
+                errorMessage = info.message || `Request failed (${response.status})`;
                 const error = new Error(errorMessage);
                 error.status = response.status;
                 error.response = response;
@@ -435,27 +599,12 @@ async function uploadMultipleFiles(endpoint, files, additionalData = {}) {
 
         if (!response.ok) {
             const errorText = await response.text();
-            let detailMessage = errorText;
-            let outputGuardrails = null;
-            try {
-                const parsed = JSON.parse(errorText);
-                const detail = parsed.detail;
-                if (typeof detail === 'string') {
-                    detailMessage = detail;
-                } else if (typeof detail === 'object' && detail?.message) {
-                    detailMessage = detail.message;
-                    if (detail.error === 'document_blocked_by_guardrails' && Array.isArray(detail.reasons) && detail.reasons.length) {
-                        detailMessage = `${detail.message} ${detail.reasons.slice(0, 3).join('; ')}`;
-                    }
-                    if (detail.error === 'dataset_output_guardrails_failed' && Array.isArray(detail.reasons) && detail.reasons.length) {
-                        detailMessage = `${detail.message} ${detail.reasons.slice(0, 3).join('; ')}`;
-                    }
-                    outputGuardrails = detail.output_guardrails || null;
-                }
-            } catch (_e) { /* use raw */ }
-            const err = new Error(`HTTP error! status: ${response.status}, message: ${detailMessage}`);
-            if (outputGuardrails) {
-                err.outputGuardrails = outputGuardrails;
+            const info = parseGuardrailHttpErrorBody(errorText);
+            const err = new Error(`HTTP error! status: ${response.status} - ${info.message}`);
+            err.status = response.status;
+            attachGuardrailFieldsToError(err, errorText);
+            if (info.guardrailDetail?.output_guardrails) {
+                err.outputGuardrails = info.guardrailDetail.output_guardrails;
             }
             throw err;
         }
@@ -503,11 +652,13 @@ async function validateIntentCoverage(datasetFolder, generatedText, useNliForGap
 }
 
 // Refine existing test script
-async function refineTestScript(textContent, newPrompt, previousResponse = null) {
+async function refineTestScript(textContent, newPrompt, previousResponse = null, datasetFolder = null, refinementSource = null) {
     const requestData = {
         text_content: textContent,
         new_prompt: newPrompt,
-        previous_response: previousResponse
+        previous_response: previousResponse,
+        dataset_folder: datasetFolder,
+        refinement_source: refinementSource,
     };
     
     return await makeAPICall('/api/test-script/refine', 'POST', requestData);
@@ -762,7 +913,12 @@ async function uploadRCALogs(files) {
         });
         
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            const info = parseGuardrailHttpErrorBody(errorText);
+            const err = new Error(info.message || `HTTP error! status: ${response.status}`);
+            err.status = response.status;
+            attachGuardrailFieldsToError(err, errorText);
+            throw err;
         }
         
         return await response.json();
@@ -1201,7 +1357,12 @@ async function uploadLogFile(file) {
         });
         
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            const info = parseGuardrailHttpErrorBody(errorText);
+            const err = new Error(info.message || `HTTP error! status: ${response.status}`);
+            err.status = response.status;
+            attachGuardrailFieldsToError(err, errorText);
+            throw err;
         }
         
         const result = await response.json();
@@ -1211,6 +1372,12 @@ async function uploadLogFile(file) {
         console.error('❌ Log file upload failed:', error);
         throw error;
     }
+}
+
+async function validateBugDiscoveryLog(logFilePath) {
+    return await makeAPICall('/api/rca/validate-log', 'POST', {
+        log_file_path: logFilePath,
+    });
 }
 
 // Update the window.API object to include error fixing functions
@@ -1244,6 +1411,9 @@ if (typeof window !== 'undefined') {
         }
         if (typeof uploadLogFile === 'function') {
             window.API.uploadLogFile = uploadLogFile;
+        }
+        if (typeof validateBugDiscoveryLog === 'function') {
+            window.API.validateBugDiscoveryLog = validateBugDiscoveryLog;
         }
         
         console.log('✅ Error fixing APIs added to window.API');

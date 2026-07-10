@@ -3483,6 +3483,21 @@ body > #languageDropdownMenu .dropdown-item:hover {
     min-height: 120px;
 }
 
+#test-script-generator #tsgGenConfigMore .tsg-more-template-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-height: 0;
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 0.1rem 0;
+}
+
+#test-script-generator #tsgGenConfigMore .prompt-studio-category-card {
+    width: 100%;
+}
+
 .tsg-gen-config-hint {
     margin: 0;
     font-size: 0.85rem;
@@ -4356,6 +4371,32 @@ body > .dropdown-content.portal-dropdown-menu {
     margin-bottom: 2px;
     line-height: 1.2;
     color: #000000;  /* Black text */
+}
+
+.status-bar.guardrail-error {
+    max-width: min(92vw, 760px);
+    max-height: 85vh;
+    overflow: hidden;
+}
+
+.status-bar.guardrail-error .status-content {
+    align-items: flex-start;
+    max-height: 85vh;
+}
+
+.status-bar.guardrail-error .status-text {
+    min-width: 0;
+    flex: 1;
+}
+
+.status-bar.guardrail-error .status-message {
+    max-height: 62vh;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 12px;
+    line-height: 1.5;
+    padding-right: 4px;
 }
 
 .status-message {

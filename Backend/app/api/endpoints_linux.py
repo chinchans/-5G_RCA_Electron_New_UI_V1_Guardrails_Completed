@@ -14,6 +14,7 @@ from app.guardrails.tsg_prompt_guardrail import (
     should_scan_tsg_prompt,
     validate_tsg_prompt_or_raise,
 )
+from app.guardrails.test_script_guardrail import validate_generated_test_script
 from app.services.recursive_test_graph_attach import (
     get_main_sections,
     get_subsections,
@@ -682,6 +683,7 @@ class TestScriptResponse(BaseModel):
     generated_script: str
     file_path: Optional[str] = None
     message: Optional[str] = None
+    guardrails: Optional[Dict[str, Any]] = None
     truncated: Optional[bool] = False
 
 class PromptTemplateResponse(BaseModel):
@@ -694,6 +696,7 @@ class RefineScriptRequest(BaseModel):
     text_content: str
     new_prompt: str
     previous_response: Optional[str] = None
+    dataset_folder: Optional[str] = None
 
 class TestScriptSaveRequest(BaseModel):
     content: str
@@ -828,7 +831,10 @@ async def generate_test_script(request: TestScriptRequest):
             
             print(f"✅ Using template from backend (length: {len(selected_prompt)} chars)")
         
-        if should_scan_tsg_prompt(request.prompt_key):
+        if should_scan_tsg_prompt(
+            request.prompt_key,
+            custom_prompt_provided=bool(request.custom_prompt and request.custom_prompt.strip()),
+        ):
             validate_tsg_prompt_or_raise(
                 selected_prompt,
                 context="tsg_generate",
@@ -843,6 +849,32 @@ async def generate_test_script(request: TestScriptRequest):
             request.text_content, 
             selected_prompt
         )
+
+        normalized_prompt_key = (request.prompt_key or "").strip().lower()
+        script_guardrails: Optional[Dict[str, Any]] = None
+        if normalized_prompt_key in {"test script", "custom"}:
+            script_verdict = validate_generated_test_script(
+                generated_script,
+                source_text=request.text_content or "",
+                language=(request.variables.language if request.variables else "python") or "python",
+            )
+            script_guardrails = script_verdict.to_dict()
+            if script_verdict.blocked:
+                raise HTTPException(
+                    status_code=422,
+                    detail={
+                        "error": "generated_script_blocked_by_guardrails",
+                        "message": (
+                            "Generated test script failed guardrails (syntax, "
+                            "test-case traceability, and/or test-case groundedness). "
+                            "Align script content with source test cases; optionally add "
+                            "# <testCaseID>: <title> above classes or methods."
+                        ),
+                        "reasons": script_verdict.reasons,
+                        "findings": script_verdict.findings,
+                        "guardrails": script_guardrails,
+                    },
+                )
         
         # Save to file
         output_dir = BACKEND_DIR / "resources" / "TestScriptGenerator"
@@ -896,6 +928,7 @@ async def generate_test_script(request: TestScriptRequest):
             generated_script=generated_script,
             file_path=file_path if success else None,
             message="Test script generated successfully",
+            guardrails={"generated_script_static_validation": script_guardrails} if script_guardrails else None,
             truncated=bool(getattr(test_script_generator, "last_generation_truncated", False)),
         )
         
@@ -1241,6 +1274,28 @@ async def refine_test_script(request: RefineScriptRequest):
             request.new_prompt,
             request.previous_response
         )
+
+        script_verdict = validate_generated_test_script(
+            refined_script,
+            source_text=request.text_content or "",
+            dataset_folder=request.dataset_folder,
+            language="python",
+        )
+        if script_verdict.blocked:
+            raise HTTPException(
+                status_code=422,
+                detail={
+                    "error": "generated_script_blocked_by_guardrails",
+                    "message": (
+                        "Refined test script failed guardrails. "
+                        "See reasons/findings below (common: Python syntax error, traceability, or groundedness)."
+                    ),
+                    "reasons": script_verdict.reasons,
+                    "findings": script_verdict.findings,
+                    "guardrails": script_verdict.to_dict(),
+                    "generated_script": refined_script,
+                },
+            )
         
         # Log to SQLite
         try:
@@ -1255,7 +1310,8 @@ async def refine_test_script(request: RefineScriptRequest):
         return TestScriptResponse(
             success=True,
             generated_script=refined_script,
-            message="Test script refined successfully"
+            message="Test script refined successfully",
+            guardrails={"generated_script_static_validation": script_verdict.to_dict()},
         )
         
     except HTTPException:
@@ -1423,7 +1479,7 @@ async def save_template(request: TemplateSaveRequest):
         print(f"💾 Template content length: {len(request.template_content)} chars")
         print(f"💾 Template preview (first 100 chars): {request.template_content[:100]}...")
 
-        if should_scan_tsg_prompt(request.template_name):
+        if should_scan_tsg_prompt(request.template_name, save_template=True):
             validate_tsg_prompt_or_raise(
                 request.template_content,
                 context="tsg_save_template",
@@ -1680,7 +1736,7 @@ async def get_deployment_status(job_id: str):
 @router.get("/api/deployment/configs")
 async def get_deployment_configs():
     """Get available deployment configurations."""
-        configs = {
+    configs = {
         "default": {
             "name": "Default Configuration",
             "source_directory": str(Path("resources/TestScriptGenerator").absolute()),

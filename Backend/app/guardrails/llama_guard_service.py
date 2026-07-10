@@ -22,6 +22,7 @@ import requests
 from app.guardrails.config import (
     GUARDRAILS_ENABLED,
     GUARDRAILS_FAIL_OPEN_ON_MODEL_ERROR,
+    GUARDRAILS_LAYER1_ENABLED,
     GUARDRAILS_REQUIRE_UPLOAD_LAYER2,
     HF_TOKEN,
     INJECTION_THRESHOLD,
@@ -37,6 +38,7 @@ from app.guardrails.injection_patterns import (
     find_layer1_suspicious_patterns,
     is_chunk_blocking_without_layer2,
     is_chunk_suspicious,
+    HIGH_CONFIDENCE_BLOCKING_PATTERNS,
 )
 from app.guardrails.text_location import LocationContext, build_finding
 
@@ -214,6 +216,76 @@ def _resolve_layer2_classifier(
     return None, "rules_only"
 
 
+def _resolve_layer1_enabled(layer1_enabled: Optional[bool] = None) -> bool:
+    if layer1_enabled is not None:
+        return layer1_enabled
+    return GUARDRAILS_LAYER1_ENABLED
+
+
+def _layer1_only_scan(
+    chunks: List[str],
+    chunk_spans: Optional[List[tuple[int, int]]] = None,
+    *,
+    location: Optional[LocationContext] = None,
+) -> ScanResult:
+    """Layer 1 regex/literal scan only (TSG Save Template)."""
+    all_patterns: List[str] = []
+    findings: List[Dict[str, Any]] = []
+    unsafe_chunks = 0
+    suspicious_indices: List[int] = []
+
+    for index, chunk in enumerate(chunks):
+        patterns = find_layer1_suspicious_patterns(chunk)
+        if not patterns:
+            continue
+        suspicious_indices.append(index)
+        all_patterns.extend(patterns)
+        if chunk_spans and index < len(chunk_spans):
+            base_offset = chunk_spans[index][0]
+        else:
+            base_offset = 0
+        unsafe_chunks += 1
+        for hit in find_layer1_pattern_details(chunk, base_offset=base_offset):
+            findings.append(
+                build_finding(
+                    layer="layer1",
+                    pattern=hit.pattern_id,
+                    matched_text=hit.matched_text,
+                    char_offset=hit.char_offset,
+                    location=location,
+                    reason="Layer 1 regex flagged suspicious prompt content.",
+                )
+            )
+
+    unique_patterns = list(dict.fromkeys(all_patterns))
+    safe = unsafe_chunks == 0
+    detail = (
+        f"Layer 1 only: {len(chunks)} chunk(s); "
+        f"suspicious={len(suspicious_indices)}; unsafe={unsafe_chunks}"
+    )
+
+    return ScanResult(
+        safe=safe,
+        backend="layer1_only",
+        label="INJECTION" if not safe else "BENIGN",
+        score=0.9 if not safe else 0.0,
+        matched_patterns=unique_patterns,
+        chunks_scanned=len(chunks),
+        unsafe_chunks=unsafe_chunks,
+        detail=detail,
+        findings=findings,
+        metadata={
+            "pipeline": "layer1_only",
+            "layer1_enabled": True,
+            "layer1_total_chunks": len(chunks),
+            "layer1_suspicious_chunks": len(suspicious_indices),
+            "layer1_clean_chunks": len(chunks) - len(suspicious_indices),
+            "layer2_llama_scanned_chunks": 0,
+            "layer2_skipped_chunks": len(chunks),
+        },
+    )
+
+
 def _tiered_chunk_scan(
     chunks: List[str],
     chunk_spans: Optional[List[tuple[int, int]]] = None,
@@ -221,33 +293,36 @@ def _tiered_chunk_scan(
     layer2_backend: str,
     location: Optional[LocationContext] = None,
     require_full_layer2: bool = False,
+    layer1_enabled: Optional[bool] = None,
 ) -> ScanResult:
     """
     Layer 1 on all chunks; Layer 2 (Llama Guard) only on Layer-1-suspicious chunks.
     """
+    l1_active = _resolve_layer1_enabled(layer1_enabled)
     all_patterns: List[str] = []
     suspicious_indices: List[int] = []
     findings: List[Dict[str, Any]] = []
 
-    for index, chunk in enumerate(chunks):
-        patterns = find_layer1_suspicious_patterns(chunk)
-        if patterns:
-            suspicious_indices.append(index)
-            all_patterns.extend(patterns)
-            if chunk_spans and index < len(chunk_spans):
-                base_offset = chunk_spans[index][0]
-            else:
-                base_offset = 0
-            for hit in find_layer1_pattern_details(chunk, base_offset=base_offset):
-                findings.append(
-                    build_finding(
-                        layer="layer1",
-                        pattern=hit.pattern_id,
-                        matched_text=hit.matched_text,
-                        char_offset=hit.char_offset,
-                        location=location,
+    if l1_active:
+        for index, chunk in enumerate(chunks):
+            patterns = find_layer1_suspicious_patterns(chunk)
+            if patterns:
+                suspicious_indices.append(index)
+                all_patterns.extend(patterns)
+                if chunk_spans and index < len(chunk_spans):
+                    base_offset = chunk_spans[index][0]
+                else:
+                    base_offset = 0
+                for hit in find_layer1_pattern_details(chunk, base_offset=base_offset):
+                    findings.append(
+                        build_finding(
+                            layer="layer1",
+                            pattern=hit.pattern_id,
+                            matched_text=hit.matched_text,
+                            char_offset=hit.char_offset,
+                            location=location,
+                        )
                     )
-                )
 
     layer2_scanned = 0
     unsafe_chunks = 0
@@ -259,7 +334,12 @@ def _tiered_chunk_scan(
         require_full_layer2=require_full_layer2,
     )
 
-    for index in suspicious_indices:
+    if not l1_active and classify_fn is not None:
+        indices_to_scan = list(range(len(chunks)))
+    else:
+        indices_to_scan = suspicious_indices
+
+    for index in indices_to_scan:
         chunk = chunks[index]
         if chunk_spans and index < len(chunk_spans):
             chunk_start = chunk_spans[index][0]
@@ -340,11 +420,12 @@ def _tiered_chunk_scan(
             )
 
     unique_patterns = list(dict.fromkeys(all_patterns))
-    clean_chunks = len(chunks) - len(suspicious_indices)
+    clean_chunks = len(chunks) - len(indices_to_scan) if l1_active else 0
     safe = worst_label not in ("INJECTION", "UNVERIFIED") and unsafe_chunks == 0
 
     detail = (
         f"Tiered scan: {len(chunks)} chunk(s); "
+        f"L1 enabled={l1_active}; "
         f"L1 suspicious={len(suspicious_indices)}; "
         f"L2 llama_scanned={layer2_scanned}; "
         f"L1 clean (skipped L2)={clean_chunks}; "
@@ -363,6 +444,7 @@ def _tiered_chunk_scan(
         findings=findings,
         metadata={
             "pipeline": "tiered",
+            "layer1_enabled": l1_active,
             "layer1_total_chunks": len(chunks),
             "layer1_suspicious_chunks": len(suspicious_indices),
             "layer1_clean_chunks": clean_chunks,
@@ -379,6 +461,8 @@ def _full_chunk_scan(
     layer2_backend: str,
     location: Optional[LocationContext] = None,
     require_full_layer2: bool = False,
+    require_layer2_strict: bool = False,
+    layer1_enabled: Optional[bool] = None,
 ) -> ScanResult:
     """
     Layer 1 on all chunks; Layer 2 (Llama Guard) on *every* chunk.
@@ -386,24 +470,26 @@ def _full_chunk_scan(
     Used for initial document upload, to avoid false negatives when Layer 1 is too strict
     or when jailbreak patterns are obfuscated and not caught by deterministic rules.
     """
+    l1_active = _resolve_layer1_enabled(layer1_enabled)
     all_patterns: List[str] = []
     findings: List[Dict[str, Any]] = []
-    for idx, chunk in enumerate(chunks):
-        all_patterns.extend(find_layer1_suspicious_patterns(chunk))
-        if chunk_spans and idx < len(chunk_spans):
-            base_offset = chunk_spans[idx][0]
-        else:
-            base_offset = 0
-        for hit in find_layer1_pattern_details(chunk, base_offset=base_offset):
-            findings.append(
-                build_finding(
-                    layer="layer1",
-                    pattern=hit.pattern_id,
-                    matched_text=hit.matched_text,
-                    char_offset=hit.char_offset,
-                    location=location,
+    if l1_active:
+        for idx, chunk in enumerate(chunks):
+            all_patterns.extend(find_layer1_suspicious_patterns(chunk))
+            if chunk_spans and idx < len(chunk_spans):
+                base_offset = chunk_spans[idx][0]
+            else:
+                base_offset = 0
+            for hit in find_layer1_pattern_details(chunk, base_offset=base_offset):
+                findings.append(
+                    build_finding(
+                        layer="layer1",
+                        pattern=hit.pattern_id,
+                        matched_text=hit.matched_text,
+                        char_offset=hit.char_offset,
+                        location=location,
+                    )
                 )
-            )
 
     layer2_scanned = 0
     unsafe_chunks = 0
@@ -415,53 +501,54 @@ def _full_chunk_scan(
         require_full_layer2=require_full_layer2,
     )
     if classify_fn is None:
+        if require_full_layer2 and require_layer2_strict:
+            guard = _get_prompt_guard()
+            model_error = guard._load_error or "Llama Prompt Guard model not loaded"
+            detail = (
+                f"Full Layer 2 scan required but model unavailable: {model_error}"
+            )
+            findings.append(
+                build_finding(
+                    layer="layer2",
+                    pattern="layer2_unavailable:UNVERIFIED",
+                    matched_text="",
+                    char_offset=0,
+                    location=location,
+                    score=1.0,
+                    reason=(
+                        "Llama Prompt Guard is required but could not be loaded. "
+                        "Install backend dependencies (torch, transformers), set HF_TOKEN, "
+                        "or disable strict Layer 2 requirement."
+                    ),
+                )
+            )
+            return ScanResult(
+                safe=False,
+                backend="layer2_unavailable",
+                label="UNVERIFIED",
+                score=1.0,
+                matched_patterns=list(dict.fromkeys(all_patterns)),
+                chunks_scanned=len(chunks),
+                unsafe_chunks=len(chunks),
+                detail=detail,
+                findings=findings,
+                metadata={
+                    "pipeline": "full_layer2",
+                    "layer1_total_chunks": len(chunks),
+                    "layer1_suspicious_chunks": None,
+                    "layer1_clean_chunks": None,
+                    "layer2_llama_scanned_chunks": 0,
+                    "layer2_skipped_chunks": len(chunks),
+                    "layer2_unavailable": True,
+                    "model_error": model_error,
+                    "require_layer2_strict": True,
+                },
+            )
         if require_full_layer2 and layer2_backend == "layer2_unavailable":
             guard = _get_prompt_guard()
             model_error = guard._load_error or "Llama Prompt Guard model not loaded"
-            strict_upload = bool(require_full_layer2 and GUARDRAILS_REQUIRE_UPLOAD_LAYER2)
-            if strict_upload:
-                detail = (
-                    f"Full Layer 2 upload scan required but model unavailable: {model_error}"
-                )
-                findings.append(
-                    build_finding(
-                        layer="layer2",
-                        pattern="layer2_unavailable:UNVERIFIED",
-                        matched_text="",
-                        char_offset=0,
-                        location=location,
-                        score=1.0,
-                        reason=(
-                            "Llama Prompt Guard is required for upload but could not be loaded. "
-                            f"Install backend dependencies (torch, transformers) or set "
-                            "GUARDRAILS_REQUIRE_UPLOAD_LAYER2=false."
-                        ),
-                    )
-                )
-                return ScanResult(
-                    safe=False,
-                    backend="layer2_unavailable",
-                    label="UNVERIFIED",
-                    score=1.0,
-                    matched_patterns=list(dict.fromkeys(all_patterns)),
-                    chunks_scanned=len(chunks),
-                    unsafe_chunks=len(chunks),
-                    detail=detail,
-                    findings=findings,
-                    metadata={
-                        "pipeline": "full_layer2",
-                        "layer1_total_chunks": len(chunks),
-                        "layer1_suspicious_chunks": None,
-                        "layer1_clean_chunks": None,
-                        "layer2_llama_scanned_chunks": 0,
-                        "layer2_skipped_chunks": len(chunks),
-                        "layer2_unavailable": True,
-                        "model_error": model_error,
-                        "require_upload_layer2": True,
-                    },
-                )
             logger.warning(
-                "Full Layer 2 upload scan unavailable (%s); falling back to tiered Layer 1 scan.",
+                "Full Layer 2 scan unavailable (%s); falling back to tiered Layer 1 scan.",
                 model_error,
             )
         else:
@@ -513,25 +600,54 @@ def _full_chunk_scan(
             )
 
     unique_patterns = list(dict.fromkeys(all_patterns))
-    if unsafe_chunks == 0 and any(p.startswith("malicious:") for p in unique_patterns):
-        unsafe_chunks = 1
-        worst_label = "INJECTION"
-        worst_score = max(worst_score, 0.9)
-        findings.append(
-            build_finding(
-                layer="layer1",
-                pattern="malicious_literal_block",
-                matched_text="",
-                char_offset=0,
-                location=location,
-                score=0.9,
-                reason="High-risk malicious literal detected in upload chunk.",
-            )
-        )
+    if l1_active and unsafe_chunks == 0:
+        blocking_hits = []
+        for idx, chunk in enumerate(chunks):
+            if not is_chunk_blocking_without_layer2(chunk):
+                continue
+            if chunk_spans and idx < len(chunk_spans):
+                chunk_start = chunk_spans[idx][0]
+            else:
+                chunk_start = 0
+            blocking_hits.append((idx, chunk_start, chunk))
+
+        if blocking_hits:
+            unsafe_chunks = len(blocking_hits)
+            worst_label = "INJECTION"
+            worst_score = max(worst_score, 0.9)
+            for idx, chunk_start, chunk in blocking_hits:
+                added_detail = False
+                for hit in find_layer1_pattern_details(chunk, base_offset=chunk_start):
+                    if hit.pattern_id in HIGH_CONFIDENCE_BLOCKING_PATTERNS or hit.pattern_id.startswith("malicious:"):
+                        findings.append(
+                            build_finding(
+                                layer="layer1",
+                                pattern=hit.pattern_id,
+                                matched_text=hit.matched_text,
+                                char_offset=hit.char_offset,
+                                location=location,
+                                score=0.9,
+                                reason="High-confidence Layer 1 prompt-injection pattern.",
+                            )
+                        )
+                        added_detail = True
+                if not added_detail:
+                    findings.append(
+                        build_finding(
+                            layer="layer1",
+                            pattern="high_confidence_layer1_block",
+                            matched_text=_chunk_snippet(chunk),
+                            char_offset=chunk_start,
+                            location=location,
+                            score=0.9,
+                            reason="High-confidence Layer 1 prompt-injection pattern.",
+                        )
+                    )
     safe = worst_label not in ("INJECTION", "UNVERIFIED") and unsafe_chunks == 0
 
     detail = (
         f"Full scan: {len(chunks)} chunk(s); "
+        f"L1 enabled={l1_active}; "
         f"L2 llama_scanned={layer2_scanned}; "
         f"unsafe={unsafe_chunks}"
     )
@@ -548,6 +664,7 @@ def _full_chunk_scan(
         findings=findings,
         metadata={
             "pipeline": "full_layer2",
+            "layer1_enabled": l1_active,
             "layer1_total_chunks": len(chunks),
             "layer1_suspicious_chunks": None,
             "layer1_clean_chunks": None,
@@ -568,13 +685,20 @@ def scan_document_text(
     text: str,
     *,
     force_layer2_all_chunks: bool = False,
+    require_layer2_strict: bool = False,
     location: Optional[LocationContext] = None,
+    layer_mode: str = "default",
 ) -> ScanResult:
     """
     Tiered document scan:
       1. Chunk text
       2. Layer 1 regex/literal filter on every chunk
       3. Layer 2 Llama Guard only on suspicious chunks
+
+    layer_mode:
+      - default: respect GUARDRAILS_LAYER1_ENABLED and force_layer2_all_chunks
+      - layer1_only: regex/literals only (TSG Save Template)
+      - layer2_only: Llama Guard on every chunk, skip Layer 1 (TSG Generate/Refine)
     """
     if not GUARDRAILS_ENABLED:
         return ScanResult(safe=True, backend="disabled", label="BENIGN", score=0.0)
@@ -591,17 +715,34 @@ def scan_document_text(
     if chunk_triplets:
         chunks = [_chunk for _chunk, _start, _end in chunk_triplets]
 
+    if layer_mode == "layer1_only":
+        return _layer1_only_scan(chunks, spans, location=location)
+
     backend = LLAMA_GUARD_BACKEND
     if backend in ("transformers", "ollama"):
-        if force_layer2_all_chunks:
+        if force_layer2_all_chunks or layer_mode == "layer2_only":
             return _full_chunk_scan(
                 chunks,
                 spans,
                 layer2_backend=backend,
                 location=location,
                 require_full_layer2=True,
+                require_layer2_strict=require_layer2_strict,
+                layer1_enabled=False if layer_mode == "layer2_only" else None,
             )
         return _tiered_chunk_scan(chunks, spans, layer2_backend=backend, location=location)
+
+    if layer_mode == "layer2_only":
+        return ScanResult(
+            safe=False,
+            backend="layer2_unavailable",
+            label="UNVERIFIED",
+            score=1.0,
+            chunks_scanned=len(chunks),
+            unsafe_chunks=0,
+            detail="Layer 2 scan requested but no ML backend configured.",
+            metadata={"pipeline": "layer2_only", "layer2_unavailable": True},
+        )
 
     return _scan_with_rules_tiered(text)
 
@@ -618,7 +759,11 @@ def get_guard_status() -> Dict[str, Any]:
     backend = LLAMA_GUARD_BACKEND
     status: Dict[str, Any] = {
         "enabled": GUARDRAILS_ENABLED,
-        "pipeline": "upload: full_layer2 (Llama Guard on every chunk) | other: tiered (L1 → L2 on suspicious only)",
+        "layer1_enabled": GUARDRAILS_LAYER1_ENABLED,
+        "pipeline": (
+            "tsg: Layer 1 on Save Template | Layer 2 on Generate/Refine | "
+            "upload: full_layer2 | other: tiered (L1 → L2 on suspicious only)"
+        ),
         "backend": backend,
         "prompt_guard_model": PROMPT_GUARD_MODEL,
         "ollama_model": OLLAMA_GUARD_MODEL,

@@ -83,7 +83,7 @@ class SpecIntelInputGuardrail:
             page_spans=extracted.page_spans,
             paragraph_spans=extracted.paragraph_spans,
         )
-        if context == "upload" and GUARDRAILS_UPLOAD_FORCE_LAYER2:
+        if context in ("upload", "bug_discovery_log") and GUARDRAILS_UPLOAD_FORCE_LAYER2:
             ensure_prompt_guard_loaded()
         return self.scan_text(
             extracted.text,
@@ -99,6 +99,8 @@ class SpecIntelInputGuardrail:
         source_path: str = "",
         location: Optional[LocationContext] = None,
         force_layer2_all_chunks: bool = False,
+        require_layer2_strict: bool = False,
+        layer_mode: str = "default",
     ) -> GuardrailVerdict:
         """Scan arbitrary text (subsection extract, pre-LLM, TSG prompts)."""
         if not GUARDRAILS_ENABLED:
@@ -108,23 +110,47 @@ class SpecIntelInputGuardrail:
             return GuardrailVerdict(passed=True, blocked=False, layers={"empty": True})
 
         force_layer2 = force_layer2_all_chunks or bool(
-            GUARDRAILS_UPLOAD_FORCE_LAYER2 and context == "upload"
+            GUARDRAILS_UPLOAD_FORCE_LAYER2
+            and context in ("upload", "bug_discovery_log", "tsg_dataset_upload")
+        ) or layer_mode == "layer2_only"
+        strict_layer2 = require_layer2_strict
+        if force_layer2 and context.startswith("tsg_"):
+            from app.guardrails.config import GUARDRAILS_TSG_REQUIRE_LAYER2
+
+            strict_layer2 = strict_layer2 or GUARDRAILS_TSG_REQUIRE_LAYER2
+        elif force_layer2 and context in ("upload", "bug_discovery_log", "tsg_dataset_upload"):
+            from app.guardrails.config import GUARDRAILS_REQUIRE_UPLOAD_LAYER2
+
+            strict_layer2 = strict_layer2 or GUARDRAILS_REQUIRE_UPLOAD_LAYER2
+
+        scan = scan_document_text(
+            text,
+            force_layer2_all_chunks=force_layer2,
+            require_layer2_strict=strict_layer2,
+            location=location,
+            layer_mode=layer_mode,
         )
-        scan = scan_document_text(text, force_layer2_all_chunks=force_layer2, location=location)
         reasons: List[str] = []
 
         meta = scan.metadata or {}
         l1_suspicious = meta.get("layer1_suspicious_chunks", 0)
         l2_scanned = meta.get("layer2_llama_scanned_chunks", 0)
         l1_clean = meta.get("layer1_clean_chunks", 0)
+        pipeline = meta.get("pipeline")
 
-        if scan.matched_patterns:
+        if pipeline == "layer1_only" and scan.matched_patterns:
+            reasons.append(
+                f"Layer 1 regex scan: suspicious patterns in "
+                f"{meta.get('layer1_suspicious_chunks', 0)} chunk(s) "
+                f"({', '.join(scan.matched_patterns[:5])}"
+                f"{'…' if len(scan.matched_patterns) > 5 else ''})"
+            )
+        elif scan.matched_patterns and meta.get("layer1_enabled", True):
             reasons.append(
                 f"Layer 1 regex: suspicious patterns in {l1_suspicious} chunk(s) "
                 f"({', '.join(scan.matched_patterns[:5])}"
                 f"{'…' if len(scan.matched_patterns) > 5 else ''})"
             )
-        pipeline = meta.get("pipeline")
         if meta.get("upload_layer2_fallback"):
             reasons.append(
                 "Layer 2 Llama Guard full upload scan unavailable — fell back to tiered "
@@ -132,19 +158,32 @@ class SpecIntelInputGuardrail:
             )
         elif pipeline == "full_layer2":
             if meta.get("layer2_unavailable"):
-                reasons.append(
-                    "Layer 2 Llama Guard full upload scan skipped — model unavailable "
-                    f"({meta.get('model_error', 'not loaded')}). "
-                    + (
-                        "Upload blocked because full Llama Guard coverage is required."
-                        if GUARDRAILS_REQUIRE_UPLOAD_LAYER2 and context == "upload"
-                        else "Set HF_TOKEN and ensure Prompt Guard can load to scan all chunks."
+                if strict_layer2:
+                    scope = "Prompt" if context.startswith("tsg_") else (
+                        "Log file" if context == "bug_discovery_log" else "Upload"
                     )
-                )
+                    reasons.append(
+                        f"Layer 2 Llama Guard full scan skipped — model unavailable "
+                        f"({meta.get('model_error', 'not loaded')}). "
+                        f"{scope} blocked because full Llama Guard coverage is required."
+                    )
+                else:
+                    reasons.append(
+                        "Layer 2 Llama Guard full scan skipped — model unavailable "
+                        f"({meta.get('model_error', 'not loaded')}). "
+                        "Set HF_TOKEN and ensure Prompt Guard can load to scan all chunks."
+                    )
             elif l2_scanned:
+                scope = "TSG prompt" if context.startswith("tsg_") else (
+                    "log file" if context == "bug_discovery_log" else "upload"
+                )
+                if layer_mode == "layer2_only" or not meta.get("layer1_enabled", True):
+                    l1_note = " (Layer 1 skipped — Llama Guard only)"
+                else:
+                    l1_note = " (including chunks with no Layer 1 hits)"
                 reasons.append(
-                    f"Layer 2 Llama Guard full upload scan: {l2_scanned}/{scan.chunks_scanned} "
-                    f"chunk(s) (including chunks with no Layer 1 hits)"
+                    f"Layer 2 Llama Guard full {scope} scan: {l2_scanned}/{scan.chunks_scanned} "
+                    f"chunk(s){l1_note}"
                 )
         elif l2_scanned:
             reasons.append(

@@ -1,3 +1,5 @@
 {
-  "NSA Attach": "Explain me NSA Attach process"
+  "NSA Attach": "Explain me NSA Attach process",
+  "Sample template": "Generate a test script based on the standard 3GPP specification for an LTE/5G NSA attach and detach procedure of a single UE under excellent radio conditions over 10 consecutive iterations.",
+  "Sample Custom 1": "Generate a test script based on the standard 3GPP specification for an LTE/5G NSA attach and detach procedure of a single UE under excellent radio conditions over 10 consecutive iterations."
 }

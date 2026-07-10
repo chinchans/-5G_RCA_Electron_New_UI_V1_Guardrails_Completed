@@ -1,0 +1,406 @@
+[
+    {
+        "testCaseId": "TC_POS_001",
+        "title": "Positive Test: Successful LTE Initial Attach and Detach of Single UE under Excellent Radio Conditions",
+        "preconditions": [
+            "Single isolated LTE cell with no inter-cell interference is active",
+            "One stationary UE (real or emulated) placed under excellent LTE RSRP as per Clause 4.6",
+            "All other cells are powered off",
+            "Test configuration parameters recorded",
+            "End-to-end LTE setup operational and stable"
+        ],
+        "testSteps": [
+            "Start call flow and signalling message logging",
+            "Power ON the UE to initiate LTE attach procedure",
+            "Wait for successful attach indication (Attach Accept and Attach Complete messages)",
+            "Verify UE is attached to the correct LTE cell by checking PCI, Global eNB ID, ARFCN",
+            "Power OFF the UE to initiate LTE detach procedure",
+            "Wait for successful detach indication (Detach Accept and UE context release messages)",
+            "Stop and save the test logs",
+            "Repeat the above steps for a total of 10 iterations"
+        ],
+        "expectedResults": [
+            "Each attach and detach attempt completes successfully with 100% success rate",
+            "Attach latency measured and recorded for each iteration",
+            "UE remains attached to the correct cell throughout attach procedure",
+            "Signalling messages conform to 3GPP TS 23.401 clauses 5.3.2.1 and 5.3.8.2.1"
+        ],
+        "commandsUsed": [
+            "generic action: Start logging",
+            "generic action: Power ON UE",
+            "generic action: Monitor attach signaling messages",
+            "generic action: Power OFF UE",
+            "generic action: Monitor detach signaling messages",
+            "generic action: Stop logging"
+        ],
+        "verificationMethods": [
+            "Analyze captured logs for attach/detach success messages",
+            "Verify KPI records for success rate and latency",
+            "Check UE cell identity parameters in logs"
+        ],
+        "testCategory": [
+            "POSITIVE TESTING",
+            "PERFORMANCE TESTING"
+        ]
+    },
+    {
+        "testCaseId": "TC_POS_002",
+        "title": "Positive Test: Successful 5G NSA Initial Attach and Secondary Node Addition with Single UE under Excellent Radio Conditions",
+        "preconditions": [
+            "Single isolated cell with LTE and 5G NSA cells active",
+            "One stationary UE (real or emulated) placed under excellent 5G SS-RSRP as per Clause 4.6",
+            "All other cells except the serving one are powered off",
+            "Test configuration parameters recorded",
+            "End-to-end 5G NSA setup operational and stable"
+        ],
+        "testSteps": [
+            "Start call flow and signalling message logging",
+            "Power ON the UE to initiate 5G NSA attach procedure",
+            "Wait for successful LTE initial attach (Attach Accept and Complete messages)",
+            "Wait for successful Secondary Node Addition (SgNB Addition Request and Reconfiguration Complete messages)",
+            "Verify UE is attached to correct LTE and 5G cells by checking PCI, Global eNB ID, Global gNB ID, ARFCN, and NR-ARFCN",
+            "Power OFF the UE to initiate 5G NSA detach procedure",
+            "Wait for successful detach indication including Secondary Node Release",
+            "Stop and save the test logs",
+            "Repeat the above steps for a total of 10 iterations"
+        ],
+        "expectedResults": [
+            "100% success rate for LTE attach, Secondary Node Addition, and detach procedures",
+            "Attach latency and secondary node addition latency measured and recorded",
+            "Signalling messages conform to 3GPP TS 23.401 Clause 5.3.2.1 and 3GPP TS 37.340 Clause 10.2.1",
+            "Secondary Node Release procedure follows 3GPP TS 37.340 Clause 10.4.1"
+        ],
+        "commandsUsed": [
+            "generic action: Start logging",
+            "generic action: Power ON UE",
+            "generic action: Monitor LTE attach messages",
+            "generic action: Monitor SgNB addition messages",
+            "generic action: Power OFF UE",
+            "generic action: Monitor detach and SN release messages",
+            "generic action: Stop logging"
+        ],
+        "verificationMethods": [
+            "Analyze logs for attach, SgNB addition, and detach success messages",
+            "Verify KPI success rates and latencies",
+            "Check UE cell identities for LTE and 5G cells"
+        ],
+        "testCategory": [
+            "POSITIVE TESTING",
+            "PERFORMANCE TESTING",
+            "INTEGRATION TESTING"
+        ]
+    },
+    {
+        "testCaseId": "TC_NEG_001",
+        "title": "Negative Test: Attach Failure Due to Poor Radio Conditions",
+        "preconditions": [
+            "Single isolated LTE or 5G NSA cell active",
+            "One stationary UE placed under poor radio conditions below the minimum coupling loss threshold",
+            "Test configuration parameters recorded",
+            "End-to-end LTE or 5G NSA setup operational"
+        ],
+        "testSteps": [
+            "Start call flow and signalling message logging",
+            "Power ON the UE to initiate attach procedure",
+            "Wait for attach failure indication or timeout",
+            "Stop and save the test logs"
+        ],
+        "expectedResults": [
+            "Attach procedure fails due to inadequate radio conditions",
+            "No successful attach or secondary node addition messages received",
+            "System logs indicate attach failure reason related to radio link quality",
+            "Attach success rate recorded as 0%"
+        ],
+        "commandsUsed": [
+            "generic action: Start logging",
+            "generic action: Power ON UE",
+            "generic action: Monitor attach signaling messages",
+            "generic action: Stop logging"
+        ],
+        "verificationMethods": [
+            "Analyze logs for attach failure messages or timeout",
+            "Verify KPIs reflect attach failure",
+            "Check radio quality parameters in logs"
+        ],
+        "testCategory": [
+            "NEGATIVE TESTING",
+            "EDGE CASES"
+        ]
+    },
+    {
+        "testCaseId": "TC_NEG_002",
+        "title": "Negative Test: Detach Failure Due to UE Not Responding to Detach Request",
+        "preconditions": [
+            "Single isolated LTE or 5G NSA cell active",
+            "UE successfully attached",
+            "UE does not respond to detach request (e.g., powered off unexpectedly or signaling lost)",
+            "Test configuration parameters recorded"
+        ],
+        "testSteps": [
+            "Start call flow and signalling message logging",
+            "Power OFF the UE to initiate detach procedure",
+            "Monitor signaling messages for detach accept or timeout",
+            "Stop and save the test logs"
+        ],
+        "expectedResults": [
+            "Detach procedure does not complete successfully",
+            "Timeout or failure indicated in logs due to missing detach accept",
+            "Detach success rate recorded as 0%",
+            "System recovers gracefully without resource leakage"
+        ],
+        "commandsUsed": [
+            "generic action: Start logging",
+            "generic action: Power OFF UE",
+            "generic action: Monitor detach signaling messages",
+            "generic action: Stop logging"
+        ],
+        "verificationMethods": [
+            "Analyze logs for detach failure or timeout",
+            "Verify resource cleanup post failure",
+            "Check system stability after failure"
+        ],
+        "testCategory": [
+            "NEGATIVE TESTING",
+            "RECOVERY TESTING"
+        ]
+    },
+    {
+        "testCaseId": "TC_EDGE_001",
+        "title": "Edge Case Test: Attach and Detach with Radio Conditions Exactly at the Minimum Coupling Loss Threshold",
+        "preconditions": [
+            "Single isolated LTE or 5G NSA cell active",
+            "UE placed such that radio conditions are exactly at the minimum coupling loss threshold defined in Clause 4.6",
+            "Test configuration parameters recorded",
+            "End-to-end setup operational"
+        ],
+        "testSteps": [
+            "Start call flow and signalling message logging",
+            "Power ON the UE to initiate attach procedure",
+            "Wait for attach success or failure",
+            "Power OFF the UE to initiate detach procedure",
+            "Wait for detach success or failure",
+            "Stop and save the test logs",
+            "Repeat for 10 iterations"
+        ],
+        "expectedResults": [
+            "Attach and detach procedures succeed or fail as per threshold behavior",
+            "Attach and detach success rates recorded",
+            "Latency values captured and analyzed for boundary performance",
+            "System behaves predictably at threshold conditions"
+        ],
+        "commandsUsed": [
+            "generic action: Start logging",
+            "generic action: Power ON UE",
+            "generic action: Monitor attach signaling messages",
+            "generic action: Power OFF UE",
+            "generic action: Monitor detach signaling messages",
+            "generic action: Stop logging"
+        ],
+        "verificationMethods": [
+            "Analyze logs for attach/detach success or failure",
+            "Verify KPIs against expected threshold behavior",
+            "Check radio measurements at threshold"
+        ],
+        "testCategory": [
+            "EDGE CASES",
+            "PERFORMANCE TESTING"
+        ]
+    },
+    {
+        "testCaseId": "TC_PERF_001",
+        "title": "Performance Test: Measure Attach and Detach Latency and Success Rate over 10 Iterations Under Excellent Radio Conditions",
+        "preconditions": [
+            "Single isolated LTE or 5G NSA cell active",
+            "UE placed under excellent radio conditions as per Clause 4.6",
+            "Test configuration parameters recorded",
+            "End-to-end setup operational"
+        ],
+        "testSteps": [
+            "Start call flow and signalling message logging",
+            "Repeat 10 times:",
+            "  Power ON UE to initiate attach",
+            "  Wait for attach success and record latency (time from attach request to attach complete)",
+            "  Power OFF UE to initiate detach",
+            "  Wait for detach success",
+            "Stop and save the test logs",
+            "Calculate minimum, average, and maximum attach latency",
+            "Calculate attach and detach success rates"
+        ],
+        "expectedResults": [
+            "Attach and detach success rates are 100%",
+            "Latency values fall within expected performance targets",
+            "No failures or anomalies during repeated attach-detach cycles"
+        ],
+        "commandsUsed": [
+            "generic action: Start logging",
+            "generic action: Power ON UE",
+            "generic action: Monitor attach signaling messages and measure latency",
+            "generic action: Power OFF UE",
+            "generic action: Monitor detach signaling messages",
+            "generic action: Stop logging"
+        ],
+        "verificationMethods": [
+            "Analyze logs to extract latency and success metrics",
+            "Verify KPI tables (Table 5-2 and Table 5-3) are populated correctly",
+            "Confirm stability and consistency of results"
+        ],
+        "testCategory": [
+            "PERFORMANCE TESTING"
+        ]
+    },
+    {
+        "testCaseId": "TC_SEC_001",
+        "title": "Security Test: Verify Authentication and Authorization During Attach Procedure",
+        "preconditions": [
+            "Single isolated LTE or 5G NSA cell active with security functions enabled",
+            "UE with valid credentials configured",
+            "Test configuration parameters recorded"
+        ],
+        "testSteps": [
+            "Start call flow and signalling message logging",
+            "Power ON UE to initiate attach procedure",
+            "Verify authentication procedure is triggered and completed successfully",
+            "Check authorization messages and context establishment",
+            "Power OFF UE to detach",
+            "Stop and save the test logs"
+        ],
+        "expectedResults": [
+            "Authentication challenge and response messages exchanged as per standards",
+            "Unauthorized UEs are not allowed to attach",
+            "Valid UEs complete authentication and authorization successfully",
+            "No security breaches observed in logs"
+        ],
+        "commandsUsed": [
+            "generic action: Start logging",
+            "generic action: Power ON UE",
+            "generic action: Monitor authentication and authorization signaling",
+            "generic action: Power OFF UE",
+            "generic action: Stop logging"
+        ],
+        "verificationMethods": [
+            "Analyze logs for authentication procedures",
+            "Verify no unauthorized attach attempts succeed",
+            "Check for security-related error messages"
+        ],
+        "testCategory": [
+            "SECURITY TESTING"
+        ]
+    },
+    {
+        "testCaseId": "TC_INT_001",
+        "title": "Integration Test: Verify Coordination of MN and SN During 5G NSA Secondary Node Release Procedure",
+        "preconditions": [
+            "5G NSA cell with MN and SN active",
+            "UE attached with active EN-DC",
+            "Test configuration parameters recorded",
+            "End-to-end setup operational"
+        ],
+        "testSteps": [
+            "Start call flow and signalling message logging",
+            "Trigger Secondary Node Release initiated by MN",
+            "Verify MN sends SgNB Release Request message and SN responds with SgNB Release Request Acknowledge",
+            "Verify RRCConnectionReconfiguration message includes SCG release instructions to UE",
+            "Verify SN sends SN Status Transfer and Secondary RAT Data Usage Report to MN",
+            "Confirm SN releases UE context upon UE Context Release message from MN",
+            "Repeat with SN initiated Secondary Node Release and verify equivalent message flows",
+            "Stop and save the test logs"
+        ],
+        "expectedResults": [
+            "MN and SN properly coordinate SN release as per 3GPP TS 37.340 Clause 10.4.1",
+            "Data forwarding and reporting messages are properly exchanged",
+            "UE receives and applies SCG release configuration correctly",
+            "No signaling or resource release errors occur"
+        ],
+        "commandsUsed": [
+            "generic action: Start logging",
+            "generic action: Trigger MN initiated SN release procedure",
+            "generic action: Monitor SgNB Release Request and Acknowledge messages",
+            "generic action: Monitor RRCConnectionReconfiguration messages to UE",
+            "generic action: Monitor SN Status Transfer and Data Usage Report messages",
+            "generic action: Trigger SN initiated SN release procedure",
+            "generic action: Stop logging"
+        ],
+        "verificationMethods": [
+            "Analyze signaling flows for message correctness and timing",
+            "Verify UE applies SCG release without errors",
+            "Check logs for data forwarding coordination",
+            "Confirm resource release at SN"
+        ],
+        "testCategory": [
+            "INTEGRATION TESTING"
+        ]
+    },
+    {
+        "testCaseId": "TC_USAB_001",
+        "title": "Usability Test: Verify Clarity and Completeness of Test Configuration Recording and Reporting",
+        "preconditions": [
+            "Test environment setup for LTE or 5G NSA attach-detach test",
+            "Test operator with access to configuration and logging interfaces"
+        ],
+        "testSteps": [
+            "Configure test parameters (cell identity, radio conditions, UE parameters)",
+            "Record the test configuration using system's configuration interface or logs",
+            "Run attach-detach test procedure as per standard steps",
+            "Review generated test report for completeness of recorded configuration parameters",
+            "Verify clarity of KPI tables (Table 5-2 and Table 5-3) and gap analysis section",
+            "Assess ease of locating configuration and KPI data in the report"
+        ],
+        "expectedResults": [
+            "Test configuration parameters are fully and accurately recorded",
+            "KPIs are clearly presented with proper labels and units",
+            "Gap analysis between measured and target KPIs is included and understandable",
+            "Test report is user-friendly and supports easy interpretation"
+        ],
+        "commandsUsed": [
+            "generic action: Configure test parameters via management interface",
+            "generic action: Export or save test configuration data",
+            "generic action: Generate test report",
+            "generic action: Review and verify report contents"
+        ],
+        "verificationMethods": [
+            "Manual inspection of test report",
+            "Feedback from test operators on report usability",
+            "Cross-reference report data with test logs"
+        ],
+        "testCategory": [
+            "USABILITY TESTING"
+        ]
+    },
+    {
+        "testCaseId": "TC_COMP_001",
+        "title": "Compatibility Test: Verify LTE and 5G NSA Attach-Detach Procedures Across Different UE Emulators and Real Devices",
+        "preconditions": [
+            "Test environment supports multiple UE types (real devices and emulators)",
+            "Single isolated cell configured for LTE and 5G NSA",
+            "Test configuration recorded for each UE type"
+        ],
+        "testSteps": [
+            "For each UE type:",
+            "  Place UE under excellent radio conditions",
+            "  Perform 10 attach and detach cycles for LTE",
+            "  Perform 10 attach and detach cycles for 5G NSA",
+            "  Record success rates and latencies",
+            "Compare test results across UE types"
+        ],
+        "expectedResults": [
+            "All UE types successfully complete attach and detach procedures",
+            "No significant differences in KPI values beyond expected variation",
+            "Logs confirm protocol compliance for all UE types",
+            "Any compatibility issues are identified and documented"
+        ],
+        "commandsUsed": [
+            "generic action: Power ON and OFF various UE types",
+            "generic action: Start and stop logging for each UE",
+            "generic action: Monitor attach and detach signaling messages",
+            "generic action: Collect and compare KPI data"
+        ],
+        "verificationMethods": [
+            "Analyze KPI metrics across UE types",
+            "Review protocol message flows in logs",
+            "Document any inconsistencies or errors"
+        ],
+        "testCategory": [
+            "COMPATIBILITY TESTING"
+        ]
+    }
+]

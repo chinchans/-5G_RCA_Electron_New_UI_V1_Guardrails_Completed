@@ -14,6 +14,11 @@ LEGACY_SPEC_INTEL_EXTRACT_ROOT = BACKEND_DIR / "resources" / "extract"
 
 GUARDRAILS_ENABLED = os.getenv("GUARDRAILS_ENABLED", "true").lower() in ("1", "true", "yes")
 
+# Layer 1 regex/literal injection patterns (set false to test Llama Prompt Guard in isolation)
+GUARDRAILS_LAYER1_ENABLED = os.getenv(
+    "GUARDRAILS_LAYER1_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+
 MAX_UPLOAD_BYTES = int(os.getenv("GUARDRAILS_MAX_UPLOAD_MB", "25")) * 1024 * 1024
 MAX_SCAN_CHARS = int(os.getenv("GUARDRAILS_MAX_SCAN_CHARS", "100_000").replace("_", ""))
 MAX_LLM_INPUT_CHARS = int(os.getenv("GUARDRAILS_MAX_LLM_CHARS", "50_000").replace("_", ""))
@@ -60,13 +65,129 @@ GUARDRAILS_REQUIRE_UPLOAD_LAYER2 = os.getenv(
     "GUARDRAILS_REQUIRE_UPLOAD_LAYER2", "false"
 ).lower() in ("1", "true", "yes")
 
-# Test Script Generator — scan modified Test Case / Custom prompts and refine text
+# Test Script Generator — scan modified prompts (Test Case / Test Script / Custom) with Llama Guard
 GUARDRAILS_TSG_PROMPT_ENABLED = os.getenv(
     "GUARDRAILS_TSG_PROMPT_ENABLED", "true"
 ).lower() in ("1", "true", "yes")
 GUARDRAILS_TSG_FORCE_LAYER2 = os.getenv(
     "GUARDRAILS_TSG_FORCE_LAYER2", "true"
 ).lower() in ("1", "true", "yes")
+# Block TSG prompt actions when full Llama Guard cannot load (strict; default fail-open like uploads)
+GUARDRAILS_TSG_REQUIRE_LAYER2 = os.getenv(
+    "GUARDRAILS_TSG_REQUIRE_LAYER2", "false"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_TSG_REFINE_SCOPE_ENABLED = os.getenv(
+    "GUARDRAILS_TSG_REFINE_SCOPE_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_SCRIPT_SCOPE_ENABLED = os.getenv(
+    "GUARDRAILS_SCRIPT_SCOPE_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_REFINE_STRICT_OUTPUT = os.getenv(
+    "GUARDRAILS_REFINE_STRICT_OUTPUT", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_BUG_DISCOVERY_LOG_ENABLED = os.getenv(
+    "GUARDRAILS_BUG_DISCOVERY_LOG_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+# Bug Discovery — Layer 1 regex + Layer 2 Llama Guard on log files (independent of telecom domain)
+GUARDRAILS_BUG_DISCOVERY_INPUT_ENABLED = os.getenv(
+    "GUARDRAILS_BUG_DISCOVERY_INPUT_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+
+# Bug Discovery — OAI telecom domain validation (structural fingerprint + evidence scoring)
+GUARDRAILS_BD_TELECOM_DOMAIN_ENABLED = os.getenv(
+    "GUARDRAILS_BD_TELECOM_DOMAIN_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_BD_TELECOM_DOMAIN_MODE = os.getenv(
+    "GUARDRAILS_BD_TELECOM_DOMAIN_MODE", "balanced"
+).lower().strip()  # advisory | balanced | strict
+GUARDRAILS_BD_TELECOM_MIN_OVERALL = float(
+    os.getenv("GUARDRAILS_BD_TELECOM_MIN_OVERALL", "0.65")
+)
+GUARDRAILS_BD_TELECOM_MIN_STRUCTURAL = float(
+    os.getenv("GUARDRAILS_BD_TELECOM_MIN_STRUCTURAL", "0.25")
+)
+
+# Bug Discovery — historical pattern matching (canonical steps + n-gram similarity)
+GUARDRAILS_BD_HISTORICAL_PATTERN_ENABLED = os.getenv(
+    "GUARDRAILS_BD_HISTORICAL_PATTERN_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_BD_HISTORICAL_PATTERN_MODE = os.getenv(
+    "GUARDRAILS_BD_HISTORICAL_PATTERN_MODE", "advisory"
+).lower().strip()  # advisory | balanced | strict
+GUARDRAILS_BD_HISTORICAL_MIN_SIMILARITY = float(
+    os.getenv("GUARDRAILS_BD_HISTORICAL_MIN_SIMILARITY", "0.65")
+)
+GUARDRAILS_BD_HISTORICAL_NGRAM_SIZE = int(
+    os.getenv("GUARDRAILS_BD_HISTORICAL_NGRAM_SIZE", "3")
+)
+GUARDRAILS_BD_HISTORICAL_MIN_PATTERNS = int(
+    os.getenv("GUARDRAILS_BD_HISTORICAL_MIN_PATTERNS", "1")
+)
+GUARDRAILS_BD_HISTORICAL_WEIGHT_LEVENSHTEIN = float(
+    os.getenv("GUARDRAILS_BD_HISTORICAL_WEIGHT_LEVENSHTEIN", "0.6")
+)
+GUARDRAILS_BD_HISTORICAL_WEIGHT_COSINE = float(
+    os.getenv("GUARDRAILS_BD_HISTORICAL_WEIGHT_COSINE", "0.4")
+)
+
+# Bug Discovery — data quality (truncation, timestamps, empty sections, completeness)
+GUARDRAILS_BD_DATA_QUALITY_ENABLED = os.getenv(
+    "GUARDRAILS_BD_DATA_QUALITY_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_BD_DATA_QUALITY_MODE = os.getenv(
+    "GUARDRAILS_BD_DATA_QUALITY_MODE", "advisory"
+).lower().strip()  # advisory | balanced | strict
+GUARDRAILS_BD_DATA_QUALITY_MIN_COMPLETENESS = float(
+    os.getenv("GUARDRAILS_BD_DATA_QUALITY_MIN_COMPLETENESS", "0.70")
+)
+GUARDRAILS_BD_DATA_QUALITY_MIN_TIMESTAMP_RATIO = float(
+    os.getenv("GUARDRAILS_BD_DATA_QUALITY_MIN_TIMESTAMP_RATIO", "0.15")
+)
+GUARDRAILS_BD_DATA_QUALITY_EMPTY_GAP_LINES = int(
+    os.getenv("GUARDRAILS_BD_DATA_QUALITY_EMPTY_GAP_LINES", "40")
+)
+# Flag as truncated when capture is shorter than this fraction of nearest learned pattern
+GUARDRAILS_BD_DATA_QUALITY_MIN_LENGTH_RATIO = float(
+    os.getenv("GUARDRAILS_BD_DATA_QUALITY_MIN_LENGTH_RATIO", "0.40")
+)
+# Minimum peer pattern step count before length comparison applies
+GUARDRAILS_BD_DATA_QUALITY_MIN_PEER_STEPS = int(
+    os.getenv("GUARDRAILS_BD_DATA_QUALITY_MIN_PEER_STEPS", "8")
+)
+
+# Generated test script traceability (test case ID + title comments)
+GUARDRAILS_SCRIPT_TRACEABILITY_ENABLED = os.getenv(
+    "GUARDRAILS_SCRIPT_TRACEABILITY_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_SCRIPT_TRACEABILITY_STRICT = os.getenv(
+    "GUARDRAILS_SCRIPT_TRACEABILITY_STRICT", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_SCRIPT_TRACEABILITY_MIN_PERCENT = float(
+    os.getenv("GUARDRAILS_SCRIPT_TRACEABILITY_MIN_PERCENT", "100")
+)
+
+# Generated test script groundedness vs source test cases (NLI + keyword)
+# mode: level2 = per-function claim grounding (block on contradiction or very low scores)
+#       level3 = level2 checks + every step/expected result must appear in script
+GUARDRAILS_SCRIPT_GROUNDEDNESS_ENABLED = os.getenv(
+    "GUARDRAILS_SCRIPT_GROUNDEDNESS_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_SCRIPT_GROUNDEDNESS_MODE = os.getenv(
+    "GUARDRAILS_SCRIPT_GROUNDEDNESS_MODE", "level2"
+).lower().strip()
+SCRIPT_GROUNDEDNESS_LEVEL2_MIN_PERCENT = float(
+    os.getenv("SCRIPT_GROUNDEDNESS_LEVEL2_MIN_PERCENT", "70")
+)
+SCRIPT_GROUNDEDNESS_LEVEL2_BLOCK_FLOOR_PERCENT = float(
+    os.getenv("SCRIPT_GROUNDEDNESS_LEVEL2_BLOCK_FLOOR_PERCENT", "40")
+)
+SCRIPT_GROUNDEDNESS_ENTAILMENT_THRESHOLD = float(
+    os.getenv("SCRIPT_GROUNDEDNESS_ENTAILMENT_THRESHOLD", "0.50")
+)
+SCRIPT_GROUNDEDNESS_MAX_CLAIMS_PER_FUNCTION = int(
+    os.getenv("SCRIPT_GROUNDEDNESS_MAX_CLAIMS_PER_FUNCTION", "24")
+)
+SCRIPT_GROUNDEDNESS_MAX_PAIRS = int(os.getenv("SCRIPT_GROUNDEDNESS_MAX_PAIRS", "120"))
 
 # NLI groundedness (cross-encoder) for Specification Intelligence output validation
 NLI_GROUNDEDNESS_ENABLED = os.getenv("NLI_GROUNDEDNESS_ENABLED", "true").lower() in ("1", "true", "yes")
@@ -76,3 +197,12 @@ NLI_MAX_PAIRS = int(os.getenv("NLI_MAX_PAIRS", "40"))
 NLI_MAX_PREMISE_CHARS = int(os.getenv("NLI_MAX_PREMISE_CHARS", "2000").replace("_", ""))
 NLI_STRICT = os.getenv("NLI_STRICT", "false").lower() in ("1", "true", "yes")
 NLI_SKIP_ON_MODEL_ERROR = os.getenv("NLI_SKIP_ON_MODEL_ERROR", "true").lower() in ("1", "true", "yes")
+
+# Intent coverage — semantic (NLI) matching for generated test cases
+# match_mode: hybrid = keyword/clause fast path + NLI for gaps; semantic = NLI only (+ explicit/clause)
+INTENT_COVERAGE_MATCH_MODE = os.getenv("INTENT_COVERAGE_MATCH_MODE", "hybrid").lower().strip()
+INTENT_COVERAGE_USE_NLI = os.getenv("INTENT_COVERAGE_USE_NLI", "true").lower() in ("1", "true", "yes")
+INTENT_COVERAGE_NLI_THRESHOLD = float(os.getenv("INTENT_COVERAGE_NLI_THRESHOLD", "0.50"))
+INTENT_COVERAGE_DOMAIN_GATE = os.getenv(
+    "INTENT_COVERAGE_DOMAIN_GATE", "true"
+).lower() in ("1", "true", "yes")

@@ -26,7 +26,11 @@ networkx>=2.8.0
 PyMuPDF>=1.20.0  # for PDF processing
 python-docx>=0.8.11  # for Word documents
 beautifulsoup4>=4.11.0  # for HTML parsing
+openpyxl>=3.1.0  # for pandas Excel (.xlsx) reading
+PyPDF2>=3.0.0  # fallback PDF extraction
+pdfplumber>=0.11.0  # 3GPP embedding generator scripts
 requests>=2.28.0
+huggingface-hub>=0.20.0  # model downloads for transformers / sentence-transformers
 
 # Data processing
 sqlite3  # built-in with Python

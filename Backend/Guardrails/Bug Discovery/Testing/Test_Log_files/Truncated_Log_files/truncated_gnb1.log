@@ -1,0 +1,40 @@
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[UTIL]   running in SA mode (no --phy-test, --do-ra, --nsa option present)
+[GNB_APP]   Initialized RAN Context: RC.nb_nr_inst = 1, RC.nb_nr_macrlc_inst = 1, RC.nb_nr_L1_inst = 1, RC.nb_RU = 1, RC.nb_nr_CC[0] = 1
+[NR_PHY]   Initializing gNB RAN context: RC.nb_nr_L1_inst = 1 
+[NR_PHY]   Registered with MAC interface module (0x555558ebfaf0)
+[RRC]   Read in ServingCellConfigCommon (PhysCellId 0, ABSFREQSSB 641280, DLBand 78, ABSFREQPOINTA 640008, DLBW 106,RACH_TargetReceivedPower -96
+[GNB_APP]   F1AP: gNB idx 0 ngran_DU: Configuring Cell 0 for TDD
+[UTIL]   threadCreate() for TASK_NGAP: creating thread with affinity ffffffff, priority 50
+[NGAP]   Starting NGAP layer
+[NGAP]   Send NGSetupRequest to AMF
+[NR_RRC]   Entering main loop of NR_RRC message task
+[NR_RRC]   Received F1 Setup Request from gNB_DU 0 (gNB-OAI) on assoc_id -1
+[RRC]   Accepting DU 0 (gNB-OAI), sending F1 Setup Response
+[GTPU]   Configuring GTPu address : 10.138.77.32, port : 2152
+[NGAP]   Received NGSetupResponse from AMF
+[GNB_APP]   [gNB 0] Received NGAP_REGISTER_GNB_CNF: associated AMF 1
+[PHY]   Setting RF config for N_RB 106, NB_RX 1, NB_TX 1
+[HW]   Running as server waiting opposite rfsimulators to connect
+[PHY]   Signaling main thread that RU 0 is ready, sl_ahead 6
+[PHY]   got sync (ru_thread)
+CMDLINE: "/home/tcs/jayasvi/gNB/openairinterface5g/cmake_targets/ran_build/build/nr-softmodem" "-O" "../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/gnb.sa.band78.fr1.106PRB.usrpb210_with_v2_core_nw.conf" "--rfsim" "--sa" 
+[PHY]   got sync (L1_stats_thread)
+TYPE <CTRL-C> TO TERMINATE
+[PHY]   RU 0 rf device ready
+[PHY]   RU 0 RF started cpu_meas_enabled 0
+[HW]   No connected device, generating void samples...
+[PHY]   Command line parameters for OAI UE: -C 3619200000 -r 106 --numerology 1 --ssb 516 
+[NR_MAC]   Frame.Slot 128.0
+[NR_MAC]   Frame.Slot 256.0
+[HW]   A client connects, sending the current time
+[PHY]   Initializing frame parms for mu 1, N_RB 106, Ncp 0
+[PHY]   Init: N_RB_DL 106, first_carrier_offset 1412, nb_prefix_samples 144,nb_prefix_samples0 176, ofdm_symbol_size 2048
+[PHY]   fp->scs=30000
+[PHY]   fp->ofdm_symbol_size=2048
+[PHY]   fp->nb_prefix_samples0=176
+[PHY]   fp->nb_prefix_samples=144
+[PHY]   fp->slots_per_subframe=2
+[PHY]   fp->samples_per_subframe_wCP=5

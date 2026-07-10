@@ -1,0 +1,78 @@
+def test_geopolitical_shifts_eastern_europe_post_cold_war():
+    """
+    Test Script: Analytical Breakdown of Geopolitical Shifts in Eastern Europe During the Post-Cold War Era
+    with Focus on Economic Impacts of Borders Changing
+
+    This test validates the comprehensive analytical model that assesses:
+    1. The geopolitical transformations in Eastern Europe after the Cold War.
+    2. The specific economic impacts resulting from changing national borders.
+
+    Preconditions:
+    - Dataset containing historical geopolitical data, economic indicators, and border changes is loaded.
+    - Analytical modules for geopolitical analysis and economic impact assessment are available.
+    """
+
+    from geopolitical_analysis import analyze_post_cold_war_shifts
+    from economic_impact import evaluate_border_change_impact
+    from data_loader import load_eastern_europe_dataset
+
+    # Load dataset
+    dataset = load_eastern_europe_dataset(region="Eastern Europe", period="1990-2000")
+
+    # Validate dataset integrity
+    assert dataset is not None, "Dataset loading failed"
+    assert dataset.geopolitical_data is not None, "Geopolitical data missing"
+    assert dataset.economic_data is not None, "Economic data missing"
+    assert dataset.border_change_records is not None, "Border change records missing"
+
+    # Step 1: Analyze geopolitical shifts
+    geopolitical_report = analyze_post_cold_war_shifts(dataset.geopolitical_data)
+    assert geopolitical_report is not None, "Geopolitical analysis failed"
+    assert "collapse_of_soviet_union" in geopolitical_report.key_events, "Key event missing"
+    assert "emergence_of_new_states" in geopolitical_report.key_events, "New states emergence missing"
+
+    # Step 2: Evaluate economic impacts of borders changing
+    economic_impact_report = evaluate_border_change_impact(dataset.economic_data, dataset.border_change_records)
+    assert economic_impact_report is not None, "Economic impact evaluation failed"
+    assert economic_impact_report.border_changes_analyzed > 0, "No border changes analyzed"
+    assert economic_impact_report.impact_metrics.get("trade_flows") is not None, "Trade flow impact missing"
+    assert economic_impact_report.impact_metrics.get("investment_patterns") is not None, "Investment pattern impact missing"
+
+    # Step 3: Correlate geopolitical shifts with economic impacts
+    correlation = geopolitical_report.correlate_with(economic_impact_report)
+    assert correlation.is_significant(), "Correlation between geopolitical shifts and economic impacts is not significant"
+
+    # Step 4: Generate comprehensive analytical summary
+    analytical_summary = {
+        "geopolitical_summary": geopolitical_report.summary(),
+        "economic_impact_summary": economic_impact_report.summary(),
+        "correlation_analysis": correlation.summary()
+    }
+
+    # Validation of final report content
+    assert "border_redefinition" in analytical_summary["geopolitical_summary"], "Border redefinition not summarized"
+    assert "economic_disruptions" in analytical_summary["economic_impact_summary"], "Economic disruptions not summarized"
+    assert "policy_implications" in analytical_summary["correlation_analysis"], "Policy implications missing"
+
+    # Output final analytical summary (could be logged or returned for further processing)
+    print("Analytical Summary of Post-Cold War Eastern Europe Geopolitical and Economic Impacts:")
+    print(analytical_summary)
+
+    return analytical_summary
+
+
+def get_internal_prompt():
+    """
+    Returns the internal prompt currently used to generate or update test scripts related to the geopolitical shifts in Eastern Europe.
+    """
+    return ("Using the dataset provided and the current user prompt, generate or update a detailed, well-structured test script. "
+            "If a previous script is provided, use it as a foundation to refine, expand, or optimize the script based on the new prompt. "
+            "Your goals: "
+            "1. Improve the test script with each new prompt. "
+            "2. Retain relevant parts of the previous script. "
+            "3. Integrate new instructions or validations as requested. "
+            "4. Ensure the final script is complete, readable, and executable.")
+
+if __name__ == "__main__":
+    test_geopolitical_shifts_eastern_europe_post_cold_war()
+    # The internal prompt can be retrieved by calling get_internal_prompt() if needed.

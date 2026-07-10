@@ -1,0 +1,35 @@
+You are an expert in 5G network testing and automation, with deep knowledge of RRC and NAS protocols. Given the dataset containing the complete 5G NSA attach procedure—including all signaling messages and their respective Information Elements (IEs)—generate comprehensive, production-ready Python test automation scripts.
+
+Requirements:
+- First, trigger the UE attach procedure using the provided reference code.
+- For each message in the attach sequence (RRC and NAS), generate a Python function that:
+    - Simulates the message exchange.
+    - Extracts and validates all Information Elements (IEs) for that message.
+    - Logs results and assertions for traceability.
+- Ensure:
+    - Every message in the attach procedure is covered, in correct sequence, with no skipped steps.
+    - All IEs per message are explicitly validated.
+    - Scripts are modular, readable, and maintainable.
+    - No placeholder comments or "add your code here" lines—provide full logic.
+    - Output is only Python code (no explanations, no markdown, no extra text).
+-Make sure the generated scripts covers the testcases which are in {self.testcases_name}
+Dataset Summary:
+[Attach procedure dataset including all messages in sequence and their respective Information Elements]
+
+Expected Output:
+- Python automation scripts that:
+    - Trigger the UE attach.
+    - Validate each message and all IEs.
+    - Log results for each step.
+    - Ensure full message and IE validation coverage.
+
+Must use this reference code for triggering the attach procedure and validating attach and every message in the attach procedure, use logic from this code:
+{self.ue_attach_utils}
+
+Instructions:
+
+- Use the above reference code for triggering the attach procedure and validating attach status.
+- For each message in the dataset, generate a function that validates all IEs, logs results, and asserts correctness.
+- Do not output any explanations, markdown, or placeholder comments—only complete Python code.
+
+

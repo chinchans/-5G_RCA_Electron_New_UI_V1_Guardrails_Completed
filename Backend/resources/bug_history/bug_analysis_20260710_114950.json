@@ -1,0 +1,56 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[SCTP]   Received SCTP SHUTDOWN EVENT\"\n\nContext:\nThis SCTP shutdown event indicates that the SCTP association between the CU and DU has been terminated unexpectedly. Following this, the log shows:\n- \"Received SCTP state 1 for assoc_id 337, removing endpoint\"\n- \"releasing DU ID 3584 (gNB-Eurecom-DU) on assoc_id 337\"\n\nThis error is critical as it represents the loss of SCTP connectivity, which is essential for F1AP messaging between CU and DU. Without this association, the system cannot maintain the control plane connection necessary for UE context management and data transfer, effectively preventing normal system operation.",
+  "log_file": "success_cu_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_cu_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-10T11:49:50.173624",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[SCTP]   Received SCTP SHUTDOWN EVENT\"\n\nContext:\nThis SCTP shutdown event indicates that the SCTP association between the CU and DU has been terminated unexpectedly. Following this, the log shows:\n- \"Received SCTP state 1 for assoc_id 337, removing endpoint\"\n- \"releasing DU ID 3584 (gNB-Eurecom-DU) on assoc_id 337\"\n\nThis error is critical as it represents the loss of SCTP connectivity, which is essential for F1AP messaging between CU and DU. Without this association, the system cannot maintain the control plane connection necessary for UE context management and data transfer, effectively preventing normal system operation.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_cu_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test basic connectivity from gNB to AMF IP to ensure network reachability"
+          },
+          {
+            "command": "ip route add 192.168.70.132 via 10.138.77.131 dev eth0",
+            "hint": "Add static route to AMF IP via gNB IP on interface eth0 to ensure proper routing"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test basic connectivity from gNB to AMF IP to ensure network reachability"
+          },
+          {
+            "command": "ip route add 192.168.70.132 via 10.138.77.131 dev eth0",
+            "explanation": "Add static route to AMF IP via gNB IP on interface eth0 to ensure proper routing"
+          }
+        ],
+        "command_count": 2
+      },
+      "command_count": 2
+    },
+    "timestamp": "2026-07-10T11:49:49.969980"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260710_114950.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

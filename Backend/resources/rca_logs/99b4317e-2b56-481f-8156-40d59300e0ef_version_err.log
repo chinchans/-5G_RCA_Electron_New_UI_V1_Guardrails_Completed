@@ -1,0 +1,5 @@
+Will compile gNB
+OPENAIR_DIR    = /home/tcs/OAI-CU
+Running "cmake ../../.."
+./build_oai: line 503: cmake: command not found
+build have failed

@@ -14,11 +14,41 @@ from app.guardrails.intent_graph_schemas import (
     IntentGraph,
     IntentNode,
 )
+from app.guardrails.config import (
+    INTENT_COVERAGE_DOMAIN_GATE,
+    INTENT_COVERAGE_MATCH_MODE,
+    INTENT_COVERAGE_NLI_THRESHOLD,
+    INTENT_COVERAGE_USE_NLI,
+)
+from app.guardrails.tsg_prompt_guardrail import (
+    _OFF_TOPIC_REFINE_SIGNALS,
+    _TELECOM_DATASET_SIGNALS,
+    _signal_hits,
+)
 from app.guardrails.intent_graph_store import load_intent_graph_model
 
 CLAUSE_ID_RE = re.compile(r"\b\d+(?:\.\d+)+\b")
 JSON_FENCE_RE = re.compile(r"```(?:json)?\s*([\s\S]*?)```", re.IGNORECASE)
-NLI_ENTAILMENT_THRESHOLD = 0.55
+VALID_MATCH_MODES = frozenset({"keyword", "hybrid", "semantic"})
+
+_REFUSAL_CORPUS_SIGNALS = frozenset({
+    "cannot provide",
+    "cannot generate",
+    "no information related",
+    "unrelated to the content",
+    "unrelated to the dataset",
+    "requested topic is unrelated",
+    "does not contain information",
+    "i cannot provide a summary",
+})
+
+_PROCEDURE_TOKEN_ALIASES: Dict[str, Tuple[str, ...]] = {
+    "lte": ("lte", "e-utran", "eutran", "e utran"),
+    "5g": ("5g", "nr", "gnodeb", "gnb"),
+    "nsa": ("nsa", "endc", "en-dc", "secondary node"),
+    "attach": ("attach", "registration", "camp on"),
+    "detach": ("detach", "deregister", "power off", "switch off"),
+}
 
 
 @dataclass
@@ -57,6 +87,18 @@ class _GraphMatchIndex:
         return expanded
 
 
+def _humanize_identifier(value: str) -> str:
+    text = str(value).strip()
+    if not text:
+        return ""
+    text = re.sub(r"[_\-]+", " ", text)
+    text = re.sub(r"(?<=[a-z])(?=[A-Z])", " ", text)
+    text = re.sub(r"(?<=[A-Z])(?=[A-Z][a-z])", " ", text)
+    text = re.sub(r"(\d)([A-Za-z])", r"\1 \2", text)
+    text = re.sub(r"([A-Za-z])(\d)", r"\1 \2", text)
+    return text
+
+
 def _flatten_test_case_text(test_case: Dict[str, Any]) -> str:
     parts: List[str] = []
     for key in (
@@ -71,6 +113,9 @@ def _flatten_test_case_text(test_case: Dict[str, Any]) -> str:
         "postconditions",
     ):
         value = test_case.get(key)
+        if key in {"testCaseID", "testCaseId"} and value:
+            parts.append(_humanize_identifier(str(value)))
+            continue
         if isinstance(value, list):
             parts.extend(str(item) for item in value)
         elif value:
@@ -154,13 +199,73 @@ def _match_text_to_intents(text: str, index: _GraphMatchIndex) -> Set[str]:
     return matched
 
 
-def _match_test_case_to_intents(
+def _label_tokens(node: IntentNode) -> List[str]:
+    return [token.lower() for token in re.findall(r"[a-zA-Z0-9]+", node.label) if len(token) > 1]
+
+
+def _procedure_token_present(lower: str, token: str) -> bool:
+    aliases = _PROCEDURE_TOKEN_ALIASES.get(token, (token,))
+    return any(alias in lower for alias in aliases)
+
+
+def _match_distributed_procedures(text: str, index: _GraphMatchIndex) -> Set[str]:
+    """Match procedures when label tokens co-occur in text (e.g. LTE + detach)."""
+    lower = text.lower()
+    matched: Set[str] = set()
+    for node in index.matchable_nodes:
+        if node.type != "procedure":
+            continue
+        tokens = _label_tokens(node)
+        if tokens and all(_procedure_token_present(lower, token) for token in tokens):
+            matched.add(node.id)
+    return matched
+
+
+def _semantic_text_matches(text: str, index: _GraphMatchIndex) -> Set[str]:
+    matched = _match_distributed_procedures(text, index)
+    matched.update(_match_text_to_intents(text, index))
+    return matched
+
+
+def _build_intent_hypothesis(node: IntentNode) -> str:
+    parts = [node.label]
+    if node.keywords:
+        parts.extend(node.keywords[:6])
+    if node.clause_ids:
+        parts.append(f"3GPP clause {' '.join(node.clause_ids)}")
+    return ". ".join(parts)
+
+
+def _resolve_match_mode(match_mode: Optional[str], use_nli_for_gaps: Optional[bool]) -> str:
+    mode = (match_mode or INTENT_COVERAGE_MATCH_MODE or "hybrid").lower().strip()
+    if mode not in VALID_MATCH_MODES:
+        mode = "hybrid"
+    if use_nli_for_gaps is False and mode == "hybrid":
+        return "keyword"
+    if use_nli_for_gaps is True and mode == "keyword":
+        return "hybrid"
+    return mode
+
+
+def _semantic_nli_enabled(match_mode: str, use_nli_for_gaps: Optional[bool]) -> bool:
+    if match_mode == "semantic":
+        return True
+    if match_mode == "keyword":
+        return False
+    if use_nli_for_gaps is not None:
+        return use_nli_for_gaps
+    return INTENT_COVERAGE_USE_NLI
+
+
+def _match_test_case_keyword_intents(
     test_case: Dict[str, Any],
     index: _GraphMatchIndex,
     *,
-    use_nli: bool = False,
+    match_mode: str = "hybrid",
 ) -> Set[str]:
+    """Keyword / clause / distributed-procedure matches only (no NLI)."""
     matched: Set[str] = set()
+    text = _flatten_test_case_text(test_case)
 
     explicit = test_case.get("covers_intents") or test_case.get("coversIntents") or []
     if isinstance(explicit, list):
@@ -169,53 +274,155 @@ def _match_test_case_to_intents(
             if item_str in index.nodes_by_id:
                 matched.add(item_str)
 
-    matched.update(_match_text_to_intents(_flatten_test_case_text(test_case), index))
+    if match_mode == "keyword":
+        matched.update(_match_text_to_intents(text, index))
+    else:
+        matched.update(_semantic_text_matches(text, index))
+    return matched
 
-    if use_nli:
-        unmatched = [
-            node
-            for node in index.mandatory_nodes
-            if node.id not in matched
-        ]
-        if unmatched:
-            matched.update(_nli_semantic_matches(_flatten_test_case_text(test_case), unmatched))
+
+def _combined_test_case_text(test_cases: Sequence[Dict[str, Any]]) -> str:
+    return " ".join(_flatten_test_case_text(case) for case in test_cases)
+
+
+def _count_off_topic_signals(text: str) -> int:
+    lowered = (text or "").lower()
+    return sum(1 for phrase in _OFF_TOPIC_REFINE_SIGNALS if phrase in lowered)
+
+
+def _is_telecom_intent_graph(index: _GraphMatchIndex) -> bool:
+    return bool(index.mandatory_nodes)
+
+
+def _evaluate_suite_domain_alignment(
+    test_cases: Sequence[Dict[str, Any]],
+    index: _GraphMatchIndex,
+) -> Tuple[bool, str]:
+    if not INTENT_COVERAGE_DOMAIN_GATE or not _is_telecom_intent_graph(index):
+        return True, ""
+
+    combined = _combined_test_case_text(test_cases)
+    if not combined.strip():
+        return False, "Generated test cases are empty."
+
+    off_topic_hits = _count_off_topic_signals(combined)
+    telecom_hits = _signal_hits(combined, _TELECOM_DATASET_SIGNALS)
+
+    if off_topic_hits > 0 and telecom_hits < 2:
+        sample = next(
+            (phrase for phrase in _OFF_TOPIC_REFINE_SIGNALS if phrase in combined.lower()),
+            "off-topic content",
+        )
+        return (
+            False,
+            "Generated test cases appear off-topic for the loaded telecom dataset "
+            f"(detected: {sample!r}).",
+        )
+
+    if telecom_hits == 0:
+        return (
+            False,
+            "Generated test cases do not reference telecom/5G procedures from the loaded dataset.",
+        )
+    return True, ""
+
+
+def _is_refusal_corpus(text: str) -> bool:
+    lowered = (text or "").lower()
+    return any(signal in lowered for signal in _REFUSAL_CORPUS_SIGNALS)
+
+
+def _match_test_case_to_intents(
+    test_case: Dict[str, Any],
+    index: _GraphMatchIndex,
+    *,
+    match_mode: str = "hybrid",
+    use_nli: bool = False,
+    allow_nli: bool = True,
+) -> Set[str]:
+    matched = _match_test_case_keyword_intents(test_case, index, match_mode=match_mode)
+
+    if use_nli and allow_nli:
+        if match_mode == "semantic":
+            nli_nodes = list(index.mandatory_nodes)
+        else:
+            nli_nodes = [node for node in index.mandatory_nodes if node.id not in matched]
+        if nli_nodes:
+            text = _flatten_test_case_text(test_case)
+            matched.update(_nli_semantic_matches(text, nli_nodes))
 
     return matched
 
 
-def _nli_semantic_matches(text: str, nodes: Sequence[IntentNode]) -> Set[str]:
+def _nli_entailment_scores(text: str, nodes: Sequence[IntentNode]) -> Dict[str, float]:
     try:
         from app.guardrails.nli_groundedness_service import _nli_model
     except ImportError:
-        return set()
+        return {}
 
     if not _nli_model.load() or not nodes:
-        return set()
+        return {}
 
     premise = " ".join(text.split())
     if len(premise) > 4000:
         premise = premise[:4000]
 
-    pairs = [
-        (premise, f"{node.label}. {' '.join(node.keywords[:4])}")
-        for node in nodes
-    ]
+    pairs = [(premise, _build_intent_hypothesis(node)) for node in nodes]
     probs = _nli_model.predict_probs(pairs)
-    matched: Set[str] = set()
+    scores: Dict[str, float] = {}
     for node, row in zip(nodes, probs):
         _contradiction, entailment, _neutral = row
-        if entailment >= NLI_ENTAILMENT_THRESHOLD:
-            matched.add(node.id)
-    return matched
+        scores[node.id] = float(entailment)
+    return scores
+
+
+def _nli_semantic_matches(text: str, nodes: Sequence[IntentNode]) -> Set[str]:
+    scores = _nli_entailment_scores(text, nodes)
+    return {
+        node_id
+        for node_id, entailment in scores.items()
+        if entailment >= INTENT_COVERAGE_NLI_THRESHOLD
+    }
+
+
+def _suite_semantic_gap_fill(
+    test_cases: Sequence[Dict[str, Any]],
+    index: _GraphMatchIndex,
+    covered_intents: Set[str],
+    *,
+    allow_nli: bool = True,
+) -> Set[str]:
+    if not allow_nli:
+        return set()
+    uncovered = [node for node in index.mandatory_nodes if node.id not in covered_intents]
+    if not uncovered:
+        return set()
+
+    best_scores: Dict[str, float] = {node.id: 0.0 for node in uncovered}
+    for test_case in test_cases:
+        scores = _nli_entailment_scores(_flatten_test_case_text(test_case), uncovered)
+        for node_id, entailment in scores.items():
+            if entailment > best_scores[node_id]:
+                best_scores[node_id] = entailment
+
+    return {
+        node_id
+        for node_id, entailment in best_scores.items()
+        if entailment >= INTENT_COVERAGE_NLI_THRESHOLD
+    }
 
 
 def validate_intent_coverage(
     dataset_folder: Path | str,
     generated_text: str,
     *,
-    use_nli_for_gaps: bool = False,
+    use_nli_for_gaps: Optional[bool] = None,
+    match_mode: Optional[str] = None,
     advisory_only: bool = True,
+    require_structured_json: bool = False,
 ) -> IntentCoverageResult:
+    resolved_mode = _resolve_match_mode(match_mode, use_nli_for_gaps)
+    use_nli = _semantic_nli_enabled(resolved_mode, use_nli_for_gaps)
     folder = Path(dataset_folder).resolve()
     if not folder.is_dir():
         return IntentCoverageResult(
@@ -239,6 +446,16 @@ def validate_intent_coverage(
     test_cases = parse_test_cases_from_generation(generated_text)
     corpus_fallback = False
     if not test_cases and generated_text and generated_text.strip():
+        if require_structured_json:
+            return IntentCoverageResult(
+                available=True,
+                passed=False,
+                advisory_only=advisory_only,
+                warnings=["Structured JSON test cases were not detected in refined output."],
+                errors=[
+                    "Refined output must remain valid structured test case JSON when refining test cases."
+                ],
+            )
         corpus_fallback = True
         test_cases = [
             {
@@ -259,7 +476,26 @@ def validate_intent_coverage(
             errors=["Could not validate intent coverage — empty generation output."],
         )
 
+    if corpus_fallback and _is_refusal_corpus(generated_text):
+        return IntentCoverageResult(
+            available=True,
+            passed=False,
+            advisory_only=advisory_only,
+            coverage_percent=0.0,
+            mandatory_total=len(index.mandatory_nodes),
+            mandatory_covered=0,
+            warnings=["Structured JSON test cases were not detected; output appears to refuse or deflect."],
+            errors=[
+                "Generated output is unrelated to the dataset and cannot be treated as test case coverage."
+            ],
+        )
+
+    domain_ok, domain_reason = _evaluate_suite_domain_alignment(test_cases, index)
+    allow_nli = domain_ok and use_nli
+    strict_mode = require_structured_json or not advisory_only
+
     covered_intents: Set[str] = set()
+    keyword_covered_intents: Set[str] = set()
     mappings: List[IntentCoverageMapping] = []
     ungrounded: List[str] = []
 
@@ -270,8 +506,21 @@ def validate_intent_coverage(
             or test_case.get("id")
             or "unknown"
         )
+        keyword_ids = _match_test_case_keyword_intents(
+            test_case,
+            index,
+            match_mode=resolved_mode,
+        )
+        keyword_covered_intents.update(keyword_ids)
+
         intent_ids = sorted(
-            _match_test_case_to_intents(test_case, index, use_nli=use_nli_for_gaps)
+            _match_test_case_to_intents(
+                test_case,
+                index,
+                match_mode=resolved_mode,
+                use_nli=use_nli,
+                allow_nli=allow_nli,
+            )
         )
         if not intent_ids:
             ungrounded.append(case_id)
@@ -285,7 +534,15 @@ def validate_intent_coverage(
             )
         )
 
+    if allow_nli:
+        covered_intents.update(
+            _suite_semantic_gap_fill(test_cases, index, covered_intents, allow_nli=True)
+        )
+    else:
+        covered_intents = set(keyword_covered_intents)
+
     covered_intents = index.expand(covered_intents)
+    keyword_covered_intents = index.expand(keyword_covered_intents)
 
     mandatory_nodes = index.mandatory_nodes
     mandatory_total = len(mandatory_nodes)
@@ -301,21 +558,36 @@ def validate_intent_coverage(
     ]
 
     warnings: List[str] = []
+    errors: List[str] = []
     if corpus_fallback:
         warnings.append(
             "Structured JSON test cases were not detected; validated full generated output as a single corpus."
         )
+    if not domain_ok:
+        errors.append(domain_reason)
+        warnings.append("NLI semantic gap-fill disabled because content failed dataset domain alignment.")
     if ungrounded:
-        warnings.append(
+        warning = (
             f"{len(ungrounded)} test case(s) did not map to any intent graph node "
             f"({', '.join(ungrounded[:5])}{'…' if len(ungrounded) > 5 else ''})."
         )
+        warnings.append(warning)
+        if strict_mode:
+            errors.append(warning)
     if uncovered_intents:
         labels = ", ".join(item["label"] for item in uncovered_intents[:4])
         suffix = "…" if len(uncovered_intents) > 4 else ""
         warnings.append(f"Uncovered mandatory intents: {labels}{suffix}.")
+        if strict_mode:
+            errors.append(f"Uncovered mandatory intents: {labels}{suffix}.")
 
     passed = mandatory_covered == mandatory_total if mandatory_total else True
+    if not domain_ok:
+        passed = False
+    if strict_mode and ungrounded:
+        passed = False
+    if strict_mode and uncovered_intents:
+        passed = False
 
     return IntentCoverageResult(
         available=True,
@@ -331,5 +603,5 @@ def validate_intent_coverage(
         test_case_mappings=mappings,
         ungrounded_test_cases=ungrounded,
         warnings=warnings,
-        errors=[] if passed or advisory_only else ["Mandatory intent coverage incomplete."],
+        errors=[] if passed else (errors or ["Mandatory intent coverage incomplete."]),
     )

@@ -6,7 +6,7 @@
     <title>Intelligent Radio Test Automation Platform for wireless Connectivity</title>
     <!-- Material Icons removed - using built-in Unicode icons instead -->
     <!--<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">-->
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="main.css?v=20260707-tsg-more-templates">
     <style>
         /* Use Inter font with ui-sans-serif fallback */
         body, html, * {
@@ -834,6 +834,7 @@
                                                 </div>
                                                 <input type="hidden" id="bugLogFileCombo" value="">
                                                 <input type="hidden" id="bugLogFilePath" value="">
+                                                <div id="bugLogGuardrailBanner" class="bd-guardrail-banner" role="alert" style="display:none;"></div>
                                             </div>
                                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
                                                 <label class="bd-field-label bd-field-label--inline">Code dump Analysis:</label>
@@ -1266,9 +1267,11 @@
                                                 </div>
                                             </div>
                                             <div id="tsgGenConfigCustom" class="tsg-gen-config-panel" style="display: none;">
-                                                <p class="tsg-gen-config-hint">Use the Generated Prompt section below to enter or edit your custom prompt. Click <strong>Modify</strong> to enable editing.</p>
+                                                <p class="tsg-gen-config-hint">Enter your prompt in the <strong>Generated Prompt</strong> section below. Generation uses Python/pytest when your prompt asks for a test script (no dataset required).</p>
                                             </div>
-                                            <div id="tsgGenConfigMore" class="tsg-gen-config-panel tsg-gen-config-panel--empty" style="display: none;"></div>
+                                            <div id="tsgGenConfigMore" class="tsg-gen-config-panel" style="display: none;">
+                                                <div id="tsgMoreTemplateList" class="tsg-more-template-list" role="list" aria-label="Additional templates"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -2333,7 +2336,7 @@
     <!-- External JavaScript file for better debugging -->
     <!-- CRITICAL: api.js MUST load before app.js to initialize window.API -->
     <!-- Scripts load synchronously by default, so order matters -->
-    <script src="api.js?v=20260625-tsg-prompt-guardrails"></script>
+    <script src="api.js?v=20260707-bug-discovery-log-guardrails"></script>
     <script>
         // Verify window.API was initialized immediately after api.js loads
         (function() {
@@ -2365,7 +2368,7 @@
             }
         })();
     </script>
-    <script src="app.js?v=20260625-tsg-prompt-guardrails"></script>
+    <script src="app.js?v=20260710-bd-dq-msg"></script>
     
     <!-- Deployment Settings Modal -->
     <div id="deploymentSettingsModal" class="modal-overlay" style="display: none;">

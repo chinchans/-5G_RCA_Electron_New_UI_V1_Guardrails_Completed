@@ -1,0 +1,76 @@
+Detect out-of-scope logs (e.g., logs unrelated to 5G/telecom domain).
+ 
+dentify incomplete or truncated log captures that may lead to inaccurate bug discovery
+ 
+Flag incorrect log time windows where the issue timeframe is not covered.
+ 
+Validate that the log sequence follows expected patterns observed in previously successful analyses (Too much variation)
+ 
+guardrail should assess whether the logs are relevant, complete, consistent, and sufficient for 5G bug discovery, not just whether they belong to the telecom domain.
+
+guardrail should assess whether the logs are relevant, complete, consistent, and sufficient for 5G bug discovery, not just whether they belong to the telecom domain.
+
+ 
+Historical Pattern Matching
+Use previously successful bug investigation logs as references.
+Extract key events and sequences from successful analyses.
+Create a repository of "known good patterns."
+Compare new logs against these patterns.
+Guardrail output: "Current log sequence differs significantly from known successful call registration scenarios."
+ 
+ 
+Scenario Relevance Check
+Compare incoming logs against the expected events for the test case.
+Registration Test → Should contain Registration Request/Accept messages.
+PDU Session Test → Should contain PDU Session Establishment events.
+Handover Test → Should contain mobility/handover events.
+Guardrail output: Expected PDU Session Setup events not found. Logs may not correspond to the reported scenario.
+ 
+
+guardrail should assess whether the logs are relevant, complete, consistent, and sufficient for 5G bug discovery, not just whether they belong to the telecom domain.
+ 
+
+ 
+NOT REQUIRED {Temporal Context Check
+Validate whether logs cover the issue timeframe.
+Example:
+Issue reported at 10:05:30
+Logs available only until 10:03:00
+Guardrail output: "Issue timestamp is outside the provided log window." }
+ 
+ 
+Telecom Domain Validation
+Identify whether logs belong to supported domains.
+Examples of supported:
+5G Core
+gNB
+UE
+RAN Signaling
+N2/N3/N4 interfaces
+Examples of invalid:
+Web server logs
+Database logs
+Windows system logs
+Guardrail output: "Provided logs do not appear to be from a supported 5G network component."
+ 
+ 
+Confidence-Based Context Check 
+Generate a relevance score using past successful investigations.
+Example:
+Telecom relevance: 95%
+Scenario match: 90%
+Completeness: 80%
+Environment match: 100%
+Overall context score: 91%
+If score < threshold (e.g., 70%), trigger guardrail.
+ 
+Data Quality Check
+Detect:
+Truncated files
+Missing timestamps
+Empty log sections
+Guardrail output: Log file appears incomplete; expected events are missing."
+ 
+ 
+you can target these..
+ 

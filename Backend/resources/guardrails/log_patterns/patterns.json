@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "patterns": [
+    {
+      "id": "registration_success_rrc_5421",
+      "scenario": "registration",
+      "description": "Successful RRC connection establishment and NGAP Initial UE Message",
+      "source": "TC_successful_rrc_connection_establishment_5421.log",
+      "steps": [
+        "prach_detected",
+        "msg2_sent",
+        "msg3_tx",
+        "msg3_received",
+        "contention_resolved",
+        "rrc_connection_request",
+        "rrc_setup_sent",
+        "rrc_setup_complete",
+        "rrc_connected",
+        "ngap_initial_ue",
+        "registration_complete",
+        "ngap_initial_ue",
+        "registration_complete"
+      ],
+      "ngrams": [
+        [
+          "prach_detected",
+          "msg2_sent",
+          "msg3_tx"
+        ],
+        [
+          "msg2_sent",
+          "msg3_tx",
+          "msg3_received"
+        ],
+        [
+          "msg3_tx",
+          "msg3_received",
+          "contention_resolved"
+        ],
+        [
+          "msg3_received",
+          "contention_resolved",
+          "rrc_connection_request"
+        ],
+        [
+          "contention_resolved",
+          "rrc_connection_request",
+          "rrc_setup_sent"
+        ],
+        [
+          "rrc_connection_request",
+          "rrc_setup_sent",
+          "rrc_setup_complete"
+        ],
+        [
+          "rrc_setup_sent",
+          "rrc_setup_complete",
+          "rrc_connected"
+        ],
+        [
+          "rrc_setup_complete",
+          "rrc_connected",
+          "ngap_initial_ue"
+        ],
+        [
+          "rrc_connected",
+          "ngap_initial_ue",
+          "registration_complete"
+        ],
+        [
+          "ngap_initial_ue",
+          "registration_complete",
+          "ngap_initial_ue"
+        ],
+        [
+          "registration_complete",
+          "ngap_initial_ue",
+          "registration_complete"
+        ]
+      ]
+    },
+    {
+      "id": "registration_success_cu_gnb",
+      "scenario": "cu_stack",
+      "description": "Successful CU gNB NGAP setup and F1AP bring-up",
+      "source": "success_cu_gnb.log",
+      "steps": [
+        "stack_init",
+        "ngap_setup_request",
+        "stack_init",
+        "ngap_setup_response",
+        "f1ap_start",
+        "ngap_register_cnf",
+        "stack_init",
+        "rrc_connected",
+        "ngap_initial_ue"
+      ],
+      "ngrams": [
+        [
+          "stack_init",
+          "ngap_setup_request",
+          "stack_init"
+        ],
+        [
+          "ngap_setup_request",
+          "stack_init",
+          "ngap_setup_response"
+        ],
+        [
+          "stack_init",
+          "ngap_setup_response",
+          "f1ap_start"
+        ],
+        [
+          "ngap_setup_response",
+          "f1ap_start",
+          "ngap_register_cnf"
+        ],
+        [
+          "f1ap_start",
+          "ngap_register_cnf",
+          "stack_init"
+        ],
+        [
+          "ngap_register_cnf",
+          "stack_init",
+          "rrc_connected"
+        ],
+        [
+          "stack_init",
+          "rrc_connected",
+          "ngap_initial_ue"
+        ]
+      ]
+    },
+    {
+      "id": "registration_success_du_gnb",
+      "scenario": "cu_stack",
+      "description": "Successful DU gNB stack initialization",
+      "source": "success_du_gnb.log",
+      "steps": [
+        "stack_init",
+        "f1ap_start",
+        "stack_init"
+      ],
+      "ngrams": [
+        [
+          "stack_init",
+          "f1ap_start",
+          "stack_init"
+        ]
+      ]
+    }
+  ]
+}

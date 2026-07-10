@@ -1,0 +1,3 @@
+2025-07-12 10:35:20 ERROR postgres: connection refused
+2025-07-12 10:35:21 LOG:  duration: 142.3 ms  statement: SELECT * FROM users WHERE id = 1
+2025-07-12 10:35:22 LOG:  duration: 8.1 ms   statement: INSERT INTO audit_log (msg) VALUES ('login')

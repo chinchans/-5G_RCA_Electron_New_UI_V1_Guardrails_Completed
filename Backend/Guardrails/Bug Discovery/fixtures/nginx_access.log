@@ -1,0 +1,4 @@
+127.0.0.1 - - [12/Jul/2025:10:35:20 +0000] "GET /index.html HTTP/1.1" 200 5123 "-" "Mozilla/5.0"
+127.0.0.1 - - [12/Jul/2025:10:35:21 +0000] "POST /api/login HTTP/1.1" 401 128 "-" "curl/7.81.0"
+nginx: [error] upstream timed out (110: Connection timed out) while reading response header from upstream
+192.168.1.10 - - [12/Jul/2025:10:35:22 +0000] "GET /health HTTP/1.1" 503 0 "-" "kube-probe/1.28"

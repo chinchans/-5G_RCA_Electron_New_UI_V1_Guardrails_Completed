@@ -1,0 +1,158 @@
+[ENB_APP]   [2025-09-11 18:24:45.434184]  nfapi running mode: MONOLITHIC
+[0m[ITTI]   [2025-09-11 18:24:46.448877]  Starting itti queue: TASK_UNKNOWN as task 0
+[0m[ITTI]   [2025-09-11 18:24:46.448900]  Starting itti queue: TASK_TIMER as task 1
+[0m[ITTI]   [2025-09-11 18:24:46.448903]  Starting itti queue: TASK_L2L1 as task 2
+[0m[ITTI]   [2025-09-11 18:24:46.448906]  Starting itti queue: TASK_BM as task 3
+[0m[ITTI]   [2025-09-11 18:24:46.448909]  Starting itti queue: TASK_PHY_ENB as task 4
+[0m[ITTI]   [2025-09-11 18:24:46.448912]  Starting itti queue: TASK_MAC_ENB as task 5
+[0m[ITTI]   [2025-09-11 18:24:46.448914]  Starting itti queue: TASK_MAC_GNB as task 6
+[0m[ITTI]   [2025-09-11 18:24:46.448917]  Starting itti queue: TASK_RLC_ENB as task 7
+[0m[ITTI]   [2025-09-11 18:24:46.448919]  Starting itti queue: TASK_RRC_ENB_NB_IoT as task 8
+[0m[ITTI]   [2025-09-11 18:24:46.448921]  Starting itti queue: TASK_PDCP_ENB as task 9
+[0m[ITTI]   [2025-09-11 18:24:46.448924]  Starting itti queue: TASK_PDCP_GNB as task 10
+[0m[ITTI]   [2025-09-11 18:24:46.448927]  Starting itti queue: TASK_DATA_FORWARDING as task 11
+[0m[ITTI]   [2025-09-11 18:24:46.448930]  Starting itti queue: TASK_END_MARKER as task 12
+[0m[ITTI]   [2025-09-11 18:24:46.448933]  Starting itti queue: TASK_RRC_ENB as task 13
+[0m[ITTI]   [2025-09-11 18:24:46.448935]  Starting itti queue: TASK_RRC_GNB as task 14
+[0m[ITTI]   [2025-09-11 18:24:46.448938]  Starting itti queue: TASK_RAL_ENB as task 15
+[0m[ITTI]   [2025-09-11 18:24:46.448941]  Starting itti queue: TASK_S1AP as task 16
+[0m[ITTI]   [2025-09-11 18:24:46.448944]  Starting itti queue: TASK_NGAP as task 17
+[0m[ITTI]   [2025-09-11 18:24:46.448947]  Starting itti queue: TASK_X2AP as task 18
+[0m[ITTI]   [2025-09-11 18:24:46.448949]  Starting itti queue: TASK_M2AP_ENB as task 19
+[0m[ITTI]   [2025-09-11 18:24:46.448951]  Starting itti queue: TASK_M2AP_MCE as task 20
+[0m[ITTI]   [2025-09-11 18:24:46.448958]  Starting itti queue: TASK_M3AP as task 21
+[0m[ITTI]   [2025-09-11 18:24:46.448962]  Starting itti queue: TASK_M3AP_MME as task 22
+[0m[ITTI]   [2025-09-11 18:24:46.448965]  Starting itti queue: TASK_M3AP_MCE as task 23
+[0m[ITTI]   [2025-09-11 18:24:46.448969]  Starting itti queue: TASK_SCTP as task 24
+[0m[ITTI]   [2025-09-11 18:24:46.448973]  Starting itti queue: TASK_ENB_APP as task 25
+[0m[ITTI]   [2025-09-11 18:24:46.448976]  Starting itti queue: TASK_GNB_APP as task 26
+[0m[ITTI]   [2025-09-11 18:24:46.448981]  Starting itti queue: TASK_MCE_APP as task 27
+[0m[ITTI]   [2025-09-11 18:24:46.448984]  Starting itti queue: TASK_MME_APP as task 28
+[0m[ITTI]   [2025-09-11 18:24:46.448987]  Starting itti queue: TASK_FLEXRAN_AGENT as task 29
+[0m[ITTI]   [2025-09-11 18:24:46.468974]  Starting itti queue: TASK_PHY_UE as task 30
+[0m[ITTI]   [2025-09-11 18:24:46.469011]  Starting itti queue: TASK_MAC_UE as task 31
+[0m[ITTI]   [2025-09-11 18:24:46.469020]  Starting itti queue: TASK_RLC_UE as task 32
+[0m[ITTI]   [2025-09-11 18:24:46.469022]  Starting itti queue: TASK_PDCP_UE as task 33
+[0m[ITTI]   [2025-09-11 18:24:46.469024]  Starting itti queue: TASK_RRC_UE as task 34
+[0m[ITTI]   [2025-09-11 18:24:46.469027]  Starting itti queue: TASK_RRC_NRUE as task 35
+[0m[ITTI]   [2025-09-11 18:24:46.469029]  Starting itti queue: TASK_NAS_UE as task 36
+[0m[ITTI]   [2025-09-11 18:24:46.469032]  Starting itti queue: TASK_RAL_UE as task 37
+[0m[ITTI]   [2025-09-11 18:24:46.469034]  Starting itti queue: TASK_GTPV1_U as task 38
+[0m[ITTI]   [2025-09-11 18:24:46.469037]  Starting itti queue: TASK_CU_F1 as task 39
+[0m[ITTI]   [2025-09-11 18:24:46.469039]  Starting itti queue: TASK_DU_F1 as task 40
+[0m[ITTI]   [2025-09-11 18:24:46.469042]  Starting itti queue: TASK_CUCP_E1 as task 41
+[0m[ITTI]   [2025-09-11 18:24:46.469045]  Starting itti queue: TASK_CUUP_E1 as task 42
+[0m[ITTI]   [2025-09-11 18:24:46.469047]  Starting itti queue: TASK_RRC_UE_SIM as task 43
+[0m[ITTI]   [2025-09-11 18:24:46.469049]  Starting itti queue: TASK_RRC_GNB_SIM as task 44
+[0m[ITTI]   [2025-09-11 18:24:46.469052]  Starting itti queue: TASK_RRC_NSA_UE as task 45
+[0m[ITTI]   [2025-09-11 18:24:46.469055]  Starting itti queue: TASK_RRC_NSA_NRUE as task 46
+[0m[ITTI]   [2025-09-11 18:24:46.469057]  Starting itti queue: TASK_NAS_NRUE as task 47
+[0m[OPT]   [2025-09-11 18:24:46.469076]  OPT disabled
+[0m[HW]   [2025-09-11 18:24:46.469470]  Version: Branch: master Abrev. Hash: ae3d0b7 Date: Tue Nov 1 17:03:55 2022 +0530
+[0m[NR_MAC]   [2025-09-11 18:24:46.469483]  [UE0] Applying default macMainConfig
+[0m[MAC]   [2025-09-11 18:24:46.469485]  Running without CellGroupConfig
+[0m[PDCP]   [2025-09-11 18:24:46.472794]  pdcp init,usegtp usenetlink
+[0m[PDCP]   [2025-09-11 18:24:46.472981]  TUN: Opened socket oaitun_ue1 with fd nas_sock_fd[0]=101
+[0m[PDCP]   [2025-09-11 18:24:46.472988]  UE pdcp will use tun interface
+[0m[PHY]   [2025-09-11 18:24:46.474233]  Set UE mode 6, UE_fo_compensation 0, UE_scan_carrier 0, UE_no_timing_correction 0 
+, chest-freq 0
+[0m[PHY]   [2025-09-11 18:24:46.474236]  Set UE nb_rx_antenna 1, nb_tx_antenna 1, threequarter_fs 0, ssb_start_subcarrier 516
+[0m[PHY]   [2025-09-11 18:24:46.474239]  SA init parameters. DL freq 3619200000 UL offset 0 SSB numerology 1 N_RB_DL 106
+[0m[NR_MAC]   [2025-09-11 18:24:46.474241]  NR band duplex spacing is 0 KHz (nr_bandtable[23].band = 48)
+[0m[NR_MAC]   [2025-09-11 18:24:46.474244]  NR band 48, duplex mode TDD, duplex spacing = 0 KHz
+[0m[93m[PHY]   [2025-09-11 18:24:46.474246]  Init: N_RB_DL 106, first_carrier_offset 1412, nb_prefix_samples 144,nb_prefix_samples0 176, ofdm_symbol_size 2048
+[0m[93m[PHY]   [2025-09-11 18:24:46.474247]  samples_per_subframe 61440/per second 61440000, wCP 57344
+[0m[PHY]   [2025-09-11 18:24:46.474249]  Initializing UE vars for gNB TXant 1, UE RXant 1
+[0m[1;31m[PHY]   [2025-09-11 18:24:46.555228]  prs_config configuration NOT found..!! Skipped configuring UE for the PRS reception
+[0m[PHY]   [2025-09-11 18:24:46.574889]  Doing symbol rotation calculation for gNB TX/RX, f0 3619200000.000000 Hz, Nsymb 28
+[0m[PHY]   [2025-09-11 18:24:46.574904]  Symbol rotation 0/28 => tl 0.000000 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574906]  Symbol rotation 1/28 => tl 0.000036 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574908]  Symbol rotation 2/28 => tl 0.000072 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574910]  Symbol rotation 3/28 => tl 0.000108 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574911]  Symbol rotation 4/28 => tl 0.000143 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574915]  Symbol rotation 5/28 => tl 0.000179 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574916]  Symbol rotation 6/28 => tl 0.000215 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574918]  Symbol rotation 7/28 => tl 0.000250 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574919]  Symbol rotation 8/28 => tl 0.000286 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574920]  Symbol rotation 9/28 => tl 0.000322 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574921]  Symbol rotation 10/28 => tl 0.000357 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574922]  Symbol rotation 11/28 => tl 0.000393 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574924]  Symbol rotation 12/28 => tl 0.000429 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574925]  Symbol rotation 13/28 => tl 0.000464 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574926]  Symbol rotation 14/28 => tl 0.000500 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574927]  Symbol rotation 15/28 => tl 0.000536 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574928]  Symbol rotation 16/28 => tl 0.000572 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574929]  Symbol rotation 17/28 => tl 0.000608 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574931]  Symbol rotation 18/28 => tl 0.000643 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574932]  Symbol rotation 19/28 => tl 0.000679 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574933]  Symbol rotation 20/28 => tl 0.000715 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574934]  Symbol rotation 21/28 => tl 0.000750 (32767,0) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574935]  Symbol rotation 22/28 => tl 0.000786 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574936]  Symbol rotation 23/28 => tl 0.000822 (32767,0) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574938]  Symbol rotation 24/28 => tl 0.000857 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574939]  Symbol rotation 25/28 => tl 0.000893 (32767,0) (1.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574940]  Symbol rotation 26/28 => tl 0.000929 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574941]  Symbol rotation 27/28 => tl 0.000964 (32767,0) (1.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574942]  Doing symbol rotation calculation for gNB TX/RX, f0 3619200000.000000 Hz, Nsymb 28
+[0m[PHY]   [2025-09-11 18:24:46.574944]  Symbol rotation 0/28 => tl 0.000000 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574945]  Symbol rotation 1/28 => tl 0.000036 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574946]  Symbol rotation 2/28 => tl 0.000072 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574947]  Symbol rotation 3/28 => tl 0.000108 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574949]  Symbol rotation 4/28 => tl 0.000143 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574950]  Symbol rotation 5/28 => tl 0.000179 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574951]  Symbol rotation 6/28 => tl 0.000215 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574952]  Symbol rotation 7/28 => tl 0.000250 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574953]  Symbol rotation 8/28 => tl 0.000286 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574954]  Symbol rotation 9/28 => tl 0.000322 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574956]  Symbol rotation 10/28 => tl 0.000357 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574957]  Symbol rotation 11/28 => tl 0.000393 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574958]  Symbol rotation 12/28 => tl 0.000429 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574959]  Symbol rotation 13/28 => tl 0.000464 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574960]  Symbol rotation 14/28 => tl 0.000500 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574962]  Symbol rotation 15/28 => tl 0.000536 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574963]  Symbol rotation 16/28 => tl 0.000572 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574964]  Symbol rotation 17/28 => tl 0.000608 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574965]  Symbol rotation 18/28 => tl 0.000643 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574968]  Symbol rotation 19/28 => tl 0.000679 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574969]  Symbol rotation 20/28 => tl 0.000715 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574970]  Symbol rotation 21/28 => tl 0.000750 (32767,0) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574971]  Symbol rotation 22/28 => tl 0.000786 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574973]  Symbol rotation 23/28 => tl 0.000822 (32767,0) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574974]  Symbol rotation 24/28 => tl 0.000857 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574975]  Symbol rotation 25/28 => tl 0.000893 (32767,0) (1.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574976]  Symbol rotation 26/28 => tl 0.000929 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574977]  Symbol rotation 27/28 => tl 0.000964 (32767,0) (1.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574979]  Timeshift symbol rotation 0 => (32767,0) 0.000000
+[0m[PHY]   [2025-09-11 18:24:46.574980]  Timeshift symbol rotation 1 => (32717,1809) -0.055223
+[0m[PHY]   [2025-09-11 18:24:46.574982]  Timeshift symbol rotation 2 => (32567,3612) -0.110447
+[0m[PHY]   [2025-09-11 18:24:46.574983]  Timeshift symbol rotation 3 => (32318,5404) -0.165670
+[0m[PHY]   [2025-09-11 18:24:46.574984]  Timeshift symbol rotation 4 => (31971,7179) -0.220893
+[0m[PHY]   [2025-09-11 18:24:46.574985]  Timeshift symbol rotation 5 => (31526,8933) -0.276117
+[0m[PHY]   [2025-09-11 18:24:46.574986]  Timeshift symbol rotation 6 => (30985,10659) -0.331340
+[0m[PHY]   [2025-09-11 18:24:46.574987]  Timeshift symbol rotation 7 => (30349,12353) -0.386563
+[0m[PHY]   [2025-09-11 18:24:46.574988]  Timeshift symbol rotation 8 => (29621,14010) -0.441786
+[0m[PHY]   [2025-09-11 18:24:46.574989]  Timeshift symbol rotation 9 => (28803,15623) -0.497010
+[0m[PHY]   [2025-09-11 18:24:46.600098]  UE 0 Setting N_TA_offset to 800 samples (factor 2.000000, UL Freq 3619200000, N_RB 106, mu 1)
+[0m[PHY]   [2025-09-11 18:24:46.600106]  HW: Configuring card 0, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600109]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600111]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600113]  HW: Configuring card 1, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600114]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600116]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600117]  HW: Configuring card 2, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600118]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600120]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600121]  HW: Configuring card 3, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600122]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600123]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600124]  HW: Configuring card 4, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600126]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600127]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600128]  HW: Configuring card 5, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600129]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600130]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600131]  HW: Configuring card 6, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600132]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600134]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600135]  HW: Configuring card 7, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600136]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0

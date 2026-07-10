@@ -1,0 +1,984 @@
+[ENB_APP]   [2025-09-11 18:24:45.434184]  nfapi running mode: MONOLITHIC
+[0m[ITTI]   [2025-09-11 18:24:46.448877]  Starting itti queue: TASK_UNKNOWN as task 0
+[0m[ITTI]   [2025-09-11 18:24:46.448900]  Starting itti queue: TASK_TIMER as task 1
+[0m[ITTI]   [2025-09-11 18:24:46.448903]  Starting itti queue: TASK_L2L1 as task 2
+[0m[ITTI]   [2025-09-11 18:24:46.448906]  Starting itti queue: TASK_BM as task 3
+[0m[ITTI]   [2025-09-11 18:24:46.448909]  Starting itti queue: TASK_PHY_ENB as task 4
+[0m[ITTI]   [2025-09-11 18:24:46.448912]  Starting itti queue: TASK_MAC_ENB as task 5
+[0m[ITTI]   [2025-09-11 18:24:46.448914]  Starting itti queue: TASK_MAC_GNB as task 6
+[0m[ITTI]   [2025-09-11 18:24:46.448917]  Starting itti queue: TASK_RLC_ENB as task 7
+[0m[ITTI]   [2025-09-11 18:24:46.448919]  Starting itti queue: TASK_RRC_ENB_NB_IoT as task 8
+[0m[ITTI]   [2025-09-11 18:24:46.448921]  Starting itti queue: TASK_PDCP_ENB as task 9
+[0m[ITTI]   [2025-09-11 18:24:46.448924]  Starting itti queue: TASK_PDCP_GNB as task 10
+[0m[ITTI]   [2025-09-11 18:24:46.448927]  Starting itti queue: TASK_DATA_FORWARDING as task 11
+[0m[ITTI]   [2025-09-11 18:24:46.448930]  Starting itti queue: TASK_END_MARKER as task 12
+[0m[ITTI]   [2025-09-11 18:24:46.448933]  Starting itti queue: TASK_RRC_ENB as task 13
+[0m[ITTI]   [2025-09-11 18:24:46.448935]  Starting itti queue: TASK_RRC_GNB as task 14
+[0m[ITTI]   [2025-09-11 18:24:46.448938]  Starting itti queue: TASK_RAL_ENB as task 15
+[0m[ITTI]   [2025-09-11 18:24:46.448941]  Starting itti queue: TASK_S1AP as task 16
+[0m[ITTI]   [2025-09-11 18:24:46.448944]  Starting itti queue: TASK_NGAP as task 17
+[0m[ITTI]   [2025-09-11 18:24:46.448947]  Starting itti queue: TASK_X2AP as task 18
+[0m[ITTI]   [2025-09-11 18:24:46.448949]  Starting itti queue: TASK_M2AP_ENB as task 19
+[0m[ITTI]   [2025-09-11 18:24:46.448951]  Starting itti queue: TASK_M2AP_MCE as task 20
+[0m[ITTI]   [2025-09-11 18:24:46.448958]  Starting itti queue: TASK_M3AP as task 21
+[0m[ITTI]   [2025-09-11 18:24:46.448962]  Starting itti queue: TASK_M3AP_MME as task 22
+[0m[ITTI]   [2025-09-11 18:24:46.448965]  Starting itti queue: TASK_M3AP_MCE as task 23
+[0m[ITTI]   [2025-09-11 18:24:46.448969]  Starting itti queue: TASK_SCTP as task 24
+[0m[ITTI]   [2025-09-11 18:24:46.448973]  Starting itti queue: TASK_ENB_APP as task 25
+[0m[ITTI]   [2025-09-11 18:24:46.448976]  Starting itti queue: TASK_GNB_APP as task 26
+[0m[ITTI]   [2025-09-11 18:24:46.448981]  Starting itti queue: TASK_MCE_APP as task 27
+[0m[ITTI]   [2025-09-11 18:24:46.448984]  Starting itti queue: TASK_MME_APP as task 28
+[0m[ITTI]   [2025-09-11 18:24:46.448987]  Starting itti queue: TASK_FLEXRAN_AGENT as task 29
+[0m[ITTI]   [2025-09-11 18:24:46.468974]  Starting itti queue: TASK_PHY_UE as task 30
+[0m[ITTI]   [2025-09-11 18:24:46.469011]  Starting itti queue: TASK_MAC_UE as task 31
+[0m[ITTI]   [2025-09-11 18:24:46.469020]  Starting itti queue: TASK_RLC_UE as task 32
+[0m[ITTI]   [2025-09-11 18:24:46.469022]  Starting itti queue: TASK_PDCP_UE as task 33
+[0m[ITTI]   [2025-09-11 18:24:46.469024]  Starting itti queue: TASK_RRC_UE as task 34
+[0m[ITTI]   [2025-09-11 18:24:46.469027]  Starting itti queue: TASK_RRC_NRUE as task 35
+[0m[ITTI]   [2025-09-11 18:24:46.469029]  Starting itti queue: TASK_NAS_UE as task 36
+[0m[ITTI]   [2025-09-11 18:24:46.469032]  Starting itti queue: TASK_RAL_UE as task 37
+[0m[ITTI]   [2025-09-11 18:24:46.469034]  Starting itti queue: TASK_GTPV1_U as task 38
+[0m[ITTI]   [2025-09-11 18:24:46.469037]  Starting itti queue: TASK_CU_F1 as task 39
+[0m[ITTI]   [2025-09-11 18:24:46.469039]  Starting itti queue: TASK_DU_F1 as task 40
+[0m[ITTI]   [2025-09-11 18:24:46.469042]  Starting itti queue: TASK_CUCP_E1 as task 41
+[0m[ITTI]   [2025-09-11 18:24:46.469045]  Starting itti queue: TASK_CUUP_E1 as task 42
+[0m[ITTI]   [2025-09-11 18:24:46.469047]  Starting itti queue: TASK_RRC_UE_SIM as task 43
+[0m[ITTI]   [2025-09-11 18:24:46.469049]  Starting itti queue: TASK_RRC_GNB_SIM as task 44
+[0m[ITTI]   [2025-09-11 18:24:46.469052]  Starting itti queue: TASK_RRC_NSA_UE as task 45
+[0m[ITTI]   [2025-09-11 18:24:46.469055]  Starting itti queue: TASK_RRC_NSA_NRUE as task 46
+[0m[ITTI]   [2025-09-11 18:24:46.469057]  Starting itti queue: TASK_NAS_NRUE as task 47
+[0m[OPT]   [2025-09-11 18:24:46.469076]  OPT disabled
+[0m[HW]   [2025-09-11 18:24:46.469470]  Version: Branch: master Abrev. Hash: ae3d0b7 Date: Tue Nov 1 17:03:55 2022 +0530
+[0m[NR_MAC]   [2025-09-11 18:24:46.469483]  [UE0] Applying default macMainConfig
+[0m[MAC]   [2025-09-11 18:24:46.469485]  Running without CellGroupConfig
+[0m[PDCP]   [2025-09-11 18:24:46.472794]  pdcp init,usegtp usenetlink
+[0m[PDCP]   [2025-09-11 18:24:46.472981]  TUN: Opened socket oaitun_ue1 with fd nas_sock_fd[0]=101
+[0m[PDCP]   [2025-09-11 18:24:46.472988]  UE pdcp will use tun interface
+[0m[PHY]   [2025-09-11 18:24:46.474233]  Set UE mode 6, UE_fo_compensation 0, UE_scan_carrier 0, UE_no_timing_correction 0 
+, chest-freq 0
+[0m[PHY]   [2025-09-11 18:24:46.474236]  Set UE nb_rx_antenna 1, nb_tx_antenna 1, threequarter_fs 0, ssb_start_subcarrier 516
+[0m[PHY]   [2025-09-11 18:24:46.474239]  SA init parameters. DL freq 3619200000 UL offset 0 SSB numerology 1 N_RB_DL 106
+[0m[NR_MAC]   [2025-09-11 18:24:46.474241]  NR band duplex spacing is 0 KHz (nr_bandtable[23].band = 48)
+[0m[NR_MAC]   [2025-09-11 18:24:46.474244]  NR band 48, duplex mode TDD, duplex spacing = 0 KHz
+[0m[93m[PHY]   [2025-09-11 18:24:46.474246]  Init: N_RB_DL 106, first_carrier_offset 1412, nb_prefix_samples 144,nb_prefix_samples0 176, ofdm_symbol_size 2048
+[0m[93m[PHY]   [2025-09-11 18:24:46.474247]  samples_per_subframe 61440/per second 61440000, wCP 57344
+[0m[PHY]   [2025-09-11 18:24:46.474249]  Initializing UE vars for gNB TXant 1, UE RXant 1
+[0m[1;31m[PHY]   [2025-09-11 18:24:46.555228]  prs_config configuration NOT found..!! Skipped configuring UE for the PRS reception
+[0m[PHY]   [2025-09-11 18:24:46.574889]  Doing symbol rotation calculation for gNB TX/RX, f0 3619200000.000000 Hz, Nsymb 28
+[0m[PHY]   [2025-09-11 18:24:46.574904]  Symbol rotation 0/28 => tl 0.000000 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574906]  Symbol rotation 1/28 => tl 0.000036 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574908]  Symbol rotation 2/28 => tl 0.000072 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574910]  Symbol rotation 3/28 => tl 0.000108 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574911]  Symbol rotation 4/28 => tl 0.000143 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574915]  Symbol rotation 5/28 => tl 0.000179 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574916]  Symbol rotation 6/28 => tl 0.000215 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574918]  Symbol rotation 7/28 => tl 0.000250 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574919]  Symbol rotation 8/28 => tl 0.000286 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574920]  Symbol rotation 9/28 => tl 0.000322 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574921]  Symbol rotation 10/28 => tl 0.000357 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574922]  Symbol rotation 11/28 => tl 0.000393 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574924]  Symbol rotation 12/28 => tl 0.000429 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574925]  Symbol rotation 13/28 => tl 0.000464 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574926]  Symbol rotation 14/28 => tl 0.000500 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574927]  Symbol rotation 15/28 => tl 0.000536 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574928]  Symbol rotation 16/28 => tl 0.000572 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574929]  Symbol rotation 17/28 => tl 0.000608 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574931]  Symbol rotation 18/28 => tl 0.000643 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574932]  Symbol rotation 19/28 => tl 0.000679 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574933]  Symbol rotation 20/28 => tl 0.000715 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574934]  Symbol rotation 21/28 => tl 0.000750 (32767,0) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574935]  Symbol rotation 22/28 => tl 0.000786 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574936]  Symbol rotation 23/28 => tl 0.000822 (32767,0) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574938]  Symbol rotation 24/28 => tl 0.000857 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574939]  Symbol rotation 25/28 => tl 0.000893 (32767,0) (1.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574940]  Symbol rotation 26/28 => tl 0.000929 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574941]  Symbol rotation 27/28 => tl 0.000964 (32767,0) (1.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574942]  Doing symbol rotation calculation for gNB TX/RX, f0 3619200000.000000 Hz, Nsymb 28
+[0m[PHY]   [2025-09-11 18:24:46.574944]  Symbol rotation 0/28 => tl 0.000000 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574945]  Symbol rotation 1/28 => tl 0.000036 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574946]  Symbol rotation 2/28 => tl 0.000072 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574947]  Symbol rotation 3/28 => tl 0.000108 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574949]  Symbol rotation 4/28 => tl 0.000143 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574950]  Symbol rotation 5/28 => tl 0.000179 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574951]  Symbol rotation 6/28 => tl 0.000215 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574952]  Symbol rotation 7/28 => tl 0.000250 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574953]  Symbol rotation 8/28 => tl 0.000286 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574954]  Symbol rotation 9/28 => tl 0.000322 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574956]  Symbol rotation 10/28 => tl 0.000357 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574957]  Symbol rotation 11/28 => tl 0.000393 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574958]  Symbol rotation 12/28 => tl 0.000429 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574959]  Symbol rotation 13/28 => tl 0.000464 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574960]  Symbol rotation 14/28 => tl 0.000500 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574962]  Symbol rotation 15/28 => tl 0.000536 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574963]  Symbol rotation 16/28 => tl 0.000572 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574964]  Symbol rotation 17/28 => tl 0.000608 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574965]  Symbol rotation 18/28 => tl 0.000643 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574968]  Symbol rotation 19/28 => tl 0.000679 (32767,-1) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574969]  Symbol rotation 20/28 => tl 0.000715 (-32767,0) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574970]  Symbol rotation 21/28 => tl 0.000750 (32767,0) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574971]  Symbol rotation 22/28 => tl 0.000786 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574973]  Symbol rotation 23/28 => tl 0.000822 (32767,0) (0.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574974]  Symbol rotation 24/28 => tl 0.000857 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574975]  Symbol rotation 25/28 => tl 0.000893 (32767,0) (1.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574976]  Symbol rotation 26/28 => tl 0.000929 (-32767,-1) (0.500000)
+[0m[PHY]   [2025-09-11 18:24:46.574977]  Symbol rotation 27/28 => tl 0.000964 (32767,0) (1.000000)
+[0m[PHY]   [2025-09-11 18:24:46.574979]  Timeshift symbol rotation 0 => (32767,0) 0.000000
+[0m[PHY]   [2025-09-11 18:24:46.574980]  Timeshift symbol rotation 1 => (32717,1809) -0.055223
+[0m[PHY]   [2025-09-11 18:24:46.574982]  Timeshift symbol rotation 2 => (32567,3612) -0.110447
+[0m[PHY]   [2025-09-11 18:24:46.574983]  Timeshift symbol rotation 3 => (32318,5404) -0.165670
+[0m[PHY]   [2025-09-11 18:24:46.574984]  Timeshift symbol rotation 4 => (31971,7179) -0.220893
+[0m[PHY]   [2025-09-11 18:24:46.574985]  Timeshift symbol rotation 5 => (31526,8933) -0.276117
+[0m[PHY]   [2025-09-11 18:24:46.574986]  Timeshift symbol rotation 6 => (30985,10659) -0.331340
+[0m[PHY]   [2025-09-11 18:24:46.574987]  Timeshift symbol rotation 7 => (30349,12353) -0.386563
+[0m[PHY]   [2025-09-11 18:24:46.574988]  Timeshift symbol rotation 8 => (29621,14010) -0.441786
+[0m[PHY]   [2025-09-11 18:24:46.574989]  Timeshift symbol rotation 9 => (28803,15623) -0.497010
+[0m[PHY]   [2025-09-11 18:24:46.600098]  UE 0 Setting N_TA_offset to 800 samples (factor 2.000000, UL Freq 3619200000, N_RB 106, mu 1)
+[0m[PHY]   [2025-09-11 18:24:46.600106]  HW: Configuring card 0, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600109]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600111]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600113]  HW: Configuring card 1, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600114]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600116]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600117]  HW: Configuring card 2, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600118]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600120]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600121]  HW: Configuring card 3, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600122]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600123]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600124]  HW: Configuring card 4, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600126]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600127]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600128]  HW: Configuring card 5, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600129]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600130]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600131]  HW: Configuring card 6, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600132]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600134]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[PHY]   [2025-09-11 18:24:46.600135]  HW: Configuring card 7, sample_rate 61440000.000000, tx/rx num_channels 1/1, duplex_mode TDD
+[0m[PHY]   [2025-09-11 18:24:46.600136]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:46.600137]  HW: Configuring channel 0 (rf_chain 0): setting tx_gain 0, rx_gain 110
+[0m[HW]   [2025-09-11 18:24:46.600160]  # /dev/cpu_dma_latency set to 2 us
+[0m[PHY]   [2025-09-11 18:24:46.647331]  Intializing UE Threads for instance 0 (0x5556f43e83d0,0x7f48677c2010)...
+[0m[93m[HW]   [2025-09-11 18:24:46.650418]  rfsim: sample_rate 61440000.000000
+[0m[HW]   [2025-09-11 18:24:46.650428]  rfsimulator: running as client: will connect to a rfsimulator server side
+[0m[HW]   [2025-09-11 18:24:46.650452]  [RRU] has loaded RFSIMULATOR device.
+[0m[HW]   [2025-09-11 18:24:46.650462]  rfsimulator: trying to connect to 10.102.42.146:4043
+[0m[HW]   [2025-09-11 18:24:46.650872]  rfsimulator: connection established
+[0m[NR_RRC]   [2025-09-11 18:24:46.651677]  create TASK_RRC_NRUE 
+[0m[ITTI]   [2025-09-11 18:24:46.654016]  Created Posix thread TASK_RRC_NRUE
+[0m[ITTI]   [2025-09-11 18:24:46.655892]  Created Posix thread TASK_NAS_NRUE
+[0m[93m[HW]   [2025-09-11 18:24:47.654220]  UE got first timestamp: starting at 260351999
+[0m[93m[HW]   [2025-09-11 18:24:47.654474]  UEsock: 104 gap of: 1 in reception
+[0m[PHY]   [2025-09-11 18:24:47.661450]  [SCHED][UE] Check absolute frequency DL 3619200000.000000, UL 3619200000.000000 (RF card 0, oai_exit 0, channel 0, rx_num_channels 1)
+[0m[93m[PHY]   [2025-09-11 18:24:47.661463]  Starting sync detection
+[0m[PHY]   [2025-09-11 18:24:47.661466]  [UE thread Synch] Running Initial Synch (mode 6)
+[0m[PHY]   [2025-09-11 18:24:47.952276]  [UE] nr_synchro_time: Sync source = 0, Peak found at pos 158160, val = 8511538725 (96 dB) avg 61 dB, ffo 0.000000
+[0m[PHY]   [2025-09-11 18:24:47.952293]  [UE0] Initial sync : Estimated PSS position 158160, Nid2 0
+[0m[PHY]   [2025-09-11 18:24:47.952296]  sync_pos 158160 ssb_offset 158016 
+[0m[PHY]   [2025-09-11 18:24:47.952338]  Calling sss detection (normal CP)
+[0m[NR_PHY]   [2025-09-11 18:24:47.952985]  ffo_pss 0.000000 (0 Hz), ffo_sss 0.000490 (14 Hz),  ffo_pss+ffo_sss 0.000490 (14 Hz)
+[0m[PHY]   [2025-09-11 18:24:47.952995]  [UE0] Initial sync: starting PBCH detection (rx_offset 0)
+[0m[32m[NR_RRC]   [2025-09-11 18:24:47.953613]  Configuring MAC for first MIB reception
+[0m[PHY]   [2025-09-11 18:24:47.953632]  [UE0] Initial sync: pbch decoded sucessfully
+[0m[PHY]   [2025-09-11 18:24:47.954102]  TDD Normal prefix: CellId 0 metric 53020, phase 7, pbch 0
+[0m[PHY]   [2025-09-11 18:24:47.954106]  [UE0] In synch, rx_offset 153600 samples
+[0m[PHY]   [2025-09-11 18:24:47.954788]  HW: Configuring channel 0 (rf_chain 0): setting tx_freq 3619200000 Hz, rx_freq 3619200000 Hz, tune_offset 0
+[0m[PHY]   [2025-09-11 18:24:47.954795]  Got synch: hw_slot_offset 10, carrier off 0 Hz, rxgain 0.000000 (DL 3619200000.000000 Hz, UL 3619200000.000000 Hz)
+[0m[32m[NR_RRC]   [2025-09-11 18:24:47.954855]  SIB1 decoded
+[0m[NR_MAC]   [2025-09-11 18:24:47.954866]  NR band duplex spacing is 0 KHz (nr_bandtable[37].band = 78)
+[0m[NR_MAC]   [2025-09-11 18:24:47.954869]  NR band 78, duplex mode TDD, duplex spacing = 0 KHz
+[0m[NR_MAC]   [2025-09-11 18:24:47.954875]  TDD has been properly configured
+[0m[NR_MAC]   [2025-09-11 18:24:47.954878]  Initializing ul_config_request. num_slots_ul = 3
+[0m[PHY]   [2025-09-11 18:24:47.957163]  Resynchronizing RX by 153600 samples (mode = 6)
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.958094]  Slot 5 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.958103]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.958320]  Slot 6 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.958326]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.959075]  Slot 10 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.959080]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.959280]  Slot 11 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.959285]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.959545]  Slot 12 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.959548]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.959722]  Slot 13 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.959725]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.959926]  Slot 14 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.959929]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.960128]  Slot 15 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.960136]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.960334]  Slot 16 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.960336]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.961539]  Slot 0 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.961547]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.961857]  Slot 1 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.961860]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.962314]  Slot 2 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.962319]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.962623]  Slot 3 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.962639]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.962971]  Slot 4 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.962975]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.963276]  Slot 5 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.963281]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.963573]  Slot 6 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.963576]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.964777]  Slot 10 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.964783]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.965071]  Slot 11 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.965075]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.965340]  Slot 12 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.965343]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.965536]  Slot 13 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.965539]  mac->ul_config is null!
+[0m[93m[NR_MAC]   [2025-09-11 18:24:47.965728]  Slot 14 is not a UL slot. get_ul_config_request called for wrong slot!!!
+[0m[1;31m[NR_MAC]   [2025-09-11 18:24:47.965731]  mac->ul_config is null!
+[0mCMDLINE: "./nr-uesoftmodem" "-r" "106" "--numerology" "1" "--band" "78" "-C" "3619200000" "--rfsim" "--sa" "-O" "/v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf" "--nokrnmod" "1" 
+[CONFIG] get parameters from libconfig /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf , debug flags: 0x00000000
+[LIBCONFIG] Path for include directive set to: /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS
+[CONFIG] function config_libconfig_init returned 0
+[CONFIG] config module libconfig loaded
+[LIBCONFIG] config: 1/1 parameters successfully set, (1 to default value)
+[LIBCONFIG] log_config: 3/3 parameters successfully set, (2 to default value)
+[LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)
+[LIBCONFIG] log_config: 56/56 parameters successfully set, (56 to default value)
+[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)
+[LIBCONFIG] log_config: 16/16 parameters successfully set, (16 to default value)
+log init done
+[LIBCONFIG] (root): 12/12 parameters successfully set, (10 to default value)
+[LIBCONFIG] (root): 36/36 parameters successfully set, (32 to default value)
+[LIBCONFIG] (root): 5/5 parameters successfully set, (4 to default value)
+nokrnmod bit enabled 
+[LIBCONFIG] TTracer: 3/3 parameters successfully set, (3 to default value)
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+create a thread for core -1
+CPU Freq is 2.419235 
+[LIBCONFIG] opt: 3/3 parameters successfully set, (3 to default value)
+[LIBCONFIG] loader: 2/2 parameters successfully set, (2 to default value)
+[LIBCONFIG] loader.ldpc: 2/2 parameters successfully set, (1 to default value)
+shlib_path libldpc.so
+[LOADER] library libldpc.so successfully loaded
+[LIBCONFIG] nas.noS1: 3/3 parameters successfully set, (3 to default value)
+[LIBCONFIG] (root): 25/25 parameters successfully set, (25 to default value)
+DL frequency 3619200000: band 48, UL frequency 3619200000
+[LIBCONFIG] loader.dfts: 2/2 parameters successfully set, (1 to default value)
+shlib_path libdfts.so
+[LOADER] library libdfts.so successfully loaded
+[LIBCONFIG] list PRSs not found in config file /v4ue/rfsim/5g_sa_split8_ue_v4_rfsim_usrp_oct_25_2022/openair3/NAS/TOOLS/5g_sa_ue.conf 
+[LIBCONFIG] device.recplay: 8/8 parameters successfully set, (8 to default value)
+[LIBCONFIG] device: 1/1 parameters successfully set, (1 to default value)
+[LIBCONFIG] loader.rfsimulator: 2/2 parameters successfully set, (1 to default value)
+shlib_path librfsimulator.so
+[LOADER] library librfsimulator.so successfully loaded
+[LIBCONFIG] rfsimulator: 8/8 parameters successfully set, (7 to default value)
+Initializing random number generator, seed 4f1a5900
+UE threads created by 131
+TYPE <CTRL-C> TO TERMINATE
+PSS execution duration 290818 microseconds 
+Nid2 0 Nid1 0 tot_metric 53020, phase_max 7 
+<UL-CCCH-Message>
+    <message>
+        <c1>
+            <rrcSetupRequest>
+                <rrcSetupRequest>
+                    <ue-Identity>
+                        <randomValue>
+                            111001111111011011110010001110001100010
+                        </randomValue>
+                    </ue-Identity>
+                    <establishmentCause><mo-Signalling/></establishmentCause>
+                    <spare>
+                        0
+                    </spare>
+                </rrcSetupRequest>
+            </rrcSetupRequest>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            34 66 30 64 31 32 65 63 34 32 35 61 34 36 66 64 
+            39 65 30 61 63 35 38 63 35 62 37 63 38 62 38 66
+        </traceParent>
+        <spanParent>65 63 64 37 30 30 62 31 66 34 61 34 64 33 66 37</spanParent>
+    </traceInfo>
+</UL-CCCH-Message>
+[NR_RRC]   [2025-09-11 18:24:47.966695]  [UE] RRCSetupRequest Encoded 448 bits (56 bytes)
+[0m<UL-CCCH-Message>
+    <message>
+        <c1>
+            <rrcSetupRequest>
+                <rrcSetupRequest>
+                    <ue-Identity>
+                        <randomValue>
+                            110111001011111000110000100001110100010
+                        </randomValue>
+                    </ue-Identity>
+                    <establishmentCause><mo-Signalling/></establishmentCause>
+                    <spare>
+                        0
+                    </spare>
+                </rrcSetupRequest>
+            </rrcSetupRequest>
+        </c1>
+    </message>
+    <traceInfo>
+        <traceParent>
+            34 66 30 64 31 32 65 63 34 32 35 61 34 36 66 64 
+            39 65 30 61 63 35 38 63 35 62 37 63 38 62 38 66
+        </traceParent>
+        <spanParent>38 66 30 61 39 39 36 64 32 61 36 32 30 34 36 38</spanParent>
+    </traceInfo>
+</UL-CCCH-Message>
+[NR_RRC]   [2025-09-11 18:24:47.966865]  [UE] RRCSetupRequest Encoded 448 bits (56 bytes)
+[0m[NR_RRC]   [2025-09-11 18:24:48.017986]  [UE 0] : Logical Channel UL-CCCH (SRB0), Generating RRCSetupRequest (bytes 56, gNB 0)
+[0m[NR_RRC]   [2025-09-11 18:24:48.017999]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.018002]  In nr_ue_get_rach: [UE 0][499.14]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.018717]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.018723]  In nr_ue_get_rach: [UE 0][499.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.021545]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.021551]  In nr_ue_get_rach: [UE 0][499.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.023327]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.023332]  In nr_ue_get_rach: [UE 0][499.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.023335]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.024897]  PRACH [UE 0] in frame.slot 499.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 9, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.031168]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.031174]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.031176]  [UE 0][RAPROC][500.7] Found RAR with the intended RAPID 36
+[0m[93m[MAC]   [2025-09-11 18:24:48.031178]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.031867]  [RAPROC][500.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.031873]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 500.17 and expiring in 500.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.032168]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.033434]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.033440]  In nr_ue_get_rach: [UE 0][500.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.034810]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.034815]  In nr_ue_get_rach: [UE 0][500.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.037868]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.037875]  In nr_ue_get_rach: [UE 0][501.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.039238]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.039244]  In nr_ue_get_rach: [UE 0][501.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.040752]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.040758]  In nr_ue_get_rach: [UE 0][501.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.043034]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.043041]  In nr_ue_get_rach: [UE 0][501.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.044547]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.044553]  In nr_ue_get_rach: [UE 0][501.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.045492]  [UE 0] : Logical Channel UL-CCCH (SRB0), Generating RRCSetupRequest (bytes 56, gNB 0)
+[0m[NR_RRC]   [2025-09-11 18:24:48.045820]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.045826]  In nr_ue_get_rach: [UE 0][501.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.045829]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.047526]  PRACH [UE 0] in frame.slot 501.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 1, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.054627]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.054636]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.054638]  [UE 0][RAPROC][502.7] Found RAR with the intended RAPID 4
+[0m[93m[MAC]   [2025-09-11 18:24:48.054640]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.055384]  [RAPROC][502.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.055393]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 502.17 and expiring in 502.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.055659]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.057179]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.057185]  In nr_ue_get_rach: [UE 0][502.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.058596]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.058602]  In nr_ue_get_rach: [UE 0][502.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.061816]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.061823]  In nr_ue_get_rach: [UE 0][503.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.064880]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.064887]  In nr_ue_get_rach: [UE 0][503.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.066963]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.066969]  In nr_ue_get_rach: [UE 0][503.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.069322]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.069328]  In nr_ue_get_rach: [UE 0][503.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.070647]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.070652]  In nr_ue_get_rach: [UE 0][503.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.072123]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.072128]  In nr_ue_get_rach: [UE 0][503.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.072131]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.073281]  PRACH [UE 0] in frame.slot 503.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 3, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.079211]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.079217]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.079219]  [UE 0][RAPROC][504.7] Found RAR with the intended RAPID 15
+[0m[93m[MAC]   [2025-09-11 18:24:48.079220]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.079929]  [RAPROC][504.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.079956]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 504.17 and expiring in 504.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.080204]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.081412]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.081418]  In nr_ue_get_rach: [UE 0][504.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.082795]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.082801]  In nr_ue_get_rach: [UE 0][504.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.085793]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.085803]  In nr_ue_get_rach: [UE 0][505.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.087109]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.087115]  In nr_ue_get_rach: [UE 0][505.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.088603]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.088609]  In nr_ue_get_rach: [UE 0][505.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.090719]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.090726]  In nr_ue_get_rach: [UE 0][505.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.092271]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.092277]  In nr_ue_get_rach: [UE 0][505.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.093727]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.093733]  In nr_ue_get_rach: [UE 0][505.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.093736]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.094906]  PRACH [UE 0] in frame.slot 505.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 6, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.101125]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.101131]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.101133]  [UE 0][RAPROC][506.7] Found RAR with the intended RAPID 26
+[0m[93m[MAC]   [2025-09-11 18:24:48.101134]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.101828]  [RAPROC][506.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.101854]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 506.17 and expiring in 506.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.102088]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.103706]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.103712]  In nr_ue_get_rach: [UE 0][506.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.105172]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.105178]  In nr_ue_get_rach: [UE 0][506.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.108123]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.108130]  In nr_ue_get_rach: [UE 0][507.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.110267]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.110273]  In nr_ue_get_rach: [UE 0][507.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.112133]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.112140]  In nr_ue_get_rach: [UE 0][507.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.114682]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.114689]  In nr_ue_get_rach: [UE 0][507.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.116105]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.116111]  In nr_ue_get_rach: [UE 0][507.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.117395]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.117401]  In nr_ue_get_rach: [UE 0][507.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.117404]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.118753]  PRACH [UE 0] in frame.slot 507.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 0, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.124743]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.124750]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.124751]  [UE 0][RAPROC][508.7] Found RAR with the intended RAPID 1
+[0m[93m[MAC]   [2025-09-11 18:24:48.124753]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.125457]  [RAPROC][508.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.125463]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 508.17 and expiring in 508.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.125678]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.127071]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.127077]  In nr_ue_get_rach: [UE 0][508.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.128646]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.128651]  In nr_ue_get_rach: [UE 0][508.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.131597]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.131605]  In nr_ue_get_rach: [UE 0][509.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.133671]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.133677]  In nr_ue_get_rach: [UE 0][509.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.135280]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.135285]  In nr_ue_get_rach: [UE 0][509.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.138100]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.138106]  In nr_ue_get_rach: [UE 0][509.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.139407]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.139413]  In nr_ue_get_rach: [UE 0][509.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.140760]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.140766]  In nr_ue_get_rach: [UE 0][509.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.140768]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.142308]  PRACH [UE 0] in frame.slot 509.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 8, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.148383]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.148389]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.148391]  [UE 0][RAPROC][510.7] Found RAR with the intended RAPID 32
+[0m[93m[MAC]   [2025-09-11 18:24:48.148393]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.149090]  [RAPROC][510.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.149097]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 510.17 and expiring in 510.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.149330]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.150950]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.150955]  In nr_ue_get_rach: [UE 0][510.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.152431]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.152436]  In nr_ue_get_rach: [UE 0][510.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.155495]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.155503]  In nr_ue_get_rach: [UE 0][511.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.157743]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.157750]  In nr_ue_get_rach: [UE 0][511.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.159322]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.159328]  In nr_ue_get_rach: [UE 0][511.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.161971]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.161977]  In nr_ue_get_rach: [UE 0][511.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.163503]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.163509]  In nr_ue_get_rach: [UE 0][511.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.164812]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.164818]  In nr_ue_get_rach: [UE 0][511.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.164821]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.165967]  PRACH [UE 0] in frame.slot 511.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 5, first_nonzero_root_idx 0
+[0m[NR_PHY]   [2025-09-11 18:24:48.166954]  ============================================
+[0m[NR_PHY]   [2025-09-11 18:24:48.166958]  Harq round stats for Downlink: 7/0/0/0
+[0m[NR_PHY]   [2025-09-11 18:24:48.166960]  ============================================
+[0m[NR_MAC]   [2025-09-11 18:24:48.171751]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.171756]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.171758]  [UE 0][RAPROC][512.7] Found RAR with the intended RAPID 22
+[0m[93m[MAC]   [2025-09-11 18:24:48.171759]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.172480]  [RAPROC][512.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.172507]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 512.17 and expiring in 512.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.172749]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.174081]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.174086]  In nr_ue_get_rach: [UE 0][512.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.175950]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.175955]  In nr_ue_get_rach: [UE 0][512.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.179031]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.179042]  In nr_ue_get_rach: [UE 0][513.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.180548]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.180555]  In nr_ue_get_rach: [UE 0][513.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.182337]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.182342]  In nr_ue_get_rach: [UE 0][513.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.184881]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.184887]  In nr_ue_get_rach: [UE 0][513.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.186261]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.186267]  In nr_ue_get_rach: [UE 0][513.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.187750]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.187756]  In nr_ue_get_rach: [UE 0][513.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.187759]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.188862]  PRACH [UE 0] in frame.slot 513.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 3, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.195397]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.195403]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.195405]  [UE 0][RAPROC][514.7] Found RAR with the intended RAPID 13
+[0m[93m[MAC]   [2025-09-11 18:24:48.195406]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.196114]  [RAPROC][514.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.196133]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 514.17 and expiring in 514.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.196351]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.197901]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.197907]  In nr_ue_get_rach: [UE 0][514.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.199424]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.199429]  In nr_ue_get_rach: [UE 0][514.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.202330]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.202339]  In nr_ue_get_rach: [UE 0][515.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.204115]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.204122]  In nr_ue_get_rach: [UE 0][515.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.205483]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.205489]  In nr_ue_get_rach: [UE 0][515.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.208580]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.208586]  In nr_ue_get_rach: [UE 0][515.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.209965]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.209971]  In nr_ue_get_rach: [UE 0][515.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.211341]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.211347]  In nr_ue_get_rach: [UE 0][515.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.211350]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.212593]  PRACH [UE 0] in frame.slot 515.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 14, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.218462]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.218468]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.218470]  [UE 0][RAPROC][516.7] Found RAR with the intended RAPID 57
+[0m[93m[MAC]   [2025-09-11 18:24:48.218471]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.219165]  [RAPROC][516.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.219171]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 516.17 and expiring in 516.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.219408]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.220852]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.220858]  In nr_ue_get_rach: [UE 0][516.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.222277]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.222282]  In nr_ue_get_rach: [UE 0][516.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.225150]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.225159]  In nr_ue_get_rach: [UE 0][517.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.228205]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.228211]  In nr_ue_get_rach: [UE 0][517.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.229942]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.229948]  In nr_ue_get_rach: [UE 0][517.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.232822]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.232829]  In nr_ue_get_rach: [UE 0][517.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.234257]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.234263]  In nr_ue_get_rach: [UE 0][517.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.235557]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.235563]  In nr_ue_get_rach: [UE 0][517.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.235566]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.236713]  PRACH [UE 0] in frame.slot 517.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 12, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.242376]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.242383]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.242384]  [UE 0][RAPROC][518.7] Found RAR with the intended RAPID 48
+[0m[93m[MAC]   [2025-09-11 18:24:48.242386]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.243084]  [RAPROC][518.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.243091]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 518.17 and expiring in 518.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.243285]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.244665]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.244671]  In nr_ue_get_rach: [UE 0][518.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.246008]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.246013]  In nr_ue_get_rach: [UE 0][518.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.248792]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.248800]  In nr_ue_get_rach: [UE 0][519.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.250685]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.250691]  In nr_ue_get_rach: [UE 0][519.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.252581]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.252586]  In nr_ue_get_rach: [UE 0][519.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.255160]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.255166]  In nr_ue_get_rach: [UE 0][519.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.256533]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.256539]  In nr_ue_get_rach: [UE 0][519.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.257871]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.257876]  In nr_ue_get_rach: [UE 0][519.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.257879]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.259007]  PRACH [UE 0] in frame.slot 519.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 0, first_nonzero_root_idx 0
+[0m[PHY]   [2025-09-11 18:24:48.260014]  [UE0] Sending synch status to higher layers
+[0m[NR_MAC]   [2025-09-11 18:24:48.265606]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.265611]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.265612]  [UE 0][RAPROC][520.7] Found RAR with the intended RAPID 2
+[0m[93m[MAC]   [2025-09-11 18:24:48.265614]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.266301]  [RAPROC][520.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.266307]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 520.17 and expiring in 520.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.266519]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.267894]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.267900]  In nr_ue_get_rach: [UE 0][520.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.269203]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.269209]  In nr_ue_get_rach: [UE 0][520.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.272015]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.272022]  In nr_ue_get_rach: [UE 0][521.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.273248]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.273254]  In nr_ue_get_rach: [UE 0][521.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.275504]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.275509]  In nr_ue_get_rach: [UE 0][521.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.277909]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.277915]  In nr_ue_get_rach: [UE 0][521.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.279700]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.279705]  In nr_ue_get_rach: [UE 0][521.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.281070]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.281075]  In nr_ue_get_rach: [UE 0][521.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.281078]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.282315]  PRACH [UE 0] in frame.slot 521.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 1, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.288227]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.288233]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.288235]  [UE 0][RAPROC][522.7] Found RAR with the intended RAPID 6
+[0m[93m[MAC]   [2025-09-11 18:24:48.288237]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.288940]  [RAPROC][522.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.288948]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 522.17 and expiring in 522.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.289142]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.290484]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.290490]  In nr_ue_get_rach: [UE 0][522.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.291827]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.291833]  In nr_ue_get_rach: [UE 0][522.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.294729]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.294737]  In nr_ue_get_rach: [UE 0][523.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.297031]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.297038]  In nr_ue_get_rach: [UE 0][523.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.299323]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.299328]  In nr_ue_get_rach: [UE 0][523.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.301612]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.301618]  In nr_ue_get_rach: [UE 0][523.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.303017]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.303023]  In nr_ue_get_rach: [UE 0][523.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.304392]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.304397]  In nr_ue_get_rach: [UE 0][523.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.304400]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.305658]  PRACH [UE 0] in frame.slot 523.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 10, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.311999]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.312006]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.312008]  [UE 0][RAPROC][524.7] Found RAR with the intended RAPID 41
+[0m[93m[MAC]   [2025-09-11 18:24:48.312009]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.312716]  [RAPROC][524.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.312742]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 524.17 and expiring in 524.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.312964]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.314317]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.314322]  In nr_ue_get_rach: [UE 0][524.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.315714]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.315719]  In nr_ue_get_rach: [UE 0][524.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.318604]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.318611]  In nr_ue_get_rach: [UE 0][525.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.320222]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.320228]  In nr_ue_get_rach: [UE 0][525.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.321914]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.321920]  In nr_ue_get_rach: [UE 0][525.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.324190]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.324196]  In nr_ue_get_rach: [UE 0][525.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.325582]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.325588]  In nr_ue_get_rach: [UE 0][525.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.327043]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.327049]  In nr_ue_get_rach: [UE 0][525.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.327052]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.328336]  PRACH [UE 0] in frame.slot 525.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 5, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.334211]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.334217]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.334219]  [UE 0][RAPROC][526.7] Found RAR with the intended RAPID 23
+[0m[93m[MAC]   [2025-09-11 18:24:48.334221]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.334939]  [RAPROC][526.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.334966]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 526.17 and expiring in 526.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.335171]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.336538]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.336544]  In nr_ue_get_rach: [UE 0][526.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.338048]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.338054]  In nr_ue_get_rach: [UE 0][526.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.341081]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.341090]  In nr_ue_get_rach: [UE 0][527.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.343663]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.343670]  In nr_ue_get_rach: [UE 0][527.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.345693]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.345698]  In nr_ue_get_rach: [UE 0][527.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.348002]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.348008]  In nr_ue_get_rach: [UE 0][527.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.349431]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.349436]  In nr_ue_get_rach: [UE 0][527.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.351099]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.351106]  In nr_ue_get_rach: [UE 0][527.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.351109]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.352400]  PRACH [UE 0] in frame.slot 527.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 1, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.358680]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.358687]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.358688]  [UE 0][RAPROC][528.7] Found RAR with the intended RAPID 7
+[0m[93m[MAC]   [2025-09-11 18:24:48.358690]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.359395]  [RAPROC][528.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.359425]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 528.17 and expiring in 528.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.359631]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.360925]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.360931]  In nr_ue_get_rach: [UE 0][528.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.362430]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.362435]  In nr_ue_get_rach: [UE 0][528.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.365703]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.365711]  In nr_ue_get_rach: [UE 0][529.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.368423]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.368430]  In nr_ue_get_rach: [UE 0][529.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.369937]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.369944]  In nr_ue_get_rach: [UE 0][529.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.372511]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.372517]  In nr_ue_get_rach: [UE 0][529.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.373820]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.373826]  In nr_ue_get_rach: [UE 0][529.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.375148]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.375154]  In nr_ue_get_rach: [UE 0][529.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.375157]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.376324]  PRACH [UE 0] in frame.slot 529.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 8, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.382609]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.382615]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.382616]  [UE 0][RAPROC][530.7] Found RAR with the intended RAPID 35
+[0m[93m[MAC]   [2025-09-11 18:24:48.382618]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.383318]  [RAPROC][530.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.383343]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 530.17 and expiring in 530.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.383557]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.384910]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.384916]  In nr_ue_get_rach: [UE 0][530.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.386219]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.386224]  In nr_ue_get_rach: [UE 0][530.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.389132]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.389141]  In nr_ue_get_rach: [UE 0][531.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.390506]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.390512]  In nr_ue_get_rach: [UE 0][531.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.392323]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.392329]  In nr_ue_get_rach: [UE 0][531.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.394557]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.394564]  In nr_ue_get_rach: [UE 0][531.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.395864]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.395870]  In nr_ue_get_rach: [UE 0][531.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.397174]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.397179]  In nr_ue_get_rach: [UE 0][531.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.397182]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.398448]  PRACH [UE 0] in frame.slot 531.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 13, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.404531]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.404537]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.404538]  [UE 0][RAPROC][532.7] Found RAR with the intended RAPID 53
+[0m[93m[MAC]   [2025-09-11 18:24:48.404540]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.405234]  [RAPROC][532.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.405239]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 532.17 and expiring in 532.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.405496]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.415023]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.415028]  In nr_ue_get_rach: [UE 0][532.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.416629]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.416634]  In nr_ue_get_rach: [UE 0][532.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.419797]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.419802]  In nr_ue_get_rach: [UE 0][533.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.421381]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.421387]  In nr_ue_get_rach: [UE 0][533.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.422703]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.422709]  In nr_ue_get_rach: [UE 0][533.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.425167]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.425172]  In nr_ue_get_rach: [UE 0][533.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.426507]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.426512]  In nr_ue_get_rach: [UE 0][533.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.428017]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.428022]  In nr_ue_get_rach: [UE 0][533.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.428024]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.429219]  PRACH [UE 0] in frame.slot 533.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 13, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.434932]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.434938]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.434940]  [UE 0][RAPROC][534.7] Found RAR with the intended RAPID 54
+[0m[93m[MAC]   [2025-09-11 18:24:48.434942]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.435650]  [RAPROC][534.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.435679]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 534.17 and expiring in 534.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.435883]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.437201]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.437206]  In nr_ue_get_rach: [UE 0][534.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.438743]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.438748]  In nr_ue_get_rach: [UE 0][534.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.441211]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.441216]  In nr_ue_get_rach: [UE 0][535.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.442470]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.442476]  In nr_ue_get_rach: [UE 0][535.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.444046]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.444051]  In nr_ue_get_rach: [UE 0][535.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.446366]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.446372]  In nr_ue_get_rach: [UE 0][535.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.448150]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.448156]  In nr_ue_get_rach: [UE 0][535.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.449410]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.449416]  In nr_ue_get_rach: [UE 0][535.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.449419]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.450596]  PRACH [UE 0] in frame.slot 535.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 13, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.456774]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.456780]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.456781]  [UE 0][RAPROC][536.7] Found RAR with the intended RAPID 54
+[0m[93m[MAC]   [2025-09-11 18:24:48.456783]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.457469]  [RAPROC][536.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.457475]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 536.17 and expiring in 536.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.457666]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.459018]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.459023]  In nr_ue_get_rach: [UE 0][536.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.460333]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.460338]  In nr_ue_get_rach: [UE 0][536.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.463108]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.463116]  In nr_ue_get_rach: [UE 0][537.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.464445]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.464450]  In nr_ue_get_rach: [UE 0][537.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.465615]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.465620]  In nr_ue_get_rach: [UE 0][537.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.467879]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.467884]  In nr_ue_get_rach: [UE 0][537.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.469222]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.469228]  In nr_ue_get_rach: [UE 0][537.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.470543]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.470549]  In nr_ue_get_rach: [UE 0][537.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.470552]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.471754]  PRACH [UE 0] in frame.slot 537.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 7, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.477450]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.477457]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.477458]  [UE 0][RAPROC][538.7] Found RAR with the intended RAPID 29
+[0m[93m[MAC]   [2025-09-11 18:24:48.477460]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.478161]  [RAPROC][538.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.478191]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 538.17 and expiring in 538.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.478384]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.479699]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.479705]  In nr_ue_get_rach: [UE 0][538.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.481533]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.481539]  In nr_ue_get_rach: [UE 0][538.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.484228]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.484234]  In nr_ue_get_rach: [UE 0][539.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.485562]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.485567]  In nr_ue_get_rach: [UE 0][539.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.487196]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.487201]  In nr_ue_get_rach: [UE 0][539.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.489488]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.489493]  In nr_ue_get_rach: [UE 0][539.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.490913]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.490918]  In nr_ue_get_rach: [UE 0][539.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.492320]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.492325]  In nr_ue_get_rach: [UE 0][539.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.492328]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.493989]  PRACH [UE 0] in frame.slot 539.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 11, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.499820]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.499826]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.499828]  [UE 0][RAPROC][540.7] Found RAR with the intended RAPID 44
+[0m[93m[MAC]   [2025-09-11 18:24:48.499829]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.500517]  [RAPROC][540.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.500521]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 540.17 and expiring in 540.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.500717]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.502108]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.502114]  In nr_ue_get_rach: [UE 0][540.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.503443]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.503449]  In nr_ue_get_rach: [UE 0][540.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.506422]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.506427]  In nr_ue_get_rach: [UE 0][541.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.508329]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.508335]  In nr_ue_get_rach: [UE 0][541.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.509579]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.509584]  In nr_ue_get_rach: [UE 0][541.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.511926]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.511931]  In nr_ue_get_rach: [UE 0][541.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.513275]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.513280]  In nr_ue_get_rach: [UE 0][541.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.514575]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.514581]  In nr_ue_get_rach: [UE 0][541.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.514583]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.516041]  PRACH [UE 0] in frame.slot 541.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 1, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.521785]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.521791]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.521793]  [UE 0][RAPROC][542.7] Found RAR with the intended RAPID 4
+[0m[93m[MAC]   [2025-09-11 18:24:48.521794]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.522480]  [RAPROC][542.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.522485]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 542.17 and expiring in 542.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.522669]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.524037]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.524043]  In nr_ue_get_rach: [UE 0][542.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.525264]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.525270]  In nr_ue_get_rach: [UE 0][542.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.527388]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.527393]  In nr_ue_get_rach: [UE 0][543.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.528693]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.528698]  In nr_ue_get_rach: [UE 0][543.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.530138]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.530144]  In nr_ue_get_rach: [UE 0][543.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.532372]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.532377]  In nr_ue_get_rach: [UE 0][543.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.533589]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.533594]  In nr_ue_get_rach: [UE 0][543.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.535093]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.535099]  In nr_ue_get_rach: [UE 0][543.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.535101]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.536635]  PRACH [UE 0] in frame.slot 543.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 6, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.542558]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.542564]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.542566]  [UE 0][RAPROC][544.7] Found RAR with the intended RAPID 24
+[0m[93m[MAC]   [2025-09-11 18:24:48.542567]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.543295]  [RAPROC][544.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.543320]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 544.17 and expiring in 544.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.543520]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.544790]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.544796]  In nr_ue_get_rach: [UE 0][544.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.546267]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.546273]  In nr_ue_get_rach: [UE 0][544.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.549191]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.549197]  In nr_ue_get_rach: [UE 0][545.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.550602]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.550608]  In nr_ue_get_rach: [UE 0][545.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.551877]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.551882]  In nr_ue_get_rach: [UE 0][545.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.554300]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.554306]  In nr_ue_get_rach: [UE 0][545.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.555639]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.555644]  In nr_ue_get_rach: [UE 0][545.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.556932]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.556938]  In nr_ue_get_rach: [UE 0][545.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.556940]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.558167]  PRACH [UE 0] in frame.slot 545.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 2, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.564105]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.564111]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.564112]  [UE 0][RAPROC][546.7] Found RAR with the intended RAPID 10
+[0m[93m[MAC]   [2025-09-11 18:24:48.564114]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.564798]  [RAPROC][546.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.564823]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 546.17 and expiring in 546.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.565030]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.566365]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.566370]  In nr_ue_get_rach: [UE 0][546.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.567815]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.567820]  In nr_ue_get_rach: [UE 0][546.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.570047]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.570054]  In nr_ue_get_rach: [UE 0][547.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.571662]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.571668]  In nr_ue_get_rach: [UE 0][547.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.573191]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.573196]  In nr_ue_get_rach: [UE 0][547.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.575468]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.575473]  In nr_ue_get_rach: [UE 0][547.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.576708]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.576713]  In nr_ue_get_rach: [UE 0][547.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.578014]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.578019]  In nr_ue_get_rach: [UE 0][547.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.578022]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.579122]  PRACH [UE 0] in frame.slot 547.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 7, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.584964]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.584970]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.584972]  [UE 0][RAPROC][548.7] Found RAR with the intended RAPID 28
+[0m[93m[MAC]   [2025-09-11 18:24:48.584973]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.585672]  [RAPROC][548.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.585696]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 548.17 and expiring in 548.13
+[0m[1;31m[MAC]   [2025-09-11 18:24:48.585907]  [UE 0] CB-RA: Contention resolution timer has expired, RA procedure has failed...
+[0m[NR_RRC]   [2025-09-11 18:24:48.587249]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.587254]  In nr_ue_get_rach: [UE 0][548.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.588676]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.588682]  In nr_ue_get_rach: [UE 0][548.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.591018]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.591025]  In nr_ue_get_rach: [UE 0][549.7]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.592359]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.592365]  In nr_ue_get_rach: [UE 0][549.8]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.593476]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.593482]  In nr_ue_get_rach: [UE 0][549.9]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.595741]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.595746]  In nr_ue_get_rach: [UE 0][549.17]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.597064]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.597070]  In nr_ue_get_rach: [UE 0][549.18]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[NR_RRC]   [2025-09-11 18:24:48.598404]  nr_mac_rrc_data_req_ue: Payload size = 56
+[0m[NR_MAC]   [2025-09-11 18:24:48.598409]  In nr_ue_get_rach: [UE 0][549.19]: Requested RRCConnectionRequest, got 56 bytes for LCID 0x34 
+[0m[MAC]   [2025-09-11 18:24:48.598411]  Initialization of 4-step contention-based random access procedure
+[0m[PHY]   [2025-09-11 18:24:48.599526]  PRACH [UE 0] in frame.slot 549.19, placing PRACH in position 2828, msg1 frequency start 0 (k1 0), preamble_offset 4, first_nonzero_root_idx 0
+[0m[NR_MAC]   [2025-09-11 18:24:48.605429]  [UE 0][RAPROC] Got BI RAR subPDU 5 ms
+[0m[NR_MAC]   [2025-09-11 18:24:48.605435]  [UE 0][RAPROC] Got RAPID RAR subPDU
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.605437]  [UE 0][RAPROC][550.7] Found RAR with the intended RAPID 19
+[0m[93m[MAC]   [2025-09-11 18:24:48.605438]  received TA command 31
+[0m[32m[NR_MAC]   [2025-09-11 18:24:48.606131]  [RAPROC][550.17] RA-Msg3 transmitted
+[0m[MAC]   [2025-09-11 18:24:48.606157]  In nr_Msg3_transmitted: [UE 0] CB-RA: contention resolution timer set in frame.slot 550.17 and expiring in 550.13

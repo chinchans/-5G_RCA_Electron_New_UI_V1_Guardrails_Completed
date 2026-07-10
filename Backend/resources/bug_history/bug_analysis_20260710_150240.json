@@ -1,0 +1,56 @@
+{
+  "error_message": "ERROR MESSAGE: \"RA Contention Resolution timer expired for UE 0xa67e, RA procedure failed...\" and later \"RA Contention Resolution timer expired for UE 0xd3a8, RA procedure failed...\"\n\nContext: These errors occur in the NR_MAC layer during the Random Access (RA) procedure, indicating that the contention resolution timer expired and the RA procedure failed for the respective UEs. This failure prevents successful UE connection establishment and would critically impact system operation.",
+  "log_file": "truncated_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Bug Discovery/Testing/Test_Log_files/Truncated_Log_files/truncated_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-10T15:02:40.872829",
+  "results": {
+    "error_message": "ERROR MESSAGE: \"RA Contention Resolution timer expired for UE 0xa67e, RA procedure failed...\" and later \"RA Contention Resolution timer expired for UE 0xd3a8, RA procedure failed...\"\n\nContext: These errors occur in the NR_MAC layer during the Random Access (RA) procedure, indicating that the contention resolution timer expired and the RA procedure failed for the respective UEs. This failure prevents successful UE connection establishment and would critically impact system operation.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Bug Discovery/Testing/Test_Log_files/Truncated_Log_files/truncated_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "grep -n \"ra_ContentionResolutionTimer\" du_gnb.conf",
+            "hint": "Check current value of contention resolution timer in gNB configuration file"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test network connectivity to AMF at IP 192.168.70.132"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "grep -n \"ra_ContentionResolutionTimer\" du_gnb.conf",
+            "explanation": "Check current value of contention resolution timer in gNB configuration file"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test network connectivity to AMF at IP 192.168.70.132"
+          }
+        ],
+        "command_count": 2
+      },
+      "command_count": 2
+    },
+    "timestamp": "2026-07-10T15:02:40.784956"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260710_150240.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

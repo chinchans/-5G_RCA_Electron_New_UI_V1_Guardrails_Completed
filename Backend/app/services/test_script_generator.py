@@ -78,24 +78,38 @@ class TestScriptGenerator:
 
 Requirements:
 - First, trigger the UE attach procedure using the provided reference code.
-- For each message in the attach sequence (RRC and NAS), generate a {LANGUAGE} function that:
+- For each message in the attach sequence (RRC and NAS), generate validation logic that:
     - Simulates the message exchange.
     - Extracts and validates all Information Elements (IEs) for that message.
-    - Logs results and assertions for traceability.
+    - Logs results for traceability.
 - Ensure:
     - Every message in the attach procedure is covered, in correct sequence, with no skipped steps.
     - All IEs per message are explicitly validated.
     - Scripts are modular, readable, and maintainable.
     - No placeholder comments or "add your code here" lines—provide full logic.
     - Output is only {LANGUAGE} code (no explanations, no markdown, no extra text).
--Make sure the generated scripts covers the testcases which are in {self.testcases_name}
+- Make sure the generated scripts cover the test cases which are in {self.testcases_name}
+
+Test Framework Structure:
+- Use a Python test automation class (e.g. UEAttachTest, UETestAutomation) with clear validation methods per message/procedure.
+- Helper/setup logic (attach trigger, parsers, logging) may live in __init__, fixtures, or module-level functions.
+- Each message in the attach sequence must have a dedicated validation method that asserts IEs and logs results.
+- Method names should be descriptive (e.g. validate_attach_request, validate_rrc_connection_setup) — pytest test_* naming is NOT required.
+
+Traceability (recommended — single-line comment format):
+- Above each test class or validation method that maps to a source test case, add ONE comment line:
+  # <testCaseID>: <title>
+  Example: # TC_POS_001: Validate successful LTE Attach and Detach
+- Do not add any other text in the traceability comment (no steps, messages, or extra notes).
+- Map source test cases to classes or methods using this comment format when test cases are available.
+
 Dataset Summary:
 [Attach procedure dataset including all messages in sequence and their respective Information Elements]
 
 Expected Output:
 - {LANGUAGE} automation scripts that:
     - Trigger the UE attach.
-    - Validate each message and all IEs.
+    - Validate each message and all IEs inside the test automation class methods.
     - Log results for each step.
     - Ensure full message and IE validation coverage.
 
@@ -105,7 +119,8 @@ Must use this reference code for triggering the attach procedure and validating 
 Instructions:
 
 - Use the above reference code for triggering the attach procedure and validating attach status.
-- For each message in the dataset, generate a function that validates all IEs, logs results, and asserts correctness.
+- For each message in the dataset, generate a validation method that validates all IEs and logs results.
+- Optionally add traceability comments (# <testCaseID>: <title>) above mapped classes or methods.
 - Do not output any explanations, markdown, or placeholder comments—only complete {LANGUAGE} code.
 
 ''',
@@ -717,6 +732,22 @@ Provide a comprehensive, actionable bug analysis that helps resolve the issue an
         except Exception as e:
             raise Exception(f"Error getting current prompt: {str(e)}")
     
+    def _custom_wants_python_script(self, selected_prompt: str) -> bool:
+        """True when Custom template should produce runnable Python pytest output."""
+        lang = (self.language_combo or "").strip().lower()
+        if lang and lang not in {"python", "py"}:
+            return False
+        prompt_lower = (selected_prompt or "").lower()
+        script_signals = (
+            "test script",
+            "pytest",
+            "python script",
+            "automated test",
+            "generate a script",
+            "write a script",
+        )
+        return any(signal in prompt_lower for signal in script_signals) or lang in {"python", "py"}
+
     def generate_response_from_text(self, text_content, selected_prompt, update_progress_callback=None):
         """Generate test scripts with improved structure and error handling."""
         try:
@@ -732,7 +763,26 @@ Provide a comprehensive, actionable bug analysis that helps resolve the issue an
             
             # Create the prompt based on whether it's a template or custom prompt
             if self.current_prompt_key == "Custom":
-                prompt = f'''
+                if self._custom_wants_python_script(selected_prompt):
+                    prompt = f'''
+You are an expert in 5G/LTE network test automation.
+
+Generate a complete, runnable Python pytest test script for the request below.
+
+CONTEXT / DATASET:
+{text_content}
+
+USER REQUEST:
+{selected_prompt}
+
+REQUIREMENTS:
+- Output valid Python code only (pytest style with test_* functions and assertions).
+- Prefer a single ```python fenced code block; do not add markdown explanations outside the code.
+- Use telecom-realistic steps for attach/detach, RRC, NAS, or KPI checks when applicable.
+- If the dataset lacks concrete values, use clear placeholders and comments.
+'''
+                else:
+                    prompt = f'''
 Based on the following dataset, please respond to the user's request:
 
 DATASET:
@@ -742,7 +792,7 @@ USER REQUEST:
 {selected_prompt}
 
 Please base your response on the dataset content above and reference specific data, values, or steps from the dataset when applicable.
-'''         
+'''
             elif self.current_prompt_key == "Test Case":
                 # For Test Case, use the merged prompt directly with dataset
                 prompt = f'''
@@ -804,6 +854,8 @@ DATASET:
         if self.current_prompt_key == "Test Case":
             return int(os.getenv("TEST_CASE_MAX_OUTPUT_TOKENS", "16384"))
         if self.current_prompt_key == "Test Script":
+            return int(os.getenv("TEST_SCRIPT_MAX_OUTPUT_TOKENS", "8192"))
+        if self.current_prompt_key == "Custom":
             return int(os.getenv("TEST_SCRIPT_MAX_OUTPUT_TOKENS", "8192"))
         return int(os.getenv("AZURE_OPENAI_MAX_OUTPUT_TOKENS", "4096"))
 
@@ -934,7 +986,10 @@ Inputs:
 - Previous Test Script (previous response): {previous_script}
 - Dataset Summary: {dataset_summary}
 
-Respond only with the refined script. Format it using appropriate comments and structure.
+Respond only with the refined script as valid, runnable Python code.
+- Do not wrap the output in markdown code fences.
+- Do not include explanations or placeholder comments.
+- Ensure the full script parses (no syntax errors).
 
 Note: Make Sure you update the script or testcase which is placed in {new_prompt} and don't modify any other thing which is not placed in {new_prompt}
 """

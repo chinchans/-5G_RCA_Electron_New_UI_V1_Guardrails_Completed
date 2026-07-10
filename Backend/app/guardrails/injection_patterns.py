@@ -34,6 +34,9 @@ SUSPICIOUS_LITERALS: Tuple[str, ...] = (
     "dan mode",
     "sudo mode",
     "god mode",
+    "stop processing",
+    "emergency override protocol",
+    "system administrator override code",
 )
 
 # Additional high-risk phrases (Layer 1)
@@ -65,6 +68,23 @@ MALICIOUS_LITERALS: Tuple[str, ...] = (
 )
 
 INJECTION_PATTERNS: List[Tuple[str, re.Pattern]] = [
+    ("stop_processing_override", re.compile(
+        r"stop\s+processing(?:\W+\w+){0,8}?\W+(override|protocol|instructions?)",
+        re.IGNORECASE,
+    )),
+    ("emergency_override_protocol", re.compile(
+        r"emergency\s+override\s+protocol(?:\s+activated)?",
+        re.IGNORECASE,
+    )),
+    ("admin_override_code", re.compile(
+        r"(system\s+administrator|admin)\s+override\s+code",
+        re.IGNORECASE,
+    )),
+    ("print_system_prompt_verbatim", re.compile(
+        r"(print|output|reveal|show)\s+(?:the\s+)?(?:initial\s+)?(?:full\s+)?"
+        r"(?:system\s+prompt|prompt\s+instructions?|instructions?)\s+verbatim",
+        re.IGNORECASE,
+    )),
     ("ignore_previous_instructions", re.compile(
         r"ignore\s+(all\s+)?(previous|prior|above)\s+(instructions?|prompts?|rules?)",
         re.IGNORECASE,
@@ -150,6 +170,10 @@ INJECTION_PATTERNS: List[Tuple[str, re.Pattern]] = [
 
 # Regex names that block uploads even when the Layer 2 model is unavailable
 HIGH_CONFIDENCE_BLOCKING_PATTERNS = frozenset({
+    "stop_processing_override",
+    "emergency_override_protocol",
+    "admin_override_code",
+    "print_system_prompt_verbatim",
     "ignore_previous_instructions",
     "reveal_system_prompt",
     "forget_your_role",

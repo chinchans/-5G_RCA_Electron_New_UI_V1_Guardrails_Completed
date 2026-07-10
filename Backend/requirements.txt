@@ -1,25 +1,47 @@
+# Web API
 fastapi
 uvicorn
 python-multipart
-python-docx
-networkx
-openai
+pydantic
+
+# Environment & HTTP
 python-dotenv
 requests
-beautifulsoup4
+
+# Document & dataset processing
+python-docx
 PyMuPDF
-paramiko
-colorama
-matplotlib
-graphviz
-tqdm
-google-generativeai
-pydantic
-numpy
+beautifulsoup4
+openpyxl
+PyPDF2
+pdfplumber
+
+# Data science & graph
+numpy<2.0
 pandas
 scikit-learn
-faiss-cpu
-sentence-transformers
-transformers
+networkx
+matplotlib
+graphviz
+
+# ML / embeddings / guardrails (transformers, NLI, Llama Prompt Guard)
 torch
+transformers
+sentence-transformers
+huggingface-hub
+faiss-cpu
+
+# LLM providers
+openai
+google-generativeai
+
+# Remote execution & CI
+paramiko
 python-jenkins>=1.8.0
+
+# Utilities
+colorama
+tqdm
+
+# Legacy PyQt desktop UI (Backend/UI_v3.py only — not required for Electron + FastAPI)
+# PyQt5
