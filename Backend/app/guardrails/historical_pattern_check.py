@@ -333,10 +333,12 @@ def check_historical_pattern_text(
     is_known = filename_known or best_score >= threshold
     is_new = not is_known
 
-    mode = GUARDRAILS_BD_HISTORICAL_PATTERN_MODE
-    blocked = is_new and mode in ("balanced", "strict")
-    warned = is_new and mode == "advisory"
-    passed = not blocked
+    # New-log detection is always advisory: warn in the UI, never block Start RCA.
+    # Mode balanced/strict remains available for future sequence-mismatch rules,
+    # but "no similar prior log" must not stop analysis.
+    blocked = False
+    warned = is_new
+    passed = True
 
     messages: List[str] = []
     matched_log_file = None
@@ -353,11 +355,6 @@ def check_historical_pattern_text(
         messages.append(
             "Human review is recommended before relying on automated RCA results."
         )
-        if best_pattern and best_score > 0:
-            messages.append(
-                f"Closest prior log: {best_pattern.log_file or best_pattern.source} "
-                f"(similarity {best_score:.0%})."
-            )
 
     return HistoricalPatternResult(
         passed=passed,

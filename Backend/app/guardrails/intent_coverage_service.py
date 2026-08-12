@@ -420,6 +420,7 @@ def validate_intent_coverage(
     match_mode: Optional[str] = None,
     advisory_only: bool = True,
     require_structured_json: bool = False,
+    primary_feature: Optional[str] = None,
 ) -> IntentCoverageResult:
     resolved_mode = _resolve_match_mode(match_mode, use_nli_for_gaps)
     use_nli = _semantic_nli_enabled(resolved_mode, use_nli_for_gaps)
@@ -589,6 +590,21 @@ def validate_intent_coverage(
     if strict_mode and uncovered_intents:
         passed = False
 
+    from app.guardrails.scenario_message_coverage import validate_scenario_message_coverage
+
+    scenario_result = validate_scenario_message_coverage(
+        generated_text,
+        primary_feature=primary_feature,
+        test_cases=test_cases,
+        advisory_only=advisory_only,
+    )
+    if scenario_result.available and scenario_result.warnings:
+        warnings.extend(scenario_result.warnings)
+    if scenario_result.available and not scenario_result.passed:
+        if not advisory_only:
+            passed = False
+            errors.extend(scenario_result.errors)
+
     return IntentCoverageResult(
         available=True,
         passed=passed,
@@ -602,6 +618,9 @@ def validate_intent_coverage(
         uncovered_categories=[],
         test_case_mappings=mappings,
         ungrounded_test_cases=ungrounded,
-        warnings=warnings,
+        scenario_message_coverage=(
+            scenario_result.to_dict() if scenario_result.available else None
+        ),
+        warnings=list(dict.fromkeys(warnings)),
         errors=[] if passed else (errors or ["Mandatory intent coverage incomplete."]),
     )

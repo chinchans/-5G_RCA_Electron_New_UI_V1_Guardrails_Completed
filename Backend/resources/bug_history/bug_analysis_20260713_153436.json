@@ -1,0 +1,572 @@
+{
+  "error_message": "ERROR MESSAGE: /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'\ncollect2: error: ld returned 1 exit status\nLocation: Linking stage of nr-softmodem executable build\n\nThis linker error caused the build to fail with:\ngmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1\ngmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2\ngmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2\ngmake: *** [Makefile:891:",
+  "log_file": "CMake_error_3.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/CMake_error_3.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-13T15:34:36.458012",
+  "results": {
+    "error_message": "ERROR MESSAGE: /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'\ncollect2: error: ld returned 1 exit status\nLocation: Linking stage of nr-softmodem executable build\n\nThis linker error caused the build to fail with:\ngmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1\ngmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2\ngmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2\ngmake: *** [Makefile:891:",
+    "extracted_error": false,
+    "error_source": "user_provided",
+    "timestamp": "2026-07-13T15:34:36.373909",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/CMake_error_3.log",
+    "deployment_context": {
+      "role": "CU",
+      "active_configs": [],
+      "network_params": {
+        "gnb_ipv4": null,
+        "amf_ipv4": null,
+        "ngap_port": null,
+        "assoc_state": "UNKNOWN"
+      },
+      "log_anchors": [
+        "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:48: warning: initialization of \u2018const F1AP_ServedPLMNs_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_ServedPLMNs_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BHChannels_FailedToBeSetupMod_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]",
+        "collect2: error: ld returned 1 exit status",
+        "gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+        "gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+        "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+        "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+        "ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+        "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+        "build have failed",
+        "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+        "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+        "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:94:67: warning: initialization of \u2018const F1AP_CUtoDURRCInformation_ExtIEs_t *\u2019 {aka \u2018const struct F1AP_CUtoDURRCInformation_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BroadcastPNI_NPN_ID_List_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]",
+        "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_common.h:74:26: warning: initialization of \u2018F1AP_DRBs_ToBeSetup_ItemExtIEs_t **\u2019 {aka \u2018struct F1AP_DRBs_ToBeSetup_ItemExtIEs **\u2019} from incompatible pointer type \u2018struct F1AP_CellToReportItem_ExtIEs **\u2019 [-Wincompatible-pointer-types]",
+        "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_common.h:74:48: warning: comparison of distinct pointer types lacks a cast",
+        "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:789:11: warning: assignment to \u2018const F1AP_DRBs_ToBeSetup_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_DRBs_ToBeSetup_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_CellToReportItem_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+        "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:854:11: warning: assignment to \u2018const F1AP_DRBs_ToBeSetupMod_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_DRBs_ToBeSetupMod_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_CellType_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+        "WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+        "[100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o",
+        "[100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_ue_context.c.o",
+        "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:"
+      ],
+      "detailed_log_context": {
+        "total_lines": 85,
+        "error_sequences": [
+          {
+            "error_line": "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:48: warning: initialization of \u2018const F1AP_ServedPLMNs_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_ServedPLMNs_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BHChannels_FailedToBeSetupMod_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]",
+            "line_number": 32,
+            "context": [
+              "     Consolidate compiler generated dependencies of target e1ap",
+              "     [100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o",
+              "     [100%] Building C object openair2/E1AP/CMakeFiles/e1ap.dir/e1ap.c.o",
+              "     [100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_ue_context.c.o",
+              "     /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:",
+              " >>> /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:48: warning: initialization of \u2018const F1AP_ServedPLMNs_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_ServedPLMNs_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BHChannels_FailedToBeSetupMod_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]",
+              "     390 |   const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];",
+              "     |                                                ^",
+              "     /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_request\u2019:",
+              "     /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+              "     872 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];"
+            ]
+          },
+          {
+            "error_line": "collect2: error: ld returned 1 exit status",
+            "line_number": 77,
+            "context": [
+              "     [100%] Built target L2_NR",
+              "     Consolidate compiler generated dependencies of target nr-softmodem",
+              "     [100%] Building C object CMakeFiles/nr-softmodem.dir/executables/nr-softmodem.c.o",
+              "     [100%] Linking CXX executable nr-softmodem",
+              "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'",
+              " >>> collect2: error: ld returned 1 exit status",
+              "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt"
+            ]
+          },
+          {
+            "error_line": "gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+            "line_number": 78,
+            "context": [
+              "     Consolidate compiler generated dependencies of target nr-softmodem",
+              "     [100%] Building C object CMakeFiles/nr-softmodem.dir/executables/nr-softmodem.c.o",
+              "     [100%] Linking CXX executable nr-softmodem",
+              "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'",
+              "     collect2: error: ld returned 1 exit status",
+              " >>> gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt"
+            ]
+          },
+          {
+            "error_line": "gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+            "line_number": 79,
+            "context": [
+              "     [100%] Building C object CMakeFiles/nr-softmodem.dir/executables/nr-softmodem.c.o",
+              "     [100%] Linking CXX executable nr-softmodem",
+              "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'",
+              "     collect2: error: ld returned 1 exit status",
+              "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              " >>> gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed"
+            ]
+          },
+          {
+            "error_line": "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+            "line_number": 80,
+            "context": [
+              "     [100%] Linking CXX executable nr-softmodem",
+              "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'",
+              "     collect2: error: ld returned 1 exit status",
+              "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              " >>> gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+            "line_number": 81,
+            "context": [
+              "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'",
+              "     collect2: error: ld returned 1 exit status",
+              "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              " >>> gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+            "line_number": 83,
+            "context": [
+              "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              " >>> ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+            "line_number": 84,
+            "context": [
+              "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              " >>> compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "     build have failed"
+            ]
+          },
+          {
+            "error_line": "build have failed",
+            "line_number": 85,
+            "context": [
+              "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              " >>> build have failed"
+            ]
+          }
+        ],
+        "debug_values": {},
+        "relevant_sections": []
+      },
+      "compiler_ground_truth_errors": [],
+      "cu_ip_address": "10.138.77.131",
+      "du_ip_address": "10.138.77.131",
+      "gnb_ip_address": "10.138.77.131",
+      "amf_ip_address": "192.168.70.132",
+      "core_network_machine_ip": "10.138.77.217",
+      "local_s_portc": "501",
+      "local_s_portd": "2152",
+      "remote_s_portc": "500",
+      "remote_s_portd": "2152",
+      "dnn": "oai",
+      "nssai_sst": "1",
+      "nssai_sd": "0xc",
+      "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+      "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+      "log_error_kind_raw": "cmake",
+      "log_error_kind": "cmake",
+      "build_log_mode": false,
+      "runtime_log_mode": false,
+      "other_log_mode": false,
+      "cmake_build_system_mode": true,
+      "dependency_advice_mode": false,
+      "full_build_log_excerpt": "Will compile gNB\nOPENAIR_DIR    = /home/tcs/Downloads/OAI-CU\nRunning \"cmake ../../..\"\n-- Ccache not found. Consider installing it for faster compilation. Command: sudo apt/dnf install ccache\n-- Check if /opt/asn1c/bin/asn1c supports -gen-APER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-UPER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-JER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-BER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-OER\n-- CMAKE_BUILD_TYPE is RelWithDebInfo\n-- CPU architecture is x86_64\n-- AVX512 intrinsics are OFF\n-- AVX2 intrinsics are ON\n-- LTTNG support disabled\n-- Checking for module 'libcap'\n--   No package 'libcap' found\n-- Checking for module 'cblas'\n--   No package 'cblas' found\n-- No Doxygen documentation requested\n-- No Support for Aerial\n-- Configuring done\n-- Generating done\n-- Build files have been written to: /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build\ncd /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build\nRunning \"cmake --build .  --target  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim -- -j4\"\nLog file for compilation is being written to: /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt\nConsolidate compiler generated dependencies of target e1ap\n[100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o\n[100%] Building C object openair2/E1AP/CMakeFiles/e1ap.dir/e1ap.c.o\n[100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_ue_context.c.o\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:48: warning: initialization of \u2018const F1AP_ServedPLMNs_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_ServedPLMNs_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BHChannels_FailedToBeSetupMod_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]\n  390 |   const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];\n      |                                                ^\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_request\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]\n  872 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];\n      |                                                 ^~~\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_response\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]\n 1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];\n      |                                                 ^~~\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c: In function \u2018decode_cu_to_du_rrc_info\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:94:67: warning: initialization of \u2018const F1AP_CUtoDURRCInformation_ExtIEs_t *\u2019 {aka \u2018const struct F1AP_CUtoDURRCInformation_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BroadcastPNI_NPN_ID_List_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]\n   94 |        const F1AP_CUtoDURRCInformation_ExtIEs_t *cu2du_info_ext = ext->list.array[i];\n      |                                                                   ^~~\nIn file included from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:24:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c: In function \u2018decode_drbs_to_setup\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_common.h:74:26: warning: initialization of \u2018F1AP_DRBs_ToBeSetup_ItemExtIEs_t **\u2019 {aka \u2018struct F1AP_DRBs_ToBeSetup_ItemExtIEs **\u2019} from incompatible pointer type \u2018struct F1AP_CellToReportItem_ExtIEs **\u2019 [-Wincompatible-pointer-types]\n   74 |     for (IE_TYPE **ptr = (IE_LIST)->array; ptr < &(IE_LIST)->array[(IE_LIST)->count]; ptr++) {       \\\n      |                          ^\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:786:6: note: in expansion of macro \u2018F1AP_LIB_FIND_IE\u2019\n  786 |      F1AP_LIB_FIND_IE(F1AP_DRBs_ToBeSetup_ItemExtIEs_t, ie, &ext->list, F1AP_ProtocolIE_ID_id_DLPDCPSNLength, true);\n      |      ^~~~~~~~~~~~~~~~\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_common.h:74:48: warning: comparison of distinct pointer types lacks a cast\n   74 |     for (IE_TYPE **ptr = (IE_LIST)->array; ptr < &(IE_LIST)->array[(IE_LIST)->count]; ptr++) {       \\\n      |                                                ^\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:786:6: note: in expansion of macro \u2018F1AP_LIB_FIND_IE\u2019\n  786 |      F1AP_LIB_FIND_IE(F1AP_DRBs_ToBeSetup_ItemExtIEs_t, ie, &ext->list, F1AP_ProtocolIE_ID_id_DLPDCPSNLength, true);\n      |      ^~~~~~~~~~~~~~~~\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:789:11: warning: assignment to \u2018const F1AP_DRBs_ToBeSetup_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_DRBs_ToBeSetup_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_CellToReportItem_ExtIEs *\u2019 [-Wincompatible-pointer-types]\n  789 |        ie = ext->list.array[j];\n      |           ^\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c: In function \u2018decode_drbs_to_setupmod\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:854:11: warning: assignment to \u2018const F1AP_DRBs_ToBeSetupMod_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_DRBs_ToBeSetupMod_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_CellType_ExtIEs *\u2019 [-Wincompatible-pointer-types]\n  854 |        ie = ext->list.array[j];\n      |           ^\n/home/tcs/Downloads/OAI-CU/openair2/E1AP/e1ap.c: In function \u2018e1apCUUP_handle_SETUP_FAILURE\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/E1AP/e1ap.c:241: note: \u2018-Wmisleading-indentation\u2019 is disabled from this point onwards, since column-tracking was disabled due to the size of the code/headers\n  241 |   if (old_transaction_id != transaction_id)\n--\n[100%] Built target L2_NR\nConsolidate compiler generated dependencies of target nr-softmodem\n[100%] Building C object CMakeFiles/nr-softmodem.dir/executables/nr-softmodem.c.o\n[100%] Linking CXX executable nr-softmodem\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'\ncollect2: error: ld returned 1 exit status\ngmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1\ngmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2\ngmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2\ngmake: *** [Makefile:891: nr-softmodem] Error 2\nWARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt\nERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt\ncompilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed\nbuild have failed",
+      "linker_derived_hints": {
+        "asn_def_types": [
+          "F1AP_LTMConfigurationID"
+        ],
+        "extra_search_queries": [
+          "F1AP_LTMConfigurationID F1AP_LTMConfigurationID.c asn1c generated source add_library cmake MESSAGES ASN1",
+          "openair2/F1AP/MESSAGES/ASN1 f1ap cmake f1ap ngap s1ap generated C sources list"
+        ],
+        "prompt_bullets": [
+          "Linker needs `asn_DEF_F1AP_LTMConfigurationID` \u2192 the defining **`F1AP_LTMConfigurationID.c`** must be compiled into `libasn1_*`. In OAI, the list of generated `.c` files is usually in **`.../MESSAGES/ASN1/<protocol>-<release>.cmake`** (e.g. `f1ap-18.6.0.cmake`), not only top-level `CMakeLists.txt`.",
+          "Log points to **`openair2/F1AP/MESSAGES/libasn1_f1ap.a`** \u2192 inspect **`openair2/F1AP/MESSAGES/ASN1/`** for **`f1ap-*.cmake`** (or similarly named) that list generated ASN.1 `.c` files for that library; patch the file list there if a `.c` is missing."
+        ],
+        "messages_lib_dir": "openair2/F1AP/MESSAGES",
+        "asn1_lib_short": "f1ap"
+      },
+      "compiler_cluster_analysis": {},
+      "build_error_mode": true
+    },
+    "log_error_kind": "cmake",
+    "ground_truth_errors": [],
+    "phase2_analysis": {
+      "suspected_functions": [],
+      "suspected_configs": [],
+      "deployment_context": {
+        "role": "CU",
+        "active_configs": [],
+        "network_params": {
+          "gnb_ipv4": null,
+          "amf_ipv4": null,
+          "ngap_port": null,
+          "assoc_state": "UNKNOWN"
+        },
+        "log_anchors": [
+          "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:48: warning: initialization of \u2018const F1AP_ServedPLMNs_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_ServedPLMNs_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BHChannels_FailedToBeSetupMod_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]",
+          "collect2: error: ld returned 1 exit status",
+          "gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+          "gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+          "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+          "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+          "ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+          "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+          "build have failed",
+          "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+          "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+          "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:94:67: warning: initialization of \u2018const F1AP_CUtoDURRCInformation_ExtIEs_t *\u2019 {aka \u2018const struct F1AP_CUtoDURRCInformation_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BroadcastPNI_NPN_ID_List_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]",
+          "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_common.h:74:26: warning: initialization of \u2018F1AP_DRBs_ToBeSetup_ItemExtIEs_t **\u2019 {aka \u2018struct F1AP_DRBs_ToBeSetup_ItemExtIEs **\u2019} from incompatible pointer type \u2018struct F1AP_CellToReportItem_ExtIEs **\u2019 [-Wincompatible-pointer-types]",
+          "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_common.h:74:48: warning: comparison of distinct pointer types lacks a cast",
+          "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:789:11: warning: assignment to \u2018const F1AP_DRBs_ToBeSetup_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_DRBs_ToBeSetup_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_CellToReportItem_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+          "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:854:11: warning: assignment to \u2018const F1AP_DRBs_ToBeSetupMod_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_DRBs_ToBeSetupMod_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_CellType_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+          "WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+          "[100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o",
+          "[100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_ue_context.c.o",
+          "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:"
+        ],
+        "detailed_log_context": {
+          "total_lines": 85,
+          "error_sequences": [
+            {
+              "error_line": "/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:48: warning: initialization of \u2018const F1AP_ServedPLMNs_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_ServedPLMNs_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BHChannels_FailedToBeSetupMod_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]",
+              "line_number": 32,
+              "context": [
+                "     Consolidate compiler generated dependencies of target e1ap",
+                "     [100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o",
+                "     [100%] Building C object openair2/E1AP/CMakeFiles/e1ap.dir/e1ap.c.o",
+                "     [100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_ue_context.c.o",
+                "     /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:",
+                " >>> /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:48: warning: initialization of \u2018const F1AP_ServedPLMNs_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_ServedPLMNs_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BHChannels_FailedToBeSetupMod_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]",
+                "     390 |   const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];",
+                "     |                                                ^",
+                "     /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_request\u2019:",
+                "     /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]",
+                "     872 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];"
+              ]
+            },
+            {
+              "error_line": "collect2: error: ld returned 1 exit status",
+              "line_number": 77,
+              "context": [
+                "     [100%] Built target L2_NR",
+                "     Consolidate compiler generated dependencies of target nr-softmodem",
+                "     [100%] Building C object CMakeFiles/nr-softmodem.dir/executables/nr-softmodem.c.o",
+                "     [100%] Linking CXX executable nr-softmodem",
+                "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'",
+                " >>> collect2: error: ld returned 1 exit status",
+                "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt"
+              ]
+            },
+            {
+              "error_line": "gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+              "line_number": 78,
+              "context": [
+                "     Consolidate compiler generated dependencies of target nr-softmodem",
+                "     [100%] Building C object CMakeFiles/nr-softmodem.dir/executables/nr-softmodem.c.o",
+                "     [100%] Linking CXX executable nr-softmodem",
+                "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'",
+                "     collect2: error: ld returned 1 exit status",
+                " >>> gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt"
+              ]
+            },
+            {
+              "error_line": "gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+              "line_number": 79,
+              "context": [
+                "     [100%] Building C object CMakeFiles/nr-softmodem.dir/executables/nr-softmodem.c.o",
+                "     [100%] Linking CXX executable nr-softmodem",
+                "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'",
+                "     collect2: error: ld returned 1 exit status",
+                "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                " >>> gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed"
+              ]
+            },
+            {
+              "error_line": "gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+              "line_number": 80,
+              "context": [
+                "     [100%] Linking CXX executable nr-softmodem",
+                "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'",
+                "     collect2: error: ld returned 1 exit status",
+                "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                " >>> gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "gmake: *** [Makefile:891: nr-softmodem] Error 2",
+              "line_number": 81,
+              "context": [
+                "     /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'",
+                "     collect2: error: ld returned 1 exit status",
+                "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                " >>> gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+              "line_number": 83,
+              "context": [
+                "     gmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1",
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                " >>> ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+              "line_number": 84,
+              "context": [
+                "     gmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2",
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                " >>> compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                "     build have failed"
+              ]
+            },
+            {
+              "error_line": "build have failed",
+              "line_number": 85,
+              "context": [
+                "     gmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2",
+                "     gmake: *** [Makefile:891: nr-softmodem] Error 2",
+                "     WARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     ERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt",
+                "     compilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed",
+                " >>> build have failed"
+              ]
+            }
+          ],
+          "debug_values": {},
+          "relevant_sections": []
+        },
+        "compiler_ground_truth_errors": [],
+        "cu_ip_address": "10.138.77.131",
+        "du_ip_address": "10.138.77.131",
+        "gnb_ip_address": "10.138.77.131",
+        "amf_ip_address": "192.168.70.132",
+        "core_network_machine_ip": "10.138.77.217",
+        "local_s_portc": "501",
+        "local_s_portd": "2152",
+        "remote_s_portc": "500",
+        "remote_s_portd": "2152",
+        "dnn": "oai",
+        "nssai_sst": "1",
+        "nssai_sd": "0xc",
+        "Deploy_command_cu_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --sa",
+        "Deploy_command_du_gnb_conf": "sudo RFSIMULATOR=server ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf --sa",
+        "log_error_kind_raw": "cmake",
+        "log_error_kind": "cmake",
+        "build_log_mode": false,
+        "runtime_log_mode": false,
+        "other_log_mode": false,
+        "cmake_build_system_mode": true,
+        "dependency_advice_mode": false,
+        "full_build_log_excerpt": "Will compile gNB\nOPENAIR_DIR    = /home/tcs/Downloads/OAI-CU\nRunning \"cmake ../../..\"\n-- Ccache not found. Consider installing it for faster compilation. Command: sudo apt/dnf install ccache\n-- Check if /opt/asn1c/bin/asn1c supports -gen-APER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-UPER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-JER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-BER\n-- Check if /opt/asn1c/bin/asn1c supports -no-gen-OER\n-- CMAKE_BUILD_TYPE is RelWithDebInfo\n-- CPU architecture is x86_64\n-- AVX512 intrinsics are OFF\n-- AVX2 intrinsics are ON\n-- LTTNG support disabled\n-- Checking for module 'libcap'\n--   No package 'libcap' found\n-- Checking for module 'cblas'\n--   No package 'cblas' found\n-- No Doxygen documentation requested\n-- No Support for Aerial\n-- Configuring done\n-- Generating done\n-- Build files have been written to: /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build\ncd /home/tcs/Downloads/OAI-CU/cmake_targets/ran_build/build\nRunning \"cmake --build .  --target  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim -- -j4\"\nLog file for compilation is being written to: /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt\nConsolidate compiler generated dependencies of target e1ap\n[100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_interface_management.c.o\n[100%] Building C object openair2/E1AP/CMakeFiles/e1ap.dir/e1ap.c.o\n[100%] Building C object openair2/F1AP/lib/CMakeFiles/f1ap_lib.dir/f1ap_ue_context.c.o\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018read_slice_info\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:390:48: warning: initialization of \u2018const F1AP_ServedPLMNs_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_ServedPLMNs_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BHChannels_FailedToBeSetupMod_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]\n  390 |   const F1AP_ServedPLMNs_ItemExtIEs_t *splmn = p->list.array[0];\n      |                                                ^\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_request\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:872:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]\n  872 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];\n      |                                                 ^~~\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c: In function \u2018decode_f1ap_setup_response\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_interface_management.c:1118:49: warning: initialization of \u2018F1AP_RRC_Version_ExtIEs_t *\u2019 {aka \u2018struct F1AP_RRC_Version_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_LocationUncertainty_ExtIEs *\u2019 [-Wincompatible-pointer-types]\n 1118 |             F1AP_RRC_Version_ExtIEs_t *rrcext = ext->list.array[0];\n      |                                                 ^~~\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c: In function \u2018decode_cu_to_du_rrc_info\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:94:67: warning: initialization of \u2018const F1AP_CUtoDURRCInformation_ExtIEs_t *\u2019 {aka \u2018const struct F1AP_CUtoDURRCInformation_ExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_BroadcastPNI_NPN_ID_List_ItemExtIEs *\u2019 [-Wincompatible-pointer-types]\n   94 |        const F1AP_CUtoDURRCInformation_ExtIEs_t *cu2du_info_ext = ext->list.array[i];\n      |                                                                   ^~~\nIn file included from /home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:24:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c: In function \u2018decode_drbs_to_setup\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_common.h:74:26: warning: initialization of \u2018F1AP_DRBs_ToBeSetup_ItemExtIEs_t **\u2019 {aka \u2018struct F1AP_DRBs_ToBeSetup_ItemExtIEs **\u2019} from incompatible pointer type \u2018struct F1AP_CellToReportItem_ExtIEs **\u2019 [-Wincompatible-pointer-types]\n   74 |     for (IE_TYPE **ptr = (IE_LIST)->array; ptr < &(IE_LIST)->array[(IE_LIST)->count]; ptr++) {       \\\n      |                          ^\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:786:6: note: in expansion of macro \u2018F1AP_LIB_FIND_IE\u2019\n  786 |      F1AP_LIB_FIND_IE(F1AP_DRBs_ToBeSetup_ItemExtIEs_t, ie, &ext->list, F1AP_ProtocolIE_ID_id_DLPDCPSNLength, true);\n      |      ^~~~~~~~~~~~~~~~\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_lib_common.h:74:48: warning: comparison of distinct pointer types lacks a cast\n   74 |     for (IE_TYPE **ptr = (IE_LIST)->array; ptr < &(IE_LIST)->array[(IE_LIST)->count]; ptr++) {       \\\n      |                                                ^\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:786:6: note: in expansion of macro \u2018F1AP_LIB_FIND_IE\u2019\n  786 |      F1AP_LIB_FIND_IE(F1AP_DRBs_ToBeSetup_ItemExtIEs_t, ie, &ext->list, F1AP_ProtocolIE_ID_id_DLPDCPSNLength, true);\n      |      ^~~~~~~~~~~~~~~~\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:789:11: warning: assignment to \u2018const F1AP_DRBs_ToBeSetup_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_DRBs_ToBeSetup_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_CellToReportItem_ExtIEs *\u2019 [-Wincompatible-pointer-types]\n  789 |        ie = ext->list.array[j];\n      |           ^\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c: In function \u2018decode_drbs_to_setupmod\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/F1AP/lib/f1ap_ue_context.c:854:11: warning: assignment to \u2018const F1AP_DRBs_ToBeSetupMod_ItemExtIEs_t *\u2019 {aka \u2018const struct F1AP_DRBs_ToBeSetupMod_ItemExtIEs *\u2019} from incompatible pointer type \u2018struct F1AP_CellType_ExtIEs *\u2019 [-Wincompatible-pointer-types]\n  854 |        ie = ext->list.array[j];\n      |           ^\n/home/tcs/Downloads/OAI-CU/openair2/E1AP/e1ap.c: In function \u2018e1apCUUP_handle_SETUP_FAILURE\u2019:\n/home/tcs/Downloads/OAI-CU/openair2/E1AP/e1ap.c:241: note: \u2018-Wmisleading-indentation\u2019 is disabled from this point onwards, since column-tracking was disabled due to the size of the code/headers\n  241 |   if (old_transaction_id != transaction_id)\n--\n[100%] Built target L2_NR\nConsolidate compiler generated dependencies of target nr-softmodem\n[100%] Building C object CMakeFiles/nr-softmodem.dir/executables/nr-softmodem.c.o\n[100%] Linking CXX executable nr-softmodem\n/usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'\ncollect2: error: ld returned 1 exit status\ngmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1\ngmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2\ngmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2\ngmake: *** [Makefile:891: nr-softmodem] Error 2\nWARNING: 8 warnings. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt\nERROR: 1 error. See /home/tcs/Downloads/OAI-CU/cmake_targets/log/all.txt\ncompilation of  nr-softmodem nr-cuup params_libconfig coding rfsimulator dfts params_yaml vrtsim failed\nbuild have failed",
+        "linker_derived_hints": {
+          "asn_def_types": [
+            "F1AP_LTMConfigurationID"
+          ],
+          "extra_search_queries": [
+            "F1AP_LTMConfigurationID F1AP_LTMConfigurationID.c asn1c generated source add_library cmake MESSAGES ASN1",
+            "openair2/F1AP/MESSAGES/ASN1 f1ap cmake f1ap ngap s1ap generated C sources list"
+          ],
+          "prompt_bullets": [
+            "Linker needs `asn_DEF_F1AP_LTMConfigurationID` \u2192 the defining **`F1AP_LTMConfigurationID.c`** must be compiled into `libasn1_*`. In OAI, the list of generated `.c` files is usually in **`.../MESSAGES/ASN1/<protocol>-<release>.cmake`** (e.g. `f1ap-18.6.0.cmake`), not only top-level `CMakeLists.txt`.",
+            "Log points to **`openair2/F1AP/MESSAGES/libasn1_f1ap.a`** \u2192 inspect **`openair2/F1AP/MESSAGES/ASN1/`** for **`f1ap-*.cmake`** (or similarly named) that list generated ASN.1 `.c` files for that library; patch the file list there if a `.c` is missing."
+          ],
+          "messages_lib_dir": "openair2/F1AP/MESSAGES",
+          "asn1_lib_short": "f1ap"
+        },
+        "compiler_cluster_analysis": {},
+        "build_error_mode": true
+      },
+      "retrieval_method": "cmake_build_system_embeddings",
+      "ground_truth_errors": [],
+      "compiler_cluster_analysis": {},
+      "build_error_mode": true,
+      "narrow_compiler_phase2": false,
+      "log_error_kind": "cmake",
+      "top_ground_truth_clusters": [],
+      "coverage_stats": {
+        "total_compiler_errors_parsed": 0,
+        "ground_truth_with_function_name": 0,
+        "ground_truth_with_file_path": 0
+      }
+    },
+    "phase3_fixes": {
+      "error_text": "ERROR MESSAGE: /usr/bin/ld: openair2/F1AP/MESSAGES/libasn1_f1ap.a(F1AP_LTMConfigurationIDMapping-Item.c.o):(.data.rel+0xc8): undefined reference to `asn_DEF_F1AP_LTMConfigurationID'\ncollect2: error: ld returned 1 exit status\nLocation: Linking stage of nr-softmodem executable build\n\nThis linker error caused the build to fail with:\ngmake[3]: *** [CMakeFiles/nr-softmodem.dir/build.make:329: nr-softmodem] Error 1\ngmake[2]: *** [CMakeFiles/Makefile2:3833: CMakeFiles/nr-softmodem.dir/all] Error 2\ngmake[1]: *** [CMakeFiles/Makefile2:3840: CMakeFiles/nr-softmodem.dir/rule] Error 2\ngmake: *** [Makefile:891:",
+      "fix_suggestion": {
+        "suspected_functions": [],
+        "suspected_configs": [
+          "openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake"
+        ],
+        "reason": "Missing F1AP_LTMConfigurationID.c in the ASN.1 source list causes undefined reference to asn_DEF_F1AP_LTMConfigurationID",
+        "config_fix": "Add F1AP_LTMConfigurationID.c to f1ap_source list in f1ap-18.6.0.cmake",
+        "code_patches": [],
+        "config_patches": [
+          {
+            "config_name": "Build relink cleanup (advisory)",
+            "file_path": "openairinterface-5g-develop/CMakeLists.txt",
+            "patch_type": "manual_build_relink",
+            "current_value": "No deterministic in-file edit was safely grounded.",
+            "new_value": "Clean ASN.1 objects/static library and rebuild linker targets (see investigation_steps).",
+            "line_number": "N/A",
+            "relevance_score": 0.7,
+            "description": "Advisory build-system action: linker unresolved ASN.1 symbols detected. No safe auto-edit found in local workspace, so apply clean/rebuild steps."
+          }
+        ],
+        "root_cause_analysis": "The linker error is caused by the missing compilation unit F1AP_LTMConfigurationID.c in the ASN.1 source list for the F1AP protocol. This file defines the symbol asn_DEF_F1AP_LTMConfigurationID required by F1AP_LTMConfigurationIDMapping-Item.c. Without it, the linker cannot resolve the reference, causing the build failure.",
+        "investigation_steps": [
+          "Verify that openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake does not include F1AP_LTMConfigurationID.c in the f1ap_source list.",
+          "Add F1AP_LTMConfigurationID.c to the f1ap_source list in f1ap-18.6.0.cmake and rebuild with 'cmake --build . --target nr-softmodem'.",
+          "If the error persists, run 'ninja clean' or 'make clean' to remove stale objects, then rebuild the entire project.",
+          "Check that the generated F1AP_LTMConfigurationID.c file exists in the ASN1 directory and is not excluded by any build filters."
+        ],
+        "specification_context": "",
+        "investigation_commands": [
+          {
+            "command": "grep -l \"F1AP_LTMConfigurationID.c\" openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake",
+            "hint": "Verify if F1AP_LTMConfigurationID.c is included in the ASN1 source list for F1AP"
+          },
+          {
+            "command": "cmake --build . --target nr-softmodem",
+            "hint": "Rebuild nr-softmodem target after adding missing source file to fix linker error"
+          },
+          {
+            "command": "make clean && cmake --build . --target nr-softmodem",
+            "hint": "Clean stale objects and rebuild nr-softmodem to ensure all dependencies are correctly linked"
+          }
+        ]
+      },
+      "context_summary": {
+        "candidate_functions_count": 0,
+        "candidate_configs_count": 0,
+        "call_graph_entries": 0,
+        "pattern_matched": false
+      },
+      "phase3_llm": {
+        "max_output_tokens": 16384,
+        "json_mode": true,
+        "build_error_mode": true,
+        "finish_reason": "stop",
+        "parse_ok": true,
+        "attempts": [
+          {
+            "attempt": 1,
+            "finish_reason": "stop",
+            "chars": 2434
+          }
+        ]
+      },
+      "phase3_cmake_diagnosis": {
+        "raw_finish_reason": "stop",
+        "diagnosis_summary": "The build fails at linking because the ASN.1 definition symbol 'asn_DEF_F1AP_LTMConfigurationID' is undefined. This strongly suggests that the source file implementing this symbol (F1AP_LTMConfigurationID.c) is not included in the ASN1 source list in openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake, causing it not to be compiled into libasn1_f1ap.a and thus missing at link time.",
+        "validated_issues": []
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 1,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "grep -l \"F1AP_LTMConfigurationID.c\" openair2/F1AP/MESSAGES/ASN1/f1ap-18.6.0.cmake",
+            "explanation": "Verify if F1AP_LTMConfigurationID.c is included in the ASN1 source list for F1AP"
+          },
+          {
+            "command": "cmake --build . --target nr-softmodem",
+            "explanation": "Rebuild nr-softmodem target after adding missing source file to fix linker error"
+          },
+          {
+            "command": "make clean && cmake --build . --target nr-softmodem",
+            "explanation": "Clean stale objects and rebuild nr-softmodem to ensure all dependencies are correctly linked"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    }
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260713_153436.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

@@ -100,7 +100,7 @@
       "source": "new_seg_fault.log",
       "log_file": "new_seg_fault.log",
       "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/new_seg_fault.log",
-      "history_file": "bug_analysis_20260601_194424.json",
+      "history_file": "bug_analysis_20260724_151326.json",
       "source_type": "learned",
       "steps": [
         "build_cmake",
@@ -762,7 +762,7 @@
       "source": "Build_gNB_fail_2.log",
       "log_file": "Build_gNB_fail_2.log",
       "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/Build_gNB_fail_2.log",
-      "history_file": "bug_analysis_20260522_121841.json",
+      "history_file": "bug_analysis_20260713_165155.json",
       "source_type": "learned",
       "steps": [
         "build_cmake",
@@ -886,7 +886,7 @@
       "source": "CMake_error_2.log",
       "log_file": "CMake_error_2.log",
       "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/CMake_error_2.log",
-      "history_file": "bug_analysis_20260529_180110.json",
+      "history_file": "bug_analysis_20260714_151005.json",
       "source_type": "learned",
       "steps": [
         "build_cmake",
@@ -914,7 +914,7 @@
       "source": "Build_gNB_failed.log",
       "log_file": "Build_gNB_failed.log",
       "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/Build_gNB_failed.log",
-      "history_file": "bug_analysis_20260529_180922.json",
+      "history_file": "bug_analysis_20260714_160653.json",
       "source_type": "learned",
       "steps": [
         "build_cmake",
@@ -1016,7 +1016,7 @@
       "source": "CMake_error_4.log",
       "log_file": "CMake_error_4.log",
       "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/CMake_error_4.log",
-      "history_file": "bug_analysis_20260616_161909.json",
+      "history_file": "bug_analysis_20260714_154545.json",
       "source_type": "learned",
       "steps": [
         "build_cmake",
@@ -1741,8 +1741,8 @@
       "description": "Learned from previous RCA on success_ue_gnb.log",
       "source": "success_ue_gnb.log",
       "log_file": "success_ue_gnb.log",
-      "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Bug Discovery/success_ue_gnb.log",
-      "history_file": "bug_analysis_20260709_120830.json",
+      "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_ue_gnb.log",
+      "history_file": "bug_analysis_20260724_143133.json",
       "source_type": "learned",
       "steps": [
         "stack_init",
@@ -1794,7 +1794,7 @@
       "source": "ue_rach_faiilure.log",
       "log_file": "ue_rach_faiilure.log",
       "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Bug Discovery/Testing/Log_files/ue_rach_faiilure.log",
-      "history_file": "bug_analysis_20260709_153710.json",
+      "history_file": "bug_analysis_20260811_143555.json",
       "source_type": "learned",
       "steps": [
         "stack_init",
@@ -2422,7 +2422,7 @@
       "source": "success_cu_gnb.log",
       "log_file": "success_cu_gnb.log",
       "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_cu_gnb.log",
-      "history_file": "bug_analysis_20260710_114950.json",
+      "history_file": "bug_analysis_20260715_123726.json",
       "source_type": "learned",
       "steps": [
         "stack_init",
@@ -2475,12 +2475,12 @@
     },
     {
       "id": "learned_success_du_gnb",
-      "scenario": "cu_stack",
+      "scenario": "du_stack",
       "description": "Learned from previous RCA on success_du_gnb.log",
       "source": "success_du_gnb.log",
       "log_file": "success_du_gnb.log",
       "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
-      "history_file": "bug_analysis_20260710_122231.json",
+      "history_file": "bug_analysis_20260714_155806.json",
       "source_type": "learned",
       "steps": [
         "stack_init",
@@ -2502,7 +2502,7 @@
       "source": "truncated_gnb.log",
       "log_file": "truncated_gnb.log",
       "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Bug Discovery/Testing/Test_Log_files/Truncated_Log_files/truncated_gnb.log",
-      "history_file": "bug_analysis_20260710_150240.json",
+      "history_file": "bug_analysis_20260715_123258.json",
       "source_type": "learned",
       "steps": [
         "stack_init",
@@ -2542,7 +2542,7 @@
       "source": "truncated_gnb1.log",
       "log_file": "truncated_gnb1.log",
       "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Bug Discovery/Testing/Test_Log_files/Truncated_Log_files/truncated_gnb1.log",
-      "history_file": "bug_analysis_20260710_150746.json",
+      "history_file": "bug_analysis_20260811_150417.json",
       "source_type": "learned",
       "steps": [
         "stack_init",
@@ -2572,6 +2572,392 @@
           "ngap_setup_response",
           "ngap_register_cnf",
           "build_cmake"
+        ]
+      ]
+    },
+    {
+      "id": "learned_CMake_error_3",
+      "scenario": "build",
+      "description": "Learned from previous RCA on CMake_error_3.log",
+      "source": "CMake_error_3.log",
+      "log_file": "CMake_error_3.log",
+      "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/CMake_error_3.log",
+      "history_file": "bug_analysis_20260713_153436.json",
+      "source_type": "learned",
+      "steps": [
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail"
+      ],
+      "ngrams": [
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ]
+      ]
+    },
+    {
+      "id": "learned_CMake_errror",
+      "scenario": "build",
+      "description": "Learned from previous RCA on CMake_errror.log",
+      "source": "CMake_errror.log",
+      "log_file": "CMake_errror.log",
+      "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/CMake_errror.log",
+      "history_file": "bug_analysis_20260714_125737.json",
+      "source_type": "learned",
+      "steps": [
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail"
+      ],
+      "ngrams": [
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ]
+      ]
+    },
+    {
+      "id": "learned_CMake_error_1",
+      "scenario": "build",
+      "description": "Learned from previous RCA on CMake_error_1.log",
+      "source": "CMake_error_1.log",
+      "log_file": "CMake_error_1.log",
+      "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/CMake_error_1.log",
+      "history_file": "bug_analysis_20260811_150024.json",
+      "source_type": "learned",
+      "steps": [
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail"
+      ],
+      "ngrams": [
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ]
+      ]
+    },
+    {
+      "id": "learned_Build_gNB_failed",
+      "scenario": "build",
+      "description": "Learned from previous RCA on Build_gNB_failed.txt",
+      "source": "Build_gNB_failed.txt",
+      "log_file": "Build_gNB_failed.txt",
+      "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/Build_gNB_failed.txt",
+      "history_file": "bug_analysis_20260714_144641.json",
+      "source_type": "learned",
+      "steps": [
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail",
+        "build_cmake",
+        "build_compile_fail"
+      ],
+      "ngrams": [
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ],
+        [
+          "build_cmake",
+          "build_compile_fail",
+          "build_cmake"
+        ],
+        [
+          "build_compile_fail",
+          "build_cmake",
+          "build_compile_fail"
+        ]
+      ]
+    },
+    {
+      "id": "learned_CU_log",
+      "scenario": "build",
+      "description": "Learned from previous RCA on CU_log.log",
+      "source": "CU_log.log",
+      "log_file": "CU_log.log",
+      "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Bug Discovery/Testing/success_logs/CU_log.log",
+      "history_file": "bug_analysis_20260812_114523.json",
+      "source_type": "learned",
+      "steps": [
+        "build_cmake",
+        "stack_init",
+        "ngap_setup_request",
+        "stack_init",
+        "f1ap_start",
+        "ngap_setup_response",
+        "ngap_register_cnf",
+        "rrc_connected",
+        "ngap_initial_ue"
+      ],
+      "ngrams": [
+        [
+          "build_cmake",
+          "stack_init",
+          "ngap_setup_request"
+        ],
+        [
+          "stack_init",
+          "ngap_setup_request",
+          "stack_init"
+        ],
+        [
+          "ngap_setup_request",
+          "stack_init",
+          "f1ap_start"
+        ],
+        [
+          "stack_init",
+          "f1ap_start",
+          "ngap_setup_response"
+        ],
+        [
+          "f1ap_start",
+          "ngap_setup_response",
+          "ngap_register_cnf"
+        ],
+        [
+          "ngap_setup_response",
+          "ngap_register_cnf",
+          "rrc_connected"
+        ],
+        [
+          "ngap_register_cnf",
+          "rrc_connected",
+          "ngap_initial_ue"
         ]
       ]
     }

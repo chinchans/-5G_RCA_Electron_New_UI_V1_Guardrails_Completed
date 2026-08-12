@@ -1,0 +1,56 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[SCTP]   Received SCTP SHUTDOWN EVENT\"\n\nContext:\nThis SCTP shutdown event indicates that the SCTP association between the CU and DU has been terminated unexpectedly. Following this, the log shows:\n- \"Received SCTP state 1 for assoc_id 337, removing endpoint\"\n- \"releasing DU ID 3584 (gNB-Eurecom-DU) on assoc_id 337\"\n\nThis error is critical as it implies loss of SCTP connectivity, which would prevent further F1AP messaging and thus disrupt the CU-DU interface operation, effectively preventing normal system operation and UE context management.\n\nNo stack trace or crash info is present, but the SCTP shutdown event is the most critical error in the log.",
+  "log_file": "success_cu_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_cu_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-test",
+  "timestamp": "2026-07-14T16:10:32.088034",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[SCTP]   Received SCTP SHUTDOWN EVENT\"\n\nContext:\nThis SCTP shutdown event indicates that the SCTP association between the CU and DU has been terminated unexpectedly. Following this, the log shows:\n- \"Received SCTP state 1 for assoc_id 337, removing endpoint\"\n- \"releasing DU ID 3584 (gNB-Eurecom-DU) on assoc_id 337\"\n\nThis error is critical as it implies loss of SCTP connectivity, which would prevent further F1AP messaging and thus disrupt the CU-DU interface operation, effectively preventing normal system operation and UE context management.\n\nNo stack trace or crash info is present, but the SCTP shutdown event is the most critical error in the log.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_cu_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test basic connectivity from gNB to AMF IP to ensure network reachability"
+          },
+          {
+            "command": "grep -n \"amf_ip\" openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+            "hint": "Verify AMF IP configuration in the CU gNB configuration file to ensure correct settings"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test basic connectivity from gNB to AMF IP to ensure network reachability"
+          },
+          {
+            "command": "grep -n \"amf_ip\" openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+            "explanation": "Verify AMF IP configuration in the CU gNB configuration file to ensure correct settings"
+          }
+        ],
+        "command_count": 2
+      },
+      "command_count": 2
+    },
+    "timestamp": "2026-07-14T16:10:31.922900"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260714_161032.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

@@ -1,0 +1,4242 @@
+[
+  {
+    "text": "Provide a detailed comparison between 3GPP TS 38.401 Section 8.2.1 and 8.2.2 regarding intra-O-CU handover procedures in an O-RAN architecture. [1, 2]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the specific requirements for CSI-RS based RSRP and SINR measurements when validating downlink peak throughput in frequency range 1 (FR1)? [3, 4]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the impact of fronthaul latency (T12/T34) on the synchronization plane (S-Plane) and the subsequent degradation of L1 downlink spectral efficiency. [5, 6]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the verification steps for mandatory IEs in a 5G SA Registration Request message for multiple network slices (SST 0x01/0x02/0x03/0x04). [7, 8]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "AMF is completely silent post NGSetupRequest, what gives? The AMF ID is correct in the O1 config. [9-11]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis UE is stuck in RRC_IDLE and won't trigger the MO call. Checked the inactivity timer on the DU, seems okay. Any ideas? [12, 13]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Yo, my VoNR call keeps dropping during Inter-O-DU handover. Throughput in the target cell is basically zero. Plss help debug. [2, 14]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? RSRP is -110 but the UE is still trying to attach to the capacity cell instead of the coverage macro. [15, 16]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a Python script to parse a large PCAP file and extract all 5QI=1 QoS Flow setup messages during EPS Fallback procedures. [17, 18]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a Robot Framework keyword to inject a fake RRC Connection Re-establishment failure into the gNB-CU to test RIC Traffic Steering robustness. [10, 19]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute an iperf3 downlink test on a specific network slice (S-NSSAI 01.FFFFFF) and bypass the standard application server to hit the UPF directly. [20, 21]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a fuzzing tool to mutate the eCPRI control plane headers on the Open Fronthaul interface and check for O-DU kernel panics. [22]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "NAS_5GS_REG_FAIL Cause: #15 (No suitable cells in tracking area) Hex: 0x0F. [23, 24]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O-DU L1 Log: [MAC] PRB Utilization 99% - UL BLER 15% - MCS 4. [15, 25]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 102: NGAP/NAS Registration Request - Mobile Identity: SUCI - SST: 0x01. [21, 26]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eCPRI Message Type 0: IQ Data - SeqID 0x0045 - Payload length 1280. [27, 28]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Specify the calculation for expected theoretical 5G NR L1 throughput for a 100 MHz FR1 TDD carrier with 30 kHz SCS and a 4:1 DL/UL ratio. [4, 29]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "My gNB is throwing an SCTP abort during Xn setup with the neighbor cell. Is it a peer ID mismatch in the Near-RT RIC config? [10, 11, 30]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "How do I script a sequence of 100 simultaneous RRC_CONNECTED state transitions to stress test the O-CU control plane capacity? [31, 32]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "PDSCH SINR distribution: Mean 7dB, StdDev 4dB. Radio Condition: Fair. [15, 33]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Analyze the procedure of UE-initiated de-registration in 5G SA and its effect on existing PDU sessions for eMBB slices. [34, 35]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "The UE emulator is acting up. It sends RRCSetupComplete but doesn't include the S-NSSAI in the list. Reg is failing every time. [21, 36]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Parse the SIP 180 Ringing message from this log and calculate the Call Setup Time for this VoLTE session. [37, 38]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "RRC Connection Release - Cause: User Inactivity - T302 not running. [12, 39]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "What is the minimum coupling loss (MCL) requirement for a Pico cell deployment to ensure repeatable OTA performance testing? [3, 40]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Why did my DL throughput tank when the O-RU moved to Fair radio conditions? The MCS should have stayed at 28. [15, 41, 42]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Can I use a FastAPI server to collect real-time KPI metrics from the O1 interface during a 48-hour stability test? [22, 43]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "NR-ARFCN: 633312 - PCI: 12 - Band: n78 - SSB SCS: 30kHz. [44, 45]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Describe the O-RAN Traffic Steering use case requirements for connected mode mobility control as mediated by the Near-RT RIC. [19, 46]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Dis UE is getting paged but doesn't respond. I checked the S1 trace and the MME sent the paging request to the gNB. [10, 24]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a bash command to filter all 'Handover Required' messages from an AMF log file using grep. [22, 47]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "eMBB Slice SST=0x01 SD=0xFFFFFF. PDU Session ID: 5. [21, 48]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Explain the role of the N26 interface in supporting seamless handover between 5GS and EPS for voice services. [49, 50]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Reg with SST 0x04 for V2X is failing. The AMF log says 'Slice Not Supported' but the config looks right. [7, 8]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Create a script to automate the calculation of Spectral Efficiency for multiple test iterations based on captured UDP throughput data. [33, 51]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Handover Failure - Target Cell: 0xAB12 - Cause: Radio Connection With UE Lost. [2, 52]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "What are the specific KPIs required for validating the functionality of the Earthquake and Tsunami Warning System (ETWS) under network load? [53, 54]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "The AR glasses have insane jitter. Video is freezing every 5 seconds. The UPF might be too far from the edge. [55, 56]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Inject a high volume of malformed NGAP messages into the O-CU-CP to determine the Denial of Service (DoS) threshold. [22, 57]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "SIP/2.0 180 Ringing - Call-ID: a84b4c76e66710 - CSeq: 314159 INVITE. [37, 58]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Provide the technical specification for evaluating Energy Efficiency (EE) gains when using Non-RT RIC for carrier and cell switch off/on. [59, 60]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "dis VoLTE call setup time is taking forever. More than 4 seconds! EPS fallback is definitely slowing it down. [61, 62]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write an automation task to periodically toggle the power state of the capacity cell and measure the energy consumption via the energy meter. [22, 63]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Total Data Volume: 5000 Mbits. Energy Consumption: 1.2 kWh. EE = 4166 Mbits/kWh. [60]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Explain the difference between full buffer and finite buffer traffic models as utilized in 3GPP and O-RAN performance testing. [64, 65]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "U see dis throughput drop? It happens right at the handover boundary between O-DU 1 and O-DU 2. [2, 66]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Parse the RRC message list to find the 'rrc-TransactionIdentifier' for all successful RRC connection establishments. [67, 68]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "UE SS-RSRP: -95dBm. UE SS-SINR: 7dB. Radio Condition: Fair. [15, 69]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Define the methodology for measuring handover interruption time and packet loss during Intra-O-DU mobility in SA mode. [1, 25]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "My gNB is stuck in 'Wait for Registration Request'. UE says it sent it but DU log is empty. Check the fronthaul! [69, 70]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Create a script to simulate 1000 IoT sensors sending periodic humidity data to an application server over an mMTC slice. [71, 72]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Cause: mps-PriorityAccess. RRC Establishment Cause: 0x01. [54, 73]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Describe the influence of MU-MIMO on aggregated cell throughput when UEs are group in clusters under a non-uniform distribution. [74, 75]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "dis FTP upload is crawling at 500kbps. It should be at least 5Mbps on dis slice. Check the PUSCH MCS. [76, 77]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Execute a security vulnerability scan on the O-Cloud environment to identify blind exploitation paths for well-known CVEs. [22]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "O-RU M-Plane Trace: [NETCONF] <edit-config> target: running. [22, 78]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Compare the DNS resolution time requirements for web browsing in 4G NSA vs 5G SA environments. [36, 79]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, dis VoLTE call setup time is 3 seconds. Isn't that too high for a clean lab setup with N26? [62, 80]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a script to automate the calculation of MOS scores using the ITU P.1203.3 algorithm for a 120-second video stream. [81, 82]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "RTP Packet Loss: 2.5%. MOS: 3.1. Call Muted: True. [83, 84]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Analyze the impact of midhaul transport latency on the F1 interface and its effect on uplink peak throughput in 5G SA. [85, 86]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "The UE position coordinate is way off. Position service accuracy is like 10 meters! Should be less than 1. [87, 88]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Use an NFV benchmarking tool to measure the vCPU usage of the O-DU virtual instance during a peak traffic load test. [22, 89]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "N26 Interface Trace: [MME -> AMF] Forward Relocation Request. [47, 50]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Explain the state transition rate benchmarking procedure for UEs moving between RRC_IDLE and RRC_CONNECTED states. [31, 39]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "dis gNB is not sending the ETWS primary notification. Checked the SIB10, it's missing. What gives? [54, 90]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Develop a script to automate the extraction of RLC layer throughput from UE logs and compare it against application layer throughput. [20, 91]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "UE ID: 0x01 - S-NSSAI: 1 - 5QI: 1 (Voice) - GBR: 128kbps. [92, 93]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "How does the scaling factor 'f' influence the expected theoretical downlink throughput in 5G NR as per TS 38.306? [4, 94]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "dis VoNR call is one-way. I can hear the MT device but they can't hear me. Check the UL RTP flow on the UPF. [95, 96]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Automate the collection of thermal noise rise (IoT) metrics from the gNB during a 100% multi-cell load scenario. [97, 98]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "gNB SIB1: CellReservedForOperatorUse: false - CellBarred: false. [24, 99]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Detail the configuration of the 'Energy saving rApp' within the SMO and its interaction with E2 nodes over the O1 interface. [78, 100]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "My UE won't register to multiple slices. registration accept only has SST 0x01. SST 0x02 is missing. [8, 101]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Use a protocol analyzer to verify the integrity of the PTP synchronization plane data between the O-DU and O-RU. [22, 102]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Handover Latency: 45ms. Interruption Time: 12ms. Status: Success. [2, 52]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Describe the methodology for calculating spectral efficiency for a TDD carrier, accounting for the fraction of symbols allocated to DL and UL. [51, 103]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "dis video stream is so pixelated. The ABR client is stuck on 360p even though SINR is 25dB. [104, 105]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a Python script to inject specific SS-RSRP thresholds into a UE emulator to trigger a cell reselection event. [106, 107]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "UE State: RRC_CONNECTED -> RRC_IDLE. Inactivity Timer Expiry. [31, 39]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Analyze the impact of different beamforming types (horizontal, vertical, 3D) on aggregated cell throughput in a uniform UE distribution. [75, 108]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Why is the registration type always 'initial registration' even when the UE is just moving between cells in the same tracking area? [21, 24]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Execute a packet generation tool to simulate a high-volume UDP stream on a URLLC slice and measure the end-to-end latency. [22, 109]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Registration Time (single slice): 150ms. Deregistration Time: 85ms. [1, 110]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Detail the verification steps for 'UE Requested PDU Session Establishment' in a 5G SA network as per TS 23.502 Clause 4.3.2.2.1. [23, 111]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, dis UE is sending a registration request but the gNB never sends the Initial Context Setup Request to the AMF. [21, 24]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Parse the O1 log files to identify any 'Loss of Synchronization' alarms on the O-RU during long-hour stability testing. [22, 43]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "O1 Alarm: [O-RU-1] Loss of Signal on Port 2. Severity: Major. [78, 112]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Explain the concept of 'Motion to Photon' latency and its significance in evaluating the end-user experience for AR applications over URLLC. [113, 114]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "dis EPS fallback is taking over 4 seconds. The UE is literally dropping to 4G and then back to 5G after the call. [61, 62]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Develop an automation script to capture all 'SgNB Reconfiguration Complete' messages and calculate the average SgNB addition success rate. [115, 116]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "SgNB Addition Success Rate: 100%. SgNB Reconfiguration Time: 45ms. [115, 117]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Provide the procedure for calculating energy efficiency gain when comparing 'ESfeature ON' versus 'ESfeature OFF' configurations. [60, 112]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Why is the PDU session establishment failing for the mIoT slice? The core log says 'Resource Not Available'. [23, 71]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Use a vulnerability scanning tool to identify open ports and services on the Near-RT RIC during its idle state. [22, 118]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "vCPU Mean Usage: 0.45. ECO-Cloud: 10kWh. Estimated EC_instance: 4.5kWh. [89, 119]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Specify the statistical KPI measurements required for cell-level performance monitoring in a RIC-enabled Traffic Steering use case. [93, 120]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "dis UE is stuck in RRC_CONNECTED but won't send any data. I think the PDU session is silent. Plss debug. [13, 121]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a script to automate the execution of 10 iterations of the LTE Attach-Detach procedure and record the average attach latency. [91, 122]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Attach Success Rate: 100%. Detach Success Rate: 100%. Average Attach Latency: 120ms. [117, 123]",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Analyze the impact of different Beam Management strategies on the SS-SINR CDF curve for a UE moving at high speed (150 kph) in a rural macro environment.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Evaluate the E2E latency for a URLLC slice where the UPF is deployed at the O-Cloud edge vs. a centralized core deployment, citing specific 5QI-83 requirements.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the procedure for validating 'UE State Transition Rate' capacity when the gNB-CU is under 90% CPU load during a multi-cell stress test?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the verification of 'Allowed NSSAI' in the Initial Context Setup Request for a UE requesting simultaneous access to eMBB and V2X slices.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the calculation of Spectral Efficiency for a TDD configuration 4:1 (DDDDSU) with 30kHz SCS and 100MHz bandwidth in FR1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the role of the A1 interface in providing policy guidance for Traffic Steering Mode 2 optimizations in a Near-RT RIC architecture.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Compare the performance of TCP vs. QUIC transport protocols for high-resolution video streaming over an O-RAN system in fair radio conditions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the steps for measuring 'Motion-to-Photon' latency in an Augmented Reality use case over a 5G SA network slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the expected behavior of the 'Energy saving rApp' when PRB utilization in the capacity cell falls below the 10% threshold for 15 minutes?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of midhaul transport latency (F1-U) on the peak uplink throughput of a UE using 256QAM in excellent radio conditions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, why is my UE not performing cell reselection in idle mode? It's literally sitting next to the target O-RU but won't jump.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis 5G SA reg is taking like 500ms. is the AMF slow or is it just the F1 latency messing with the NAS timers?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "My ftp download is stuck at 2Mbps even though I'm in excellent radio. Check if the PDSCH MCS is capped at 10 plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? The AR headset has massive jitter. The video is freezing every time the UE moves. Is the UPF at the edge or not?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "VoNR call is dropping every time I hit the handover boundary between O-DU 1 and O-DU 2. Check the Xn interface config.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The energy meter is showing no change even after the rApp supposedly switched off the cell. is the O-RU actually powered down?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis UE won't attach to the capacity cell at all. it's always staying on the macro. maybe the RSRP offset is too high?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "throughput is tanking during the 48-hour stability test. seems like a memory leak in the O-DU. plss look at the logs.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Why am I getting 'Slice Not Supported' for SST 3? I provisioned it in the core and the gNB. U sure the config is pushed?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The UE emulator is acting up again. It sends RRCSetupComplete but the S-NSSAI list is empty. Registry keeps failing.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a Python script to extract all 'UE Context Release Command' messages from an O-CU log and count the occurrences of 'User Inactivity'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a Robot Framework script to simulate 500 UEs power-on in a sequence with 100ms intervals to test gNB-CU registration capacity.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a packet generation tool to inject malformed SCTP chunks into the N2 interface to check for AMF stability under protocol stress.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse this PCAP to find the 'rrc-TransactionIdentifier' for all RRCReconfiguration messages that resulted in a reconfiguration failure.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute a bash command to filter all 'Handover Command' messages from the gNB logs and calculate the average time until 'Handover Success'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the calculation of the MOS score for 50 VoNR calls using the captured RTP streams and the P.1203 algorithm.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a vulnerability scanner to check the SMO's O1 interface for open ports and identify any unencrypted NETCONF sessions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a FastAPI microservice to collect real-time PRB utilization metrics from multiple O-DUs and visualize the cell load distribution.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a script to inject a specific 'Cell Barred' bit into the SIB1 broadcast of a UE emulator to test redirection to LTE during 5G overload.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute iperf3 on an mMTC slice and bypass the standard throttle to determine the absolute maximum throughput for small data bursts.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "[O-DU] MAC_SCHED: PRB_Usage_DL=85%, PRB_Usage_UL=12%, Active_UEs=120.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "NAS_5GS_REG_REJECT: Cause #62 (No network slices available) Hex: 0x3E.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "RRCReconfiguration - radioBearerConfig: srb-ToAddModList, drb-ToAddModList - SST: 0x01.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SS-RSRP: -108dBm, SS-SINR: 2dB, Radio Condition: Poor (Cell Edge).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 1089: F1AP UE Context Setup Response - GNB-CU-UE-F1AP-ID: 0x0045A1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eCPRI Message: Type 2 (Real-time Control) - SeqID: 0x12FF - Payload: 0x0A0B0C.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SIP/2.0 403 Forbidden - Reason: Service Not Subscribed - Call-ID: 987654321.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O1 ALARM: [O-RU-5] S-Plane Loss of Sync. Severity: Critical. Timestamp: 2024-05-21T14:30:00Z.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE State: RRC_CONNECTED -> RRC_IDLE (Inactivity Timer Expiry - 10s).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "HTTP/1.1 200 OK - Content-Length: 2097152 - TTFB: 150ms.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Analyze the impact of the 'Scaling Factor f' on the theoretical peak throughput for a band combination including n78 and n28.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the methodology for validating the 'Earthquake and Tsunami Warning System' (ETWS) primary notification under 100% cell load.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the verification steps for 'Release with Redirect' from 5GS to EPS when the N26 interface is not available in the core network.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the specific requirements for 'MPS-subscribed UEs' to maintain connectivity during an eNB overload condition as per TS 23.401?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Evaluate the energy efficiency gain (EE) when comparing ESfeature ON vs. OFF using the ETSI-based traffic model for a 24-hour cycle.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the influence of MU-MIMO on aggregated downlink cell throughput when UEs are grouped in non-uniform clusters.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the statistical KPI measurements required for monitoring 'Relative Jitter' and 'RTP Error Rate' in a VoNR mobility test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the configuration of 'Proportional Fairness' scheduling and its impact on throughput for UEs at the cell edge vs. cell center.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the procedure for 'UE-initiated de-registration' and its effect on active PDU sessions across different network slices.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the impact of fronthaul transport latency (T12/T34) on the synchronization plane and its subsequent effect on L1 spectral efficiency.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, dis VoLTE call setup time is taking like 4 seconds. Isn't it supposed to be under 2.5s for a clean lab setup?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "The UE is stuck in RRC_CONNECTED but I'm getting 0 throughput. I think the PDU session is dead. Debug plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "U see dis bler? It's jumping to 15% even though RSRP is -80. There must be massive inter-cell interference.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "why is the gNB sending RRC Connection Release right after the attach? I checked the logs and it says 'other'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "dis FTP upload is crawling. MCS is like 2. is the O-RU even receiving my signals correctly?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "Yo, check the O1 traces. The rApp just switched off the capacity cell but the UE didn't handover. It just dropped!",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "dis video stream is so pixelated. SINR is 20dB but the ABR client is stuck on 360p. something is wrong with the path.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "The UE position is jumping all over the map. position service accuracy is like 10 meters off. fix plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "why am I not getting n78 in the SCell addition? I see it in the gNB config but the UE won't measure it.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "my ping is 200ms. URLLC slice my foot! The midhaul is definitely a bottleneck. check the F1-U traces.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "Write a Python script to automate the calculation of the 'TTFB' for 100 HTTP requests during a web browsing service test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a bash script to parse the O-RU M-Plane logs and extract all NETCONF 'edit-config' errors related to power management.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use an NFV benchmarking tool to measure the vCPU usage of the O-DU virtual instance during a peak 10Gbps traffic test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute a security scan to detect if the E2 interface is vulnerable to a Man-in-the-Middle (MitM) attack for hijacking xApp policies.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the extraction of 'Uplink BLER' samples from the gNB logs and plot them against UE RSRP over time.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a Robot Framework keyword to inject a fake 'S1 Setup Failure' to test the gNB's ability to switch to a secondary MME.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse this large trace file and calculate the average 'Handover Interruption Time' for all inter-O-CU mobility events.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to inject high-frequency 'UE Context Release' requests into the O-CU-CP to trigger a memory exhaustion condition.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute iperf3 in bidirectional mode for 60 minutes and record any socket errors or protocol timeouts on the URLLC slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a protocol analyzer to decrypt IPsec traffic on the F1 interface and verify the integrity of the RRCReconfiguration message.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "RRC Connection Setup Complete - Selected PLMN Identity: 01 - Dedicated NAS Message: 0x01A2B3.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "[MME] S1AP: Initial Context Setup Failure - Cause: Radio Resources Not Available (0x01).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE Measurements: ARFCN=633312, RSRP=-95dBm, RSRQ=-12dB. PCI=14 (Serving).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SIP 183 Session Progress - P-Early-Media: supported - Content-Type: application/sdp.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "[O-CU-UP] DL Throughput: 1.2 Gbps, UL Throughput: 450 Mbps, PDU Sessions: 50.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "PDSCH MCS Distribution: MCS 28 (15%), MCS 15 (50%), MCS 4 (35%).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eCPRI Control Msg: Real-Time Control Data - SeqID: 0x442 - Payload Len: 120.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Cause: mps-PriorityAccess (0x01). RRC Establishment Cause - SST: 0x01 SD: 0xFFFFFF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O1 Notification: [Capacity_Cell] State -> Disabled. Reason: rApp_EnergySaving_Action.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE State: RRC_CONNECTED. HARQ Retransmissions: 12. PDSCH BLER: 8.5%.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Describe the E2E procedure for validating 'Intra-O-DU Mobility' in SA mode, citing 3GPP TS 38.401 Clause 8.2.1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of different PRB utilization thresholds (30%, 50%, 70%) on the IoT noise rise during multi-cell performance testing.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the methodology for calculating Energy Efficiency Gain using the EE_ESfeature_ON / EE_ESfeature_OFF ratio.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the role of the SMO in managing O-RU M-Plane configurations for both 'Hybrid' and 'Hierarchical' management modes.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the required KPIs for assessing the Quality of Experience (QoE) for high-bandwidth file transfers over an eMBB network slice?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, dis gNB is silent post X2 setup request. is it a peer ID mismatch or is the firewall blocking the SCTP chunks?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "The UE emulator says it's attached but I don't see any data in the application server. check the N3 tunnel config plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "dis VoNR call is one-way. I can hear the MT side but they can't hear me. Check the UL RTP flow on the UPF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "my registration time is 2 seconds! that's insane for a clean lab. check if the RIC is delaying the UE context setup.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "U see dis bler spike during the handover? it's hitting 20%. the target cell is definitely not ready for the UE.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "Write a script to automate the calculation of the 'Spectral Efficiency' for multiple TDD slots across a 10ms radio frame.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a tool to inject high-volume 'Paging' messages into the NGAP interface to stress test the gNB's paging queue capacity.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a fuzzer to mutate the 'S-NSSAI' values in the Registration Request and check for AMF crash during slice selection.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse this trace to find the delay between 'SIP INVITE' and 'SIP 180 Ringing' for all successful VoLTE calls.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a bash command to filter all 'Cell Reserved for Operator Use' bits in the captured SIB1 messages from the air interface.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "RRC Connection Re-establishment Request - Cause: reconfigurationFailure (0x01) - PCI: 12.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "[O-DU] L1_Log: Slot_Error_Count=45, CRC_Fail_UL=120, DL_TB_Size=124000.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 442: NGAP/NAS Authentication Request - RAND: 0xA1B2C3D4, AUTN: 0xE5F6G7H8.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE State: RRC_CONNECTED. MIMO Rank: 4, MCS: 28, SINR: 25dB. Status: Peak.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Cause: trackingAreaNotAllowed (0x0C). NAS 5GS Registration Reject - MCC: 310, MNC: 260.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Evaluate the signaling procedure for a mobile-originated VoNR call, specifically focusing on the interaction between the 5G Core and IMS for 5QI-1 QoS Flow establishment.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the technical requirements for Multimedia Priority Service (MPS) calls to maintain connectivity during a gNB overload condition using 'mps-PriorityAccess'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the specific methodology for measuring Voice Call Setup Time (CST) from the initial SIP INVITE to the reception of the SIP 180 Ringing message?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the difference in end-user experience when performing EPS Fallback using the N26 interface versus the Release with Redirect method.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of midhaul transport latency on the F1-C interface regarding the success rate of RRC Connection Re-establishments during inter-O-CU handovers.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the configuration of the ETWS (Earthquake and Tsunami Warning System) Primary Notification within SIB10 and its delivery mechanism under 100% cell load.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the calculation for Mean Opinion Score (MOS) using the ITU P.1203.3 algorithm for H.264 encoded video streams in a ViLTE session.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the mandatory Information Elements (IEs) required in an IMS Registration Request for a UE attached via an O-RAN 5G SA system?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the E2E verification of 'UE Requested PDU Session Establishment' for a GBR-based voice slice as per TS 23.502.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Assess the effect of RLC Unacknowledged Mode (UM) on the stability of VoNR audio streams in poor radio conditions with high PUSCH BLER.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Yo, my VoNR call setup is taking like 5 seconds. I think the EPS fallback is triggering even though I have 5G coverage.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis UE won't register with IMS. I see the SIP INVITE but no 403 or anything. Is the P-CSCF silent or what?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The 911 call failed during the stress test. The gNB should prioritize it but the logs show 'radio resources not available'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis jitter? Audio is totally robotic. I think the UPF edge deployment is messed up for the URLLC slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "My ViLTE session keeps freezing every time I move to the cell edge. Is it a rank 1 issue or is the MCS just too low?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The ETWS alert didn't pop up on the UE emulator. Did the gNB actually broadcast SIB10 during the overload?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "VoNR is one-way again. I can hear the MT but they can't hear me. Plss check the UL RTP on the N3 interface.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis VoLTE handover between O-eNB 1 and 2 is dropping calls. The MME trace says 'Handover Cancelled'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Why is my MPS call getting 'highPriorityAccess' in the gNB logs but still failing to attach during the peak load?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The F1-U latency is spiking to 50ms. No wonder the video stream is buffering like crazy. Check the midhaul fiber.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a Python script to parse a Wireshark PCAP and calculate the delta between SIP INVITE and SIP 180 Ringing for 100 iterations.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a Robot Framework script to inject 500 simultaneous IMS Registration requests into the O-CU-CP to test SIP signaling capacity.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a bash tool to grep all 'Cause: mps-PriorityAccess' occurrences from a gNB trace file and output a CSV of success/fail.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create an automation task to bypass the standard SIP stack and inject raw RTP packets into the UPF to measure DL jitter on a 5QI-1 flow.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a vulnerability scanner to check if the IMS core interfaces (Gm/Rx) are exposed to unauthorized SIP INVITE floods.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the calculation of MOS scores using ITU P.1203 for 50 ViLTE calls based on captured application layer logs.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse the O-DU L1 logs to identify any CRC failures on the PUSCH during a high-load VoNR stability test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute a packet generation tool to simulate a failure in the N26 interface and verify if the UE falls back to 'Release with Redirect'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use an NFV benchmarking tool to measure the memory usage of the O-CU-CP instance when processing 100 emergency calls per second.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a script to inject malformed SIB10 messages into the RU emulator to verify UE resilience to corrupt ETWS data.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "SIP/2.0 180 Ringing - Call-ID: f81d4fae-7dec - CSeq: 1 INVITE - Contact: <sip:ue@10.0.0.1>.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "RRC Establishment Cause: mps-PriorityAccess (0x01) - SST: 0x01 - SD: 0xFFFFFF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "IMS REGISTRATION FAILURE: Cause #403 Forbidden - Reason: UE not provisioned for VoNR.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "F1AP: UE Context Setup Request - QoSFlowID: 1 - 5QI: 1 - GBR: 128kbps - MBR: 128kbps.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "RTP Packet Loss: 12.5% - DL Jitter: 45ms - MOS: 2.1 (Poor).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SIB10 ETWS: messageIdentifier: 0x1101 - serialNumber: 0x4001 - warningType: 00.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "NAS_5GS_SERVICE_REJECT: Cause #38 (Network failure) Hex: 0x26 - During EPS Fallback.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 2045: SIP INVITE - SDP: m=audio 49170 RTP/AVP 0 8 99 - b=AS:64.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O-CU-CP Log: [RRC] Sending RRCRelease with redirectInfo: E-UTRA-ARFCN: 1650.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE State: RRC_CONNECTED -> RRC_IDLE (User Inactivity Timer Expiry 10s).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Evaluate the impact of midhaul (F1) latency on the end-to-end delay for a ViLTE call, specifically focusing on the RTP packet arrival at the O-DU.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the verification steps for 'Release with Redirect' from 5G to LTE when the N26 interface is unavailable in the EPC/5GC core.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the required KPIs for assessing the 'Motion to Audio' latency in a tactile URLLC use case over 5G SA?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the role of the 'VoLTE Inactivity Timer' and its configuration on the O-eNB to optimize radio resource utilization.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the procedure of UE-initiated deregistration with the 'Switch Off' type and its cleanup sequence in the O-CU context.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Provide the technical specification for validating VoNR call continuity during an Intra-CU Inter-DU handover.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the statistical KPI measurements required for monitoring 'Relative Jitter' during 100 consecutive VoLTE calls.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "How does the 'Voice Codec Aware Scheduler' in the O-DU impact the MOS score for VoNR in a multi-cell loaded scenario?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the methodology for calculating the 'Call Setup Success Rate' (CSSR) for emergency services under SUT overload.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the impact of Robust Header Compression (RoHC) on the overall spectral efficiency of a VoLTE-only network.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "dis VoNR call is dropping every time the UE moves to O-RU 2. I think the Xn handover is failing at the CU.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "The AR glasses have insane lag. The image is like 2 seconds behind my head movement. UPF is definitely not at the edge.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "yo, why did the emergency call fail? The gNB log says 'mps-PriorityAccess' but the attach was rejected by AMF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "U see dis SIP 488? The IMS core doesn't like the AMR-WB codec I'm sending. Check the O-CU-UP profile.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "My VoLTE mute rate is spiking to 5%. I can see high RTP loss in the downlink. Is the O-RU overheating?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "dis UE is stuck in 'Wait for Registration Accept'. The SIP INVITE is already out but the NAS is hanging.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "The ETWS secondary notification never reached the UE. I checked the SIB11 but it's empty. What gives?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "my ping is 150ms on the URLLC slice. This is supposed to be 'ultra-low' latency! Check the F1 midhaul fiber.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "Why is the video call switching to audio-only? The SINR is 20dB. The O-DU must be capping the throughput.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "The UE position in the AR app is jumping 5 meters. The 'Position Service Accuracy' is way off the spec.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "Write a Python script to extract 'RTP Sequence Number' from a PCAP and detect any out-of-sequence packets during a handover.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a bash command to filter all 'SIP 183 Session Progress' messages and calculate the average time for early media setup.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a fuzzer to mutate the 'SDP' body in the SIP INVITE and check if the O-CU-UP crashes during codec negotiation.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse this trace and calculate the delta between 'F1AP: UE Context Setup' and the first RTP packet sent by the UPF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Robot Framework keyword to inject a simulated 'N26 Interface Timeout' to test the UE's redirect behavior.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute iperf3 on the URLLC slice and bypass the standard gateway to measure the raw UDP jitter at the O-Cloud edge.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a script to periodically toggle 'mps-PriorityAccess' for a test UE and measure the success rate during 100% cell load.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a security scanner to check if the gNB is vulnerable to a 'Paging Flood' attack that could block emergency calls.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse the NETCONF logs and extract all 'S-Plane Loss of Sync' alarms from the O-RU during a 24-hour stability test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the extraction of 'UE SS-SINR' samples and plot them against 'RTP Error Rate' for a moving UE.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "NAS_5GS_REG_REJECT: Cause #27 (N1 mode not allowed) Hex: 0x1B - During VoNR test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "[O-DU] L1_Log: Slot_Error_Count=85, PRB_Usage=98%, VoNR_Active_UEs=12.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 882: NGAP/NAS PDU Session Resource Setup Request - 5QI: 1 - ARP: 1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SIP 100 Trying - Via: SIP/2.0/UDP 10.0.0.1:5060;branch=z9hG4bK776as.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE State: RRC_CONNECTED. HARQ Max Retransmissions Reached. Cause: Radio Link Failure.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eCPRI Control Msg: Real-Time Control - SeqID: 0x5A2 - Type: 2 (User Plane).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Cause: trackingAreaNotAllowed (0x0C). MCC: 310, MNC: 260. TAI: 0x00A1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "[IMS] SIP INVITE - Content-Type: application/sdp - m=video 5000 RTP/AVP 96.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O1 Notification: [O-RU] High Temperature Alarm. State -> Degraded.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE Measurements: ARFCN=633312, RSRP=-105dBm, SINR=2dB. PCI=12.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Describe the E2E procedure for validating 'Intra-Central Unit (CU) handover' during a VoNR call, citing 3GPP TS 38.401.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of different TTI bundling configurations on the UL MOS score for VoLTE in cell edge conditions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the verification of 'QoS Flow ID 5' (SIP signaling) vs 'QoS Flow ID 1' (Audio) in a 5G SA registration flow.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the expected behavior of the UE when it receives a 'SIB10' notification while in the RRC_IDLE state?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the steps for measuring 'Motion to Photon' latency for an AR device where the UPF is deployed in the O-Cloud edge.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, dis emergency call is taking 6 seconds to setup. Isn't that too slow for a priority access UE?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "The SIP 180 Ringing is reaching the MT UE but the MO UE is still showing 'Calling'. Is the IMS core dropping packets?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "U see dis bler? It's hitting 15% on the PUSCH during the VoNR call. No wonder the MOS score is 2.0.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "dis EPS fallback is failing with 'radio connection lost'. UE is literally dropping off 5G before it can reach 4G.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "My video stream is pixelated during the inter-DU handover. It looks like packet loss at the F1-U interface.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "Write a script to automate the generation of 1000 'mps-PriorityAccess' registration requests to stress test the O-CU-CP.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a tool to inject a specific 'Warning Type' into the SIB10 broadcast to test the UE's emergency alert display.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a protocol analyzer to decrypt the Gm interface traffic and verify the 'P-Access-Network-Info' header in the SIP INVITE.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse this trace to find the delay between 'SIP INVITE' and 'SIP 200 OK' for all successful VoNR calls.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a bash command to filter all 'F1AP: Context Release' messages with cause 'User Inactivity' during a VoLTE stress test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "RRC Connection Re-establishment Request - Cause: other (0x02) - During ViLTE call.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "[IMS] SIP/2.0 488 Not Acceptable Here - Reason: Codec Mismatch.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 331: NGAP/NAS Service Request - Service Type: Data - PDU Session ID: 1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE State: RRC_CONNECTED. MIMO Rank: 2, MCS: 15, SINR: 12dB. Status: Fair.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Explain the mathematical derivation for SETDD_UL (Uplink Spectral Efficiency) in a 10ms radio frame as defined in the O-RAN E2E testing methodology.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the specific procedure for estimating the energy consumption of a virtualized O-DU (VNF) based on vCPU mean usage proportions within an O-Cloud environment.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of fronthaul transport latency (T12 and T34) on the stability of the S-Plane synchronization between the O-DU and O-RU.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the configuration requirements for benchmarking 'UE State Transition Rate' when scaling from 100 to 1000 UEs in a single cell scenario?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the differences between Traffic Steering Mode 1 and Mode 2 regarding the utilization of A1 policy guidance from the Non-RT RIC.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the criteria for calculating 'Energy Efficiency Gain' when comparing ESfeature ON vs. ESfeature OFF using the ETSI-based traffic model.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Evaluate the influence of 256QAM modulation on the L1 throughput calculation for a 100 MHz bandwidth carrier with a 30 kHz SCS.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the methodology for validating MU-MIMO performance in a non-uniform UE distribution scenario where UEs are grouped in clusters.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the role of the 'Energy saving rApp' in the SMO for executing carrier and cell switch off/on decisions based on PRB utilization thresholds.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the effect of Robust Header Compression (RoHC) on the overall spectral efficiency for a VoLTE-only traffic model in a dense urban environment.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "dis energy meter is flatlining even tho the rApp says the capacity cell is switched off. is the O-RU actually powered down?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "yo, why is my 5G throughput capped at 50Mbps? SINR is 25dB, so I should be hitting way more. Check the scaling factor f.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The UE emulator is crashing during the 1000 RRC connection stress test. Is it a memory leak in the O-CU-CP or just a bad script?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? The Near-RT RIC is steering UEs to Cell A but the radio conditions there are trash. Check the A1 policy plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis PRB usage is at 100% but I'm only getting half the expected throughput. Is the CFI overhead messing with the calculation?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "VoLTE call setup is taking forever. EPS fallback is definitely triggering even though we have 5G coverage. What gives?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The AR glasses have massive jitter. Image is freezing whenever the UE moves. Is the UPF actually at the edge?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a Python script to calculate the average 'TTFB' for 1000 HTTP requests by parsing these captured application layer traces.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a Robot Framework keyword to inject a fake 'Loss of Synchronization' alarm into the O-RU M-Plane via NETCONF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a FastAPI server to collect real-time PRB utilization metrics from multiple O-DUs and visualize the cell load distribution.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute an iperf3 downlink test on an mMTC slice (SST 0x03) and bypass the standard gateway to hit the UPF-Edge directly.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a bash script to filter all 'Handover Command' messages from gNB logs and calculate the average time until 'Handover Success'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a vulnerability scanner to detect if the E2 interface is vulnerable to a Man-in-the-Middle (MitM) attack for hijacking xApp policies.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a script to automate the extraction of 'Uplink BLER' samples from the gNB and plot them against UE RSRP over a 24-hour stability test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to parse a large PCAP and extract all 5QI=1 QoS Flow setup messages during EPS Fallback procedures.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use an NFV benchmarking tool to measure the memory usage of the O-CU-CP when processing 100 simultaneous emergency calls.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "NAS_5GS_REG_FAIL Cause: #15 (No suitable cells in tracking area) Hex: 0x0F.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "[O-DU] MAC_SCHED: PRB_Usage_DL=99%, PRB_Usage_UL=12%, Active_UEs=1000.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O-RU M-Plane: <edit-config> target: running, state: power-saving-mode.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 1024: SIP 180 Ringing - Call-ID: a84b4c - CSeq: 314159 INVITE.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SS-RSRP: -115dBm, SS-SINR: -2dB, Condition: Poor (Out of Coverage).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eCPRI Message Type 0: IQ Data - SeqID 0x00A1 - Payload length 1280.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O1 Alarm: [O-RU-1] Loss of Signal on Port 2. Severity: Major.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE State: RRC_CONNECTED -> RRC_IDLE. Cause: User Inactivity.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "S-NSSAI: SST=0x01, SD=0xFFFFFF. PDU Session ID: 5.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "vCPU Mean Usage: 0.85. EC_instance: 8.5kWh. ECO-Cloud: 10kWh.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Detail the configuration of 'Proportional Fairness' scheduling and its impact on the spectral efficiency of cell-edge UEs.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Provide a technical comparison of DNS resolution time requirements between 4G NSA and 5G SA for web browsing services.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the verification steps for 'Initial Registration' with multiple network slices (SST 0x01/02/03/04) as per TS 23.502.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the procedure for UE-initiated de-registration with the 'Switch Off' type and its cleanup sequence in the O-CU.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the impact of 3D beamforming on aggregated cell throughput in a high-rise building deployment scenario.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Yo, my VoLTE call is dropping every time I hit the Xn handover boundary. Check if the O-CU-UP is failing the bearer setup.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis VoNR call setup time is 3 seconds. Isn't that too high for a clean lab setup with N26?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The UE position coordinate is way off. AR accuracy is like 10 meters when it should be less than 1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? RSRP is -110 but the UE is still trying to attach to the capacity cell instead of the coverage macro.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a script to automate the calculation of MOS scores using the ITU P.1203.3 algorithm for a 120-second video stream.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a packet generation tool to inject malformed SCTP chunks into the N2 interface to check for AMF stability.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a script to automate the extraction of 'RTP Sequence Number' from a PCAP to detect out-of-sequence packets during handover.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse the O1 log files to identify any 'Loss of Synchronization' alarms on the O-RU during long-hour stability testing.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Inject a high volume of 'mps-PriorityAccess' registration requests to stress test the O-CU-CP's priority handling logic.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "O-DU L1 Log: CRC_Fail_UL=450, DL_TB_Size=124000, PRB_Usage=85%.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 442: NGAP/NAS Authentication Request - RAND: 0xA1B2, AUTN: 0xE5F6.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SIP 183 Session Progress - P-Early-Media: supported. Call-ID: 987654.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Describe the verification steps for 'Earthquake and Tsunami Warning System' (ETWS) primary notification under 100% cell load.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the methodology for measuring 'Motion to Photon' latency in a tactile URLLC use case over 5G SA.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of midhaul transport latency (F1-U) on the peak uplink throughput of a UE using 256QAM.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the expected behavior of the 'Energy saving rApp' when PRB utilization in the capacity cell falls below 10%?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "dis UE is stuck in RRC_IDLE and won't trigger the MO call. Checked the inactivity timer on the DU, seems okay.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The energy meter is showing no change even after the rApp supposedly switched off the cell. is the O-RU powered?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis video stream is so pixelated. SINR is 20dB but the ABR client is stuck on 360p.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Develop a bash command to filter all 'SIP 183 Session Progress' messages and calculate the average early media setup time.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a protocol analyzer to verify the integrity of the PTP synchronization plane data between the O-DU and O-RU.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a Robot Framework keyword to inject a simulated 'N26 Interface Timeout' to test the UE's redirect behavior.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "UE ID: 0x01 - S-NSSAI: 1 - 5QI: 1 (Voice) - GBR: 128kbps.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Total Data Volume: 5000 Mbits. Energy Consumption: 1.2 kWh. EE = 4166 Mbits/kWh.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Detail the configuration of the 'Energy saving rApp' within the SMO and its interaction with E2 nodes over the O1 interface.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the difference in end-user experience when performing EPS Fallback using the N26 interface vs Release with Redirect.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, why did the emergency call fail? The gNB log says 'mps-PriorityAccess' but the attach was rejected.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The ETWS alert didn't pop up on the UE emulator. Did the gNB actually broadcast SIB10?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Develop a script to simulate 1000 IoT sensors sending periodic data to an application server over an mMTC slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use an NFV benchmarking tool to measure the vCPU usage of the O-DU virtual instance during a peak traffic test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute iperf3 in bidirectional mode for 60 minutes and record any socket errors on the URLLC slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Calculate the expected 5G NR L1 downlink throughput for a 100 MHz bandwidth with numerology \u00b5=1 (30 kHz SCS) using 256QAM and 4 MIMO layers as per TS 38.306.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the specific procedure for validating 'UE Requested PDU Session Release' for a non-roaming case according to 3GPP TS 23.502 Clause 4.3.4.2?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the relationship between the scaling factor 'f' and the total number of component carriers 'J' in the 5G NR peak data rate formula.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the impact of High Speed Vehicular mobility (up to 500 kph) on the RRC state transition success rate in an O-RAN deployment.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Identify the mandatory IEs required in a 5G SA Registration Accept message to confirm the Configured NSSAI for a V2X network slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the influence of Control Format Indicator (CFI) overhead on the 4G LTE L1 throughput calculation for a 20 MHz FDD carrier.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the performance requirements for 'Time Synchronous Accuracy' in an industrial robotics URLLC use case as defined in Table 733?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the methodology for measuring 'Position Service Latency' in a logistics manufacturing scenario using an O-RAN location service.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Compare the PRB allocation for a 50 MHz channel bandwidth between numerology \u00b5=0 (15 kHz) and \u00b5=2 (60 kHz) in the FR1 range.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the configuration of 'Dynamic GBR Admission Control' for VoNR services and its impact on the Call Setup Success Rate (CSSR).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the verification steps for 'Initial Registration' when the UE is moving between different Tracking Areas (TA) in a 5G SA network.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the expected behavior of the O-DU scheduler when the 'Voice Codec Aware' feature is enabled during a high-load VoLTE scenario?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of different MIMO antenna configurations (e.g., 4T4R vs 2T2R) on the SS-SINR distribution in a rural macro environment.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the difference between S-Plane and C-Plane synchronization requirements for O-RU and O-DU interoperability.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the role of the SMF+PGW-C combined anchor point in supporting seamless 5GS to EPS handover over the N26 interface.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the required KPIs for evaluating 'Network Energy Saving' gains using the basic traffic model defined in Clause 9.3.2.3.1?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the calculation of Uplink Spectral Efficiency for a TDD carrier accounting for the fraction of symbols allocated to the Guard Period.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Evaluate the impact of Robust Header Compression (RoHC) on the RTP packet loss rate for ViLTE calls in poor radio conditions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the procedure for UE-initiated de-registration with the 'Switch Off' type as specified in Table 58 of the O-RAN E2E spec.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the effect of MU-MIMO on the aggregated cell throughput when UEs are distributed according to a non-uniform cluster scenario.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the configuration parameters for benchmarking 'UE State Transition Rate' when processing 100 transitions per second.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the methodology for validating the 'Earthquake and Tsunami Warning System' (ETWS) primary notification using SIB10?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the influence of the scaling factor 'f' on the theoretical peak throughput for a band combination using n78 and n28.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the steps for measuring 'Motion-to-Photon' latency in an AR device where the UPF is deployed at the O-Cloud edge.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the use of A1 policy guidance from the Non-RT RIC for optimizing Traffic Steering Mode 2 in a Standalone deployment.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, dis ping on n78 is way higher than n28. shouldn't it be lower? check the midhaul fiber delay plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? The UE is camping on a barred cell even tho the PCI is in the neighbor list. check the SIB1 config.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my registration is loopin' between 4G and 5G. I think the N26 is down or the AMF is silent. Plss look at the core traces.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis PRB usage is at 100% but I'm only gettin' 50Mbps. something is wrong with the scaling factor f in the config.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The AR glasses have insane lag. The image is like 2 seconds behind my head movement. Is the UPF at the edge or not?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis VoNR call setup time is taking 5 seconds. is it the EPS fallback or just a slow IMS core? Plss debug.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis bler? it's hittin' 20% on the PUSCH even tho SINR is 10dB. Interference must be crazy in the lab.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my UE won't attach to the capacity cell at all. it's always staying on the macro. maybe the RSRP offset is too high?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis energy meter is flatlining even tho the rApp says the cell is off. is the O-RU actually powered down?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The UE position coordinate is way off. AR accuracy is like 10 meters when it should be less than 1. Fix plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "yo, why am I gettin' 'Slice Not Supported' for SST 3? I provisioned it in the core. U sure the config is pushed?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis video stream is so pixelated. SINR is 25dB but the ABR client is stuck on 360p. Check the transport path.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis gNB is silent post X2 setup request. is it a peer ID mismatch or is the firewall blocking the SCTP chunks?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "The UE emulator is acting up again. It sends RRCSetupComplete but the S-NSSAI list is empty. Reg keeps failing.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis VoLTE call is one-way. I can hear the MT but they can't hear me. Plss check the UL RTP flow on the UPF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my ping is 200ms on the URLLC slice. This is supposed to be 'ultra-low' latency! Check the F1 midhaul fiber.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "yo, why is the gNB sending RRC Connection Release right after the attach? I checked the logs and it says 'other'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? The Near-RT RIC is steering UEs to Cell A but the radio conditions there are trash. Check the A1 policy.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a Python script to automate the calculation of 'L1 throughput' for 5G NR using the formula defined in Clause 6.1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a Robot Framework keyword to inject a fake 'S1 Setup Failure' into the gNB to test its ability to switch to a secondary MME.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute a bash script to filter all 'Handover Command' messages from gNB logs and calculate the average time until 'Handover Success'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to parse a large PCAP file and extract all 5QI=1 QoS Flow setup messages during EPS Fallback procedures.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a script to simulate 1000 IoT sensors sending periodic data to an application server over an mMTC network slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a vulnerability scanning tool to check the SMO's O1 interface for open ports and identify any unencrypted NETCONF sessions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create an automation task to bypass the standard SIP stack and inject raw RTP packets into the UPF to measure DL jitter.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute iperf3 in bidirectional mode on a URLLC slice and record any socket errors or protocol timeouts at the O-Cloud edge.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the calculation of MOS scores using ITU P.1203 for 50 ViLTE calls based on captured application logs.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to inject specific SS-RSRP thresholds into a UE emulator to trigger a cell reselection event in idle mode.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the extraction of 'Uplink BLER' samples from the gNB and plot them against UE RSRP over 24 hours.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a script to inject a specific 'Cell Barred' bit into the SIB1 broadcast of a UE emulator to test redirection logic.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "IMS REGISTRATION FAILURE: Cause #403 Forbidden - Reason: UE not provisioned.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "F1AP: UE Context Setup Request - QoSFlowID: 1 - 5QI: 1 - GBR: 128kbps.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SIB10 ETWS: messageIdentifier: 0x1101 - serialNumber: 0x4001.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "NAS_5GS_SERVICE_REJECT: Cause #38 (Network failure) Hex: 0x26.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 2045: SIP INVITE - SDP: m=audio 49170 RTP/AVP 0 8 99.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Total Data Volume: 5000 Mbits. Energy Consumption: 1.2 kWh. EE = 4166.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "NR-ARFCN: 633312 - PCI: 12 - Band: n78 - SSB SCS: 30kHz.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eCPRI Message Type 2: Real-time Control - SeqID 0x0045 - Payload 0x0A.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O1 Notification: [Capacity_Cell] State -> Disabled. Reason: rApp_EnergySaving.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "What is the normative reference in O-RAN E2E specifications for validating 'Time Synchronous Accuracy' in advanced industrial robotics URLLC scenarios?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the mathematical derivation for SE-TDD-UL (Uplink Spectral Efficiency) as a function of symbols allocated to the Guard Period in a 10ms radio frame.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the verification of 'Allowed NSSAI' in the Initial Context Setup Request during a 5G SA registration procedure for multiple network slices.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of different PRB utilization thresholds (30% vs 70%) on the IoT noise rise during multi-cell performance testing.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the configuration of the 'Energy saving rApp' within the SMO and its interaction with E2 nodes for executing carrier switch off decisions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the specific requirements for CSI-RS based RSRP and SINR measurements when validating downlink peak throughput in FR1?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the methodology for measuring 'Position Service Latency' in an AR logistics scenario using an O-RAN location service.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the influence of the scaling factor 'f' on the theoretical peak throughput for a band combination including n78 and n28.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the procedure of UE-initiated de-registration with the 'Switch Off' type and its cleanup sequence in the O-CU context.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Evaluate the E2E latency for a URLLC slice where the UPF is deployed at the O-Cloud edge vs. a centralized core deployment.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the specific methodology for measuring Voice Call Setup Time (CST) from the initial SIP INVITE to the reception of the SIP 180 Ringing?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of MU-MIMO on aggregated downlink cell throughput when UEs are grouped in non-uniform clusters.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the configuration of the ETWS Primary Notification within SIB10 and its delivery mechanism under 100% cell load.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the mandatory IEs required in an IMS Registration Request for a UE attached via an O-RAN 5G SA system?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the role of the A1 interface in providing policy guidance for Traffic Steering Mode 2 optimizations in a Near-RT RIC architecture.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Evaluate the influence of 256QAM modulation on the L1 throughput calculation for a 100 MHz carrier with a 30 kHz SCS.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the calculation of Uplink Spectral Efficiency for a TDD carrier accounting for the fraction of symbols allocated to DL/UL.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the influence of MU-MIMO on aggregated downlink cell throughput when UEs are distributed in a non-uniform cluster scenario.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, my URLLC slice is dropping packets like crazy. is the jitter buffer on the O-DU configured correctly?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "dis UE won't handover to the neighbor cell even tho RSRP is way better. Check the A1 policies for the RIC plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "U see dis bler? MCS is at 4 but SINR is 15dB. The link adaptation logic is totally messed up.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "The energy saving rApp says the cell is off but I still see the pilot signal. is the O-RU actually powered down?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "My ftp download is stuck at 500kbps on the mIoT slice. isn't that too slow for a background data flow?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "throughput is tanking during the 48-hour stability test. seems like a memory leak in the O-DU. plss help.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "dis 5G SA reg is taking like 500ms. is the AMF slow or is it just the F1 latency messing with timers?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "my registration time is 2 seconds! that's insane for a clean lab. check if the RIC is delaying the UE setup.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "U see dis bler spike during the handover? it's hitting 20%. the target cell is definitely not ready.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "The UE emulator says it's attached but I don't see any data in the application server. check the N3 tunnel.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "yo, dis VoLTE call setup time is 4 seconds. Isn't it supposed to be under 2.5s for a clean lab?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "The UE is stuck in RRC_CONNECTED but I'm getting 0 throughput. I think the PDU session is dead.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "dis energy meter is flatlining even tho the rApp says the capacity cell is switched off. is it off?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "yo, why is my 5G throughput capped at 50Mbps? SINR is 25dB, so I should be hitting way more.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "The UE emulator is crashing during the 1000 RRC connection stress test. Is it a memory leak?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "U see dis? The RIC is steering UEs to Cell A but the radio conditions there are trash. Check A1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "dis PRB usage is at 100% but I'm only getting half the expected throughput. Is it CFI overhead?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_natural_phrasing"
+  },
+  {
+    "text": "Execute a python script to parse the PCAP and detect if the 'P-Access-Network-Info' header is missing.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a vulnerability scanner to check if the NETCONF server on the O-RU is susceptible to unauthorized 'edit-config'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a script to inject high-frequency paging requests into the S1 interface to determine the gNB paging limit.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Bypass the standard application layer and use iperf3 to test raw UDP throughput on 5QI=83 for URLLC metrics.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a FastAPI tool to fetch and visualize O1 performance counters from multiple O-DUs during a stability test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a tool to inject high-volume 'Paging' messages into the NGAP interface to stress test the paging queue.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a fuzzer to mutate the 'S-NSSAI' values in the Registration Request and check for AMF crash.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse this trace to find the delay between 'SIP INVITE' and 'SIP 180 Ringing' for all successful calls.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a bash command to filter all 'Cell Reserved for Operator Use' bits in the captured SIB1 messages.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute a packet generation tool to simulate a failure in the N26 interface and verify if the UE falls back.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use an NFV benchmarking tool to measure the memory usage of the O-CU-CP when processing 100 emergency calls.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a script to inject malformed SIB10 messages into the RU emulator to verify UE resilience to corrupt ETWS.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to automate the calculation of the 'TTFB' for 100 HTTP requests during a browsing test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a bash script to parse O-RU M-Plane logs and extract all NETCONF 'edit-config' errors for power saving.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute a security scan to detect if the E2 interface is vulnerable to a MitM attack for hijacking xApps.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the extraction of 'Uplink BLER' samples and plot them against UE RSRP over time.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a Robot Framework keyword to inject a fake 'S1 Setup Failure' to test the gNB's MME failover logic.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse this large trace file and calculate the average 'Handover Interruption Time' for all inter-O-CU mobility.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to inject high-frequency 'UE Context Release' requests into the O-CU-CP to trigger exhaustion.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a protocol analyzer to decrypt IPsec traffic on the F1 interface and verify the RRCReconfiguration integrity.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to automate the calculation of MOS scores using ITU P.1203 for 50 ViLTE calls.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a script to periodically toggle 'mps-PriorityAccess' for a test UE and measure the success rate.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "NAS_5GS_REG_FAIL Cause: #62 (No network slices available). MCC: 310, MNC: 260.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O-DU L1 Log: PRB_Usage_DL=100% - Active_UEs=500 - PDSCH_BLER=12.4%.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 551: SIP/2.0 403 Forbidden - Reason: UE not provisioned for VoNR services.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eCPRI Type 0 Message: IQ Data - SeqID: 0x4B21 - Payload: 0xFF...FF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE SS-RSRP: -112dBm, SS-SINR: -5dB. Status: Call Drop.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O-RU M-Plane Trace: [NETCONF] <edit-config> target: running.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "vCPU Mean Usage: 0.45. ECO-Cloud: 10kWh. Estimated EC_instance: 4.5kWh.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Describe the normative procedure for validating UE-initiated de-registration with the 'Switch Off' type as specified in Table 58 of the O-RAN E2E specification.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the mathematical derivation of SETDD_DL (Downlink Spectral Efficiency) including the coefficient for slots and symbols not part of the switching gap.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Identify the mandatory Information Elements in a 5G SA Registration Request required to verify 'IE 5GS registration type' as 'initial registration'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the specific SINR thresholds for 'Excellent' vs 'Good' radio conditions when performing peak performance measurements in frequency range 1?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of the 'Voice Codec Aware scheduler' in the O-DU on the MOS score for VoLTE calls under high PRB utilization.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the signaling flow for an EPS Fallback procedure using the N26 interface between the MME and AMF as defined in TS 23.502.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the role of the SMO in managing O-RU M-Plane configurations specifically for 'Hybrid' management mode in an O-RAN architecture.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the methodology for calculating 'GainESfeature' by comparing energy efficiency with ESfeature ON versus ESfeature OFF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the verification of 'Allowed NSSAI' within an Initial Context Setup Request during a multi-slice registration for eMBB and URLLC.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Assess the requirements for 'Time Synchronous Accuracy' in industrial robotics URLLC use cases as defined in Table 733.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, dis UE is sending RRCSetupComplete but doesn't include the S-NSSAI. Reg is failing every time. Plss look at the DU logs.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my ping on the URLLC slice is like 50ms. isn't it supposed to be ultra-low? check if the UPF is actually at the edge node.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? The AMF is silent post NGSetupRequest even tho the AMF ID is correct in the O1 config. what gives?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "VoNR call is one-way. I can hear the MT but they can't hear me. Check the UL RTP flow on the N3 interface ASAP.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis EPS fallback is taking over 4 seconds. The UE is dropping to 4G and then back to 5G after the call. is N26 up?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "why am I getting 'Slice Not Supported' for SST 3? I provisioned it in the core and gNB. U sure the config is pushed?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my registration time is 2 seconds! that's insane for a clean lab setup. check if the RIC is delaying the UE context setup.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis UE is stuck in RRC_IDLE and won't trigger the MO call. Checked the inactivity timer on the DU, seems okay. Any ideas?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a Python script to automate the calculation of L1 throughput for 5G NR using the exact formula from Clause 6.1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a Robot Framework keyword to inject a fake 'Loss of Synchronization' alarm into the O-RU M-Plane via NETCONF to test SMO response.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use an NFV benchmarking tool to measure the vCPU usage of the virtualized O-DU during a peak 10Gbps traffic stress test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute a bash command to filter all 'Handover Command' messages from gNB traces and calculate the average time until 'Handover Success'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a vulnerability scanner to check if the NETCONF server on the O-RU is susceptible to unauthorized 'edit-config' commands.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Bypass the standard application layer and use iperf3 to test raw UDP throughput on 5QI=83 for URLLC reliability metrics.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a FastAPI tool to fetch and visualize O1 performance counters from multiple O-DUs during a 48-hour stability test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a script to inject a specific 'Cell Barred' bit into the SIB1 broadcast of a UE emulator to test redirection logic to LTE.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "NAS_5GS_REG_FAIL Cause: #62 (No network slices available) Hex: 0x3E.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "[O-DU] MAC_SCHED: PRB_Usage_DL=99%, Active_UEs=1000, PDSCH_BLER=15%.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eCPRI Type 0 Message: IQ Data - SeqID 0x00A1 - Payload length 1280.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O1 Alarm: [O-RU-1] S-Plane Loss of Sync. Severity: Critical.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Describe the E2E verification steps for 'Intra-Distributed Unit mobility' in Standalone mode as per 3GPP TS 38.401.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Identify the mandatory IEs required in a 5G SA Registration Accept message to confirm the Configured NSSAI.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the procedure for estimating the energy consumption of a virtualized O-DU based on vCPU mean usage proportions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "dis VoLTE call setup time is 3 seconds. Isn't that too high for a clean lab setup with N26?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "throughput is tanking during the 48-hour stability test. seems like a memory leak in the O-DU.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? RSRP is -110 but the UE is still trying to attach to the capacity cell instead of macro.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a Python script to extract 'RTP Sequence Number' from a PCAP and detect any out-of-sequence packets during handover.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a Robot Framework keyword to inject a fake 'S1 Setup Failure' to test the gNB's ability to switch to a secondary MME.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a fuzzer to mutate the 'S-NSSAI' values in the Registration Request and check for AMF stability.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Specify the role of the SMO in managing O-RU M-Plane configurations for both 'Hybrid' and 'Hierarchical' modes.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the expected behavior of the 'Energy saving rApp' when PRB utilization falls below 10% for 15 minutes?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "The energy meter is showing no change even after the rApp supposedly switched off the cell. is it off?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Define the mathematical requirements for calculating SEFDD_UL (Uplink Spectral Efficiency) for an FDD duplex mode as specified in Clause 4.8 of the O-RAN E2E specification.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Contrast the reporting range and definitions of LTE RSRP (-140dBm to -44dBm) versus 5G SS-RSRP (-140dBm to -40dBm) based on 3GPP TS 38.133 requirements.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "How is the IoT (Interference over Thermal) noise rise specifically mapped to multi-cell Load 30%, 50%, and 70% scenarios for uplink performance assessment?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the Minimum Coupling Loss (MCL) and corresponding O-RU to UE distance for a 'Macro cell' vs 'Pico cell' deployment scenario as defined in Clause 4.6.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of the 'Scaling Factor f' on 5G NR peak data rates when multiple component carriers (J) are aggregated in a band combination.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the verification procedure for 'IE 5GS registration type' in a 5G SA Registration Request to ensure it is flagged as 'initial registration'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the role of the Synchronization Plane (S-Plane) in facilitating PTP-based timing distribution between O-DU and O-RU nodes.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Evaluate the influence of Control Format Indicator (CFI) overhead on the theoretical L1 throughput of a 10 MHz LTE carrier with 2 TX antenna ports.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the configuration requirements for the 'Hybrid' management mode regarding O-RU M-Plane connectivity to the SMO?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the calculation of SETDD_DL where the ratio of symbols allocated to DL data accounts for the symbols lost in the switching gap.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the difference between 'Full Buffer' and 'Finite Buffer' (FTP Model 1/2/3) traffic models in the context of O-RAN capacity testing.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Assess the performance requirements for 'Time Synchronous Accuracy' in industrial URLLC use cases as defined in ITU-R M.2410-0.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the signaling sequence for 'UE-initiated de-registration' with 'Switch Off' type as specified in Table 58 of the E2E spec.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "How does the 'Voice Codec Aware' scheduler in the O-DU specifically optimize PRB allocation for AMR-WB frames during peak congestion?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Provide the technical specification for validating inter-system mobility from 5GS to EPS using the N26 interface as per TS 23.502.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of 'High Speed Vehicular' mobility (up to 500 kph) on the RRC Connection Re-establishment success rate.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the mandatory IEs for a 5G SA Registration Accept message to confirm a 'Configured NSSAI' for an eMBB slice?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the methodology for measuring 'Position Service Latency' between a location request and the availability of coordinates in an O-RAN system.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Compare the PRB allocation for a 20 MHz bandwidth between 5G NR numerology \u00b5=0 (15 kHz) and \u00b5=1 (30 kHz) in FR1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the verification of 'Allowed NSSAI' in an Initial Context Setup Request during multi-slice registration (SST 0x01 and 0x02).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Identify the normative reference for validating 'Earthquake and Tsunami Warning System' (ETWS) primary notifications via SIB10.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the role of the 'Energy saving rApp' in triggering carrier switch-off decisions based on the 10% PRB utilization threshold.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the verification steps for 'UE Requested PDU Session Establishment' in a non-roaming 5G SA scenario.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the influence of 'MU-MIMO' precoder orthogonality on the aggregated cell throughput in a uniform UE distribution.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the expected behavior of a UE when receiving an 'RRC Connection Release' with 'redirectInfo' pointing to an E-UTRA-ARFCN?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, my RSRP is -140 but the UE is still trying to decode the PBCH. that's basically floor noise level! check the LNA.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis 5G SA setup is failing because the SST 0x01 isn't configured in the AMF slice profile. Plss double check the core.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? The UE is in Vehicular mobility class but the handover success rate is zero. Check the fader speed settings.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis PRB usage is at 100% but I'm only gettin' 50Mbps. something is wrong with the scaling factor f in the DU config.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Develop a Python tool to calculate the SETDD_DL using the formula from Clause 4.8, incorporating the fraction of symbols allocated to DL.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a bash script to parse UE logs and extract 'LTE RSRP' values to verify they stay within the -140dBm to -44dBm range.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a security test script using a protocol fuzzing tool to mutate eCPRI User Plane headers on the Open Fronthaul interface.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a FastAPI server to collect real-time vCPU usage proportions from the O-Cloud and estimate the energy consumption of the virtualized O-DU.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute a Robot Framework keyword to inject a fake 'S1 Setup Failure' to test the gNB's ability to switch to a secondary MME node.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to automate the calculation of the 'TTFB' for 100 HTTP requests by parsing these captured application layer traces.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a bash command to filter all 'Handover Command' messages from gNB logs and calculate the average time until 'Handover Success'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "O-RU Trace: [S-Plane] PTP Delay_Req received - Sync Status: LOCKED - Offset: 45ns",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE App Log: [HTTP/3] QUIC Connection Established - 0-RTT: True - MSS: 1200",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Cause: TrackingAreaUpdateFailure - MCC: 310 MNC: 260 - Status: Reject (0x0F)",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "[gNB] RRC: UL_Information_Transfer - Dedicated_NAS_Message: 0xDEADBEEF - SST: 0x01",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "PDU Session Resource Setup Failure - Cause: #1 (Radio Resources Not Available) - ID: 5",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eCPRI Type 0: IQ Data - SeqID: 0x4B21 - Payload: 0xFF...FF - RT Control: False",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE SS-RSRP: -112dBm, SS-SINR: -5dB. Status: Call Drop. Reason: Out of Coverage",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "RRC Connection Re-establishment Request - Cause: reconfigurationFailure (0x01) - PCI: 12",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "[O-DU] L1_Log: Slot_Error_Count=45, CRC_Fail_UL=120, DL_TB_Size=124000",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 442: NGAP/NAS Authentication Request - RAND: 0xA1B2C3D4, AUTN: 0xE5F6G7H8",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE State: RRC_CONNECTED. MIMO Rank: 4, MCS: 28, SINR: 25dB. Status: Peak",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Cause: trackingAreaNotAllowed (0x0C). NAS 5GS Registration Reject - MCC: 310, MNC: 260",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SIP/2.0 180 Ringing - Call-ID: f81d4fae-7dec - CSeq: 1 INVITE - Contact: <sip:ue@10.0.0.1>",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "RRC Establishment Cause: mps-PriorityAccess (0x01) - SST: 0x01 - SD: 0xFFFFFF",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "IMS REGISTRATION FAILURE: Cause #403 Forbidden - Reason: UE not provisioned for VoNR",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "F1AP: UE Context Setup Request - QoSFlowID: 1 - 5QI: 1 - GBR: 128kbps - MBR: 128kbps",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "RTP Packet Loss: 12.5% - DL Jitter: 45ms - MOS: 2.1 (Poor) - Direction: Downlink",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SIB10 ETWS: messageIdentifier: 0x1101 - serialNumber: 0x4001 - warningType: 00",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "NAS_5GS_SERVICE_REJECT: Cause #38 (Network failure) Hex: 0x26 - During EPS Fallback",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 2045: SIP INVITE - SDP: m=audio 49170 RTP/AVP 0 8 99 - b=AS:64",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O-CU-CP Log: [RRC] Sending RRCRelease with redirectInfo: E-UTRA-ARFCN: 1650",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE State: RRC_CONNECTED -> RRC_IDLE (User Inactivity Timer Expiry 10s)",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "vCPU Mean Usage: 0.45. ECO-Cloud: 10kWh. Estimated EC_instance: 4.5kWh",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "S-NSSAI: SST=0x01, SD=0xFFFFFF. PDU Session ID: 5. Status: Active",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O1 Notification: [Capacity_Cell] State -> Disabled. Reason: rApp_EnergySaving_Action",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Explain the normative requirements for 5G SS-RSRP reporting ranges as defined in 3GPP TS 38.133, specifically contrasting it with the -140dBm to -44dBm range used in legacy LTE systems.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the mathematical derivation for SE-TDD-DL (Downlink Spectral Efficiency) including the coefficient for total symbols per frame versus DL-allocated symbols in a 10ms radio frame.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the expected behavior of the Synchronization Plane (S-Plane) when utilizing PTP for timing distribution between an O-DU and an O-RU over the Open Fronthaul interface?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the influence of Control Format Indicator (CFI) overhead on the theoretical L1 throughput of a 10 MHz FDD LTE carrier with 2 TX antenna ports.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the Minimum Coupling Loss (MCL) requirements and corresponding antenna-to-UE distance for a Pico cell (Local Area BS) deployment as defined in Section 4.6.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Identify the mandatory Information Elements required in a 5G SA Registration Accept message to verify the Configured NSSAI for multiple network slices.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "How is the Interference over Thermal (IoT) noise rise specifically mapped to multi-cell Load 30%, 50%, and 70% scenarios for evaluating uplink performance?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the difference between 'Full Buffer' and 'Finite Buffer' traffic models, specifically focusing on the user arrival process in FTP Model 1/2/3 simulations.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the signaling procedure for UE-initiated de-registration with the 'Switch Off' type as specified in Table 58 of the O-RAN E2E system test specification.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the configuration requirements for benchmarking 'UE State Transition Rate' when processing 100 transitions per second under a 90% CPU load condition?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Compare the PRB allocation for a 100 MHz bandwidth carrier across numerologies \u00b5=1 (30 kHz) and \u00b5=2 (60 kHz) in the FR1 range.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the verification steps for 'IE 5GS registration type' in a 5G SA Registration Request to ensure it is correctly flagged as 'initial registration'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Evaluate the impact of high-speed vehicular mobility (up to 500 kph) on the RRC Connection Re-establishment success rate in a rural macro environment.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the role of the 'Energy saving rApp' within the SMO for executing carrier switch-off decisions based on the 10% PRB utilization threshold.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the effect of MU-MIMO precoder orthogonality on the aggregated cell throughput when UEs are distributed in a uniform geographical pattern.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the use of the A1 interface for providing policy guidance to the Near-RT RIC in Traffic Steering Mode 2 Standalone deployments.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the specific requirements for 'Time Synchronous Accuracy' in an industrial robotics URLLC use case as defined in ITU-R M.2410-0?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the methodology for calculating Energy Efficiency (EE) as the ratio of total transmitted data volume to total SUT energy consumption in kWh.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "How does the 'Voice Codec Aware' scheduler in the O-DU specifically optimize PRB allocation for AMR-WB frames during periods of peak cell congestion?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the verification of 'Allowed NSSAI' within an Initial Context Setup Request during a multi-slice registration for eMBB and URLLC services.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the criteria for calculating 'Gain-ES-feature' by comparing energy efficiency measurements between ES-feature ON and ES-feature OFF states.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the influence of the 'Scaling Factor f' on 5G NR peak data rates when signaling per-band capabilities for a band combination including n78.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the expected behavior of a UE receiving an 'RRC Connection Release' with 'redirectInfo' pointing to a specific E-UTRA-ARFCN?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the performance requirements for 'Position Service Latency' between a location request and the availability of coordinates in an O-RAN system.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the difference between 'Hybrid' and 'Hierarchical' management modes for O-RU M-Plane connectivity to the SMO architecture.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, why is my UE reporting -140dBm RSRP? It's basically silent. is the O-RU antenna disconnected or what? checked the cable and it looks fine.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis VoLTE call is one-way. I can hear the other side but they can't hear me. Check the UL RTP flow on the UPF ASAP plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "u see dis jitter? The video is buffering every 2 seconds. The edge UPF must be overloaded. URLLC slice is totally not working.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my 5G reg is taking forever. is the AMF down? Checked the N2 logs and everything looks dead post Initial Context Setup.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "why am I gettin' 0 throughput even tho RRC state is CONNECTED? PDU session must have failed during the user plane setup.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis URLLC slice is trash. ping is 100ms. check the F1-U latency config plss, the midhaul fiber delay might be too high.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "yo, the rApp just switched off the capacity cell but the UE didn't jump to the macro. it just dropped the VoNR call!",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "throughput on n78 is way lower than expected. is the MCS capped at 10? check the link adaptation logic in the DU plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis AR headset has massive lag. 'motion to photon' is definitely not 10ms. feels like a second! check the image processing server.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "why is the UE camping on a barred cell? I see it in the neighbor list but it won't reselect. check the SIB1 barring bit.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my energy meter is flatlined. is the O-RU actually in power-saving mode or did the rApp fail to send the edit-config?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "VoNR call setup time is taking like 5 seconds. is it the EPS fallback triggering or just a slow IMS core? Plss debug.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "u see dis bler? it's at 20% on the PUSCH but SINR is 15dB. interference must be crazy in the lab today. check for external signal leaks.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis UE won't register with SST 3. I provisioned it in the AMF slice profile. check the gNB 'Allowed NSSAI' config plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "why am I gettin' 'resource not available' for the emergency call? gNB should be prioritizing it via mps-PriorityAccess!",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis video stream is pixelated as hell. ABR is stuck on 360p even tho I have full bars. SINR is 25dB, so check the UPF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my UE position is way off. it says I'm 10 meters away when I'm right next to the antenna. position service accuracy is trash.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis gNB is silent post X2 setup request. is it a peer ID mismatch or is the firewall blocking SCTP chunks? check port 36422.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "yo, the UE emulator is crashing during the 1000 UE stress test. is it a memory leak in the O-DU stack or a bad script?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "u see dis? RSRP is -110 but the UE is still trying to attach to the capacity cell instead of the coverage macro. check cell reselection.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my registration is looping between 4G and 5G. I think the N26 is down or the AMF is silent. Plss look at the core traces.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "why did my throughput tank when the UE moved to the cell edge? MCS should have stayed at 15 for 'fair' conditions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis ETWS alert didn't pop up on the UE emulator. did the gNB actually broadcast SIB10 during the multi-cell load?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "u see dis bler spike during the handover? it's hitting 15%. target cell is not ready for the UE stack. check Xn config.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "why is the UE not performing reselection in idle mode? it's literally sitting next to the target O-RU but won't jump.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a Python script to parse the PCAP and detect if the 'P-Access-Network-Info' header is missing from the SIP INVITE for VoNR calls.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute a vulnerability scan on the SMO's O1 interface to check for unencrypted NETCONF sessions during an Energy Saving rApp trigger.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use iperf3 to inject a 10Gbps UDP stream into a specific network slice to determine the O-DU PRB exhaustion limit and vCPU mean usage.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a Robot Framework keyword to simulate an 'N26 Interface Timeout' to test the gNB's ability to fallback to 'Release with Redirect'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a bash command to filter all 'Initial Context Setup Failure' messages from the AMF logs with cause 'Radio Resources Not Available' (0x01).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a script to inject malformed SIB10 messages into the RU emulator to verify UE resilience to corrupt ETWS Primary Notification data.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a fuzzer to mutate the 'S-NSSAI' values in a Registration Request to test the AMF's slice selection logic stability under protocol stress.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse the O-DU L1 logs to identify any CRC failures on the PUSCH during a high-load VoNR call stability test over 48 hours.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the calculation of MOS scores using the ITU P.1203 algorithm from captured application layer video traces.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use an NFV benchmarking tool to measure the vCPU usage of the O-DU VNF during a peak traffic test to estimate energy consumption proportions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a FastAPI microservice to fetch real-time performance counters from the gNB and visualize PRB utilization across all 10 target cells.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Bypass the standard application layer and use iperf3 to test raw UDP throughput on 5QI=83 for URLLC reliability and jitter metrics.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to inject specific SS-RSRP thresholds into a UE emulator to trigger a cell reselection event during idle mode intra-O-DU mobility.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse this large trace file and calculate the average 'Handover Interruption Time' for all inter-O-CU mobility events in SA mode.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a bash script to grep all 'Cause: mps-PriorityAccess' occurrences from a gNB trace file and output a CSV of success versus failure.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a protocol analyzer to verify the integrity of the PTP synchronization plane data between the O-DU and O-RU nodes under 100% load.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to automate the extraction of 'Uplink BLER' samples from the gNB and plot them against UE RSRP values.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a Robot Framework keyword to inject a fake 'S1 Setup Failure' to test the gNB's ability to switch to a secondary MME node.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a packet generation tool to simulate a high-volume UDP stream on a URLLC slice and measure the end-to-end round-trip time.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to periodically toggle the 'mps-PriorityAccess' cause for a test UE and measure the registration success rate under stress.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a fuzzer to mutate the SDP body in a SIP INVITE and check for O-CU-UP crash during VoLTE codec negotiation.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Parse the NETCONF logs and extract all 'S-Plane Loss of Sync' alarms from the O-RU during a 48-hour stability testing campaign.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a script to simulate 1000 IoT sensors sending periodic humidity data to an application server over an mMTC network slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Frame 1024: SIP 180 Ringing - Call-ID: a84b4c76e66710 - CSeq: 314159 INVITE - Status: MO Call Progress.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "NAS_5GS_REG_FAIL Cause: #15 (No suitable cells in tracking area) Hex: 0x0F - PLMN: 310-260.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O-DU MAC Log: [DL] PRB Utilization 99% - [UL] BLER 15.4% - MCS 4 - Active UEs: 1000.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SS-RSRP: -115dBm, SS-SINR: -2dB. Condition: Poor (Cell Edge / Out of Coverage).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eCPRI Message Type 0: IQ Data - SeqID 0x00A1 - Payload length 1280 - S-Plane Sync: LOCKED.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "RRC Connection Release - Cause: User Inactivity - T302 not running - Signaling Release Initiated.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SIP/2.0 403 Forbidden - Reason: Service Not Subscribed - Call-ID: 987654 - From: <sip:ue@10.0.0.1>.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O1 Alarm: [O-RU-1] Loss of Signal on Port 2. Severity: Major. Timestamp: 2026-07-30T14:30:00Z.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "vCPU Mean Usage: 0.85. EC_instance: 8.5kWh. ECO-Cloud: 10kWh. Proportionality Constant: 0.85.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 442: NGAP/NAS Authentication Request - RAND: 0xA1B2C3D4, AUTN: 0xE5F6G7H8 - AMF ID: 0x01.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SIP 183 Session Progress - P-Early-Media: supported. Call-ID: 987654. SDP: m=audio 49170 RTP/AVP.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "PDU Session Resource Setup Failure - Cause: #1 (Radio Resources Not Available) - PDU Session ID: 5.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eMBB Slice SST=0x01 SD=0xFFFFFF. PDU Session ID: 5. Status: ACTIVE - GBR: 0kbps.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Handover Failure - Target Cell: 0xAB12 - Cause: Radio Connection With UE Lost - Mobility Interruption: 12ms.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "RRC Connection Re-establishment Request - Cause: reconfigurationFailure (0x01) - Source PCI: 12.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "NAS_5GS_SERVICE_REJECT: Cause #38 (Network failure) Hex: 0x26 - Triggered during EPS Fallback.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "SIB10 ETWS: messageIdentifier: 0x1101 - serialNumber: 0x4001 - warningType: 00 (Earthquake).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "RTP Packet Loss: 12.5% - DL Jitter: 45ms - MOS: 2.1 (Poor) - AMR-WB Mode: 23.85kbps.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "NR-ARFCN: 633312 - PCI: 12 - Band: n78 - SSB SCS: 30kHz - DL/UL Ratio: 4:1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O-RU M-Plane: <edit-config> target: running, state: power-saving-mode - ES-feature: ON.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "HTTP/1.1 200 OK - Content-Length: 2097152 - TTFB: 150ms - Protocol: QUIC/UDP.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE State: RRC_CONNECTED -> RRC_IDLE. Cause: User Inactivity. Timer: 10 seconds.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "PUSCH Transmit Power: 23dBm. MCS: 2. Radio Condition: Cell Edge (Poor). BLER: 12.4%.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "[O-CU-UP] DL Throughput: 1.2 Gbps, UL Throughput: 450 Mbps. Aggregated PDU Sessions: 50.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Specify the normative Minimum Coupling Loss (MCL) requirement for a Macro cell deployment scenario and its impact on the minimum ground distance to the UE.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the mathematical derivation of SEFDD_DL in bits per second per Hertz assuming 100% resource utilization in both time and frequency domains.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the signaling flow for a '5G Secondary Node Release' in a Non-Standalone architecture according to 3GPP TS 37.340 Clause 10.4.1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the mandatory Information Elements required in a 5G SA Registration Accept message to verify the 'Configured NSSAI' for an eMBB slice?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of the LDPC maximum coding rate (948/1024) on the 5G NR physical layer peak data rate calculation.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the verification of the 'Allowed NSSAI' IE within an Initial Context Setup Request during a multi-slice registration for eMBB and URLLC.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Define the 'DNS Resolution Time' KPI and its specific measurement methodology from the client query to the IP address response.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the constraints for Mean Opinion Score (MOS) calculation using ITU P.1203.3 regarding H.264 video resolution and duration.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the synchronization requirements for the S-Plane when O-RU and O-DU utilize PTP for timing distribution over the fronthaul.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the role of the SMF+PGW-C combined anchor point in facilitating seamless 5GS to EPS handovers via the N26 interface.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the expected behavior for 'UE-initiated de-registration' when the de-registration type is set to 'Switch Off' in the NAS layer?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Calculate the total symbols per radio frame for 5G NR numerology mu=2 with a 60 kHz sub-carrier spacing and normal cyclic prefix.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Assess the influence of the scaling factor 'f' on signaling UE radio access capabilities for multiple aggregated component carriers.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Identify the technical requirements for ETWS Primary Notification delivery within SIB10 under saturated 100% cell load conditions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the methodology for measuring 'Position Service Latency' in an inbound logistics manufacturing URLLC use case.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain how the 'Voice Codec Aware' scheduler in the O-DU optimizes PRB allocation for AMR-WB frames during peak cell congestion.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the SINR thresholds and MCS utilization expectations for UEs in 'Excellent' radio conditions during peak downlink testing.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the calculation for Energy Efficiency (EE) as the ratio of total data volume to the cumulative energy consumption of the SUT.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of midhaul transport latency (F1-U) on the uplink peak throughput for UEs in a rural macro environment.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the procedure for estimating virtualized O-DU energy consumption based on mean vCPU usage proportions in an O-Cloud.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the configuration requirements for 'AccessIdentity=1' for Multimedia Priority Service (MPS) UEs in a 5GC network?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the influence of MU-MIMO precoder orthogonality on the aggregated downlink cell throughput in uniform spatial distributions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the 'UE State Transition Rate' benchmarking procedure for processing 100 transitions per second under high CPU load.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the mandatory IEs for a 5G SA Registration Request to ensure the 'IE 5GS registration type' is correctly flagged.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of Control Format Indicator (CFI) overhead on the theoretical peak physical layer throughput for a 10 MHz LTE carrier.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Why is my TTFB hitting 4 seconds on a 2MB page? The browsing server is right next to the core emulator.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis URLLC slice is giving me 120ms jitter. isn't industrial robotics supposed to be ultra-reliable and low lag?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Yo, my UE is stuck in RRC_IDLE even tho the inactivity timer is only 10s. DU log says paging was sent.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "RSRP is -112, UE is basically screaming for a handover but the target cell is ignoring the request. check Xn.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Why's the rApp switching off my coverage cell? It should only be killing the high-band capacity O-RU.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "My FTP upload is like 5Mbps but I have 100Mbps DL on n78. check if the core is capping the MBR for dis slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? VoNR is one-way. MT can hear me fine but MT audio isn't reaching the MT device. plss check UPF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Why's my emergency call failing during the load test? SUT is overloaded but gNB should give priority to 911.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis ping on the URLLC slice is 150ms. so much for 'ultra-low' latency! check the fiber midhaul delay.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "My AR glasses are lagging like crazy. augmented worker app video is freezing every 3 seconds. is the server down?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? Handover delay is 400ms on the inter-O-CU boundary. my ViLTE stream is totally buffering.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Why am I getting 'Slice Not Supported' for SST 2? I provisioned it in the AMF and the DU profiles.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis registration type is always 'initial' even tho I'm coming from LTE. is the N26 interface actually up?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my energy efficiency is trash. vCPU usage is 95% but throughput is zero. is there a memory leak in the VNF?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis bler? MCS 28 but PDSCH BLER is 18%. there must be massive interference in the shielded box.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Why is my UE camping on the barred cell? PCI is in the neighbor list. check the SIB1 barring bit plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "VoLTE call setup is 6 seconds. is EPS fallback triggering even tho I have 5G bars right next to the O-RU?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis 1000 UE stress test is killing my DU. CPU is at 100% and I'm seeing context setup failures everywhere.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "ETWS earthquake alert didn't pop on the emulator. did we actually broadcast SIB10? UE log looks empty.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis jitter? RTP stream is totally robotic. midhaul fiber delay must be way out of spec. plss fix.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my registration time is 3 seconds! that's insane for a clean lab. check if the RIC is delaying the UE context setup.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Why's the UE-initiated detach failing? UE log says 'Switch Off' sent but AMF never acknowledged it.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis video stream is pixelated and stuck on 360p even tho SINR is 27dB. ABR client is not switching up.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? PDU session establishment rejected with cause #1. Core says no radio resources available. what gives?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my ping is fine but peak DL is capped at 100Mbps. scaling factor f in the DU config is at 0.4. fix it!",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a Python script using the SE-TDD-DL formula from Clause 4.8 to evaluate efficiency across 100 test iterations.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a Robot Framework keyword to inject a fake 'Loss of Signal' alarm into the O-RU M-Plane via NETCONF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute a bash command to filter all 'Cell Reserved for Operator Use' bits from captured air-interface SIB1 messages.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the calculation of MOS scores using the ITU P.1203.3 algorithm for a 5-minute H.264 video stream.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a packet generation tool to inject malformed SCTP chunks into the N2 interface to check for AMF stability under stress.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a FastAPI microservice to collect real-time PRB utilization metrics from multiple O-DUs and visualize load distribution.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to parse a large PCAP and extract all 5QI=1 QoS Flow setup messages during inter-system mobility.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a script to simulate 500 IoT sensors sending periodic humidity data bursts over an mMTC network slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use an NFV benchmarking tool to estimate the energy consumption of a virtualized O-DU based on mean vCPU usage proportions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the extraction of RLC layer throughput from UE logs and compare it against application layer data.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute an iperf3 downlink test on a URLLC slice and bypass the standard throttle to determine absolute maximum throughput.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a tool to inject high-volume paging requests into the S1 interface to identify the gNB's paging saturation point.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to inject specific SS-RSRP thresholds into a UE emulator to trigger an idle mode cell reselection event.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a protocol analyzer to verify the integrity of the PTP synchronization plane data between the O-DU and O-RU nodes.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute iperf3 in bidirectional mode for 60 minutes and record any socket errors or protocol timeouts on an eMBB slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a bash command to filter all 'Initial Context Setup Failure' messages from the AMF logs with cause code #1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to automate the calculation of the 'TTFB' for 1000 HTTP requests by parsing captured traces.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a security test script using a protocol fuzzing tool to mutate eCPRI control plane headers on the Open Fronthaul.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a bash script to grep all 'Cause: mps-PriorityAccess' occurrences and output a CSV of success versus failure.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a fuzzer to mutate the 'S-NSSAI' values in a Registration Request to test AMF slice selection stability under stress.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the extraction of 'Uplink BLER' samples and plot them against UE RSRP over a stability test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a tool to inject high-volume 'Paging' messages into the NGAP interface to stress test gNB queue capacity.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "O-RU M-Plane Log: [NETCONF] <edit-config> target: running, state: power-saving-mode - ES-feature: ON.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "NAS_5GS_REG_FAIL Cause: #62 (No network slices available) Hex: 0x3E - Requested SST: 0x02.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Frame 551: SIP/2.0 403 Forbidden - Reason: UE not provisioned for VoNR services - Call-ID: 987654.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "UE SS-RSRP: -115dBm, SS-SINR: -2dB. Condition: Poor (Cell Edge / Out of Coverage). BLER: 12.4%.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "eCPRI Type 0 Message: IQ Data - SeqID: 0x4B21 - Payload: 0xFF...FF - S-Plane: LOCKED.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "vCPU Mean Usage: 0.85. EC_instance: 8.5kWh. ECO-Cloud: 10kWh. Proportionality: 0.85.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O1 Alarm: [O-RU-1] S-Plane Loss of Sync. Severity: Critical. Timestamp: 2026-07-30T14:30:00Z.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Handover Failure - Target Cell: 0xAB12 - Cause: Radio Connection With UE Lost - Interruption: 12ms.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "O-DU Log: PRB Utilization 99% - DL BLER 1.2% - MCS 28 - Active UEs: 1000.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "Identify the normative sub-carrier spacing (SCS) and total number of symbols per 10ms frame for 5G NR numerology mu=3 as defined in Table 64.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the mathematical relationship between SE-FDD-DL and SE-TDD-DL, specifically focusing on the symbols lost during the switching gap in a TDD configuration.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the verification steps for 'IE 5GS registration type' in a 5G SA Registration Request to confirm it is flagged as 'initial registration'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the specific requirements for 'High Speed Vehicular' mobility (up to 500 kph) regarding RRC state transition success rates in an O-RAN deployment?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the Minimum Coupling Loss (MCL) for a 'Small cell' (medium range BS) and the corresponding minimal O-RU to UE distance.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of the 'Voice Codec Aware' scheduler in the O-DU on the mean opinion score (MOS) for VoNR calls under 70% PRB utilization.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the configuration of 'AccessIdentity=1' for Multimedia Priority Service (MPS) UEs within a 5GC network for priority call establishment.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the methodology for calculating 'Gain-ES-feature' by comparing energy efficiency metrics with ES-feature ON versus OFF.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Compare the PRB allocation for a 100 MHz channel bandwidth between numerology mu=1 (30 kHz) and mu=2 (60 kHz) in the FR1 range.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the signaling procedure for a '5G Secondary Node Release' in an EN-DC architecture as per 3GPP TS 37.340 Clause 10.4.1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Evaluate the influence of Control Format Indicator (CFI) overhead on the theoretical peak throughput for a 20 MHz LTE carrier with 4 TX antenna ports.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the expected behavior of the S-Plane when utilizing PTP for timing distribution between an O-DU and O-RU over the fronthaul?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Identify the mandatory IEs required in an IMS Registration Request for a UE attached via an O-RAN 5G SA system.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the statistical KPI measurements required for monitoring 'Relative Jitter' during inter-O-CU mobility events for voice services.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the role of the SMF+PGW-C combined anchor point in facilitating seamless 5GS to EPS handover via the N26 interface.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the procedure of UE-initiated de-registration with the 'Switch Off' type and its cleanup sequence in the O-CU.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What is the specific methodology for measuring 'Position Service Latency' in an industrial robotics URLLC use case?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the impact of 3D beamforming on aggregated cell throughput in high-rise deployment scenarios with non-uniform UE distributions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Detail the steps for measuring 'Motion to Photon' latency for an AR device where the UPF is deployed at the O-Cloud edge.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Specify the SINR thresholds for 'Excellent' radio conditions and the expected utilization of the highest possible MCS and MIMO rank.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Explain the verification of 'Allowed NSSAI' within an Initial Context Setup Request during multi-slice registration for eMBB and URLLC.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Analyze the impact of different PRB utilization thresholds (30% vs 70%) on the IoT noise rise during multi-cell load testing.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "Describe the configuration requirements for the 'Energy saving rApp' within the SMO and its interaction with E2 nodes over O1.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "What are the configuration parameters for benchmarking 'UE State Transition Rate' when processing 100 transitions per second?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_1_formal_technical"
+  },
+  {
+    "text": "yo, why is my UE reporting -140dBm RSRP? It's basically silent. check the O-RU antenna cables plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my ping is 150ms on the URLLC slice. dis is supposed to be 'ultra-low' latency! check the fiber midhaul delay.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis? the rApp just killed the capacity cell but the UE didn't jump to the macro. call dropped!",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "VoNR call is one-way again. I can hear the MT but they can't hear me. check the UL RTP flow on the N3 interface.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "throughput is tanking during the 48-hour stability test. seems like a memory leak in the O-DU virtual instance.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "yo, dis emergency call failed with 'resource not available'. shouldn't mps-PriorityAccess bypass the load?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis jitter? video is buffering every 3 seconds. is the edge UPF actually at the edge node?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my registration time is 3 seconds! that's insane for a clean lab setup. check if the RIC is delaying context setup.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis video stream is pixelated as hell. ABR client is stuck on 360p even tho SINR is 25dB. fix it plss.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "why am I getting 'Slice Not Supported' for SST 3? I provisioned it in the AMF and the DU config already.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "the UE position is jumping 10 meters off the map. position service accuracy is trash for dis smart factory app.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis energy meter is flatlined even tho the rApp says the cell is off. is the O-RU actually powered down?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "yo, why did my throughput drop when I moved to the cell edge? MCS should have stayed at 15 for 'fair' conditions.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis bler spike during the handover? it's hitting 20%. target cell is definitely not ready for the UE.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my VoLTE call setup is taking 6 seconds. is EPS fallback triggering even tho I have 5G coverage?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis ETWS earthquake alert didn't pop up. did we actually broadcast SIB10 during the multi-cell stress test?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "the UE emulator is acting up. it sends RRCSetupComplete but the S-NSSAI list is empty. reg keeps failing.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "yo, dis gNB is silent post X2 setup request. is it a peer ID mismatch or is the firewall blocking SCTP?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "U see dis bler? MCS is at 4 but SINR is 15dB. the link adaptation logic is totally messed up today.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis VoNR call is dropping every time I hit the O-DU 1 to O-DU 2 boundary. check the Xn interface.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "dis AR headset has massive lag. image is 2 seconds behind my head movement. UPF is not at the edge node!",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "my registration type is always 'initial' even tho I'm coming from LTE. is the N26 interface actually up?",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_2_conversational_slang"
+  },
+  {
+    "text": "Write a Python script to automate the calculation of SETDD_DL using the total symbols versus DL symbols formula.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute a bash command to filter all 'Handover Command' messages and calculate the average time until 'Handover Success'.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a script to simulate 1000 IoT sensors sending periodic temperature data over an mMTC network slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a fuzzer to mutate the 'S-NSSAI' values in the Registration Request and check for AMF stability under protocol stress.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute iperf3 in bidirectional mode for 60 minutes and record any socket errors or protocol timeouts on a URLLC slice.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the extraction of 'Uplink BLER' samples from the gNB and plot them against UE RSRP over time.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a bash script to parse O-RU M-Plane logs and extract all NETCONF 'edit-config' errors for energy saving.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Create a script to inject a specific 'Cell Barred' bit into the SIB1 broadcast of a UE emulator to test redirection.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a protocol analyzer to decrypt IPsec traffic on the F1 interface and verify the integrity of RRCReconfiguration.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to calculate the average 'TTFB' for 100 HTTP requests by parsing captured application traces.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a FastAPI microservice to fetch real-time performance counters from multiple O-DUs and visualize cell load.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use an NFV benchmarking tool to measure the vCPU usage of the virtualized O-DU during a peak traffic stress test.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to automate the calculation of MOS scores using ITU P.1203 for 50 ViLTE calls from application logs.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a tool to inject high-volume 'Paging' messages into the NGAP interface to stress test gNB paging queues.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a Python script to inject specific SS-RSRP thresholds into a UE emulator to trigger cell reselection events.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Develop a bash command to filter all 'Cell Reserved for Operator Use' bits in captured SIB1 messages.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Use a security scanner to detect if the E2 interface is vulnerable to a Man-in-the-Middle (MitM) attack.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Write a script to periodically toggle 'mps-PriorityAccess' for a test UE and measure success rate under 100% load.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "Execute an iperf3 downlink test on a URLLC slice and bypass standard throttles to determine maximum throughput.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_3_hard_negatives_boundary"
+  },
+  {
+    "text": "SS-RSRP: -115dBm, SS-SINR: -2dB. Condition: Poor (Out of Coverage).",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "RRC Establishment Cause: mps-PriorityAccess (0x01) - SST: 0x01.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  },
+  {
+    "text": "LTE RSRP: -140dBm. CRS linear average: 1.0e-17 W. Subframe: 0.",
+    "label": "TELECOM_WORKBENCH",
+    "tier": "tier_4_noise_error_edge"
+  }
+]

@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "text": "Does the 5G SS-RSRP reporting range match the legacy LTE RSRP range exactly, or is it broader?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 2,
+    "text": "Can I calculate spectral efficiency for a TDD cell by simply dividing the throughput by the bandwidth like I do for FDD?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 3,
+    "text": "Does the S-Plane handle real-time control messages between the O-DU and O-RU, or is that the C-Plane's job?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 4,
+    "text": "Is the N26 interface required for all EPS Fallback procedures, or just for the Release with Redirect method?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 5,
+    "text": "If I am testing a single isolated cell, is the SINR value reported by the UE actually just SNR because there's no neighbor load?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 6,
+    "text": "Does the O-RU host the M-Plane instance only in Hierarchical mode, or also in Hybrid management mode?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 7,
+    "text": "Is the maximum coding rate for LDPC in 5G the same as the maximum rate for Turbo codes in LTE?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 8,
+    "text": "Can a UE register for an eMBB slice and a V2X slice at the same time using a single S-NSSAI parameter?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 9,
+    "text": "Does the fiber distance between O-DU and O-RU only impact T12 latency, or does it affect the symmetry of T34 as well?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 10,
+    "text": "Is the 'Full Buffer' traffic model used to simulate users arriving at different times, or is that the 'Finite Buffer' model?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 11,
+    "text": "Does the Voice Codec Aware scheduler work on the IMS core or is it a feature strictly inside the O-DU?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 12,
+    "text": "Is the Minimum Coupling Loss for a Pico cell 70dB, or is that specific to Macro cell deployments?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 13,
+    "text": "Can I use RSRQ to assess Uplink performance, or should it only be used for Downlink assessments?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 14,
+    "text": "Is the O-CU responsible for Low-PHY layers like FFT/iFFT, or is that task delegated to the O-RU?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 15,
+    "text": "Does an Option 3x network architecture route user plane data through the 4G MME or the 5G UPF?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 16,
+    "text": "If I increase the IoT noise rise to 9dB, am I simulating a 70% multi-cell load or a 100% load?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 17,
+    "text": "Is the A1 interface used for connected mode mobility control policies, or only for idle mode reselection?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 18,
+    "text": "Does the 'Motion-to-Photon' KPI measure backhaul latency to the application server or the user's perceived image lag?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 19,
+    "text": "Is PTP defined in IEEE 1588 used for distributing IQ samples over the User Plane?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 20,
+    "text": "When the energy saving rApp triggers a 'Cell switch off', does it power down the Coverage cell or the Capacity cell?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 21,
+    "text": "Does the 'Initial registration' procedure in 5G SA include the setup of the PDU session, or is that a separate step?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 22,
+    "text": "Is the maximum number of MIMO layers in 5G NR downlink capped at 4, or can it go up to 8?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 23,
+    "text": "Does 'Time To First Byte' measure the duration of the entire page load or just the start of the HTTP response?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 24,
+    "text": "If I am in an NSA deployment, does my VoLTE call use a QCI-1 bearer or a 5QI-1 QoS flow?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 25,
+    "text": "Is the sub-carrier spacing for numerology mu=1 equal to 15 kHz or 30 kHz?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 26,
+    "text": "Does the 'UE Context Release' message in Intra-O-DU mobility originate from the AMF or the O-DU itself?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 27,
+    "text": "Is the 'Scaling Factor f' signaled per UE category or per frequency band combination?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 28,
+    "text": "Does a 'Stationary' mobility class permit a speed of up to 4 kph, or must it be exactly 0 kph?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 29,
+    "text": "Is the ETWS Primary Notification sent via SIB11 or SIB10?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 30,
+    "text": "Can I use TCP throughput measurements for official O-RAN system benchmarking, or is UDP preferred?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 31,
+    "text": "Does 'Mute Rate' count calls where RTP loss occurs in only one direction, or must it be both?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 32,
+    "text": "Is the 'Initial Context Setup Request' sent from the gNB to the AMF or from the AMF to the gNB?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 33,
+    "text": "Does a 'One Way Call' count as a 'Muted Call' in the overall voice quality statistics?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 34,
+    "text": "Is the sub-slot duration the same for all 5G NR numerologies, or does the number of symbols per slot change?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 35,
+    "text": "Does MU-MIMO increase the peak throughput for a single user, or just the aggregated cell capacity?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 36,
+    "text": "Is the 'User arrival process' a characteristic of the Full Buffer model or the Finite Buffer model?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 37,
+    "text": "Does the 'Allowed NSSAI' in the Registration Accept message indicate slices the UE is barred from using?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 38,
+    "text": "Is the maximum number of PRBs for a 50 MHz bandwidth carrier with 15 kHz SCS equal to 270 or 133?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 39,
+    "text": "Does a 'Handover Interruption Time' of 0ms mean the data session was never actually active during mobility?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 40,
+    "text": "Is the 'mps-PriorityAccess' cause used for Earthquake alerts or for Multimedia Priority Service calls?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 41,
+    "text": "Does 'GainESfeature' measure the total energy consumed or the ratio of efficiency with the feature on vs off?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 42,
+    "text": "Is the 'SST' value for an eMBB slice typically '0x01' or '0x02'?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 43,
+    "text": "Does the 'Voice over NR' service require a 4G Master cell in all Standalone deployments?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 44,
+    "text": "Is 'CFI' overhead used to calculate 5G NR throughput, or is it specific to 4G LTE?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 45,
+    "text": "Does the 'Position Service Accuracy' KPI measure the time it takes to get a location or the distance error?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 46,
+    "text": "Is the 'O-Cloud' used to host the O-RU physical hardware or the virtualized O-DU and O-CU?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 47,
+    "text": "Does 'RTP Packet Loss' only occur in the Uplink direction during a VoLTE call?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 48,
+    "text": "Is 'Registration Time' measured from the 'Registration Request' to the 'Signaling Connection Release'?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 49,
+    "text": "Does the 'Near-RT RIC' collect data on a per-UE basis using the O1 interface or the E2 interface?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  },
+  {
+    "id": 50,
+    "text": "Is the 'Switch Off' de-registration type used when a user manually detaches, or only when the phone loses power?",
+    "category": "TELECOM_WORKBENCH : Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "TELECOM_WORKBENCH"
+  }
+]

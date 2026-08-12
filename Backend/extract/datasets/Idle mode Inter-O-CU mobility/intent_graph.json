@@ -1,0 +1,122 @@
+{
+  "version": 3,
+  "subsection": "Idle mode Inter-O-CU mobility",
+  "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/extract/datasets/Idle mode Inter-O-CU mobility",
+  "nodes": [
+    {
+      "id": "subsection:idle_mode_inter_o_cu_mobility",
+      "type": "oran_subsection",
+      "label": "Idle mode Inter-O-CU mobility",
+      "mandatory": false,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "idle mode inter-o-cu mobility"
+      ]
+    },
+    {
+      "id": "clause:4_2_2_3",
+      "type": "clause",
+      "label": "Clause 4.2.2.3",
+      "mandatory": false,
+      "clause_ids": [
+        "4.2.2.3"
+      ],
+      "references": [
+        "Clause '4.2.2.3' not found in the document."
+      ],
+      "keywords": [
+        "4.2.2.3",
+        "clause 4.2.2.3"
+      ]
+    },
+    {
+      "id": "clause:4_2_2_4",
+      "type": "clause",
+      "label": "Clause 4.2.2.4",
+      "mandatory": false,
+      "clause_ids": [
+        "4.2.2.4"
+      ],
+      "references": [
+        "Clause '4.2.2.4' not found in the document."
+      ],
+      "keywords": [
+        "4.2.2.4",
+        "clause 4.2.2.4"
+      ]
+    },
+    {
+      "id": "clause:5_2_2",
+      "type": "clause",
+      "label": "Clause 5.2.2",
+      "mandatory": false,
+      "clause_ids": [
+        "5.2.2"
+      ],
+      "references": [
+        "5.2.2\tStates and state transitions in RRC_IDLE state and RRC_INACTIVE state Figure 5.2.2-1 shows the states and state transitions and procedures in RRC_IDLE and RRC_INACTIVE. Whenever a new PLMN selec"
+      ],
+      "keywords": [
+        "5.2.2",
+        "clause 5.2.2"
+      ]
+    },
+    {
+      "id": "clause:5_3_3_1",
+      "type": "clause",
+      "label": "Clause 5.3.3.1",
+      "mandatory": false,
+      "clause_ids": [
+        "5.3.3.1"
+      ],
+      "references": [
+        "Clause '5.3.3.1' not found in the document."
+      ],
+      "keywords": [
+        "5.3.3.1",
+        "clause 5.3.3.1"
+      ]
+    },
+    {
+      "id": "procedure:handover",
+      "type": "procedure",
+      "label": "Handover / Mobility",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "handover / mobility",
+        "handover",
+        "handover request",
+        "handover command",
+        "handover complete",
+        "path switch",
+        "mobility",
+        "xn handover",
+        "ng handover"
+      ]
+    },
+    {
+      "id": "kpi:attach_latency",
+      "type": "kpi",
+      "label": "Attach latency",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "attach latency",
+        "maximum latency",
+        "minimum latency",
+        "average latency"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "subsection:idle_mode_inter_o_cu_mobility",
+      "target": "procedure:handover",
+      "relation": "requires"
+    }
+  ]
+}

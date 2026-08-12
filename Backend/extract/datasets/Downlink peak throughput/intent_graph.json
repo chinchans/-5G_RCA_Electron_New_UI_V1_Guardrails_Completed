@@ -1,0 +1,38 @@
+{
+  "version": 3,
+  "subsection": "Downlink peak throughput",
+  "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/extract/datasets/Downlink peak throughput",
+  "nodes": [
+    {
+      "id": "subsection:downlink_peak_throughput",
+      "type": "oran_subsection",
+      "label": "Downlink peak throughput",
+      "mandatory": false,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "downlink peak throughput"
+      ]
+    },
+    {
+      "id": "procedure:5g_nsa_attach",
+      "type": "procedure",
+      "label": "5G NSA Attach",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "5g nsa attach",
+        "secondary node addition",
+        "en-dc"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "subsection:downlink_peak_throughput",
+      "target": "procedure:5g_nsa_attach",
+      "relation": "requires"
+    }
+  ]
+}

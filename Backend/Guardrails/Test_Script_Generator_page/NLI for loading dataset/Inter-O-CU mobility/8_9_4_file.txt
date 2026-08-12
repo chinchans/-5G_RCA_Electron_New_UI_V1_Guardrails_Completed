@@ -1,0 +1,84 @@
+8.9.4	Inter-gNB handover involving gNB-CU-UP change
+Figure 8.9.4-1 shows the procedure used for inter-gNB handover involving gNB-CU-UP change. Overall inter-gNB handover procedure is specified in TS 37.340 [12].
+
+Figure 8.9.4-1: Inter-gNB handover involving gNB-CU-UP change
+1.	The source gNB-CU-CP sends HANDOVER REQUEST message to the target gNB-CU-CP. In case of Conditional Handover, the target gNB is regarded as a candidate gNB which is only accessed by the UE when the CHO condition(s) are fulfilled.
+2-4.	Bearer Context Setup procedure is performed as described in clause 8.9.2.
+5.	The target gNB-CU-CP responds the source gNB-CU-CP with an HANDOVER REQUEST ACKNOWLEDGE message.
+NOTE 1:	In case of Conditional Handover, it is up to target gNB-CU-CP implementation to make sure that the EARLY STATUS TRANSFER information is forwarded to the right gNB-CU-UP (e.g. separate UE-associated signalling connection over Xn interface for each gNB-CU-UP).
+6.	The F1 UE Context Modification procedure is performed to send the handover command to the UE, and to indicate to stop the data transmission for the UE.
+NOTE 2:	In case of DAPS Handover or Conditional Handover, the F1 UE Context Modification procedure in step 6 does not indicate to stop the data transmission for the UE. Instead, the F1 DL RRC Message Transfer procedure can be used which carries the handover command to the UE.
+7-8.	Bearer Context Modification procedure (gNB-CU-CP initiated) is performed to enable the gNB-CU-CP to retrieve the PDCP UL/DL status and to exchange data forwarding information for the bearer.
+9.	The source gNB-CU-CP sends an SN STATUS TRANSFER message to the target gNB-CU-CP.
+NOTE 3:	In case of DAPS Handover, the EARLY STATUS TRANSFER message is sent for DRBs configured with DAPS instead of the SN STATUS TRANSFER message.
+NOTE 4:	In case of Conditional Handover, the EARLY STATUS TRANSFER message is sent only if early data forwarding is applied.
+NOTE 5:	The COUNT related info for the EARLY STATUS TRANSFER message is retrieved from the source gNB-CU-UP via the steps 7/8.
+10-11.	Bearer Context Modification procedure is performed as described in clause 8.9.2. The target gNB-CU-CP does not transfer the PDCP UL/DL status carried from the SN STATUS TRANSFER message to the target gNB-CU-UP if the PDCP status does not need to be preserved (e.g. full configuration). In case of DAPS Handover or Conditional Handover, the COUNT related info carried by the EARLY STATUS TRANSFER message is provided to the target gNB-CU-UP.
+12.	Data Forwarding may be performed from the source gNB-CU-UP to the target gNB-CU-UP.
+NOTE 6:	In case of Conditional Handover, the UE performs RACH when the CHO condition(s) are fulfilled. Once successfully accessed, the target gNB-DU sends an ACCESS SUCCESS message to inform the target gNB-CU-CP of which cell the UE has accessed through. The target gNB-CU-CP may forward to the target gNB-CU-UP, necessary information for sending downlink packets (i.e. DL TNL address information for F1-U and UP security information corresponding to the accessed cell), via a Bearer context modification procedure. The target gNB-CU-CP may initiate Bearer context release procedure toward the other signalling connections or other candidate target gNB-CU-UPs, if any, to release the prepared conditional handover resources for the UE.
+12a.	In case of DAPS Handover or Conditional Handover, the target gNB-CU-CP sends the HANDOVER SUCCESS message to the source gNB-CU-CP to inform that the UE has successfully accessed the target cell.
+12b	In case of DAPS Handover or Conditional Handover, the F1 UE Context Modification procedure is performed to indicate to stop the data transmission for the UE.
+12c-12d.	In case of DAPS Handover or Conditional Handover, the Bearer context modification procedure (gNB-CU-CP initiated) is performed to indicate the source gNB-CU-UP to stop packet delivery and also to retrieve the PDCP UL/DL status.
+12e.	In case of DAPS Handover or Conditional Handover, the source gNB-CU-CP sends the SN STATUS TRANSFER message to the target gNB-CU-CP.
+12f-12g.	In case of DAPS Handover or Conditional Handover, the Bearer context modification procedure is performed to provide the PDCP UL/DL status to the target gNB-CU-UP only if the PDCP status needs to be preserved as described in TS 38.300 [2].
+NOTE 7:	In case of Conditional Handover, inactivity monitoring is performed after step 12g.
+13-15.	Path Switch procedure is performed to update the DL TNL address information for the NG-U towards the core network.
+16.	The target gNB-CU-CP sends an UE CONTEXT RELEASE message to the source gNB-CU-CP.
+17.	and 19. Bearer Context Release procedure is performed.
+18.	F1 UE Context Release procedure is performed to release the UE context in the source gNB-DU.
+Clause:	Clause 8.9.4	8.9.4	Inter-gNB handover involving gNB-CU-UP change
+Figure 8.9.4-1 shows the procedure used for inter-gNB handover involving gNB-CU-UP change. Overall inter-gNB handover procedure is specified in TS 37.340 [12].
+
+Figure 8.9.4-1: Inter-gNB handover involving gNB-CU-UP change
+1.	The source gNB-CU-CP sends HANDOVER REQUEST message to the target gNB-CU-CP. In case of Conditional Handover, the target gNB is regarded as a candidate gNB which is only accessed by the UE when the CHO condition(s) are fulfilled.
+2-4.	Bearer Context Setup procedure is performed as described in clause 8.9.2.
+5.	The target gNB-CU-CP responds the source gNB-CU-CP with an HANDOVER REQUEST ACKNOWLEDGE message.
+NOTE 1:	In case of Conditional Handover, it is up to target gNB-CU-CP implementation to make sure that the EARLY STATUS TRANSFER information is forwarded to the right gNB-CU-UP (e.g. separate UE-associated signalling connection over Xn interface for each gNB-CU-UP).
+6.	The F1 UE Context Modification procedure is performed to send the handover command to the UE, and to indicate to stop the data transmission for the UE.
+NOTE 2:	In case of DAPS Handover or Conditional Handover, the F1 UE Context Modification procedure in step 6 does not indicate to stop the data transmission for the UE. Instead, the F1 DL RRC Message Transfer procedure can be used which carries the handover command to the UE.
+7-8.	Bearer Context Modification procedure (gNB-CU-CP initiated) is performed to enable the gNB-CU-CP to retrieve the PDCP UL/DL status and to exchange data forwarding information for the bearer.
+9.	The source gNB-CU-CP sends an SN STATUS TRANSFER message to the target gNB-CU-CP.
+NOTE 3:	In case of DAPS Handover, the EARLY STATUS TRANSFER message is sent for DRBs configured with DAPS instead of the SN STATUS TRANSFER message.
+NOTE 4:	In case of Conditional Handover, the EARLY STATUS TRANSFER message is sent only if early data forwarding is applied.
+NOTE 5:	The COUNT related info for the EARLY STATUS TRANSFER message is retrieved from the source gNB-CU-UP via the steps 7/8.
+10-11.	Bearer Context Modification procedure is performed as described in clause 8.9.2. The target gNB-CU-CP does not transfer the PDCP UL/DL status carried from the SN STATUS TRANSFER message to the target gNB-CU-UP if the PDCP status does not need to be preserved (e.g. full configuration). In case of DAPS Handover or Conditional Handover, the COUNT related info carried by the EARLY STATUS TRANSFER message is provided to the target gNB-CU-UP.
+12.	Data Forwarding may be performed from the source gNB-CU-UP to the target gNB-CU-UP.
+NOTE 6:	In case of Conditional Handover, the UE performs RACH when the CHO condition(s) are fulfilled. Once successfully accessed, the target gNB-DU sends an ACCESS SUCCESS message to inform the target gNB-CU-CP of which cell the UE has accessed through. The target gNB-CU-CP may forward to the target gNB-CU-UP, necessary information for sending downlink packets (i.e. DL TNL address information for F1-U and UP security information corresponding to the accessed cell), via a Bearer context modification procedure. The target gNB-CU-CP may initiate Bearer context release procedure toward the other signalling connections or other candidate target gNB-CU-UPs, if any, to release the prepared conditional handover resources for the UE.
+12a.	In case of DAPS Handover or Conditional Handover, the target gNB-CU-CP sends the HANDOVER SUCCESS message to the source gNB-CU-CP to inform that the UE has successfully accessed the target cell.
+12b	In case of DAPS Handover or Conditional Handover, the F1 UE Context Modification procedure is performed to indicate to stop the data transmission for the UE.
+12c-12d.	In case of DAPS Handover or Conditional Handover, the Bearer context modification procedure (gNB-CU-CP initiated) is performed to indicate the source gNB-CU-UP to stop packet delivery and also to retrieve the PDCP UL/DL status.
+12e.	In case of DAPS Handover or Conditional Handover, the source gNB-CU-CP sends the SN STATUS TRANSFER message to the target gNB-CU-CP.
+12f-12g.	In case of DAPS Handover or Conditional Handover, the Bearer context modification procedure is performed to provide the PDCP UL/DL status to the target gNB-CU-UP only if the PDCP status needs to be preserved as described in TS 38.300 [2].
+NOTE 7:	In case of Conditional Handover, inactivity monitoring is performed after step 12g.
+13-15.	Path Switch procedure is performed to update the DL TNL address information for the NG-U towards the core network.
+16.	The target gNB-CU-CP sends an UE CONTEXT RELEASE message to the source gNB-CU-CP.
+17.	and 19. Bearer Context Release procedure is performed.
+18.	F1 UE Context Release procedure is performed to release the UE context in the source gNB-DU.
+Clause:	Clause 8.9.4	8.9.4	Inter-gNB handover involving gNB-CU-UP change
+Figure 8.9.4-1 shows the procedure used for inter-gNB handover involving gNB-CU-UP change. Overall inter-gNB handover procedure is specified in TS 37.340 [12].
+
+Figure 8.9.4-1: Inter-gNB handover involving gNB-CU-UP change
+1.	The source gNB-CU-CP sends HANDOVER REQUEST message to the target gNB-CU-CP. In case of Conditional Handover, the target gNB is regarded as a candidate gNB which is only accessed by the UE when the CHO condition(s) are fulfilled.
+2-4.	Bearer Context Setup procedure is performed as described in clause 8.9.2.
+5.	The target gNB-CU-CP responds the source gNB-CU-CP with an HANDOVER REQUEST ACKNOWLEDGE message.
+NOTE 1:	In case of Conditional Handover, it is up to target gNB-CU-CP implementation to make sure that the EARLY STATUS TRANSFER information is forwarded to the right gNB-CU-UP (e.g. separate UE-associated signalling connection over Xn interface for each gNB-CU-UP).
+6.	The F1 UE Context Modification procedure is performed to send the handover command to the UE, and to indicate to stop the data transmission for the UE.
+NOTE 2:	In case of DAPS Handover or Conditional Handover, the F1 UE Context Modification procedure in step 6 does not indicate to stop the data transmission for the UE. Instead, the F1 DL RRC Message Transfer procedure can be used which carries the handover command to the UE.
+7-8.	Bearer Context Modification procedure (gNB-CU-CP initiated) is performed to enable the gNB-CU-CP to retrieve the PDCP UL/DL status and to exchange data forwarding information for the bearer.
+9.	The source gNB-CU-CP sends an SN STATUS TRANSFER message to the target gNB-CU-CP.
+NOTE 3:	In case of DAPS Handover, the EARLY STATUS TRANSFER message is sent for DRBs configured with DAPS instead of the SN STATUS TRANSFER message.
+NOTE 4:	In case of Conditional Handover, the EARLY STATUS TRANSFER message is sent only if early data forwarding is applied.
+NOTE 5:	The COUNT related info for the EARLY STATUS TRANSFER message is retrieved from the source gNB-CU-UP via the steps 7/8.
+10-11.	Bearer Context Modification procedure is performed as described in clause 8.9.2. The target gNB-CU-CP does not transfer the PDCP UL/DL status carried from the SN STATUS TRANSFER message to the target gNB-CU-UP if the PDCP status does not need to be preserved (e.g. full configuration). In case of DAPS Handover or Conditional Handover, the COUNT related info carried by the EARLY STATUS TRANSFER message is provided to the target gNB-CU-UP.
+12.	Data Forwarding may be performed from the source gNB-CU-UP to the target gNB-CU-UP.
+NOTE 6:	In case of Conditional Handover, the UE performs RACH when the CHO condition(s) are fulfilled. Once successfully accessed, the target gNB-DU sends an ACCESS SUCCESS message to inform the target gNB-CU-CP of which cell the UE has accessed through. The target gNB-CU-CP may forward to the target gNB-CU-UP, necessary information for sending downlink packets (i.e. DL TNL address information for F1-U and UP security information corresponding to the accessed cell), via a Bearer context modification procedure. The target gNB-CU-CP may initiate Bearer context release procedure toward the other signalling connections or other candidate target gNB-CU-UPs, if any, to release the prepared conditional handover resources for the UE.
+12a.	In case of DAPS Handover or Conditional Handover, the target gNB-CU-CP sends the HANDOVER SUCCESS message to the source gNB-CU-CP to inform that the UE has successfully accessed the target cell.
+12b	In case of DAPS Handover or Conditional Handover, the F1 UE Context Modification procedure is performed to indicate to stop the data transmission for the UE.
+12c-12d.	In case of DAPS Handover or Conditional Handover, the Bearer context modification procedure (gNB-CU-CP initiated) is performed to indicate the source gNB-CU-UP to stop packet delivery and also to retrieve the PDCP UL/DL status.
+12e.	In case of DAPS Handover or Conditional Handover, the source gNB-CU-CP sends the SN STATUS TRANSFER message to the target gNB-CU-CP.
+12f-12g.	In case of DAPS Handover or Conditional Handover, the Bearer context modification procedure is performed to provide the PDCP UL/DL status to the target gNB-CU-UP only if the PDCP status needs to be preserved as described in TS 38.300 [2].
+NOTE 7:	In case of Conditional Handover, inactivity monitoring is performed after step 12g.
+13-15.	Path Switch procedure is performed to update the DL TNL address information for the NG-U towards the core network.
+16.	The target gNB-CU-CP sends an UE CONTEXT RELEASE message to the source gNB-CU-CP.
+17.	and 19. Bearer Context Release procedure is performed.
+18.	F1 UE Context Release procedure is performed to release the UE context in the source gNB-DU.

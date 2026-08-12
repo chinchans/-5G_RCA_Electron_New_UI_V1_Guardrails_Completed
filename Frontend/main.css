@@ -816,7 +816,7 @@ textarea {
 }
 
 /* Unified Button Style - Applied to all buttons (exclude bd-btn design system) */
-button:not(.back-button):not(.menu-toggle):not(.template-modal-close):not(.close-btn):not(.status-close):not(.dropdown-btn):not(.landing-option-btn):not(.user-template-delete-btn):not(.bd-btn):not(.template-modal-btn.cancel):not(.td-loglevel-picker-btn):not(.td-loglevel-subitem),
+button:not(.back-button):not(.menu-toggle):not(.template-modal-close):not(.close-btn):not(.status-close):not(.dropdown-btn):not(.landing-option-btn):not(.user-template-delete-btn):not(.tsg-more-template-delete):not(.bd-btn):not(.template-modal-btn.cancel):not(.td-loglevel-picker-btn):not(.td-loglevel-subitem),
 .btn,
 .launch-btn,
 .home-btn:not(.secondary),
@@ -881,7 +881,7 @@ button:not(.back-button):not(.menu-toggle):not(.template-modal-close):not(.close
     background-color: var(--app-btn-bg-hover) !important;
 }
 
-button:not(.back-button):not(.menu-toggle):not(.template-modal-close):not(.close-btn):not(.status-close):not(.dropdown-btn):not(.landing-option-btn):not(.user-template-delete-btn):not(.bd-btn):not(.template-modal-btn.cancel):not(.td-loglevel-picker-btn):not(.td-loglevel-subitem):hover:not(#crashAnalysisToggle),
+button:not(.back-button):not(.menu-toggle):not(.template-modal-close):not(.close-btn):not(.status-close):not(.dropdown-btn):not(.landing-option-btn):not(.user-template-delete-btn):not(.tsg-more-template-delete):not(.bd-btn):not(.template-modal-btn.cancel):not(.td-loglevel-picker-btn):not(.td-loglevel-subitem):hover:not(#crashAnalysisToggle),
 .btn:hover,
 .launch-btn:hover,
 .home-btn:not(.secondary):hover,
@@ -897,7 +897,7 @@ button:not(.back-button):not(.menu-toggle):not(.template-modal-close):not(.close
     box-shadow: none;
 }
 
-button:not(.back-button):not(.menu-toggle):not(.template-modal-close):not(.close-btn):not(.status-close):not(.dropdown-btn):not(.landing-option-btn):not(.user-template-delete-btn):not(.bd-btn):not(.td-loglevel-picker-btn):not(.td-loglevel-subitem):active:not(#bugFixPresentBtn):not(#crashAnalysisToggle):not(#clearDeploymentSettingsBtn),
+button:not(.back-button):not(.menu-toggle):not(.template-modal-close):not(.close-btn):not(.status-close):not(.dropdown-btn):not(.landing-option-btn):not(.user-template-delete-btn):not(.tsg-more-template-delete):not(.bd-btn):not(.td-loglevel-picker-btn):not(.td-loglevel-subitem):active:not(#bugFixPresentBtn):not(#crashAnalysisToggle):not(#clearDeploymentSettingsBtn),
 .btn:active,
 .launch-btn:active,
 .home-btn:active,
@@ -910,7 +910,7 @@ button:not(.back-button):not(.menu-toggle):not(.template-modal-close):not(.close
     box-shadow: 0 2px 6px rgba(93, 146, 255, 0.2);
 }
 
-button:not(.back-button):not(.menu-toggle):not(.template-modal-close):not(.close-btn):not(.status-close):not(.dropdown-btn):not(.landing-option-btn):not(.user-template-delete-btn):not(.bd-btn):not(.td-loglevel-picker-btn):not(.td-loglevel-subitem):disabled,
+button:not(.back-button):not(.menu-toggle):not(.template-modal-close):not(.close-btn):not(.status-close):not(.dropdown-btn):not(.landing-option-btn):not(.user-template-delete-btn):not(.tsg-more-template-delete):not(.bd-btn):not(.td-loglevel-picker-btn):not(.td-loglevel-subitem):disabled,
 .btn:disabled,
 .launch-btn:disabled,
 .home-btn:disabled,
@@ -3494,6 +3494,68 @@ body > #languageDropdownMenu .dropdown-item:hover {
     padding: 0.1rem 0;
 }
 
+#test-script-generator #tsgGenConfigMore .tsg-more-template-card-wrap {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 0.35rem;
+}
+
+#test-script-generator #tsgGenConfigMore .tsg-more-template-card-wrap .tsg-more-template-card {
+    flex: 1;
+    min-width: 0;
+}
+
+#test-script-generator #tsgGenConfigMore .tsg-more-template-delete {
+    flex: 0 0 auto;
+    width: 2.5rem;
+    min-width: 2.5rem;
+    height: auto;
+    min-height: 2.75rem;
+    padding: 0 !important;
+    border: 1px solid #fecaca !important;
+    border-radius: 0.65rem !important;
+    background: #fff !important;
+    color: #dc2626 !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+#test-script-generator #tsgGenConfigMore .tsg-more-template-delete svg {
+    width: 1.15rem !important;
+    height: 1.15rem !important;
+    min-width: 1.15rem;
+    min-height: 1.15rem;
+    stroke: #dc2626 !important;
+    fill: none !important;
+    display: block;
+}
+
+#test-script-generator #tsgGenConfigMore .tsg-more-template-delete svg path,
+#test-script-generator #tsgGenConfigMore .tsg-more-template-delete svg line,
+#test-script-generator #tsgGenConfigMore .tsg-more-template-delete svg polyline {
+    stroke: #dc2626 !important;
+    fill: none !important;
+}
+
+#test-script-generator #tsgGenConfigMore .tsg-more-template-delete:hover {
+    color: #fff !important;
+    border-color: #dc2626 !important;
+    background: #dc2626 !important;
+}
+
+#test-script-generator #tsgGenConfigMore .tsg-more-template-delete:hover svg,
+#test-script-generator #tsgGenConfigMore .tsg-more-template-delete:hover svg path,
+#test-script-generator #tsgGenConfigMore .tsg-more-template-delete:hover svg line,
+#test-script-generator #tsgGenConfigMore .tsg-more-template-delete:hover svg polyline {
+    stroke: #fff !important;
+}
+
 #test-script-generator #tsgGenConfigMore .prompt-studio-category-card {
     width: 100%;
 }
@@ -4296,12 +4358,12 @@ body > .dropdown-content.portal-dropdown-menu {
     100% { transform: rotate(360deg); }
 }
 
-/* Modern Status Bar */
+/* Modern Status Bar — above modals/overlays so guardrail errors stay visible */
 .status-bar {
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 10000;
+    z-index: 100050;
     max-width: 400px;
     background: #ffffff;  /* White background */
     border-radius: 12px;
@@ -4309,6 +4371,7 @@ body > .dropdown-content.portal-dropdown-menu {
     border: 1px solid #e2e8f0;  /* Light gray border */
     animation: slideInRight 0.3s ease-out;
     overflow: hidden;
+    pointer-events: auto;
 }
 
 .status-bar.success {
@@ -4379,6 +4442,17 @@ body > .dropdown-content.portal-dropdown-menu {
     overflow: hidden;
 }
 
+.status-bar.guardrail-warning {
+    max-width: min(92vw, 760px);
+    border: 1px solid #f0ad4e !important;
+    background: #fff9e6 !important;
+}
+
+.status-bar.guardrail-warning .status-title,
+.status-bar.guardrail-warning .status-message {
+    color: #664d03 !important;
+}
+
 .status-bar.guardrail-error .status-content {
     align-items: flex-start;
     max-height: 85vh;
@@ -4404,6 +4478,7 @@ body > .dropdown-content.portal-dropdown-menu {
     opacity: 0.9;
     line-height: 1.3;
     color: #000000;  /* Black text */
+    white-space: pre-wrap;
 }
 
 /* Status Close Button - Special close button, keep unique style */
@@ -7516,10 +7591,16 @@ body > #tdSubcarrierSpacingDropdownMenu .dropdown-item:hover,
     border-radius: 12px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
     overflow: visible;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .bd-panel-inner {
     overflow: visible;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .bd-panel-inner--load .bd-panel-hint {
@@ -7586,6 +7667,20 @@ body > #tdSubcarrierSpacingDropdownMenu .dropdown-item:hover,
 
 .bd-config-actions {
     padding: 1rem 1.25rem;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.bd-guardrail-banner {
+    display: none;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    min-width: 0;
 }
 
 .bd-rca-actions {
@@ -10858,11 +10953,12 @@ body > #ceResultsLayerDropdownMenu .dropdown-item:hover {
     border-right: 1px solid var(--ws-border) !important;
 }
 
-/* Status toast — lighter shadow */
+/* Status toast — above Add Template / other modals; lighter shadow */
 .status-bar,
 .status-bar.success,
 .status-bar.error,
 .status-bar.warning {
+    z-index: 100050 !important;
     background: var(--ws-surface) !important;
     border: 1px solid var(--ws-border) !important;
     box-shadow: var(--ws-shadow-md) !important;

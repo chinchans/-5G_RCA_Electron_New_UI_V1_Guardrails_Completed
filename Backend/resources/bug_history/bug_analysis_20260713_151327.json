@@ -1,0 +1,64 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[HW]   Lost socket\" \n\nThis indicates a critical hardware or communication failure likely affecting system operation. It is the most recent and critical error in the log. No stack trace or function call information is provided.",
+  "log_file": "success_du_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-13T15:13:27.191827",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[HW]   Lost socket\" \n\nThis indicates a critical hardware or communication failure likely affecting system operation. It is the most recent and critical error in the log. No stack trace or function call information is provided.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "ethtool -S eth0",
+            "hint": "Check hardware statistics and errors on network interface eth0 to identify hardware faults"
+          },
+          {
+            "command": "dmesg | grep -i firmware",
+            "hint": "Verify if there are any firmware or driver related errors reported in the kernel logs"
+          },
+          {
+            "command": "ss -s",
+            "hint": "Monitor socket usage and buffer states to detect resource exhaustion or socket issues"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ethtool -S eth0",
+            "explanation": "Check hardware statistics and errors on network interface eth0 to identify hardware faults"
+          },
+          {
+            "command": "dmesg | grep -i firmware",
+            "explanation": "Verify if there are any firmware or driver related errors reported in the kernel logs"
+          },
+          {
+            "command": "ss -s",
+            "explanation": "Monitor socket usage and buffer states to detect resource exhaustion or socket issues"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    },
+    "timestamp": "2026-07-13T15:13:26.102798"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260713_151327.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

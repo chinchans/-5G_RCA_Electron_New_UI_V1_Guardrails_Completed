@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "text": "How do i implement a debounced search input in Vue 3 using the composition api?",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 2,
+    "text": "The biology lab is currently observing a single cell from a rare jellyfish found in Japan.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 3,
+    "text": "I'm so rich in life because I romanticize the small stuff like my morning coffee routine.",
+    "category": "Category 3: General Knowledge, Life & Daily Conversation",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 4,
+    "text": "My iPhone 15 Pro battery is draining so rapidly that it's already at 20% by noon.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 5,
+    "text": "What is the best PostgreSQL query to calculate the average salary of employees per department?",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 6,
+    "text": "The quarterback botched the handoff during the third quarter and they lost their momentum.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 7,
+    "text": "First day back at the office after the holidays and my brain is totally 404 coded.",
+    "category": "Category 3: General Knowledge, Life & Daily Conversation",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 8,
+    "text": "My Kindle Paperwhite is frozen on the screensaver and the power button does nothing.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 9,
+    "text": "How do I fix a 502 Bad Gateway error on my Nginx server running in Norway?",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 10,
+    "text": "The Gateway Arch in St. Louis is a based architectural landmark that glows at sunset.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 11,
+    "text": "I need to buy a packet of stamps for these letters I'm sending to Hungary.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 12,
+    "text": "My smart light bulbs are unresponsive in the app and the office vibes are totally chopped.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 13,
+    "text": "What is the best way to handle JWT authentication in a Node.js Express application?",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 14,
+    "text": "The relay race featured a historic 4x100 finish where the baton handoff was perfect.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 15,
+    "text": "This music playlist is chopped; the transitions between songs are all over the place.",
+    "category": "Category 3: General Knowledge, Life & Daily Conversation",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 16,
+    "text": "My Sony noise-cancelling headphones are making a high-pitched noise in the left ear.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 17,
+    "text": "How can I center a div both vertically and horizontally using Tailwind CSS classes?",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 18,
+    "text": "The high-security prisoner was moved to a new cell in Pakistan this morning.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 19,
+    "text": "Realizing you've been pronouncing the name of that market wrong your whole life is a canon event.",
+    "category": "Category 3: General Knowledge, Life & Daily Conversation",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 20,
+    "text": "My Ring doorbell is showing as offline even though my Lebanon wifi is popping off.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 21,
+    "text": "What does Docker container exit code 137 mean and should I check my RAM limits?",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 22,
+    "text": "The solar cell efficiency is at its peak performance during the long summer days in Qatar.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 23,
+    "text": "You're serving farmer's market with that vintage tote bag and fresh baguette.",
+    "category": "Category 3: General Knowledge, Life & Daily Conversation",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 24,
+    "text": "My PS5 is overheating and shutting down randomly while I'm playing Elden Ring.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 25,
+    "text": "Write a Python script to fetch data from a public API and save it to a CSV file.",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 26,
+    "text": "The company used a payment gateway to expand their digital services into the Brazil market.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 27,
+    "text": "I lost a packet of sugar from Turkey in the bottom of my messy bag.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 28,
+    "text": "My MacBook Air M2 is getting extremely hot while just browsing the web in Chrome.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 29,
+    "text": "Should I use git rebase or git merge to keep my commit history clean and based?",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 30,
+    "text": "The plant cell wall provides essential structural support in this based environment.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 31,
+    "text": "I'm roaming the streets of Malta looking for hidden based gems to visit.",
+    "category": "Category 3: General Knowledge, Life & Daily Conversation",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 32,
+    "text": "My smart TV screen is flickering during dark scenes and the vibes are chopped.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 33,
+    "text": "How do I setup a local Kubernetes cluster using Minikube and Helm charts?",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 34,
+    "text": "The gateway to the afterlife is a common based theme in ancient myths.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 35,
+    "text": "What is the best way to get a good night's sleep when you're crashing out from stress?",
+    "category": "Category 3: General Knowledge, Life & Daily Conversation",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 36,
+    "text": "My Apple Watch won't sync my workout data to the fitness app on my iPhone.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 37,
+    "text": "PostgreSQL query to find all records with a created_at date greater than yesterday.",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 38,
+    "text": "The frequency band for this radio in Kenya is serving a very weak signal.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 39,
+    "text": "Can you recommend a really based podcast about world history for my commute?",
+    "category": "Category 3: General Knowledge, Life & Daily Conversation",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 40,
+    "text": "My Roomba is getting stuck under the couch in my Lebanon apartment and it's chopped.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 41,
+    "text": "How to create a Tailwind CSS grid with 12 columns and custom responsive gaps?",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 42,
+    "text": "The project handoff from the design team in India was smooth and efficient.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 43,
+    "text": "How many calories are in a medium sized avocado imported from Mexico?",
+    "category": "Category 3: General Knowledge, Life & Daily Conversation",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 44,
+    "text": "My Firestick keeps restarting in the middle of a movie and the vibes are chopped.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 45,
+    "text": "Write a bash script to automate weekly backups of a local folder to an S3 bucket.",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 46,
+    "text": "The wedding band was engraved with a based quote about trust and loyalty.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 47,
+    "text": "Who won the Best Picture Oscar in 2024? I was totally 404 coded during the show.",
+    "category": "Category 3: General Knowledge, Life & Daily Conversation",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 48,
+    "text": "My Bose headphones are making a low buzzing noise when the active noise cancelling is on.",
+    "category": "Category 4: Consumer Electronics & Home Tech Support",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 49,
+    "text": "I'm getting a 403 Forbidden Access Denied error on my S3 bucket when using a public link.",
+    "category": "Category 1: General Software, Web Dev & IT",
+    "label": "OUT_OF_SCOPE"
+  },
+  {
+    "id": 50,
+    "text": "The frequency band for this audio in South Korea is serving restricted content.",
+    "category": "Category 2: Ambiguous / Keyword-Overlap Hard Negatives",
+    "label": "OUT_OF_SCOPE"
+  }
+]

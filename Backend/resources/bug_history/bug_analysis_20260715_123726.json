@@ -1,0 +1,64 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[SCTP]   Received SCTP SHUTDOWN EVENT\"\n\nContext:\nThis indicates that the SCTP association was shut down unexpectedly, which would disrupt the communication between the CU and DU or between network functions. Following this, the log shows:\n- \"Received SCTP state 1 for assoc_id 337, removing endpoint\"\n- \"releasing DU ID 3584 (gNB-Eurecom-DU) on assoc_id 337\"\n\nThis SCTP shutdown event is critical as it leads to the removal of the SCTP endpoint and release of the DU, effectively terminating the connection and preventing further operation involving that DU association. No stack trace is provided, but the SCTP shutdown event itself is a critical failure preventing system operation.",
+  "log_file": "success_cu_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_cu_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-15T12:37:26.485626",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[SCTP]   Received SCTP SHUTDOWN EVENT\"\n\nContext:\nThis indicates that the SCTP association was shut down unexpectedly, which would disrupt the communication between the CU and DU or between network functions. Following this, the log shows:\n- \"Received SCTP state 1 for assoc_id 337, removing endpoint\"\n- \"releasing DU ID 3584 (gNB-Eurecom-DU) on assoc_id 337\"\n\nThis SCTP shutdown event is critical as it leads to the removal of the SCTP endpoint and release of the DU, effectively terminating the connection and preventing further operation involving that DU association. No stack trace is provided, but the SCTP shutdown event itself is a critical failure preventing system operation.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_cu_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test basic connectivity from gNB to AMF IP to ensure network reachability"
+          },
+          {
+            "command": "grep -n \"amf_ip\" openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+            "hint": "Verify AMF IP configuration in gNB configuration file to ensure correct AMF address is set"
+          },
+          {
+            "command": "ip route add 192.168.70.132 via 10.138.77.131 dev eth0",
+            "hint": "Add static route to AMF IP via gNB IP on interface eth0 if AMF is on a different subnet or interface"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test basic connectivity from gNB to AMF IP to ensure network reachability"
+          },
+          {
+            "command": "grep -n \"amf_ip\" openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf",
+            "explanation": "Verify AMF IP configuration in gNB configuration file to ensure correct AMF address is set"
+          },
+          {
+            "command": "ip route add 192.168.70.132 via 10.138.77.131 dev eth0",
+            "explanation": "Add static route to AMF IP via gNB IP on interface eth0 if AMF is on a different subnet or interface"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    },
+    "timestamp": "2026-07-15T12:37:26.305934"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260715_123726.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

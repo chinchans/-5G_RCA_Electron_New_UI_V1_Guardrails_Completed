@@ -312,26 +312,26 @@
     },
     "dynamic_error_message\n\"[hw]___lost_soc": {
       "keywords": [
-        "Lost socket",
-        "Hardware failure",
-        "Communication failure",
-        "Socket error"
+        "hardware",
+        "socket",
+        "lost socket",
+        "communication failure"
       ],
-      "root_cause_template": "This error indicates a critical failure in the hardware or communication interface where a socket connection was unexpectedly lost. Common causes include hardware malfunction, network interface issues, driver faults, or abrupt termination of the socket by the remote endpoint or local system.",
+      "root_cause_template": "This error indicates a loss of a hardware-level socket connection, which is critical for inter-process or inter-module communication. Common causes include hardware interface failures, driver malfunctions, resource exhaustion, or unexpected resets of the communication endpoint.",
       "suggested_fixes": [
-        "1. Verify physical hardware connections and replace any faulty network interface cards or cables.",
-        "2. Check system logs for related hardware or driver errors and update or reinstall network drivers.",
-        "3. Implement socket keep-alive mechanisms and timeout handling to detect and recover from lost connections.",
-        "4. Review and enhance error handling in the socket communication code to gracefully handle unexpected disconnections."
+        "1. Verify hardware interfaces and physical connections related to the socket communication.",
+        "2. Check and update the device drivers or firmware managing the socket hardware.",
+        "3. Monitor system resource usage to ensure socket descriptors are not exhausted or leaked.",
+        "4. Implement enhanced logging around socket initialization and teardown to capture failure context."
       ],
       "specifications": [
         "3GPP TS 23.501 - System Architecture for the 5G System (5GS)",
         "3GPP TS 36.300 - E-UTRA and E-UTRAN Overall Description"
       ],
       "function_analysis": [
-        "Check the socket initialization and teardown functions to ensure proper resource allocation and release.",
-        "Trace socket read/write operations to identify where the connection is lost or closed unexpectedly.",
-        "Analyze retry and error handling logic around socket communication to confirm robustness against transient failures."
+        "Review socket creation and binding functions to ensure proper error handling and resource allocation.",
+        "Analyze hardware abstraction layer (HAL) code managing socket interfaces for race conditions or unexpected resets.",
+        "Trace communication initialization sequences to identify points where socket loss occurs without recovery."
       ]
     }
   },

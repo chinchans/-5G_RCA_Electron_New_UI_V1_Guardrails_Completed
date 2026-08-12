@@ -1,0 +1,19 @@
+{
+  "version": 3,
+  "subsection": "Test Setup and Methodology",
+  "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/extract/datasets/Test Setup and Methodology",
+  "nodes": [
+    {
+      "id": "subsection:test_setup_and_methodology",
+      "type": "oran_subsection",
+      "label": "Test Setup and Methodology",
+      "mandatory": false,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "test setup and methodology"
+      ]
+    }
+  ],
+  "edges": []
+}

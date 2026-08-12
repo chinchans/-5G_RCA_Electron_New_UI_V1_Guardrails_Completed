@@ -48,3 +48,21 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+
+
+Backend/Guardrails/Test_Script_Generator_page/fill_data_tsg_output_guardrails.py
+Backend/Guardrails/Fine-tuning/Data_Cleaning/fill_data_tsg_oos.py
+Backend/Guardrails/Testing_Records/Guardrail_Efficiency_Length_Extended_Benchmark.xlsx
+Backend/Guardrails/Fine-tuning/Data_Cleaning/fill_data_telecom_workbench.py
+Backend/Guardrails/Fine-tuning/Data_Cleaning/fill_data_spec_intel_prompt_injection.py
+Backend/Guardrails/Fine-tuning/Data_Cleaning/fill_data_spec_intel_doc_upload.py
+Backend/Guardrails/Fine-tuning/Data_Cleaning/fill_data_update_results.py
+fill_data_*.py
+
+Access_tokens/
+Backend/Guardrails/Testing_Records/Guardrail_Efficiency_TSG_page_filled.xlsx
+Backend/Guardrails/Testing_Records/Guardrail_Efficiency_TSG_page_filled1.xlsx
+Backend/Guardrails/Testing_Records/Guardrail_Efficiency_TSG_page.xlsx
+Backend/Guardrails/Testing_Records/Guardrail_Test_Prompts.xlsx
+Backend/Guardrails/Prompt Injection & Jailbreaking Testing/prev
+

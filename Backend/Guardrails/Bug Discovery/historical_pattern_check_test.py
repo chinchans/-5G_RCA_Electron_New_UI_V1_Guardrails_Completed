@@ -81,12 +81,30 @@ def test_known_log_from_previous_rca() -> None:
 
 
 def test_new_log_triggers_human_review_warning() -> None:
-    result = check_historical_pattern(NEW_LOG)
-    _assert(result.is_new_log, f"expected new log, known={result.is_known_log}")
-    _assert(result.warned, f"new log should warn in advisory mode: {result.messages}")
+    # Short but extractable OAI-like sequence that stays below similarity threshold.
+    synthetic = """
+[NGAP] Send NGSetupRequest to AMF
+[NGAP] Received NGSetupResponse from AMF
+[F1AP] Starting F1AP
+[NAS] Registration Request
+[PHY] totally unique xyz_quantum_marker_781
+[MAC] Contention resolution timer has expired unique_seq_only
+"""
+    result = _historical.check_historical_pattern_text(
+        synthetic,
+        log_filename="brand_new_unique_xyz.log",
+    )
+    _assert(result.is_new_log, f"expected new log, known={result.is_known_log} score={result.similarity_score}")
+    _assert(result.warned, f"new log should warn: {result.messages}")
+    _assert(not result.blocked, "new log must never block RCA analysis")
+    _assert(result.passed, "new log must pass so Start RCA continues")
     _assert(any("new log file" in m.lower() for m in result.messages), result.messages)
     _assert(any("human review" in m.lower() for m in result.messages), result.messages)
-    print(f"OK new_log: {NEW_LOG.name} score={result.similarity_score:.3f}")
+    _assert(
+        not any("closest prior" in m.lower() for m in result.messages),
+        f"closest prior match must not appear in messages: {result.messages}",
+    )
+    print(f"OK new_log: warned score={result.similarity_score:.3f}")
 
 
 def test_similar_build_log_recognized_from_history() -> None:

@@ -137,10 +137,34 @@ def test_windows_log_blocked() -> None:
     print(f"OK windows: blocked relevance={result.telecom_relevance:.2f}")
 
 
+def test_success_du_gnb_no_score_warning() -> None:
+    """DU runtime logs are telecom-domain; do not warn on 64%-vs-65% hybrid score."""
+    log = BACKEND_DIR / "app/services/Error_fixing_pipelin/log_files/success_du_gnb.log"
+    if not log.exists():
+        log = Path(__file__).resolve().parent / "success_du_gnb.log"
+    if not log.exists():
+        print("SKIP success_du_gnb.log (file not found)")
+        return
+    result = check_telecom_domain(log)
+    _assert(result.passed, f"DU log should pass: {result.messages}")
+    _assert(not result.blocked, f"DU log should not block: {result.messages}")
+    _assert(not result.warned, f"DU log should not warn: {result.messages}")
+    _assert(
+        not any("Overall context score" in m for m in result.messages),
+        f"unexpected score warning: {result.messages}",
+    )
+    _assert(result.profile != "oai_build", f"DU runtime mis-profiled as build: {result.profile}")
+    print(
+        f"OK success_du_gnb: relevance={result.telecom_relevance:.2f} "
+        f"profile={result.profile} warned={result.warned}"
+    )
+
+
 def main() -> None:
     test_oai_rach_log_passes()
     test_gnb_plain_oai_log_passes()
     test_cmake_build_log_passes()
+    test_success_du_gnb_no_score_warning()
     test_all_pipeline_log_files_pass()
     test_windows_log_blocked()
     test_nginx_blocked()

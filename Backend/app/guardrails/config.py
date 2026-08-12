@@ -79,6 +79,77 @@ GUARDRAILS_TSG_REQUIRE_LAYER2 = os.getenv(
 GUARDRAILS_TSG_REFINE_SCOPE_ENABLED = os.getenv(
     "GUARDRAILS_TSG_REFINE_SCOPE_ENABLED", "true"
 ).lower() in ("1", "true", "yes")
+
+# Test Script Generator — fine-tuned RoBERTa intent classifier (telecom / OOS / injection)
+GUARDRAILS_TSG_CLASSIFIER_ENABLED = os.getenv(
+    "GUARDRAILS_TSG_CLASSIFIER_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAIL_CLASSIFIER_MODEL_PATH = Path(
+    os.getenv(
+        "GUARDRAIL_CLASSIFIER_MODEL_PATH",
+        str(
+            BACKEND_DIR
+            / "Guardrails"
+            / "Fine-tuning"
+            / "fine_tuned_guardrail_roberta"
+        ),
+    )
+)
+GUARDRAIL_CLASSIFIER_MAX_LENGTH = int(
+    os.getenv("GUARDRAIL_CLASSIFIER_MAX_LENGTH", "512")
+)
+GUARDRAIL_CLASSIFIER_MIN_CONFIDENCE = float(
+    os.getenv("GUARDRAIL_CLASSIFIER_MIN_CONFIDENCE", "0.55")
+)
+# RoBERTa was trained on short prompts; long system templates ("You are an expert...")
+# are often false-positive PROMPT_INJECTION. Only enforce that label below this length.
+# OUT_OF_SCOPE is still enforced for any length. Llama Guard covers injection on long text.
+GUARDRAIL_CLASSIFIER_INJECTION_MAX_CHARS = int(
+    os.getenv("GUARDRAIL_CLASSIFIER_INJECTION_MAX_CHARS", "2000")
+)
+# Dynamic-anchor + sliding-window scan (catches planted OOS without sentence-isolation FPs)
+GUARDRAILS_TSG_CLASSIFIER_WINDOW_ENABLED = os.getenv(
+    "GUARDRAILS_TSG_CLASSIFIER_WINDOW_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAIL_CLASSIFIER_WINDOW_SIZE = int(
+    os.getenv("GUARDRAIL_CLASSIFIER_WINDOW_SIZE", "3")
+)
+GUARDRAIL_CLASSIFIER_MAX_WINDOWS = int(
+    os.getenv("GUARDRAIL_CLASSIFIER_MAX_WINDOWS", "32")
+)
+GUARDRAIL_CLASSIFIER_MAX_SENTENCES = int(
+    os.getenv("GUARDRAIL_CLASSIFIER_MAX_SENTENCES", "80")
+)
+# auto | cpu | cuda
+GUARDRAIL_CLASSIFIER_DEVICE = os.getenv("GUARDRAIL_CLASSIFIER_DEVICE", "auto").lower().strip()
+# When true, block TSG prompts if the fine-tuned classifier cannot load
+GUARDRAILS_TSG_REQUIRE_CLASSIFIER = os.getenv(
+    "GUARDRAILS_TSG_REQUIRE_CLASSIFIER", "false"
+).lower() in ("1", "true", "yes")
+# Layer 1: strip trusted template text; classify only user delta / payload
+GUARDRAILS_TSG_PROMPT_EXTRACTION_ENABLED = os.getenv(
+    "GUARDRAILS_TSG_PROMPT_EXTRACTION_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+# Refine/follow-up: prepend parent session telecom anchor before intent classification
+GUARDRAILS_TSG_REFINE_CONTEXT_INJECT_ENABLED = os.getenv(
+    "GUARDRAILS_TSG_REFINE_CONTEXT_INJECT_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAIL_CLASSIFIER_REFINE_ANCHOR_CHARS = int(
+    os.getenv("GUARDRAIL_CLASSIFIER_REFINE_ANCHOR_CHARS", "500")
+)
+
+# Prompt Studio — template create/save (legacy L1+L2, structure, telecom scope).
+# When false, Add Template uses the RoBERTa intent classifier (same as TSG Generate).
+GUARDRAILS_PROMPT_STUDIO_ENABLED = os.getenv(
+    "GUARDRAILS_PROMPT_STUDIO_ENABLED", "false"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_PROMPT_STUDIO_SCOPE_ENABLED = os.getenv(
+    "GUARDRAILS_PROMPT_STUDIO_SCOPE_ENABLED", "false"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_PROMPT_STUDIO_REQUIRE_LAYER2 = os.getenv(
+    "GUARDRAILS_PROMPT_STUDIO_REQUIRE_LAYER2", "false"
+).lower() in ("1", "true", "yes")
+
 GUARDRAILS_SCRIPT_SCOPE_ENABLED = os.getenv(
     "GUARDRAILS_SCRIPT_SCOPE_ENABLED", "true"
 ).lower() in ("1", "true", "yes")
@@ -153,6 +224,25 @@ GUARDRAILS_BD_DATA_QUALITY_MIN_LENGTH_RATIO = float(
 # Minimum peer pattern step count before length comparison applies
 GUARDRAILS_BD_DATA_QUALITY_MIN_PEER_STEPS = int(
     os.getenv("GUARDRAILS_BD_DATA_QUALITY_MIN_PEER_STEPS", "8")
+)
+
+# Scenario relevance (Registration / PDU Session / Handover event presence)
+GUARDRAILS_BD_SCENARIO_RELEVANCE_ENABLED = os.getenv(
+    "GUARDRAILS_BD_SCENARIO_RELEVANCE_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_BD_SCENARIO_RELEVANCE_MODE = os.getenv(
+    "GUARDRAILS_BD_SCENARIO_RELEVANCE_MODE", "advisory"
+).lower().strip()
+
+# Confidence-based context check (aggregate scorecard vs past successful investigations)
+GUARDRAILS_BD_CONTEXT_CONFIDENCE_ENABLED = os.getenv(
+    "GUARDRAILS_BD_CONTEXT_CONFIDENCE_ENABLED", "true"
+).lower() in ("1", "true", "yes")
+GUARDRAILS_BD_CONTEXT_CONFIDENCE_MODE = os.getenv(
+    "GUARDRAILS_BD_CONTEXT_CONFIDENCE_MODE", "advisory"
+).lower().strip()  # advisory | balanced | strict
+GUARDRAILS_BD_CONTEXT_MIN_OVERALL = float(
+    os.getenv("GUARDRAILS_BD_CONTEXT_MIN_OVERALL", "0.70")
 )
 
 # Generated test script traceability (test case ID + title comments)

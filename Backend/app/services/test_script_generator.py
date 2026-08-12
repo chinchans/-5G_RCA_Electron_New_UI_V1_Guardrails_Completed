@@ -10,7 +10,8 @@ import re
 import copy
 from pathlib import Path
 from datetime import datetime
-from openai import AzureOpenAI
+from typing import Optional
+from openai import AzureOpenAI, OpenAI
 from dotenv import load_dotenv
 
 
@@ -18,21 +19,27 @@ class TestScriptGenerator:
     """Main class for test script generation operations."""
     
     def __init__(self):
-        """Initialize the generator with Azure OpenAI client."""
+        """Initialize the generator with Gemini or Azure OpenAI client."""
         load_dotenv()
         
-        # Get Azure OpenAI credentials
+        # Get credentials (prefer GEMINI_API_KEY_LATEST / GEMINI_API_KEY)
+        self.api_key = os.getenv("GEMINI_API_KEY_LATEST") or os.getenv("GEMINI_API_KEY") or os.getenv("AZURE_OPENAI_API_KEY") or os.getenv("AZURE_OPENAI_KEY")
         self.azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-        self.api_key = os.getenv("AZURE_OPENAI_API_KEY")
         self.api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2024-02-01")
-        self.model_name = os.getenv("AZURE_OPENAI_MODEL_NAME", "gpt-4")
         
-        # Initialize OpenAI client
-        self.client = AzureOpenAI(
-            azure_endpoint=self.azure_endpoint,
-            api_key=self.api_key,
-            api_version=self.api_version
-        )
+        if os.getenv("GEMINI_API_KEY_LATEST") or os.getenv("GEMINI_API_KEY"):
+            self.model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+            self.client = OpenAI(
+                api_key=self.api_key,
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+            )
+        else:
+            self.model_name = os.getenv("AZURE_OPENAI_MODEL_NAME", "gpt-4")
+            self.client = AzureOpenAI(
+                azure_endpoint=self.azure_endpoint,
+                api_key=self.api_key,
+                api_version=self.api_version
+            )
         
         # Path for custom templates JSON file (for updated/modified default templates)
         # Use absolute path based on backend directory
@@ -176,6 +183,22 @@ REQUIREMENTS:
 4. **No Duplication**: Avoid repetitive or near-identical test cases
 5. **Exhaustive Coverage**: If one sentence implies multiple scenarios, create separate test cases for each
 6. **Command/Interface Relevance**: Only use commands/interfaces that are actually relevant and applicable to each test scenario, or create appropriate generic steps
+7. **Primary Feature Focus**: Prioritize scenarios for primary feature `{PRIMARY_FEATURE}` when provided, but still include all mandatory scenarios below
+8. **MANDATORY dedicated 5G scenario test cases (ALWAYS include all three — do not skip)**:
+   Create **separate dedicated test cases** (distinct testCaseID + title) for each scenario. Do **not** treat Secondary Node Release / SN Release as Handover.
+
+   **A. Registration Test** (title must include "Registration"):
+   - Registration Request → Registration Accept → Registration Complete (when applicable)
+
+   **B. PDU Session Test** (title must include "PDU Session"):
+   - PDU Session Establishment Request → PDU Session Authentication (if applicable) → PDU Session Accept → User Plane Setup → N3 Tunnel Creation
+   - At minimum MUST explicitly mention **PDU Session Establishment**
+   - Also cover related signals where relevant: SMF, UPF, N11, N4, QoS Flow, Session Release
+
+   **C. Handover / Mobility Test** (title must include "Handover", "Xn Handover", "N2 Handover", or "Inter-gNB"):
+   - Measurement Report → Handover Required → Handover Request → Handover Request Ack → RRC Reconfiguration → Path Switch → Handover Complete
+   - Alternatives: Xn Handover, N2 Handover, Inter-gNB Mobility, Inter-DU, Inter-CU
+   - **NOT acceptable as Handover:** Secondary Node Release / SgNB Release / SN Release alone
 
 COMMAND/INTERFACE SELECTION STRATEGY:
 - **Analyze Before Selection**: Review all available commands/interfaces (if provided) to understand their purpose and functionality
@@ -212,6 +235,7 @@ Return a valid JSON array of test cases where:
 - Commands/actions are integrated inline within descriptive test steps
 - Each test case includes commands Used and verificationMethods arrays
 - Commands/actions are chosen based on test scenario requirements, not arbitrary categories
+- The JSON array **must include at least one dedicated Registration test case, one dedicated PDU Session test case, and one dedicated Handover/mobility test case** with the mandatory signaling events listed above
 
 Do not skip or merge scenarios — extract comprehensive test cases from every relevant aspect of the documentation while making intelligent use of the available commands/interfaces or creating appropriate generic test steps."""
             },
@@ -803,17 +827,41 @@ DATASET:
 '''
                 self.testcases_list = "Test Case"
             elif self.current_prompt_key == "Test Script":
+                cases_blob = (self.testcases_name or "").strip()
+                if not cases_blob:
+                    cases_blob = self.load_latest_test_cases_content() or ""
+                    if cases_blob:
+                        self.testcases_name = cases_blob
+                        self.testcases_list = "Test Case"
+                # Replace unresolved placeholders from the editor/template text.
+                instructions = (selected_prompt or "").replace(
+                    "{self.testcases_name}",
+                    "the SOURCE TEST CASES JSON below" if cases_blob else "the loaded dataset procedures",
+                )
+                cases_section = ""
+                if cases_blob:
+                    # Cap extremely large suites so the prompt stays usable.
+                    max_chars = 120_000
+                    clipped = cases_blob if len(cases_blob) <= max_chars else cases_blob[:max_chars] + "\n... [truncated]"
+                    cases_section = f"""
+SOURCE TEST CASES (MUST implement these — add `# <testCaseID>: <title>` above mapped classes/methods):
+{clipped}
+"""
                 prompt = f'''
 You are an expert in 5G network test automation.
 
-Based ONLY on the following dataset, generate a complete Python test script.
+Based on the following dataset AND source test cases, generate a complete Python test script.
 
 DATASET:
 {text_content}
-
+{cases_section}
 INSTRUCTIONS:
-{selected_prompt}
-Note: Make Sure the generated scripts covers the testcases which are in {self.testcases_name}
+{instructions}
+
+CRITICAL:
+- Cover the SOURCE TEST CASES above (Registration, PDU Session, Handover, and any others present).
+- For each mapped class/method add a single-line traceability comment: # <testCaseID>: <title>
+- Output Python code only (no markdown explanations).
 '''
             else:
                 # For other templates (Testing Strategy, Bug Analysis, etc.), use the template directly with dataset
@@ -840,6 +888,10 @@ DATASET:
             
             # Post-process the response
             processed_response = self.post_process_test_script(response)
+
+            # Remember generated test cases so a subsequent Test Script run can cover them.
+            if self.current_prompt_key == "Test Case" and processed_response:
+                self.set_test_cases_content(processed_response)
             
             if update_progress_callback:
                 update_progress_callback(90)
@@ -872,6 +924,11 @@ DATASET:
             print("=============================")
             
             # Make the API call with proper parameters
+            extra_params = {}
+            if not (os.getenv("GEMINI_API_KEY_LATEST") or os.getenv("GEMINI_API_KEY")):
+                extra_params["frequency_penalty"] = 0.0
+                extra_params["presence_penalty"] = 0.0
+
             response = self.client.chat.completions.create(
                 model=self.model_name,
                 messages=[
@@ -881,8 +938,7 @@ DATASET:
                 temperature=0.7,
                 max_tokens=max_tokens,
                 top_p=1.0,
-                frequency_penalty=0.0,
-                presence_penalty=0.0
+                **extra_params
             )
 
             # Extract and validate the response
@@ -969,33 +1025,56 @@ DATASET:
                 raise Exception("Please enter a new prompt.")
             
             previous_script = previous_response or self.previous_response or ""
+            # Keep refine prompts bounded — full prior JSON + huge max_tokens made follow-ups hang.
+            max_prev_chars = int(os.getenv("TSG_REFINE_PREVIOUS_MAX_CHARS", "20000"))
+            if len(previous_script) > max_prev_chars:
+                previous_script = (
+                    previous_script[:max_prev_chars]
+                    + "\n\n...[previous output truncated for refinement speed]..."
+                )
             dataset_summary = text_content[:1000]  # Use first 1000 chars as summary
+
+            looks_like_test_cases = (
+                '"testCaseID"' in previous_script
+                or '"test_case_id"' in previous_script
+                or previous_script.lstrip().startswith("[")
+            )
+            if looks_like_test_cases:
+                output_rules = """Respond only with a valid JSON array of test cases.
+- Keep existing test cases unless the new prompt asks to change/remove them.
+- Apply only the changes requested in the Current Prompt.
+- Do not wrap the output in markdown code fences.
+- Do not include explanations outside the JSON array."""
+                max_tokens = int(os.getenv("TEST_CASE_REFINE_MAX_OUTPUT_TOKENS", "8192"))
+            else:
+                output_rules = """Respond only with the refined script as valid, runnable Python code.
+- Do not wrap the output in markdown code fences.
+- Do not include explanations or placeholder comments.
+- Ensure the full script parses (no syntax errors)."""
+                max_tokens = int(os.getenv("TEST_SCRIPT_REFINE_MAX_OUTPUT_TOKENS", "8192"))
             
             # Build iterative refinement prompt
             iterative_prompt = f"""
-Using the dataset provided and the current user prompt, generate or update a detailed, well-structured test script. If a previous script is provided, use it as a foundation to refine, expand, or optimize the script based on the new prompt.
+Using the dataset provided and the current user prompt, generate or update a detailed, well-structured test artifact. If a previous response is provided, use it as a foundation to refine, expand, or optimize it based on the new prompt.
 
 Your goals:
-1. Improve the test script with each new prompt.
-2. Retain relevant parts of the previous script.
+1. Improve the output with each new prompt.
+2. Retain relevant parts of the previous response.
 3. Integrate new instructions or validations as requested.
-4. Ensure the final script is complete, readable, and executable.
+4. Ensure the final output is complete and usable.
 
 Inputs:
 - Current Prompt: {new_prompt}
-- Previous Test Script (previous response): {previous_script}
+- Previous Output: {previous_script}
 - Dataset Summary: {dataset_summary}
 
-Respond only with the refined script as valid, runnable Python code.
-- Do not wrap the output in markdown code fences.
-- Do not include explanations or placeholder comments.
-- Ensure the full script parses (no syntax errors).
+{output_rules}
 
-Note: Make Sure you update the script or testcase which is placed in {new_prompt} and don't modify any other thing which is not placed in {new_prompt}
+Note: Make sure you update only what is requested in: {new_prompt}
 """
             
-            # Generate response
-            response = self.generate_response(iterative_prompt)
+            # Generate response with a bounded token budget for faster follow-ups
+            response = self.generate_response(iterative_prompt, max_tokens=max_tokens)
             
             # Update previous response
             self.previous_response = response
@@ -1101,6 +1180,31 @@ Note: Make Sure you update the script or testcase which is placed in {new_prompt
         self.login_credentials_combo = login_credentials
         self.access_mode_combo = access_mode
         self.language_combo = language
+
+    def set_test_cases_content(self, content: Optional[str]) -> None:
+        """Store generated test-case JSON/text for Test Script generation."""
+        text = (content or "").strip()
+        if text:
+            self.testcases_name = text
+            self.testcases_list = "Test Case"
+        else:
+            self.testcases_name = None
+
+    @staticmethod
+    def load_latest_test_cases_content(output_dir: Optional[str] = None) -> Optional[str]:
+        """Load the most recent saved test_case_*.json from the test suite folder."""
+        backend_dir = Path(__file__).resolve().parent.parent.parent
+        base = Path(output_dir) if output_dir else (backend_dir / "resources" / "TestScriptGenerator")
+        case_dir = base / "test_suite" / "test_case"
+        if not case_dir.is_dir():
+            return None
+        files = sorted(case_dir.glob("test_case_*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+        if not files:
+            return None
+        try:
+            return files[0].read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            return None
     
     def get_prompts(self):
         """Get available prompts."""

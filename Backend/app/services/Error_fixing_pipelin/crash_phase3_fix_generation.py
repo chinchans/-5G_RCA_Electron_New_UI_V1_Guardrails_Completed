@@ -13,7 +13,7 @@ import json
 import logging
 from typing import List, Dict, Any, Optional
 from datetime import datetime
-from openai import AzureOpenAI
+from openai import AzureOpenAI, OpenAI
 
 # Load environment variables
 try:
@@ -50,30 +50,33 @@ class CrashPhase3FixGeneration:
         logger.info("✅ Crash Phase 3 Fix Generation initialized")
     
     def _setup_azure_client(self):
-        """Setup Azure OpenAI client"""
-        logger.info("🔧 Setting up Azure OpenAI client...")
+        """Setup OpenAI / Gemini or Azure OpenAI client"""
+        logger.info("🔧 Setting up LLM client...")
         
-        # Prefer AZURE_OPENAI_API_KEY, but also accept AZURE_OPENAI_KEY for backward compatibility
-        api_key = os.getenv('AZURE_OPENAI_API_KEY') or os.getenv('AZURE_OPENAI_KEY')
+        # Prefer GEMINI_API_KEY_LATEST / GEMINI_API_KEY, fallback to AZURE_OPENAI_API_KEY
+        api_key = os.getenv('GEMINI_API_KEY_LATEST') or os.getenv('GEMINI_API_KEY') or os.getenv('AZURE_OPENAI_API_KEY') or os.getenv('AZURE_OPENAI_KEY')
         endpoint = os.getenv('AZURE_OPENAI_ENDPOINT')
         
         missing_vars = []
         if not api_key:
-            missing_vars.append('AZURE_OPENAI_API_KEY (or AZURE_OPENAI_KEY for backward compatibility)')
-        if not endpoint:
-            missing_vars.append('AZURE_OPENAI_ENDPOINT')
+            missing_vars.append('GEMINI_API_KEY_LATEST (or GEMINI_API_KEY / AZURE_OPENAI_API_KEY)')
         
         if missing_vars:
             raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
         
-        # Initialize Azure OpenAI client
-        self.azure_client = AzureOpenAI(
-            api_key=api_key,
-            api_version="2024-05-01-preview",
-            azure_endpoint=endpoint
-        )
-        
-        logger.info("✅ Azure OpenAI client initialized")
+        if os.getenv('GEMINI_API_KEY_LATEST') or os.getenv('GEMINI_API_KEY'):
+            self.azure_client = OpenAI(
+                api_key=api_key,
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+            )
+            logger.info("✅ Gemini client initialized successfully")
+        else:
+            self.azure_client = AzureOpenAI(
+                api_key=api_key,
+                api_version="2024-05-01-preview",
+                azure_endpoint=endpoint
+            )
+            logger.info("✅ Azure OpenAI client initialized")
     
     def process_crash_fix_generation(self, 
                                      phase2_graded_file: str,

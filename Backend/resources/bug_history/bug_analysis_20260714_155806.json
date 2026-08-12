@@ -1,0 +1,64 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[GTPU] try to get a gtp-u not existing output\"\n\nAdditional context:\n- This error indicates an attempt to access a non-existent GTP-U tunnel output for UE ID 904, which could disrupt user plane data forwarding.\n- Followed by \"[NR_MAC] Unknown RNTI 0388 in PUCCH UCI\" indicating MAC layer issues with the UE RNTI.\n- Also, \"[HW] Lost socket\" suggests a hardware or communication interface failure.\n\nThese combined errors, especially the GTP-U tunnel access failure and lost socket, are critical as they can prevent proper data forwarding and system operation.",
+  "log_file": "success_du_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-test",
+  "timestamp": "2026-07-14T15:58:06.970884",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[GTPU] try to get a gtp-u not existing output\"\n\nAdditional context:\n- This error indicates an attempt to access a non-existent GTP-U tunnel output for UE ID 904, which could disrupt user plane data forwarding.\n- Followed by \"[NR_MAC] Unknown RNTI 0388 in PUCCH UCI\" indicating MAC layer issues with the UE RNTI.\n- Also, \"[HW] Lost socket\" suggests a hardware or communication interface failure.\n\nThese combined errors, especially the GTP-U tunnel access failure and lost socket, are critical as they can prevent proper data forwarding and system operation.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "ethtool -i eth0",
+            "hint": "Verify driver and firmware info for the network interface to check hardware/socket driver status"
+          },
+          {
+            "command": "ss -s | grep -i gtp",
+            "hint": "Check current GTP-U socket states and resource usage to identify socket leaks or failures"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test basic connectivity to AMF to ensure network path is operational"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ethtool -i eth0",
+            "explanation": "Verify driver and firmware info for the network interface to check hardware/socket driver status"
+          },
+          {
+            "command": "ss -s | grep -i gtp",
+            "explanation": "Check current GTP-U socket states and resource usage to identify socket leaks or failures"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test basic connectivity to AMF to ensure network path is operational"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    },
+    "timestamp": "2026-07-14T15:58:05.626931"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260714_155806.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

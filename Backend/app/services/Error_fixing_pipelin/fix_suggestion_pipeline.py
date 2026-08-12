@@ -16,7 +16,7 @@ import hashlib
 import logging
 from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass
-from openai import AzureOpenAI
+from openai import AzureOpenAI, OpenAI
 
 # Load environment variables from .env file
 try:
@@ -943,34 +943,37 @@ class FixSuggestionPipeline:
         return None
     
     def _setup_azure_client(self):
-        """Setup Azure OpenAI client"""
-        logger.info("🔧 Setting up Azure OpenAI client...")
+        """Setup OpenAI / Gemini or Azure OpenAI client"""
+        logger.info("🔧 Setting up LLM client...")
         
-        # Prefer AZURE_OPENAI_API_KEY, but also accept AZURE_OPENAI_KEY for backward compatibility
-        api_key = os.getenv('AZURE_OPENAI_API_KEY') or os.getenv('AZURE_OPENAI_KEY')
+        # Prefer GEMINI_API_KEY_LATEST / GEMINI_API_KEY, fallback to AZURE_OPENAI_API_KEY
+        api_key = os.getenv('GEMINI_API_KEY_LATEST') or os.getenv('GEMINI_API_KEY') or os.getenv('AZURE_OPENAI_API_KEY') or os.getenv('AZURE_OPENAI_KEY')
         endpoint = os.getenv('AZURE_OPENAI_ENDPOINT')
         
         missing_vars = []
         if not api_key:
-            missing_vars.append('AZURE_OPENAI_API_KEY (or AZURE_OPENAI_KEY for backward compatibility)')
-        if not endpoint:
-            missing_vars.append('AZURE_OPENAI_ENDPOINT')
+            missing_vars.append('GEMINI_API_KEY_LATEST (or GEMINI_API_KEY / AZURE_OPENAI_API_KEY)')
         
         if missing_vars:
             raise ValueError(f"Missing required environment variables: {missing_vars}")
         
-        # Initialize Azure OpenAI client
-        self.azure_client = AzureOpenAI(
-            api_key=api_key,
-            api_version="2024-05-01-preview",
-            azure_endpoint=endpoint
-        )
-        
-        # Use hardcoded deployment name
-        self.model = "gpt-4o-mini"
-        
-        logger.info("✅ Azure OpenAI client initialized successfully")
-        logger.info(f"📦 Using deployment: {self.model}")
+        if os.getenv('GEMINI_API_KEY_LATEST') or os.getenv('GEMINI_API_KEY'):
+            self.azure_client = OpenAI(
+                api_key=api_key,
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+            )
+            self.model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+            logger.info("✅ Gemini client initialized successfully")
+            logger.info(f"📦 Using model: {self.model}")
+        else:
+            self.azure_client = AzureOpenAI(
+                api_key=api_key,
+                api_version="2024-05-01-preview",
+                azure_endpoint=endpoint
+            )
+            self.model = os.getenv("AZURE_OPENAI_MODEL_NAME", "gpt-4o-mini")
+            logger.info("✅ Azure OpenAI client initialized successfully")
+            logger.info(f"📦 Using deployment: {self.model}")  
     
     def _smart_truncate_code(self, code_body: str) -> str:
         """

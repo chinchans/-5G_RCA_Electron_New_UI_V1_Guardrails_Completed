@@ -79,21 +79,32 @@ _OAI_BUILD_LINE_RE = re.compile(
     r"gmake\[|Running \"cmake|build have failed|compilation of",
     re.IGNORECASE,
 )
+# Strong compile/cmake markers only — nr-softmodem also appears on live gNB startup.
 _OAI_BUILD_STRONG_MARKERS: Tuple[re.Pattern[str], ...] = (
     re.compile(r"Will compile gNB", re.IGNORECASE),
     re.compile(r"OPENAIR_DIR", re.IGNORECASE),
     re.compile(r"build_oai|cmake_targets", re.IGNORECASE),
-    re.compile(r"nr-softmodem|nr-cuup", re.IGNORECASE),
-    re.compile(r"openair[23]/", re.IGNORECASE),
+    re.compile(r"CMakeFiles|gmake\[|Running \"cmake|build have failed", re.IGNORECASE),
+    re.compile(r"compilation of", re.IGNORECASE),
+)
+
+# Untagged DU/gNB console stats — common in success_du_gnb.log captures.
+_OAI_RUNTIME_STATS_RE = re.compile(
+    r"UE\s+RNTI\b|dlsch_rounds|ulsch_rounds|average RSRP|pucch0_DTX|"
+    r"LCID\s+\d+\s*:|in-sync PH\b|CMDLINE:.*nr-(?:softmodem|uesoftmodem)|"
+    r"DL frequency\b|TYPE <CTRL-C>|Initialized RAN|ngran_DU\b",
+    re.IGNORECASE,
 )
 
 _COMPONENT_PATTERNS: Dict[str, re.Pattern[str]] = {
     "gNB_RAN": re.compile(
-        r"\bgNB\b|\beNB\b|GNB_APP|MAC_GNB|PHY_ENB|TASK_RRC_GNB|openair",
+        r"\bgNB\b|\beNB\b|GNB_APP|MAC_GNB|PHY_ENB|TASK_RRC_GNB|openair|"
+        r"nr-softmodem|nr-cuup|ngran_DU",
         re.IGNORECASE,
     ),
     "OAI_build": re.compile(
-        r"Will compile gNB|OPENAIR_DIR|build_oai|cmake_targets|nr-softmodem|nr-cuup",
+        r"Will compile gNB|OPENAIR_DIR|build_oai|cmake_targets|"
+        r"CMakeFiles|build have failed|compilation of",
         re.IGNORECASE,
     ),
     "UE": re.compile(
@@ -105,7 +116,8 @@ _COMPONENT_PATTERNS: Dict[str, re.Pattern[str]] = {
         re.IGNORECASE,
     ),
     "RAN_stack": re.compile(
-        r"\b(ITTI|nfapi|MAC|PHY|RRC|PDCP|RLC)\b|candidate_ra|RAPROC|PRACH",
+        r"\b(ITTI|nfapi|MAC|PHY|RRC|PDCP|RLC|F1AP)\b|candidate_ra|RAPROC|PRACH|"
+        r"dlsch_rounds|ulsch_rounds",
         re.IGNORECASE,
     ),
 }
@@ -166,11 +178,20 @@ def _build_log_signal(text: str, build_line_hits: int, total_lines: int) -> floa
 
 
 def _is_oai_build_log(structural_meta: Dict[str, Any]) -> bool:
-    return (
-        structural_meta.get("fingerprint") == "oai_build"
-        or structural_meta.get("build_signal", 0) >= 0.35
-        or structural_meta.get("build_line_ratio", 0) >= 0.08
-    )
+    """True only for cmake/compile captures — not live nr-softmodem runs."""
+    build_signal = float(structural_meta.get("build_signal", 0) or 0)
+    build_line_ratio = float(structural_meta.get("build_line_ratio", 0) or 0)
+    oai_line_ratio = float(structural_meta.get("oai_line_ratio", 0) or 0)
+    stats_line_ratio = float(structural_meta.get("stats_line_ratio", 0) or 0)
+    runtime_heavy = (oai_line_ratio + stats_line_ratio) >= 0.12
+    if structural_meta.get("fingerprint") == "oai_build" and not runtime_heavy:
+        return True
+    # Dense compile/cmake lines, or strong markers with little runtime content.
+    if build_line_ratio >= 0.08:
+        return True
+    if build_signal >= 0.55 and not runtime_heavy:
+        return True
+    return False
 
 
 @dataclass
@@ -275,6 +296,7 @@ def _compute_structural(lines: List[str]) -> Tuple[float, Dict[str, Any]]:
 
     timestamped_hits = 0
     plain_hits = 0
+    stats_hits = 0
     layer_tag_hits = 0
     timestamp_hits = 0
     itti_hits = 0
@@ -291,6 +313,9 @@ def _compute_structural(lines: List[str]) -> Tuple[float, Dict[str, Any]]:
             timestamped_hits += 1
         elif _OAI_PLAIN_LINE_RE.search(clean):
             plain_hits += 1
+        elif _OAI_RUNTIME_STATS_RE.search(clean):
+            # DU/UE console stats without [LAYER] tags still count as OAI runtime.
+            stats_hits += 1
         if _OAI_BUILD_LINE_RE.search(clean):
             build_line_hits += 1
 
@@ -313,6 +338,7 @@ def _compute_structural(lines: List[str]) -> Tuple[float, Dict[str, Any]]:
     joined = "\n".join(lines)
     timestamped_ratio = _ratio(timestamped_hits, total)
     plain_line_ratio = _ratio(plain_hits, total)
+    stats_line_ratio = _ratio(stats_hits, total)
     build_line_ratio = _ratio(build_line_hits, total)
     oai_line_ratio = _ratio(timestamped_hits + plain_hits, total)
     layer_ratio = _ratio(layer_tag_hits, total)
@@ -324,19 +350,22 @@ def _compute_structural(lines: List[str]) -> Tuple[float, Dict[str, Any]]:
     build_signal = _build_log_signal(joined, build_line_hits, total)
 
     runtime_structural = (
-        0.30 * timestamped_ratio
-        + 0.35 * plain_line_ratio
-        + 0.20 * layer_ratio
-        + 0.15 * framework_signal
+        0.28 * timestamped_ratio
+        + 0.30 * plain_line_ratio
+        + 0.18 * stats_line_ratio
+        + 0.14 * layer_ratio
+        + 0.10 * framework_signal
     )
     build_structural = 0.55 * build_line_ratio + 0.45 * build_signal
     structural = max(runtime_structural, build_structural)
 
-    if build_signal >= 0.35 or build_line_ratio >= 0.08:
+    runtime_ratio = oai_line_ratio + stats_line_ratio
+    # Prefer runtime fingerprint when layer/stats content dominates over cmake noise.
+    if build_line_ratio >= 0.08 or (build_signal >= 0.55 and runtime_ratio < 0.08):
         fingerprint = "oai_build"
-    elif timestamped_ratio >= plain_line_ratio:
+    elif timestamped_ratio >= plain_line_ratio and timestamped_ratio > 0:
         fingerprint = "oai_timestamped"
-    elif plain_line_ratio > 0:
+    elif plain_line_ratio > 0 or stats_line_ratio > 0:
         fingerprint = "oai_plain"
     else:
         fingerprint = "unknown"
@@ -346,6 +375,7 @@ def _compute_structural(lines: List[str]) -> Tuple[float, Dict[str, Any]]:
         "oai_line_ratio": round(oai_line_ratio, 4),
         "timestamped_line_ratio": round(timestamped_ratio, 4),
         "plain_line_ratio": round(plain_line_ratio, 4),
+        "stats_line_ratio": round(stats_line_ratio, 4),
         "build_line_ratio": round(build_line_ratio, 4),
         "build_signal": round(build_signal, 4),
         "layer_tag_ratio": round(layer_ratio, 4),
@@ -362,17 +392,19 @@ def _compute_structural(lines: List[str]) -> Tuple[float, Dict[str, Any]]:
 
 
 def _detect_profile(structural_meta: Dict[str, Any], components: Set[str]) -> str:
-    if _is_oai_build_log(structural_meta) or "OAI_build" in components:
+    if _is_oai_build_log(structural_meta) and "OAI_build" in components:
         return "oai_build"
     layers = set(structural_meta.get("layers_seen") or [])
+    if "F1AP" in layers or "GNB_APP" in layers or "gNB_RAN" in components:
+        return "oai_gnb"
     if "NGAP" in layers or "5G_Core" in components:
         return "oai_core"
-    if "GNB_APP" in layers or "gNB_RAN" in components:
-        return "oai_gnb"
-    if "UE" in components or any(layer in layers for layer in ("MAC", "NR_MAC", "PHY")):
+    if "UE" in components or any(layer in layers for layer in ("MAC", "NR_MAC", "PHY", "NAS")):
         return "oai_ue"
-    if structural_meta.get("oai_line_ratio", 0) >= 0.1:
+    if structural_meta.get("oai_line_ratio", 0) >= 0.1 or structural_meta.get("stats_line_ratio", 0) >= 0.1:
         return "oai_generic"
+    if "OAI_build" in components:
+        return "oai_build"
     return "unknown"
 
 
@@ -459,12 +491,14 @@ def _evaluate_lines(
     # --- Check 1: Structural OAI fingerprint (first gate) ---
     plain_line_ratio = structural_meta.get("plain_line_ratio", 0)
     oai_line_ratio = structural_meta.get("oai_line_ratio", 0)
+    stats_line_ratio = structural_meta.get("stats_line_ratio", 0)
     layer_tag_ratio = structural_meta.get("layer_tag_ratio", 0)
     build_line_ratio = structural_meta.get("build_line_ratio", 0)
     build_signal = structural_meta.get("build_signal", 0)
     is_build_log = _is_oai_build_log(structural_meta)
     has_oai_fingerprint = (
         oai_line_ratio >= 0.08
+        or stats_line_ratio >= 0.10
         or plain_line_ratio >= 0.10
         or layer_tag_ratio >= 0.12
         or build_line_ratio >= 0.05
@@ -477,6 +511,7 @@ def _evaluate_lines(
         or structural_meta.get("gnb_framework_hits", 0) > 0
         or structural_meta.get("timestamp_ratio", 0) >= 0.20
         or plain_line_ratio >= 0.10
+        or stats_line_ratio >= 0.10
         or build_signal >= 0.25
         or build_line_ratio >= 0.05
     )
@@ -544,7 +579,11 @@ def _evaluate_lines(
         )
 
     # --- Check 4: Overall confidence ---
-    overall_pass = telecom_relevance >= min_overall
+    # When OAI structure + component/signaling evidence already pass, the hybrid
+    # score is secondary — do not warn on borderline threshold misses (e.g. DU
+    # runtime logs dense with untagged PHY/MAC stats).
+    strong_domain_evidence = structural_pass and co_evidence_pass and negative_pass
+    overall_pass = telecom_relevance >= min_overall or strong_domain_evidence
     checks.append(
         {
             "id": "telecom_relevance_score",
@@ -557,7 +596,7 @@ def _evaluate_lines(
             ),
         }
     )
-    if structural_pass and not overall_pass:
+    if structural_pass and telecom_relevance < min_overall and not strong_domain_evidence:
         messages.append(
             f"Overall context score {telecom_relevance * 100:.0f}% is below "
             f"{min_overall * 100:.0f}% threshold. RCA may be unreliable."
@@ -573,23 +612,27 @@ def _evaluate_lines(
 
     if mode == "advisory":
         blocked = False
-        warned = bool(messages) or not overall_pass
-        passed = not hard_block or True  # advisory never blocks
-        if hard_block or not overall_pass:
+        warned = bool(messages) or (telecom_relevance < min_overall and not strong_domain_evidence)
+        passed = True  # advisory never blocks
+        if hard_block or (telecom_relevance < min_overall and not strong_domain_evidence):
             warned = True
     elif mode == "strict":
-        blocked = hard_block or not overall_pass or not co_evidence_pass
+        blocked = hard_block or (telecom_relevance < min_overall and not strong_domain_evidence) or not co_evidence_pass
         warned = False
         passed = not blocked
     else:  # balanced
         # Do not block valid OAI runtime or OAI build logs that pass structural fingerprint
         blocked = hard_block or (
             structural_pass
-            and not overall_pass
+            and telecom_relevance < min_overall
+            and not strong_domain_evidence
             and plain_line_ratio < 0.08
             and not is_build_log
         )
-        warned = (not blocked) and (not co_evidence_pass or not overall_pass)
+        warned = (not blocked) and (
+            not co_evidence_pass
+            or (telecom_relevance < min_overall and not strong_domain_evidence)
+        )
         passed = not blocked
 
     if blocked and not messages:

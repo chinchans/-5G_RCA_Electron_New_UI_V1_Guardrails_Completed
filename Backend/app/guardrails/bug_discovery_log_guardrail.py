@@ -1,4 +1,4 @@
-"""Input guardrails for Bug Discovery log files (telecom domain + historical + data quality + security)."""
+"""Input guardrails for Bug Discovery log files (telecom domain + historical + data quality + scenario relevance + context confidence + security)."""
 
 from __future__ import annotations
 
@@ -10,11 +10,18 @@ from fastapi import HTTPException
 from app.guardrails.config import (
     GUARDRAILS_BUG_DISCOVERY_INPUT_ENABLED,
     GUARDRAILS_BUG_DISCOVERY_LOG_ENABLED,
+    GUARDRAILS_BD_CONTEXT_CONFIDENCE_ENABLED,
     GUARDRAILS_BD_DATA_QUALITY_ENABLED,
     GUARDRAILS_BD_HISTORICAL_PATTERN_ENABLED,
+    GUARDRAILS_BD_SCENARIO_RELEVANCE_ENABLED,
     GUARDRAILS_BD_TELECOM_DOMAIN_ENABLED,
     GUARDRAILS_ENABLED,
+    MAX_SCAN_CHARS,
     MAX_UPLOAD_BYTES,
+)
+from app.guardrails.context_confidence_check import (
+    ContextConfidenceResult,
+    compute_context_confidence,
 )
 from app.guardrails.data_quality_check import DataQualityResult, check_data_quality
 from app.guardrails.historical_pattern_check import (
@@ -22,9 +29,14 @@ from app.guardrails.historical_pattern_check import (
     check_historical_pattern,
 )
 from app.guardrails.input_guardrail import GuardrailVerdict, get_spec_intel_guardrail
+from app.guardrails.scenario_relevance_check import (
+    ScenarioRelevanceResult,
+    check_scenario_relevance,
+)
 from app.guardrails.telecom_domain_check import TelecomDomainResult, check_telecom_domain
 
 _LOG_EXTENSIONS = frozenset({".log", ".txt"})
+_DEFAULT_BD_SCENARIO = "attach"
 
 
 def _resolve_log_path(log_file_path: str) -> Path:
@@ -118,6 +130,64 @@ def _data_quality_blocked_verdict(
     )
 
 
+def _scenario_blocked_verdict(
+    scenario: ScenarioRelevanceResult,
+    quality: Optional[TelecomDomainResult] = None,
+    historical: Optional[HistoricalPatternResult] = None,
+    data_quality: Optional[DataQualityResult] = None,
+) -> GuardrailVerdict:
+    reasons = list(scenario.messages) or [
+        "Expected PDU Session Setup events/Registration logs not found."
+    ]
+    layers: Dict[str, Any] = {
+        "scenario_relevance": scenario.to_dict(),
+        "security_skipped": True,
+    }
+    if quality is not None:
+        layers["telecom_domain"] = quality.to_dict()
+    if historical is not None:
+        layers["historical_pattern"] = historical.to_dict()
+    if data_quality is not None:
+        layers["data_quality"] = data_quality.to_dict()
+    return GuardrailVerdict(
+        passed=False,
+        blocked=True,
+        reasons=reasons,
+        layers=layers,
+    )
+
+
+def _context_blocked_verdict(
+    context: ContextConfidenceResult,
+    quality: Optional[TelecomDomainResult] = None,
+    historical: Optional[HistoricalPatternResult] = None,
+    data_quality: Optional[DataQualityResult] = None,
+    scenario: Optional[ScenarioRelevanceResult] = None,
+) -> GuardrailVerdict:
+    reasons = list(context.messages) or [
+        f"Overall context score {int(round(context.overall * 100))}% is below "
+        f"{int(round(context.threshold * 100))}% threshold."
+    ]
+    layers: Dict[str, Any] = {
+        "context_confidence": context.to_dict(),
+        "security_skipped": True,
+    }
+    if quality is not None:
+        layers["telecom_domain"] = quality.to_dict()
+    if historical is not None:
+        layers["historical_pattern"] = historical.to_dict()
+    if data_quality is not None:
+        layers["data_quality"] = data_quality.to_dict()
+    if scenario is not None:
+        layers["scenario_relevance"] = scenario.to_dict()
+    return GuardrailVerdict(
+        passed=False,
+        blocked=True,
+        reasons=reasons,
+        layers=layers,
+    )
+
+
 def _merge_historical_into_verdict(
     verdict: GuardrailVerdict,
     historical: HistoricalPatternResult,
@@ -176,6 +246,64 @@ def _merge_data_quality_into_verdict(
     )
 
 
+def _merge_scenario_into_verdict(
+    verdict: GuardrailVerdict,
+    scenario: ScenarioRelevanceResult,
+) -> GuardrailVerdict:
+    layers = dict(verdict.layers or {})
+    layers["scenario_relevance"] = scenario.to_dict()
+
+    if scenario.blocked:
+        merged_reasons = list(dict.fromkeys(list(verdict.reasons) + list(scenario.messages)))
+        return GuardrailVerdict(
+            passed=False,
+            blocked=True,
+            reasons=merged_reasons,
+            scan=verdict.scan,
+            layers=layers,
+        )
+
+    if scenario.warned and scenario.messages:
+        layers["scenario_relevance_warnings"] = scenario.messages
+
+    return GuardrailVerdict(
+        passed=verdict.passed and not verdict.blocked,
+        blocked=verdict.blocked,
+        reasons=verdict.reasons,
+        scan=verdict.scan,
+        layers=layers,
+    )
+
+
+def _merge_context_into_verdict(
+    verdict: GuardrailVerdict,
+    context: ContextConfidenceResult,
+) -> GuardrailVerdict:
+    layers = dict(verdict.layers or {})
+    layers["context_confidence"] = context.to_dict()
+
+    if context.blocked:
+        merged_reasons = list(dict.fromkeys(list(verdict.reasons) + list(context.messages)))
+        return GuardrailVerdict(
+            passed=False,
+            blocked=True,
+            reasons=merged_reasons,
+            scan=verdict.scan,
+            layers=layers,
+        )
+
+    if context.warned and context.messages:
+        layers["context_confidence_warnings"] = context.messages
+
+    return GuardrailVerdict(
+        passed=verdict.passed and not verdict.blocked,
+        blocked=verdict.blocked,
+        reasons=verdict.reasons,
+        scan=verdict.scan,
+        layers=layers,
+    )
+
+
 def _merge_quality_into_verdict(
     verdict: GuardrailVerdict,
     quality: TelecomDomainResult,
@@ -205,12 +333,23 @@ def _merge_quality_into_verdict(
     )
 
 
-def validate_bug_discovery_log_file(log_file_path: str) -> GuardrailVerdict:
-    """Run telecom domain → historical pattern → data quality → optional security."""
+def validate_bug_discovery_log_file(
+    log_file_path: str,
+    *,
+    reported_scenario: Optional[str] = None,
+) -> GuardrailVerdict:
+    """Run telecom → historical → data quality → scenario → context confidence → optional security."""
     if not GUARDRAILS_ENABLED or not GUARDRAILS_BUG_DISCOVERY_LOG_ENABLED:
         return GuardrailVerdict(passed=True, blocked=False, layers={"enabled": False})
 
     path = _resolve_log_path(log_file_path)
+    scenario_label = (reported_scenario or "").strip() or _DEFAULT_BD_SCENARIO
+
+    try:
+        raw = path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        raw = ""
+    log_sample = raw if len(raw) <= MAX_SCAN_CHARS else raw[:MAX_SCAN_CHARS]
 
     quality: Optional[TelecomDomainResult] = None
     if GUARDRAILS_BD_TELECOM_DOMAIN_ENABLED:
@@ -230,6 +369,27 @@ def validate_bug_discovery_log_file(log_file_path: str) -> GuardrailVerdict:
         if data_quality.blocked:
             return _data_quality_blocked_verdict(data_quality, quality, historical)
 
+    scenario: Optional[ScenarioRelevanceResult] = None
+    if GUARDRAILS_BD_SCENARIO_RELEVANCE_ENABLED:
+        scenario = check_scenario_relevance(path, reported_scenario=scenario_label)
+        if scenario.blocked:
+            return _scenario_blocked_verdict(scenario, quality, historical, data_quality)
+
+    context: Optional[ContextConfidenceResult] = None
+    if GUARDRAILS_BD_CONTEXT_CONFIDENCE_ENABLED:
+        context = compute_context_confidence(
+            telecom=quality,
+            historical=historical,
+            data_quality=data_quality,
+            scenario=scenario,
+            filename=path.name,
+            log_text=log_sample,
+        )
+        if context.blocked:
+            return _context_blocked_verdict(
+                context, quality, historical, data_quality, scenario
+            )
+
     if GUARDRAILS_BUG_DISCOVERY_INPUT_ENABLED:
         guard = get_spec_intel_guardrail()
         verdict = guard.scan_file(path, context="bug_discovery_log")
@@ -248,6 +408,12 @@ def validate_bug_discovery_log_file(log_file_path: str) -> GuardrailVerdict:
 
     if data_quality is not None:
         verdict = _merge_data_quality_into_verdict(verdict, data_quality)
+
+    if scenario is not None:
+        verdict = _merge_scenario_into_verdict(verdict, scenario)
+
+    if context is not None:
+        verdict = _merge_context_into_verdict(verdict, context)
 
     return verdict
 
@@ -306,6 +472,44 @@ def raise_if_bug_log_blocked(verdict: GuardrailVerdict) -> None:
                 "guardrails": verdict.to_dict(),
                 "data_quality": data_quality,
                 "findings": data_quality.get("checks") or [],
+            },
+        )
+
+    is_scenario_block = bool(layers.get("scenario_relevance", {}).get("blocked"))
+    if is_scenario_block:
+        scenario = layers.get("scenario_relevance") or {}
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "error": "log_blocked_by_scenario_relevance",
+                "message": (
+                    (scenario.get("messages") or [None])[0]
+                    or (
+                        "Expected PDU Session Setup events/Registration logs not found."
+                    )
+                ),
+                "reasons": verdict.reasons,
+                "guardrails": verdict.to_dict(),
+                "scenario_relevance": scenario,
+                "findings": scenario.get("checks") or [],
+            },
+        )
+
+    is_context_block = bool(layers.get("context_confidence", {}).get("blocked"))
+    if is_context_block:
+        context = layers.get("context_confidence") or {}
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "error": "log_blocked_by_context_confidence",
+                "message": (
+                    (context.get("messages") or [None])[0]
+                    or "Overall context score is below the configured threshold."
+                ),
+                "reasons": verdict.reasons,
+                "guardrails": verdict.to_dict(),
+                "context_confidence": context,
+                "findings": context.get("scorecard") or [],
             },
         )
 

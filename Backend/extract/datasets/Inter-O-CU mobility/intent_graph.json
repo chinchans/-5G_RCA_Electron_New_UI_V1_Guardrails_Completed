@@ -1,0 +1,157 @@
+{
+  "version": 3,
+  "subsection": "Inter-O-CU mobility",
+  "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/extract/datasets/Inter-O-CU mobility",
+  "nodes": [
+    {
+      "id": "subsection:inter_o_cu_mobility",
+      "type": "oran_subsection",
+      "label": "Inter-O-CU mobility",
+      "mandatory": false,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "inter-o-cu mobility"
+      ]
+    },
+    {
+      "id": "clause:10_5_1",
+      "type": "clause",
+      "label": "Clause 10.5.1",
+      "mandatory": false,
+      "clause_ids": [
+        "10.5.1"
+      ],
+      "references": [
+        "10.5.1\tEN-DC The Secondary Node Change procedure is initiated either by MN or SN and used to transfer a UE context from a source SN to a target SN and to change the SCG configuration in UE from one SN"
+      ],
+      "keywords": [
+        "10.5.1",
+        "clause 10.5.1"
+      ]
+    },
+    {
+      "id": "clause:8_9_4",
+      "type": "clause",
+      "label": "Clause 8.9.4",
+      "mandatory": false,
+      "clause_ids": [
+        "8.9.4"
+      ],
+      "references": [
+        "8.9.4\tInter-gNB handover involving gNB-CU-UP change Figure 8.9.4-1 shows the procedure used for inter-gNB handover involving gNB-CU-UP change. Overall inter-gNB handover procedure is specified in TS 3"
+      ],
+      "keywords": [
+        "8.9.4",
+        "clause 8.9.4"
+      ]
+    },
+    {
+      "id": "clause:8_9_5",
+      "type": "clause",
+      "label": "Clause 8.9.5",
+      "mandatory": false,
+      "clause_ids": [
+        "8.9.5"
+      ],
+      "references": [
+        "8.9.5\tChange of gNB-CU-UP Figure 8.9.5-1 shows the procedure used for the change of gNB-CU-UP within a gNB.  Figure 8.9.5-1: Change of gNB-CU-UP 1.\tChange of gNB-CU-UP is triggered in gNB-CU-CP based"
+      ],
+      "keywords": [
+        "8.9.5",
+        "clause 8.9.5"
+      ]
+    },
+    {
+      "id": "procedure:lte_attach",
+      "type": "procedure",
+      "label": "LTE Attach",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "lte attach",
+        "e-utran initial attach"
+      ]
+    },
+    {
+      "id": "procedure:pdu_session",
+      "type": "procedure",
+      "label": "PDU Session Establishment",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "pdu session establishment",
+        "pdu session",
+        "pdu session establishment request",
+        "pdu session establishment accept",
+        "pdu session resource setup",
+        "pdu session setup"
+      ]
+    },
+    {
+      "id": "procedure:handover",
+      "type": "procedure",
+      "label": "Handover / Mobility",
+      "mandatory": true,
+      "clause_ids": [
+        "10.5.1",
+        "8.9.4",
+        "8.9.5."
+      ],
+      "references": [],
+      "keywords": [
+        "handover / mobility",
+        "handover",
+        "handover request",
+        "handover command",
+        "handover complete",
+        "path switch",
+        "mobility",
+        "xn handover",
+        "ng handover"
+      ]
+    },
+    {
+      "id": "kpi:sn_addition_success_rate",
+      "type": "kpi",
+      "label": "Secondary node addition success rate",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "secondary node addition success rate",
+        "secondary node addition",
+        "sgnb addition"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "subsection:inter_o_cu_mobility",
+      "target": "procedure:lte_attach",
+      "relation": "requires"
+    },
+    {
+      "source": "subsection:inter_o_cu_mobility",
+      "target": "procedure:pdu_session",
+      "relation": "requires"
+    },
+    {
+      "source": "subsection:inter_o_cu_mobility",
+      "target": "procedure:handover",
+      "relation": "requires"
+    },
+    {
+      "source": "procedure:handover",
+      "target": "clause:10_5_1",
+      "relation": "grounded_in"
+    },
+    {
+      "source": "procedure:handover",
+      "target": "clause:8_9_4",
+      "relation": "grounded_in"
+    }
+  ]
+}

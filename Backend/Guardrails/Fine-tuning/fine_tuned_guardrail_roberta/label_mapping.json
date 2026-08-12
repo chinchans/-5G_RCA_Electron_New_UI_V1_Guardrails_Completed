@@ -1,0 +1,12 @@
+{
+  "label2id": {
+    "TELECOM_WORKBENCH": 0,
+    "OUT_OF_SCOPE": 1,
+    "PROMPT_INJECTION": 2
+  },
+  "id2label": {
+    "0": "TELECOM_WORKBENCH",
+    "1": "OUT_OF_SCOPE",
+    "2": "PROMPT_INJECTION"
+  }
+}

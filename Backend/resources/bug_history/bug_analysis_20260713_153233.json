@@ -1,0 +1,64 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[HW]   Lost socket\"\n\nThis is the most critical error found in the log. It indicates a hardware-related socket loss which could prevent system operation or communication. There is no additional stack trace or function call information provided.",
+  "log_file": "success_du_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-13T15:32:33.566954",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[HW]   Lost socket\"\n\nThis is the most critical error found in the log. It indicates a hardware-related socket loss which could prevent system operation or communication. There is no additional stack trace or function call information provided.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "ethtool eth0",
+            "hint": "Verify physical link status and hardware interface details on the network device"
+          },
+          {
+            "command": "dmesg | grep -i socket",
+            "hint": "Check kernel logs for socket-related hardware errors or driver messages"
+          },
+          {
+            "command": "lsof -n | grep TCP | wc -l",
+            "hint": "Monitor current open socket descriptors to detect resource exhaustion or leaks"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ethtool eth0",
+            "explanation": "Verify physical link status and hardware interface details on the network device"
+          },
+          {
+            "command": "dmesg | grep -i socket",
+            "explanation": "Check kernel logs for socket-related hardware errors or driver messages"
+          },
+          {
+            "command": "lsof -n | grep TCP | wc -l",
+            "explanation": "Monitor current open socket descriptors to detect resource exhaustion or leaks"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    },
+    "timestamp": "2026-07-13T15:32:32.561715"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260713_153233.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

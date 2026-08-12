@@ -1,0 +1,649 @@
+tcs@01HW2243898:~/venu/CU_TESTING_Intent1/OAI_Testing/cmake_targets/ran_build/build$ sudo ./nr-softmodem -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf --telnetsrv --telnetsrv.shrmod ci | sudo tee cu.log
+[LOADER] library libtelnetsrv_gnb.so is not loaded: libtelnetsrv_gnb.so: cannot open shared object file: No such file or directory
+CMDLINE: "./nr-softmodem" "-O" "../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf" "--telnetsrv" "--telnetsrv.shrmod" "ci" 
+[CONFIG] function config_libconfig_init returned 0
+[TELNETSRV] Telnet server: module 0 = telnet added to shell
+[TELNETSRV] Telnet server: module 1 = softmodem added to shell
+[TELNETSRV] Telnet server: module 2 = loader added to shell
+[TELNETSRV] Telnet server: module 3 = measur added to shell
+policy set to other, priority 0
+Error 3: No such process trying to get nice value of thread 3019896384 
+[TELNETSRV] 
+Initializing telnet server...
+[TELNETSRV] couldn't find add_phy_cmds for module phy 
+[TELNETSRV] Telnet server: module 4 = ci added to shell
+[UTIL]   running in SA mode (no --phy-test, --do-ra, --nsa option present)
+[OPT]   OPT disabled
+[HW]   Version: Branch: ltm_feature Abrev. Hash: 9739f80 Date: Mon Aug 3 17:56:12 2026 +0530
+[GNB_APP]   Initialized RAN Context: RC.nb_nr_inst = 1, RC.nb_nr_macrlc_inst = 0, RC.nb_nr_L1_inst = 0, RC.nb_RU = 0, RC.nb_nr_CC[0] = 0
+[GNB_APP]   F1AP: gNB_CU_id[0] 0
+[GNB_APP]   F1AP: gNB_CU_name[0] gNB-Eurecom-CU
+[GNB_APP]   SDAP layer is disabled
+[GNB_APP]   Data Radio Bearer count 1
+[GNB_APP]   Parsed IPv4 address for NG AMF: 10.138.77.108
+[UTIL]   threadCreate() for TASK_SCTP: creating thread with affinity ffffffff, priority 50
+[X2AP]   X2AP is disabled.
+[UTIL]   threadCreate() for TASK_NGAP: creating thread with affinity ffffffff, priority 50
+[UTIL]   threadCreate() for TASK_RRC_GNB: creating thread with affinity ffffffff, priority 50
+[NGAP]   Starting NGAP layer
+[GTPU]   Configuring GTPu
+[NGAP]   Registered new gNB[0] and macro gNB id 0
+[NGAP]   [gNB 0] check the amf registration state
+[GTPU]   SA mode 
+[GTPU]   Configuring GTPu address : 10.138.77.108, port : 2152
+[GTPU]   Initializing UDP for local address 10.138.77.108 with port 2152
+[GTPU]   Created gtpu instance id: 95
+[NR_RRC]   Entering main loop of NR_RRC message task
+[UTIL]   threadCreate() for TASK_GNB_APP: creating thread with affinity ffffffff, priority 50
+[NR_RRC]   Accepting new CU-UP ID 0 name gNB-Eurecom-CU (assoc_id -1)
+[UTIL]   threadCreate() for TASK_GTPV1_U: creating thread with affinity ffffffff, priority 50
+[UTIL]   threadCreate() for TASK_CU_F1: creating thread with affinity ffffffff, priority 50
+[NGAP]   Send NGSetupRequest to AMF
+[NGAP]   0 -> 00000000
+[UTIL]   threadCreate() for time source realtime: creating thread with affinity ffffffff, priority 2
+[F1AP]   Starting F1AP at CU
+[UTIL]   time manager configuration: [time source: reatime] [mode: standalone] [server IP: 127.0.0.1} [server port: 7374] (server IP/port not used)
+[F1AP]   F1AP_CU_SCTP_REQ(create socket) for 127.0.0.4 len 10
+[GTPU]   Initializing UDP for local address 127.0.0.4 with port 2152
+[GTPU]   Created gtpu instance id: 97
+[NGAP]   Served GUAMIs for AMF (no name) (assoc_id=15):
+[NGAP]    GUAMI:
+[NGAP]      PLMN: MCC=208, MNC=95
+[NGAP]      AMF Region ID: 128
+[NGAP]      AMF Set ID: 1
+[NGAP]      AMF Pointer: 0
+[NGAP]   Supported PLMN 0: MCC=208 MNC=95
+[NGAP]   Supported slice (PLMN 0): SST=0x80 SD=00128
+[NGAP]   Supported slice (PLMN 0): SST=0x01 SD=255255255
+[NGAP]   Supported slice (PLMN 0): SST=0x82 SD=00130
+[NGAP]   Received NGSetupResponse from AMF
+[GNB_APP]   [gNB 0] Received NGAP_REGISTER_GNB_CNF: associated AMF 1
+[F1AP]   CU Task Received SCTP_NEW_ASSOCIATION_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   CU Task Received SCTP_NEW_ASSOCIATION_RESP for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU_handle_F1_SETUP_REQUEST
+[NR_RRC]   Received F1 Setup Request from gNB_DU 3584 (gNB-Eurecom-DU) on assoc_id 17
+[NR_RRC]   Accepting DU 3584 (gNB-Eurecom-DU), sending F1 Setup Response
+[NR_RRC]   DU uses RRC version 18.6.0
+[F1AP]   CU Task Received F1AP_SETUP_RESP for instance 0: sending SCTP message via assoc_id 17
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   [SCTP 17] CU_handle_gNB_DU_CONFIGURATION_UPDATE
+[F1AP]   Sending F1AP_GNB_DU_CONFIGURATION_UPDATE ITTI message 
+[NR_RRC]   cell PLMN 208.95 Cell ID 1 is in service
+[F1AP]   CU Task Received F1AP_GNB_DU_CONFIGURATION_UPDATE_ACKNOWLEDGE for instance 0: sending SCTP message via assoc_id 17
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[NR_RRC]   Decoding CCCH: RNTI 4bf8, payload_size 6
+[NR_RRC]   [--] (cellID 0, UE ID 1 RNTI 4bf8) Create UE context: CU UE ID 1 DU UE ID 19448 (rnti: 4bf8, random ue id 638abb54b000000)
+[RRC]   activate SRB 1 of UE 1
+[NR_RRC]   [DL] (cellID 1, UE ID 1 RNTI 4bf8) Send RRC Setup
+[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE for instance 0: sending SCTP message via assoc_id 17
+[F1AP]   CU send DL_RRC_MESSAGE_TRANSFER 
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU_handle_UL_RRC_MESSAGE_TRANSFER 
+[F1AP]   UL RRC MESSAGE for SRB 1 in DCCH 
+[F1AP]   [UE 1] calling pdcp_data_ind for SRB 1 with size 39 (DCCH) 
+[NR_RRC]   [UL] (cellID 1, UE ID 1 RNTI 4bf8) Received RRCSetupComplete (RRC_CONNECTED reached)
+[NGAP]   Selected PLMN in the NG Initial UE Message: MCC 208, MNC 95
+[NGAP]   UE 1: Chose AMF 'OAI-AMF' (assoc_id 15) through selected PLMN MCC=208 MNC=95
+[NGAP]   Create UE context (ID 1) for AMF 'OAI-AMF' (assoc_id 15)
+[NR_RRC]   [DL] (cellID 1, UE ID 1 RNTI 4bf8) Send DL Information Transfer [42 bytes]
+[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE for instance 0: sending SCTP message via assoc_id 17
+[F1AP]   CU send DL_RRC_MESSAGE_TRANSFER 
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU_handle_UL_RRC_MESSAGE_TRANSFER 
+[F1AP]   UL RRC MESSAGE for SRB 1 in DCCH 
+[F1AP]   [UE 1] calling pdcp_data_ind for SRB 1 with size 30 (DCCH) 
+[NR_RRC]   [UL] (cellID 1, UE ID 1 RNTI 4bf8) Received RRC UL Information Transfer [24 bytes]
+[NR_RRC]   [DL] (cellID 1, UE ID 1 RNTI 4bf8) Send DL Information Transfer [21 bytes]
+[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE for instance 0: sending SCTP message via assoc_id 17
+[F1AP]   CU send DL_RRC_MESSAGE_TRANSFER 
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU_handle_UL_RRC_MESSAGE_TRANSFER 
+[F1AP]   UL RRC MESSAGE for SRB 1 in DCCH 
+[F1AP]   [UE 1] calling pdcp_data_ind for SRB 1 with size 66 (DCCH) 
+[NR_RRC]   [UL] (cellID 1, UE ID 1 RNTI 4bf8) Received RRC UL Information Transfer [60 bytes]
+[NGAP]   NGAP_FIND_PROTOCOLIE_BY_ID ie is NULL (searching for ie: 110)
+[NGAP]   NGAP_FIND_PROTOCOLIE_BY_ID ie is NULL (searching for ie: 71)
+[NGAP]   AllowedNSSAI.list.count 3
+[NGAP]   NGAP_FIND_PROTOCOLIE_BY_ID ie is NULL (searching for ie: 36)
+[NR_RRC]   [--] (cellID 1, UE ID 1 RNTI 4bf8) Selected security algorithms: ciphering 0, integrity 2
+[NR_RRC]   [UE 4bf8] Saved security key 21
+[NR_RRC]   UE 1 Logical Channel DL-DCCH, Generate SecurityModeCommand (bytes 3)
+[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE for instance 0: sending SCTP message via assoc_id 17
+[F1AP]   CU send DL_RRC_MESSAGE_TRANSFER 
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU_handle_UL_RRC_MESSAGE_TRANSFER 
+[F1AP]   UL RRC MESSAGE for SRB 1 in DCCH 
+[F1AP]   [UE 1] calling pdcp_data_ind for SRB 1 with size 8 (DCCH) 
+[NR_RRC]   [UL] (cellID 1, UE ID 1 RNTI 4bf8) Received Security Mode Complete
+[NR_RRC]   UE 1: Logical Channel DL-DCCH, Generate NR UECapabilityEnquiry (bytes 8, xid 1)
+[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE for instance 0: sending SCTP message via assoc_id 17
+[F1AP]   CU send DL_RRC_MESSAGE_TRANSFER 
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU_handle_UL_RRC_MESSAGE_TRANSFER 
+[F1AP]   UL RRC MESSAGE for SRB 1 in DCCH 
+[F1AP]   [UE 1] calling pdcp_data_ind for SRB 1 with size 20 (DCCH) 
+[NR_RRC]   [UL] (cellID 1, UE ID 1 RNTI 4bf8) Received UE capabilities
+[NR_RRC]   Send message to ngap: NGAP_UE_CAPABILITIES_IND
+[NR_RRC]   [DL] (cellID 1, UE ID 1 RNTI 4bf8) Send DL Information Transfer [70 bytes]
+[NR_RRC]   Send message to sctp: NGAP_InitialContextSetupResponse
+[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE for instance 0: sending SCTP message via assoc_id 17
+[F1AP]   CU send DL_RRC_MESSAGE_TRANSFER 
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU_handle_UL_RRC_MESSAGE_TRANSFER 
+[F1AP]   UL RRC MESSAGE for SRB 1 in DCCH 
+[F1AP]   [UE 1] calling pdcp_data_ind for SRB 1 with size 19 (DCCH) 
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU_handle_UL_RRC_MESSAGE_TRANSFER 
+[F1AP]   UL RRC MESSAGE for SRB 1 in DCCH 
+[F1AP]   [UE 1] calling pdcp_data_ind for SRB 1 with size 48 (DCCH) 
+[NR_RRC]   [UL] (cellID 1, UE ID 1 RNTI 4bf8) Received RRC UL Information Transfer [13 bytes]
+[NR_RRC]   [UL] (cellID 1, UE ID 1 RNTI 4bf8) Received RRC UL Information Transfer [42 bytes]
+[NGAP]   PDUSESSIONSetup initiating message
+[NR_RRC]   UE 1: received PDU Session Resource Setup Request
+[NR_RRC]   Bearer Context Setup: PDU Session ID=10, incoming TEID=0x0000005b, Addr=10.244.0.66
+[NR_RRC]   UE 1: configure DRB ID 1 for PDU session ID 10
+[NR_RRC]   [--] (cellID 1, UE ID 1 RNTI 4bf8) selecting CU-UP ID 0 based on exact NSSAI match (128:0x000080)
+[RRC]   UE 1 associating to CU-UP assoc_id -1 out of 1 CU-UPs
+[E1AP]   UE 1: add PDU session ID 10 (1 bearers)
+[GTPU]   [95] Created tunnel for UE ID 1, teid for incoming: 42ff7357, teid for outgoing 5b to remote IPv4: 10.244.0.66, IPv6 ::
+[PDCP]   added drb 1 to UE ID 1
+[SDAP]   Default DRB for the created SDAP entity: 1 
+[GTPU]   [97] Created tunnel for UE ID 1, teid for incoming: 7682da8e, teid for outgoing ffff to remote IPv4: 0.0.0.0, IPv6 ::
+[RRC]   activate SRB 2 of UE 1
+[RRC]   UE 1 trigger UE context setup request with 1 DRBs
+[F1AP]   CU Task Received F1AP_UE_CONTEXT_SETUP_REQ for instance 0: sending SCTP message via assoc_id 17
+TYPE <CTRL-C> TO TERMINATE
+<F1AP-PDU>
+    <initiatingMessage>
+        <procedureCode>5</procedureCode>
+        <criticality><reject/></criticality>
+        <value>
+            <UEContextSetupRequest>
+                <protocolIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>40</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <GNB-CU-UE-F1AP-ID>1</GNB-CU-UE-F1AP-ID>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>41</id>
+                        <criticality><ignore/></criticality>
+                        <value>
+                            <GNB-DU-UE-F1AP-ID>19448</GNB-DU-UE-F1AP-ID>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>63</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <NRCGI>
+                                <pLMN-Identity>02 F8 59</pLMN-Identity>
+                                <nRCellIdentity>
+                                    000000000000000000000000000000000001
+                                </nRCellIdentity>
+                            </NRCGI>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>107</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <ServCellIndex>0</ServCellIndex>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>9</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <CUtoDURRCInformation>
+                                <uE-CapabilityRAT-ContainerList>10 14 00 00 00 00 00 00 00 00 00 00</uE-CapabilityRAT-ContainerList>
+                            </CUtoDURRCInformation>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>74</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <SRBs-ToBeSetup-List>
+                                <ProtocolIE-SingleContainer>
+                                    <id>73</id>
+                                    <criticality><reject/></criticality>
+                                    <value>
+                                        <SRBs-ToBeSetup-Item>
+                                            <sRBID>2</sRBID>
+                                        </SRBs-ToBeSetup-Item>
+                                    </value>
+                                </ProtocolIE-SingleContainer>
+                            </SRBs-ToBeSetup-List>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>35</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <DRBs-ToBeSetup-List>
+                                <ProtocolIE-SingleContainer>
+                                    <id>34</id>
+                                    <criticality><reject/></criticality>
+                                    <value>
+                                        <DRBs-ToBeSetup-Item>
+                                            <dRBID>1</dRBID>
+                                            <qoSInformation>
+                                                <choice-extension>
+                                                    <id>164</id>
+                                                    <criticality><reject/></criticality>
+                                                    <value>
+                                                        <DRB-Information>
+                                                            <dRB-QoS>
+                                                                <qoS-Characteristics>
+                                                                    <non-Dynamic-5QI>
+                                                                        <fiveQI>9</fiveQI>
+                                                                    </non-Dynamic-5QI>
+                                                                </qoS-Characteristics>
+                                                                <nGRANallocationRetentionPriority>
+                                                                    <priorityLevel>1</priorityLevel>
+                                                                    <pre-emptionCapability><shall-not-trigger-pre-emption/></pre-emptionCapability>
+                                                                    <pre-emptionVulnerability><not-pre-emptable/></pre-emptionVulnerability>
+                                                                </nGRANallocationRetentionPriority>
+                                                            </dRB-QoS>
+                                                            <sNSSAI>
+                                                                <sST>80</sST>
+                                                                <sD>00 00 80</sD>
+                                                            </sNSSAI>
+                                                            <flows-Mapped-To-DRB-List>
+                                                                <Flows-Mapped-To-DRB-Item>
+                                                                    <qoSFlowIdentifier>6</qoSFlowIdentifier>
+                                                                    <qoSFlowLevelQoSParameters>
+                                                                        <qoS-Characteristics>
+                                                                            <non-Dynamic-5QI>
+                                                                                <fiveQI>9</fiveQI>
+                                                                            </non-Dynamic-5QI>
+                                                                        </qoS-Characteristics>
+                                                                        <nGRANallocationRetentionPriority>
+                                                                            <priorityLevel>1</priorityLevel>
+                                                                            <pre-emptionCapability><shall-not-trigger-pre-emption/></pre-emptionCapability>
+                                                                            <pre-emptionVulnerability><not-pre-emptable/></pre-emptionVulnerability>
+                                                                        </nGRANallocationRetentionPriority>
+                                                                    </qoSFlowLevelQoSParameters>
+                                                                </Flows-Mapped-To-DRB-Item>
+                                                            </flows-Mapped-To-DRB-List>
+                                                        </DRB-Information>
+                                                    </value>
+                                                </choice-extension>
+                                            </qoSInformation>
+                                            <uLUPTNLInformation-ToBeSetup-List>
+                                                <ULUPTNLInformation-ToBeSetup-Item>
+                                                    <uLUPTNLInformation>
+                                                        <gTPTunnel>
+                                                            <transportLayerAddress>
+                                                                01111111000000000000000000000100
+                                                            </transportLayerAddress>
+                                                            <gTP-TEID>76 82 DA 8E</gTP-TEID>
+                                                        </gTPTunnel>
+                                                    </uLUPTNLInformation>
+                                                </ULUPTNLInformation-ToBeSetup-Item>
+                                            </uLUPTNLInformation-ToBeSetup-List>
+                                            <rLCMode><rlc-am/></rLCMode>
+                                            <iE-Extensions>
+                                                <DRBs-ToBeSetup-ItemExtIEs>
+                                                    <id>161</id>
+                                                    <criticality><ignore/></criticality>
+                                                    <extensionValue>
+                                                        <PDCPSNLength><eighteen-bits/></PDCPSNLength>
+                                                    </extensionValue>
+                                                </DRBs-ToBeSetup-ItemExtIEs>
+                                                <DRBs-ToBeSetup-ItemExtIEs>
+                                                    <id>192</id>
+                                                    <criticality><ignore/></criticality>
+                                                    <extensionValue>
+                                                        <PDCPSNLength><eighteen-bits/></PDCPSNLength>
+                                                    </extensionValue>
+                                                </DRBs-ToBeSetup-ItemExtIEs>
+                                            </iE-Extensions>
+                                        </DRBs-ToBeSetup-Item>
+                                    </value>
+                                </ProtocolIE-SingleContainer>
+                            </DRBs-ToBeSetup-List>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>158</id>
+                        <criticality><ignore/></criticality>
+                        <value>
+                            <BitRate>1000000000</BitRate>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                </protocolIEs>
+            </UEContextSetupRequest>
+        </value>
+    </initiatingMessage>
+</F1AP-PDU>
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[RRC]   UE 4bf8 replacing existing CellGroupConfig with new one received from DU
+[E1AP]   UE 1: updating PDU session ID 10 (1 bearers)
+[PDCP]   DRB 1 re-established
+[GTPU]   [97] Tunnel Outgoing TEID updated to 26b71eda and address to 300007f
+[NR_RRC]   [DL] (cellID 1, UE ID 1 RNTI 4bf8) Generate RRCReconfiguration (bytes 309, xid 3)
+[RRC]   UE 1: PDU session ID 10 modified 1 bearers
+[F1AP]   CU Task Received F1AP_DL_RRC_MESSAGE for instance 0: sending SCTP message via assoc_id 17
+[F1AP]   CU send DL_RRC_MESSAGE_TRANSFER 
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU_handle_UL_RRC_MESSAGE_TRANSFER 
+[F1AP]   UL RRC MESSAGE for SRB 1 in DCCH 
+[F1AP]   [UE 1] calling pdcp_data_ind for SRB 1 with size 8 (DCCH) 
+[NR_RRC]   [UL] (cellID 1, UE ID 1 RNTI 4bf8) Received RRCReconfigurationComplete
+[NR_RRC]   PDU Session Setup Response: ID=10, outgoing TEID=0x42ff7357, Addr=10.138.77.108
+[NR_RRC]   NGAP_PDUSESSION_SETUP_RESP: sending the message
+[F1AP]   CU Task Received F1AP_UE_CONTEXT_MODIFICATION_REQ for instance 0: sending SCTP message via assoc_id 17
+[NGAP]   Encoded PDU Session Transfer (10): TEID=0x42ff7357, Addr=10.138.77.108
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU Task Received SCTP_NEW_ASSOCIATION_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   CU Task Received SCTP_NEW_ASSOCIATION_RESP for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU_handle_F1_SETUP_REQUEST
+[NR_RRC]   Received F1 Setup Request from gNB_DU 3585 (gNB-Eurecom-DU) on assoc_id 19
+[NR_RRC]   Accepting DU 3585 (gNB-Eurecom-DU), sending F1 Setup Response
+[NR_RRC]   DU uses RRC version 18.6.0
+[F1AP]   CU Task Received F1AP_SETUP_RESP for instance 0: sending SCTP message via assoc_id 19
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   [SCTP 19] CU_handle_gNB_DU_CONFIGURATION_UPDATE
+[F1AP]   Sending F1AP_GNB_DU_CONFIGURATION_UPDATE ITTI message 
+[NR_RRC]   cell PLMN 208.95 Cell ID 2 is in service
+[F1AP]   CU Task Received F1AP_GNB_DU_CONFIGURATION_UPDATE_ACKNOWLEDGE for instance 0: sending SCTP message via assoc_id 19
+[TELNETSRV] Telnet client connected....
+[NR_RRC]   Handover triggered for UE 1/RNTI 4bf8 towards DU 3585/assoc_id 19/PCI 1
+[F1AP]   CU Task Received F1AP_UE_CONTEXT_SETUP_REQ for instance 0: sending SCTP message via assoc_id 19
+<F1AP-PDU>
+    <initiatingMessage>
+        <procedureCode>5</procedureCode>
+        <criticality><reject/></criticality>
+        <value>
+            <UEContextSetupRequest>
+                <protocolIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>40</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <GNB-CU-UE-F1AP-ID>1</GNB-CU-UE-F1AP-ID>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>63</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <NRCGI>
+                                <pLMN-Identity>02 F8 59</pLMN-Identity>
+                                <nRCellIdentity>
+                                    000000000000000000000000000000000010
+                                </nRCellIdentity>
+                            </NRCGI>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>107</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <ServCellIndex>0</ServCellIndex>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>9</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <CUtoDURRCInformation>
+                                <iE-Extensions>
+                                    <CUtoDURRCInformation-ExtIEs>
+                                        <id>119</id>
+                                        <criticality><ignore/></criticality>
+                                        <extensionValue>
+                                            <HandoverPreparationInformation>00 20 28 00 00 00 00 00 00 00 00 00 00</HandoverPreparationInformation>
+                                        </extensionValue>
+                                    </CUtoDURRCInformation-ExtIEs>
+                                </iE-Extensions>
+                            </CUtoDURRCInformation>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>74</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <SRBs-ToBeSetup-List>
+                                <ProtocolIE-SingleContainer>
+                                    <id>73</id>
+                                    <criticality><reject/></criticality>
+                                    <value>
+                                        <SRBs-ToBeSetup-Item>
+                                            <sRBID>1</sRBID>
+                                        </SRBs-ToBeSetup-Item>
+                                    </value>
+                                </ProtocolIE-SingleContainer>
+                                <ProtocolIE-SingleContainer>
+                                    <id>73</id>
+                                    <criticality><reject/></criticality>
+                                    <value>
+                                        <SRBs-ToBeSetup-Item>
+                                            <sRBID>2</sRBID>
+                                        </SRBs-ToBeSetup-Item>
+                                    </value>
+                                </ProtocolIE-SingleContainer>
+                            </SRBs-ToBeSetup-List>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>35</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <DRBs-ToBeSetup-List>
+                                <ProtocolIE-SingleContainer>
+                                    <id>34</id>
+                                    <criticality><reject/></criticality>
+                                    <value>
+                                        <DRBs-ToBeSetup-Item>
+                                            <dRBID>1</dRBID>
+                                            <qoSInformation>
+                                                <choice-extension>
+                                                    <id>164</id>
+                                                    <criticality><reject/></criticality>
+                                                    <value>
+                                                        <DRB-Information>
+                                                            <dRB-QoS>
+                                                                <qoS-Characteristics>
+                                                                    <non-Dynamic-5QI>
+                                                                        <fiveQI>9</fiveQI>
+                                                                    </non-Dynamic-5QI>
+                                                                </qoS-Characteristics>
+                                                                <nGRANallocationRetentionPriority>
+                                                                    <priorityLevel>1</priorityLevel>
+                                                                    <pre-emptionCapability><shall-not-trigger-pre-emption/></pre-emptionCapability>
+                                                                    <pre-emptionVulnerability><not-pre-emptable/></pre-emptionVulnerability>
+                                                                </nGRANallocationRetentionPriority>
+                                                            </dRB-QoS>
+                                                            <sNSSAI>
+                                                                <sST>80</sST>
+                                                                <sD>00 00 80</sD>
+                                                            </sNSSAI>
+                                                            <flows-Mapped-To-DRB-List>
+                                                                <Flows-Mapped-To-DRB-Item>
+                                                                    <qoSFlowIdentifier>6</qoSFlowIdentifier>
+                                                                    <qoSFlowLevelQoSParameters>
+                                                                        <qoS-Characteristics>
+                                                                            <non-Dynamic-5QI>
+                                                                                <fiveQI>9</fiveQI>
+                                                                            </non-Dynamic-5QI>
+                                                                        </qoS-Characteristics>
+                                                                        <nGRANallocationRetentionPriority>
+                                                                            <priorityLevel>1</priorityLevel>
+                                                                            <pre-emptionCapability><shall-not-trigger-pre-emption/></pre-emptionCapability>
+                                                                            <pre-emptionVulnerability><not-pre-emptable/></pre-emptionVulnerability>
+                                                                        </nGRANallocationRetentionPriority>
+                                                                    </qoSFlowLevelQoSParameters>
+                                                                </Flows-Mapped-To-DRB-Item>
+                                                            </flows-Mapped-To-DRB-List>
+                                                        </DRB-Information>
+                                                    </value>
+                                                </choice-extension>
+                                            </qoSInformation>
+                                            <uLUPTNLInformation-ToBeSetup-List>
+                                                <ULUPTNLInformation-ToBeSetup-Item>
+                                                    <uLUPTNLInformation>
+                                                        <gTPTunnel>
+                                                            <transportLayerAddress>
+                                                                01111111000000000000000000000100
+                                                            </transportLayerAddress>
+                                                            <gTP-TEID>76 82 DA 8E</gTP-TEID>
+                                                        </gTPTunnel>
+                                                    </uLUPTNLInformation>
+                                                </ULUPTNLInformation-ToBeSetup-Item>
+                                            </uLUPTNLInformation-ToBeSetup-List>
+                                            <rLCMode><rlc-am/></rLCMode>
+                                            <iE-Extensions>
+                                                <DRBs-ToBeSetup-ItemExtIEs>
+                                                    <id>161</id>
+                                                    <criticality><ignore/></criticality>
+                                                    <extensionValue>
+                                                        <PDCPSNLength><eighteen-bits/></PDCPSNLength>
+                                                    </extensionValue>
+                                                </DRBs-ToBeSetup-ItemExtIEs>
+                                                <DRBs-ToBeSetup-ItemExtIEs>
+                                                    <id>192</id>
+                                                    <criticality><ignore/></criticality>
+                                                    <extensionValue>
+                                                        <PDCPSNLength><eighteen-bits/></PDCPSNLength>
+                                                    </extensionValue>
+                                                </DRBs-ToBeSetup-ItemExtIEs>
+                                            </iE-Extensions>
+                                        </DRBs-ToBeSetup-Item>
+                                    </value>
+                                </ProtocolIE-SingleContainer>
+                            </DRBs-ToBeSetup-List>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>158</id>
+                        <criticality><ignore/></criticality>
+                        <value>
+                            <BitRate>1000000000</BitRate>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>720</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <LTMInformation-Setup>
+                                <lTMIndicator><true/></lTMIndicator>
+                                <referenceConfiguration>
+                                    <referenceConfiguration>
+                                        5C 04 B0 01 11 7A EC 70 10 61 F0 00 B0 91 11 7A 
+                                        EC 70 10 65 E0 00 B1 C0 32 08 6F C6 1A 0F 05 08 
+                                        0F 80 40 8D 07 81 00 00 82 4B 30 32 A0 10 3F FF 
+                                        E0 00 00 00 20 00 0E E2 00 40 00 01 01 06 E2 88 
+                                        40 00 10 02 CA 00 00 90 40 00 08 81 26 02 46 AA 
+                                        49 A8 00 02 00 40 40 00 80 0D 01 00 13 B6 49 18 
+                                        0E E0 3B 3C 4D 5E 68 00 00 14 D0 80 10 00 12 C0 
+                                        61 06 01 60 E0 C1 0E 00 18 94 0E 00 00 10 AF 7A 
+                                        00 80 00 80 00 03 20 00 A0 00 32 A0 A0 0C 44 01 
+                                        50 00 00 00 00 14 20 08 00 01 45 08 08 00 2C 60
+                                    </referenceConfiguration>
+                                </referenceConfiguration>
+                            </LTMInformation-Setup>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>721</id>
+                        <criticality><reject/></criticality>
+                        <value>
+                            <LTMConfigurationIDMappingList>
+                                <LTMConfigurationIDMapping-Item>
+                                    <lTMCellID>
+                                        <pLMN-Identity>02 F8 59</pLMN-Identity>
+                                        <nRCellIdentity>
+                                            000000000000000000000000000000000010
+                                        </nRCellIdentity>
+                                    </lTMCellID>
+                                    <lTMConfigurationID>1</lTMConfigurationID>
+                                </LTMConfigurationIDMapping-Item>
+                            </LTMConfigurationIDMappingList>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                    <UEContextSetupRequestIEs>
+                        <id>726</id>
+                        <criticality><ignore/></criticality>
+                        <value>
+                            <EarlySyncInformation-Request>
+                                <requestforRACHConfiguration><true/></requestforRACHConfiguration>
+                                <lTMgNB-DU-IDsList>
+                                    <LTMgNB-DU-IDs-Item>
+                                        <lTMgNB-DU-ID>3584</lTMgNB-DU-ID>
+                                    </LTMgNB-DU-IDs-Item>
+                                    <LTMgNB-DU-IDs-Item>
+                                        <lTMgNB-DU-ID>3585</lTMgNB-DU-ID>
+                                    </LTMgNB-DU-IDs-Item>
+                                </lTMgNB-DU-IDsList>
+                            </EarlySyncInformation-Request>
+                        </value>
+                    </UEContextSetupRequestIEs>
+                </protocolIEs>
+            </UEContextSetupRequest>
+        </value>
+    </initiatingMessage>
+</F1AP-PDU>
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[RRC]   UE 4bf8 replacing existing CellGroupConfig with new one received from DU
+[E1AP]   UE 1: updating PDU session ID 10 (1 bearers)
+[PDCP]   DRB 1 re-established
+[GTPU]   [97] Tunnel Outgoing TEID updated to b43f06a2 and address to 500007f
+[NR_RRC]   HO acknowledged: Send reconfiguration for UE 1/RNTI 4bf8...
+[F1AP]   CU Task Received F1AP_UE_CONTEXT_MODIFICATION_REQ for instance 0: sending SCTP message via assoc_id 17
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[PDCP]   SRB 2 re-established
+[RRC]   UE 1: PDU session ID 10 modified 1 bearers
+[NR_RRC]   UE 1 handover: update RNTI from 4bf8 to 4168
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU_handle_UL_RRC_MESSAGE_TRANSFER 
+[F1AP]   UL RRC MESSAGE for SRB 1 in DCCH 
+[F1AP]   [UE 1] calling pdcp_data_ind for SRB 1 with size 8 (DCCH) 
+[NR_RRC]   [UL] (cellID 2, UE ID 1 RNTI 4168) Received RRCReconfigurationComplete
+[NR_RRC]   handover for UE 1/RNTI 4168 complete!
+[NR_RRC]   UE 1 Handover: trigger release on DU assoc_id 17
+[F1AP]   CU Task Received F1AP_UE_CONTEXT_RELEASE_CMD for instance 0: sending SCTP message via assoc_id 17
+[F1AP]   CU Task Received F1AP_UE_CONTEXT_MODIFICATION_REQ for instance 0: sending SCTP message via assoc_id 19
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+[F1AP]   CU Task Received SCTP_DATA_IND for instance 0: sending SCTP message via assoc_id 0
+[F1AP]   Calling handler with instance 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

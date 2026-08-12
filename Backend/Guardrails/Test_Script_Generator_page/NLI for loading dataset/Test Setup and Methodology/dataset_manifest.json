@@ -1,0 +1,67 @@
+{
+  "validated": true,
+  "pipeline": [
+    "input_guardrails",
+    "extraction",
+    "dataset_files_on_disk",
+    "schema_validation",
+    "hierarchy_validation",
+    "source_traceability_validation",
+    "nli_groundedness_validation",
+    "save_dataset",
+    "ready_for_test_script_generator"
+  ],
+  "output_guardrails": {
+    "passed": true,
+    "blocked": false,
+    "schema_validation": {
+      "step": "schema_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "hierarchy_validation": {
+      "step": "hierarchy_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": []
+    },
+    "source_traceability_validation": {
+      "step": "source_traceability_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": [
+        "Section title not found near start of extracted section text"
+      ]
+    },
+    "nli_groundedness_validation": {
+      "step": "nli_groundedness_validation",
+      "passed": true,
+      "errors": [],
+      "warnings": [
+        "No clause-grounded claims found for NLI verification"
+      ],
+      "details": {
+        "available": true,
+        "pairs_checked": 0,
+        "passed": true,
+        "contradictions": [],
+        "warnings": [
+          "No clause-grounded claims found for NLI verification"
+        ],
+        "errors": [],
+        "load_error": null,
+        "metadata": {}
+      }
+    }
+  },
+  "metadata": {
+    "source_file_id": "7addaeef-f34d-417f-9874-5e2484fd3ba0.docx",
+    "source_document_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/resources/uploaded_docs/7addaeef-f34d-417f-9874-5e2484fd3ba0.docx",
+    "section": "RIC-enabled end-to-end use case test",
+    "subsection": "Test Setup and Methodology",
+    "safe_subsection": "Test Setup and Methodology",
+    "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI/Backend/extract/datasets/Test Setup and Methodology"
+  },
+  "ready_for_test_script_generator": true
+}

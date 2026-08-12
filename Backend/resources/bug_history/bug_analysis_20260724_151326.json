@@ -1,0 +1,64 @@
+{
+  "error_message": "ERROR MESSAGE:  \nSegmentation fault in rrc_gNB_send_NGAP_NAS_FIRST_REQ at /home/tcs/jayasvi/cu/openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c:173  \nDetails: Attempt to access rrcSetupComplete->dedicatedNAS_Message.size where rrcSetupComplete is NULL (0x0), causing a crash.  \nStack trace:  \n#0  rrc_gNB_send_NGAP_NAS_FIRST_REQ (rrc=0x555558ef62a0, UE=0x7fff8c075030, rrcSetupComplete=0x0) at rrc_gNB_NGAP.c:173  \n#1  rrc_gNB_decode_dcch at rrc_gNB.c:1711  \n#2  rrc_gnb_task at rrc_gNB.c:2526  \n#3  start_thread at pthread_create.c:442  \n#",
+  "log_file": "new_seg_fault.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/new_seg_fault.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-test",
+  "timestamp": "2026-07-24T15:13:26.806023",
+  "results": {
+    "error_message": "ERROR MESSAGE:  \nSegmentation fault in rrc_gNB_send_NGAP_NAS_FIRST_REQ at /home/tcs/jayasvi/cu/openairinterface5g/openair2/RRC/NR/rrc_gNB_NGAP.c:173  \nDetails: Attempt to access rrcSetupComplete->dedicatedNAS_Message.size where rrcSetupComplete is NULL (0x0), causing a crash.  \nStack trace:  \n#0  rrc_gNB_send_NGAP_NAS_FIRST_REQ (rrc=0x555558ef62a0, UE=0x7fff8c075030, rrcSetupComplete=0x0) at rrc_gNB_NGAP.c:173  \n#1  rrc_gNB_decode_dcch at rrc_gNB.c:1711  \n#2  rrc_gnb_task at rrc_gNB.c:2526  \n#3  start_thread at pthread_create.c:442  \n#",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/new_seg_fault.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "grep -n \"rrcSetupComplete\" openair2/RRC/NR/rrc_gNB_NGAP.c",
+            "hint": "Verify code references to rrcSetupComplete to identify potential null pointer usage causing the crash"
+          },
+          {
+            "command": "tail -100 /var/log/openairinterface5g/gnb.log",
+            "hint": "Check recent gNB logs for RRC setup procedure errors or missing UE context leading to NULL rrcSetupComplete"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "hint": "Test basic network connectivity to AMF to rule out communication issues affecting RRC setup completion"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "grep -n \"rrcSetupComplete\" openair2/RRC/NR/rrc_gNB_NGAP.c",
+            "explanation": "Verify code references to rrcSetupComplete to identify potential null pointer usage causing the crash"
+          },
+          {
+            "command": "tail -100 /var/log/openairinterface5g/gnb.log",
+            "explanation": "Check recent gNB logs for RRC setup procedure errors or missing UE context leading to NULL rrcSetupComplete"
+          },
+          {
+            "command": "ping 192.168.70.132",
+            "explanation": "Test basic network connectivity to AMF to rule out communication issues affecting RRC setup completion"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    },
+    "timestamp": "2026-07-24T15:13:26.675431"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260724_151326.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

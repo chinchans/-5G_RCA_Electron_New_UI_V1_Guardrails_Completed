@@ -54,6 +54,7 @@ def validate_refined_output(
     new_prompt: str = "",
     previous_response: Optional[str] = None,
     refinement_source: Optional[str] = None,
+    primary_feature: Optional[str] = None,
 ) -> RefineGuardrailVerdict:
     """Validate refined output for both test-case and test-script refinement paths."""
     source = detect_refinement_source(previous_response, refinement_source)
@@ -63,6 +64,7 @@ def validate_refined_output(
             refined_text,
             source_text=source_text,
             dataset_folder=dataset_folder,
+            primary_feature=primary_feature,
         )
 
     script_verdict = validate_generated_test_script(
@@ -90,6 +92,7 @@ def _validate_refined_test_cases(
     *,
     source_text: str,
     dataset_folder: Optional[str],
+    primary_feature: Optional[str] = None,
 ) -> RefineGuardrailVerdict:
     findings: List[Dict[str, Any]] = []
     reasons: List[str] = []
@@ -115,7 +118,40 @@ def _validate_refined_test_cases(
             findings=findings,
         )
 
+    from app.guardrails.scenario_message_coverage import validate_scenario_message_coverage
+
+    scenario = validate_scenario_message_coverage(
+        refined_text,
+        primary_feature=primary_feature,
+        test_cases=parsed_cases,
+        advisory_only=False,
+    )
+
     if not dataset_folder:
+        if scenario.available and not scenario.passed:
+            reasons.extend(scenario.errors or scenario.warnings)
+            findings.append(
+                {
+                    "layer": "scenario_message_coverage",
+                    "check": "registration_pdu_handover_messages",
+                    "severity": "error",
+                    "detail": "; ".join(scenario.errors or scenario.warnings),
+                }
+            )
+            return RefineGuardrailVerdict(
+                passed=False,
+                blocked=True,
+                refinement_source="test_case",
+                reasons=list(dict.fromkeys(reasons)),
+                findings=findings,
+                intent_coverage={
+                    "available": True,
+                    "passed": False,
+                    "scenario_message_coverage": scenario.to_dict(),
+                    "warnings": scenario.warnings,
+                    "errors": scenario.errors,
+                },
+            )
         warning = "Intent coverage skipped — dataset folder not provided for refined test cases."
         return RefineGuardrailVerdict(
             passed=True,
@@ -130,6 +166,11 @@ def _validate_refined_test_cases(
                     "detail": warning,
                 }
             ],
+            intent_coverage={
+                "available": True,
+                "passed": True,
+                "scenario_message_coverage": scenario.to_dict() if scenario.available else None,
+            },
         )
 
     coverage = validate_intent_coverage(
@@ -137,6 +178,7 @@ def _validate_refined_test_cases(
         refined_text,
         require_structured_json=True,
         advisory_only=False,
+        primary_feature=primary_feature,
     )
     coverage_dict = coverage.to_dict()
 

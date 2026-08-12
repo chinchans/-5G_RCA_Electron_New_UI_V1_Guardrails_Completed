@@ -6,7 +6,7 @@
     <title>Intelligent Radio Test Automation Platform for wireless Connectivity</title>
     <!-- Material Icons removed - using built-in Unicode icons instead -->
     <!--<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">-->
-    <link rel="stylesheet" href="main.css?v=20260707-tsg-more-templates">
+    <link rel="stylesheet" href="main.css?v=20260724-status-toast-z">
     <style>
         /* Use Inter font with ui-sans-serif fallback */
         body, html, * {
@@ -834,13 +834,13 @@
                                                 </div>
                                                 <input type="hidden" id="bugLogFileCombo" value="">
                                                 <input type="hidden" id="bugLogFilePath" value="">
-                                                <div id="bugLogGuardrailBanner" class="bd-guardrail-banner" role="alert" style="display:none;"></div>
                                             </div>
                                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
                                                 <label class="bd-field-label bd-field-label--inline">Code dump Analysis:</label>
                                                 <button id="crashAnalysisToggle" class="template-btn save-btn" style="min-width: 65px; padding: 0.4rem 0.8rem; font-size: 0.85rem; background-color: #AAAAAA; color: white; border: 2px solid #999999; border-radius: 14px; font-weight: bold;" title="Toggle ON for segmentation faults and crash analysis">OFF</button>
                                             </div>
                                         </div>
+                                        <div id="bugLogGuardrailBanner" class="bd-guardrail-banner" role="alert" style="display:none;"></div>
                                     </div>
                                     <div class="bd-rca-actions">
                                         <button type="button" id="startBugRCAButton" class="bd-btn bd-btn-rca">Start RCA Analysis</button>
@@ -1185,6 +1185,7 @@
                                                                     <div class="dropdown-item" data-value="Detach">Detach</div>
                                                                     <div class="dropdown-item" data-value="Register">Registration</div>
                                                                     <div class="dropdown-item" data-value="Deregister">Deregistration</div>
+                                                                    <div class="dropdown-item" data-value="PDU Session">PDU Session</div>
                                                                     <div class="dropdown-item" data-value="Handover">Handover</div>
                                                                 </div>
                                                             </div>
@@ -2266,7 +2267,7 @@
                 </div>
                 <div>
                     <label for="newTemplatePromptInput" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">Template Prompt:</label>
-                    <textarea id="newTemplatePromptInput" placeholder="Enter your template prompt here..." 
+                    <textarea id="newTemplatePromptInput" placeholder="Enter your template prompt here. Include at least one placeholder such as {log_file} or {error_message} for RCA/telecom context…" 
                               style="width: 100%; min-height: 250px; padding: 0.75rem; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 0.9rem; font-family: 'Consolas', 'Monaco', monospace; resize: vertical; line-height: 1.5; box-sizing: border-box;" autocomplete="off"></textarea>
                     <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #6B7280;">Enter the prompt content for this template</p>
                 </div>
@@ -2336,7 +2337,7 @@
     <!-- External JavaScript file for better debugging -->
     <!-- CRITICAL: api.js MUST load before app.js to initialize window.API -->
     <!-- Scripts load synchronously by default, so order matters -->
-    <script src="api.js?v=20260707-bug-discovery-log-guardrails"></script>
+    <script src="api.js?v=20260724-prompt-studio-input-guardrails"></script>
     <script>
         // Verify window.API was initialized immediately after api.js loads
         (function() {
@@ -2368,7 +2369,7 @@
             }
         })();
     </script>
-    <script src="app.js?v=20260710-bd-dq-msg"></script>
+    <script src="app.js?v=20260724-status-toast-on-top"></script>
     
     <!-- Deployment Settings Modal -->
     <div id="deploymentSettingsModal" class="modal-overlay" style="display: none;">

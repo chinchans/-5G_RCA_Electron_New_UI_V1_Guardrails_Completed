@@ -4014,6 +4014,11 @@ Requirements:
             print(prompt)
             print("=============================")
             # Make the API call with proper parameters
+            extra_params = {}
+            if not (os.getenv("GEMINI_API_KEY_LATEST") or os.getenv("GEMINI_API_KEY")):
+                extra_params["frequency_penalty"] = 0.0
+                extra_params["presence_penalty"] = 0.0
+
             response = client.chat.completions.create(
                 #model="gpt-3.5-turbo",
                 #model="gpt-4o-mini",
@@ -4025,8 +4030,7 @@ Requirements:
                 temperature=0.7,
                 max_tokens=2000,
                 top_p=1.0,
-                frequency_penalty=0.0,
-                presence_penalty=0.0
+                **extra_params
             )
 
             # Extract and validate the response

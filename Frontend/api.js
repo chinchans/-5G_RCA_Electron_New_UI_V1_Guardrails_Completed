@@ -36,8 +36,35 @@ function buildConciseGuardrailSummary(detail, findings = [], reasons = []) {
             return sanitizeGuardrailReasonText(detail?.message)
                 || 'New prompt is off-topic for the loaded dataset.';
         }
+        if (detail?.blocked_by === 'intent_classifier') {
+            const predicted = String(
+                detail?.classifier?.predicted_label
+                || detail?.guardrails?.layers?.intent_classifier?.predicted_label
+                || ''
+            ).toUpperCase();
+            const classifierMsg = sanitizeGuardrailReasonText(detail?.message);
+            if (predicted === 'OUT_OF_SCOPE') {
+                return classifierMsg
+                    || 'Prompt blocked: out of scope for the 5G/telecom Test Script Generator.';
+            }
+            if (predicted === 'PROMPT_INJECTION') {
+                return classifierMsg
+                    || 'Prompt blocked: possible prompt injection or jailbreak detected.';
+            }
+            return classifierMsg || 'Prompt blocked by the intent classifier.';
+        }
         if (detail?.blocked_by === 'layer1') {
             return 'Prompt blocked: suspicious instruction-override pattern detected.';
+        }
+        if (detail?.blocked_by === 'prompt_studio') {
+            const studioReason = sanitizeGuardrailReasonText(detail?.message || firstReason);
+            if (studioReason && /injection|ignore|jailbreak|override|suspicious/i.test(studioReason)) {
+                return 'Template blocked — prompt injection / jailbreak pattern detected.';
+            }
+            if (studioReason && studioReason.length < 220) {
+                return `Template blocked — ${studioReason}`;
+            }
+            return 'Template blocked by Prompt Studio input guardrails.';
         }
         return 'Prompt blocked: possible prompt injection or jailbreak detected.';
     }
@@ -63,14 +90,10 @@ function buildConciseGuardrailSummary(detail, findings = [], reasons = []) {
             .concat(Array.isArray(detail?.reasons) ? detail.reasons : [])
             .map(sanitizeGuardrailReasonText)
             .filter(Boolean);
-        const headline = messages.find((m) => /new log file|human review/i.test(m))
+        return messages.find((m) => /new log file/i.test(m))
+            || messages.find((m) => /human review/i.test(m))
             || messages.find((m) => /differs significantly/i.test(m))
-            || 'This log appears to be new — human review is recommended.';
-        const score = historical?.similarity_score;
-        if (typeof score === 'number' && historical?.is_new_log) {
-            return `${headline} Closest prior match: ${Math.round(score * 100)}%.`;
-        }
-        return headline;
+            || 'This appears to be a new log file — human review is recommended.';
     }
     if (errorCode === 'log_blocked_by_data_quality') {
         const dataQuality = detail?.data_quality
@@ -87,6 +110,17 @@ function buildConciseGuardrailSummary(detail, findings = [], reasons = []) {
             return `${headline} Completeness: ${Math.round(score * 100)}%.`;
         }
         return headline;
+    }
+    if (errorCode === 'log_blocked_by_scenario_relevance') {
+        const scenario = detail?.scenario_relevance
+            || detail?.guardrails?.layers?.scenario_relevance
+            || {};
+        const messages = (Array.isArray(scenario.messages) ? scenario.messages : [])
+            .concat(Array.isArray(detail?.reasons) ? detail.reasons : [])
+            .map(sanitizeGuardrailReasonText)
+            .filter(Boolean);
+        return messages[0]
+            || 'Expected registration test events not found.';
     }
     if (errorCode === 'document_blocked_by_guardrails') {
         return 'Dataset blocked: malicious or jailbreak content detected.';
@@ -117,7 +151,11 @@ function buildConciseGuardrailSummary(detail, findings = [], reasons = []) {
         if (firstReason) {
             return `Generated script blocked: ${firstReason}`;
         }
-        return 'Generated script blocked: failed syntax, traceability, or groundedness checks.';
+        const backendMessage = sanitizeGuardrailReasonText(detail?.message);
+        if (backendMessage) {
+            return backendMessage;
+        }
+        return 'Generated script blocked: failed syntax, traceability, or groundedness checks. Generate Test Cases first, then Test Script.';
     }
 
     const backendMessage = sanitizeGuardrailReasonText(detail?.message);
@@ -177,7 +215,8 @@ function parseGuardrailHttpErrorBody(errorText) {
                     || detail.error === 'generated_script_blocked_by_guardrails'
                     || detail.error === 'log_blocked_by_telecom_domain'
                     || detail.error === 'log_blocked_by_historical_pattern'
-                    || detail.error === 'log_blocked_by_data_quality';
+                    || detail.error === 'log_blocked_by_data_quality'
+                    || detail.error === 'log_blocked_by_scenario_relevance';
             } else if (detail.guardrails?.blocked || detail.guardrails?.scan?.safe === false) {
                 result.isGuardrailBlock = true;
             }
@@ -631,13 +670,14 @@ if (typeof window !== 'undefined') {
 }
 
 // Generate test script
-async function generateTestScript(promptKey, textContent, variables = null, customPrompt = null, datasetFolder = null) {
+async function generateTestScript(promptKey, textContent, variables = null, customPrompt = null, datasetFolder = null, testCasesContent = null) {
     const requestData = {
         prompt_key: promptKey,
         text_content: textContent,
         variables: variables,
         custom_prompt: customPrompt,
-        dataset_folder: datasetFolder
+        dataset_folder: datasetFolder,
+        test_cases_content: testCasesContent
     };
     
     return await makeAPICall('/api/test-script/generate', 'POST', requestData);
@@ -735,17 +775,22 @@ async function saveTestScriptResponse(content, templateType, language = "Python"
 }
 
 // Save or update template prompt
-async function saveTemplatePrompt(templateName, templateContent) {
+async function saveTemplatePrompt(templateName, templateContent, options = {}) {
     try {
+        const body = {
+            template_name: templateName,
+            template_content: templateContent,
+        };
+        if (options.source) body.source = options.source;
+        if (options.role) body.role = options.role;
+        if (options.reference_doc) body.reference_doc = options.reference_doc;
+
         const response = await fetch(`${API_BASE_URL}/api/test-script/save-template`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                template_name: templateName,
-                template_content: templateContent
-            })
+            body: JSON.stringify(body),
         });
 
         if (!response.ok) {
@@ -764,12 +809,71 @@ async function saveTemplatePrompt(templateName, templateContent) {
     }
 }
 
+async function validatePromptStudioTemplate(templateName, templateContent, options = {}) {
+    try {
+        const body = {
+            template_name: templateName,
+            template_content: templateContent,
+        };
+        if (options.role) body.role = options.role;
+        if (options.reference_doc) body.reference_doc = options.reference_doc;
+
+        const response = await fetch(`${API_BASE_URL}/api/prompt-studio/validate-template`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            const info = parseGuardrailHttpErrorBody(errorText);
+            const err = new Error(info.message || `Template validation failed (${response.status})`);
+            attachGuardrailFieldsToError(err, errorText);
+            err.status = response.status;
+            throw err;
+        }
+
+        const data = await response.json();
+        // Defense in depth: older backends returned 200 with blocked=true.
+        if (data?.blocked || data?.passed === false || data?.guardrails?.blocked) {
+            const messages = Array.isArray(data?.messages) ? data.messages : [];
+            const reasons = Array.isArray(data?.guardrails?.reasons)
+                ? data.guardrails.reasons
+                : messages;
+            const detail = {
+                error: 'prompt_blocked_by_guardrails',
+                message: messages[0]
+                    || 'Template blocked by Prompt Studio input guardrails.',
+                blocked_by: 'prompt_studio',
+                reasons,
+                findings: data?.guardrails?.layers?.security?.findings || [],
+                checks: data?.checks || data?.guardrails?.checks || [],
+                guardrails: data?.guardrails || data,
+            };
+            const err = new Error(detail.message);
+            err.status = 422;
+            err.isGuardrailBlock = true;
+            err.guardrailDetail = detail;
+            err.guardrailFindings = detail.findings;
+            err.guardrailReasons = reasons;
+            throw err;
+        }
+        return data;
+    } catch (error) {
+        console.error('Error validating Prompt Studio template:', error);
+        throw error;
+    }
+}
+
 // IMMEDIATE: Assign saveTemplatePrompt to window.API right after definition (like uploadDocument)
 if (typeof window !== 'undefined') {
     if (!window.API) {
         window.API = {};
     }
     window.API.saveTemplatePrompt = saveTemplatePrompt;
+    window.API.validatePromptStudioTemplate = validatePromptStudioTemplate;
     console.log('[api.js] ✅ IMMEDIATE: saveTemplatePrompt assigned to window.API right after definition');
 }
 
@@ -982,8 +1086,23 @@ async function getUserHistory(filters = {}) {
 // Immediately initialize window.API (don't wait for anything)
 if (typeof window !== 'undefined') {
     try {
-        // CRITICAL: Initialize window.API as empty object first to ensure it exists
-        window.API = window.API || {};
+        // CRITICAL: Initialize a mutable plain object for HTTP APIs.
+        // Electron contextBridge previously froze window.API; keep IPC helpers on electronAPI.
+        if (!window.API || typeof window.API !== 'object') {
+            window.API = {};
+        }
+        // Merge Electron IPC helpers if present (preload exposes electronAPI).
+        if (window.electronAPI && typeof window.electronAPI === 'object') {
+            Object.keys(window.electronAPI).forEach((key) => {
+                if (typeof window.API[key] !== 'function') {
+                    try {
+                        window.API[key] = window.electronAPI[key];
+                    } catch (_) {
+                        /* ignore frozen proxy */
+                    }
+                }
+            });
+        }
         
         // CRITICAL: Verify critical functions exist before assignment
         console.log('[api.js] Verifying function availability before assignment...');
@@ -991,6 +1110,7 @@ if (typeof window !== 'undefined') {
         console.log('[api.js] typeof checkBackendHealth:', typeof checkBackendHealth);
         console.log('[api.js] typeof makeAPICall:', typeof makeAPICall);
         console.log('[api.js] typeof getUserHistory:', typeof getUserHistory);
+        console.log('[api.js] typeof validateBugDiscoveryLog:', typeof validateBugDiscoveryLog);
         
         // Assign configuration first
         window.API.API_BASE_URL = API_BASE_URL || 'http://localhost:8000';
@@ -1149,6 +1269,13 @@ if (typeof window !== 'undefined') {
         }
         if (typeof logBugDiscoveryHistory === 'function') {
             window.API.logBugDiscoveryHistory = logBugDiscoveryHistory;
+        }
+        // Scenario relevance / log validation — must always be available in Bug Discovery
+        window.API.validateBugDiscoveryLog = validateBugDiscoveryLog;
+        if (typeof window.API.validateBugDiscoveryLog !== 'function') {
+            console.error('[api.js] ❌ validateBugDiscoveryLog assignment failed!');
+        } else {
+            console.log('[api.js] ✅ validateBugDiscoveryLog assigned to window.API');
         }
         // CRITICAL: getUserHistory must be assigned directly (like uploadDocument)
         console.log('[api.js] Before assignment - typeof getUserHistory:', typeof getUserHistory);
@@ -1378,6 +1505,14 @@ async function validateBugDiscoveryLog(logFilePath) {
     return await makeAPICall('/api/rca/validate-log', 'POST', {
         log_file_path: logFilePath,
     });
+}
+
+// Assign immediately after definition (same pattern as uploadDocument).
+if (typeof window !== 'undefined') {
+    if (!window.API) {
+        window.API = {};
+    }
+    window.API.validateBugDiscoveryLog = validateBugDiscoveryLog;
 }
 
 // Update the window.API object to include error fixing functions
@@ -1613,6 +1748,13 @@ if (typeof window !== 'undefined') {
     // ONE MORE TIME - assign saveTemplatePrompt at the very end
     window.API.saveTemplatePrompt = saveTemplatePrompt;
     console.log('[api.js] ✅ LAST ASSIGNMENT: saveTemplatePrompt assigned one more time at the very end');
+
+    // FINAL GUARANTEE: Bug Discovery log validation (scenario relevance)
+    window.API.validateBugDiscoveryLog = validateBugDiscoveryLog;
+    console.log(
+        '[api.js] ✅ FINAL: validateBugDiscoveryLog type:',
+        typeof window.API.validateBugDiscoveryLog
+    );
     
     // FINAL GUARANTEE: Test Execution functions - assign at the very end to ensure they're always available
     console.log('[api.js] FINAL: Assigning test execution functions at the very end...');
@@ -1621,5 +1763,5 @@ if (typeof window !== 'undefined') {
     window.API.getTestExecutionConfigs = getTestExecutionConfigs;
     console.log('[api.js] ✅ FINAL: Test execution functions assigned at the very end');
     console.log('[api.js] FINAL: window.API.executeTestScripts type:', typeof window.API.executeTestScripts);
-    console.log('[api.js] FINAL: All window.API keys:', Object.keys(window.API).filter(k => k.includes('Test') || k.includes('test')));
+    console.log('[api.js] FINAL: All window.API keys:', Object.keys(window.API).filter(k => k.includes('Test') || k.includes('test') || k.includes('validate') || k.includes('Bug')));
 }

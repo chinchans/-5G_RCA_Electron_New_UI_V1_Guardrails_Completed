@@ -1,7 +1,8 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('API', {
-    ...(window.API || {}),
+// Expose Electron IPC helpers under electronAPI (not "API") so the renderer
+ // can freely own window.API for HTTP helpers without fighting a frozen bridge object.
+contextBridge.exposeInMainWorld('electronAPI', {
     showOpenDirectoryDialog: async (title = 'Select folder') => {
         return await ipcRenderer.invoke('show-open-directory-dialog', { title });
     },

@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "subsection": "LTE/5G NSA attach and detach of multiple UEs",
   "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/extract/datasets/LTE_5G NSA attach and detach of multiple UEs",
   "nodes": [

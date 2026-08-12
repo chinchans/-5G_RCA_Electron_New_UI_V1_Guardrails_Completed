@@ -20,7 +20,7 @@ from typing import List, Dict, Any, Tuple, Optional
 from dataclasses import dataclass
 import faiss
 from sentence_transformers import SentenceTransformer
-from openai import AzureOpenAI
+from openai import AzureOpenAI, OpenAI
 from datetime import datetime
 
 # Load environment variables from .env file
@@ -148,36 +148,42 @@ class ErrorHandlingPipeline:
         self._load_data_sources()
     
     def _setup_azure_client(self):
-        """Setup Azure OpenAI client."""
-        logger.info("🔧 Setting up Azure OpenAI client...")
+        """Setup OpenAI / Gemini or Azure OpenAI client."""
+        logger.info("🔧 Setting up LLM client...")
         
-        # Prefer AZURE_OPENAI_API_KEY, but also accept AZURE_OPENAI_KEY for backward compatibility
-        api_key = os.getenv('AZURE_OPENAI_API_KEY') or os.getenv('AZURE_OPENAI_KEY')
+        # Prefer GEMINI_API_KEY_LATEST / GEMINI_API_KEY, fallback to AZURE_OPENAI_API_KEY
+        api_key = os.getenv('GEMINI_API_KEY_LATEST') or os.getenv('GEMINI_API_KEY') or os.getenv('AZURE_OPENAI_API_KEY') or os.getenv('AZURE_OPENAI_KEY')
         endpoint = os.getenv('AZURE_OPENAI_ENDPOINT')
         
         missing_vars = []
         if not api_key:
-            missing_vars.append('AZURE_OPENAI_API_KEY (or AZURE_OPENAI_KEY for backward compatibility)')
-        if not endpoint:
-            missing_vars.append('AZURE_OPENAI_ENDPOINT')
+            missing_vars.append('GEMINI_API_KEY_LATEST (or GEMINI_API_KEY / AZURE_OPENAI_API_KEY)')
         
         if missing_vars:
             logger.error(f"❌ Missing environment variables: {missing_vars}")
-            logger.info("Please set the following in your .env file:")
-            logger.info("AZURE_OPENAI_API_KEY=your-api-key")
-            logger.info("AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/")
+            logger.info("Please set GEMINI_API_KEY_LATEST or AZURE_OPENAI_API_KEY in your .env file.")
             raise ValueError(f"Missing required environment variables: {missing_vars}")
         
         try:
-            self.azure_client = AzureOpenAI(
-                api_key=api_key,
-                api_version="2024-05-01-preview",
-                azure_endpoint=endpoint
-            )
-            logger.info("✅ Azure OpenAI client initialized successfully")
-            logger.info("📦 Using deployment: gpt-4o-mini")
+            if os.getenv('GEMINI_API_KEY_LATEST') or os.getenv('GEMINI_API_KEY'):
+                self.azure_client = OpenAI(
+                    api_key=api_key,
+                    base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+                )
+                self.deployment_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+                logger.info("✅ Gemini client initialized successfully")
+                logger.info(f"📦 Using model: {self.deployment_name}")
+            else:
+                self.azure_client = AzureOpenAI(
+                    api_key=api_key,
+                    api_version="2024-05-01-preview",
+                    azure_endpoint=endpoint
+                )
+                self.deployment_name = os.getenv("AZURE_OPENAI_MODEL_NAME", "gpt-4o-mini")
+                logger.info("✅ Azure OpenAI client initialized successfully")
+                logger.info(f"📦 Using deployment: {self.deployment_name}")
         except Exception as e:
-            logger.error(f"❌ Failed to initialize Azure OpenAI client: {e}")
+            logger.error(f"❌ Failed to initialize LLM client: {e}")
             raise
     
     def _load_embedding_model(self):

@@ -68,6 +68,7 @@ class IntentCoverageResult(BaseModel):
     uncovered_categories: List[dict] = Field(default_factory=list)
     test_case_mappings: List[IntentCoverageMapping] = Field(default_factory=list)
     ungrounded_test_cases: List[str] = Field(default_factory=list)
+    scenario_message_coverage: Optional[dict] = None
     warnings: List[str] = Field(default_factory=list)
     errors: List[str] = Field(default_factory=list)
 

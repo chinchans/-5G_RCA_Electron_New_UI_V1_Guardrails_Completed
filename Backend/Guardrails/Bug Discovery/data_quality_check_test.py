@@ -167,6 +167,35 @@ def test_explicit_truncation_marker() -> None:
     print("OK truncation_marker")
 
 
+def test_success_ue_fixture_passes() -> None:
+    path = Path(__file__).resolve().parent / "success_ue_gnb.log"
+    if not path.exists():
+        print("SKIP success_ue_fixture")
+        return
+    result = check_data_quality(path)
+    _assert(not result.incomplete_tail, result.to_dict())
+    _assert(not result.truncated, result.to_dict())
+    _assert(not result.blocked, result.to_dict())
+    print(f"OK success_ue_fixture score={result.completeness_score:.2f}")
+
+
+def test_build_failure_without_newline_passes() -> None:
+    text = (
+        'Running "cmake"\n'
+        "OPENAIR_DIR=/oai\n"
+        "cmake_targets/build\n"
+        "CMakeFiles/nr-softmodem\n"
+        "Will compile gNB\n"
+        "undefined reference to `foo'\n"
+        "build have failed"
+    )
+    result = check_data_quality_text(text, content_chars=len(text))
+    _assert(not result.truncated, result.to_dict())
+    _assert(not result.incomplete_tail, result.to_dict())
+    _assert(not result.blocked, result.to_dict())
+    print("OK build_failure_complete_eof")
+
+
 if __name__ == "__main__":
     test_complete_rrc_log_passes()
     test_truncated_midline()
@@ -177,4 +206,6 @@ if __name__ == "__main__":
     test_large_midbyte_truncation_detected()
     test_clean_half_file_truncation_detected()
     test_explicit_truncation_marker()
+    test_success_ue_fixture_passes()
+    test_build_failure_without_newline_passes()
     print("All data quality tests passed.")

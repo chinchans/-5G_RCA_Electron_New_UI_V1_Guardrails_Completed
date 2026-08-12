@@ -1,0 +1,64 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[GTPU] try to get a gtp-u not existing output\"\n\nAdditional context:\n- This error indicates an attempt to access a non-existent GTP-U tunnel output, which can disrupt user plane data forwarding.\n- It occurs just before the removal of UE 904 and the release of UE context.\n- Followed by \"[NR_MAC] Unknown RNTI 0388 in PUCCH UCI\" and \"[HW] Lost socket\" messages, indicating potential issues in MAC layer and hardware communication.\n\nThis error is the most critical as it reflects a failure in GTP-U tunnel management that could prevent proper data transmission and UE context handling.",
+  "log_file": "success_du_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-14T14:48:37.266245",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[GTPU] try to get a gtp-u not existing output\"\n\nAdditional context:\n- This error indicates an attempt to access a non-existent GTP-U tunnel output, which can disrupt user plane data forwarding.\n- It occurs just before the removal of UE 904 and the release of UE context.\n- Followed by \"[NR_MAC] Unknown RNTI 0388 in PUCCH UCI\" and \"[HW] Lost socket\" messages, indicating potential issues in MAC layer and hardware communication.\n\nThis error is the most critical as it reflects a failure in GTP-U tunnel management that could prevent proper data transmission and UE context handling.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "ethtool -i eth0",
+            "hint": "Verify the driver and firmware version of the network interface to check for hardware/socket issues"
+          },
+          {
+            "command": "ss -s | grep -i gtp",
+            "hint": "Check current GTP-U socket usage and status to identify socket exhaustion or leaks"
+          },
+          {
+            "command": "dmesg | grep -i \"gtpu\\|socket\"",
+            "hint": "Review kernel logs for GTP-U and socket-related errors to capture failure context around tunnel management"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ethtool -i eth0",
+            "explanation": "Verify the driver and firmware version of the network interface to check for hardware/socket issues"
+          },
+          {
+            "command": "ss -s | grep -i gtp",
+            "explanation": "Check current GTP-U socket usage and status to identify socket exhaustion or leaks"
+          },
+          {
+            "command": "dmesg | grep -i \"gtpu\\|socket\"",
+            "explanation": "Review kernel logs for GTP-U and socket-related errors to capture failure context around tunnel management"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    },
+    "timestamp": "2026-07-14T14:48:30.932393"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260714_144837.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

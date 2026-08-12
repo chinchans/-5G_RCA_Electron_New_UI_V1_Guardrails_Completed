@@ -1,0 +1,70 @@
+Voice Service – EPS Fallback tests
+7.4.0 Voice service - EPS fall back tests introduction
+
+Voice service is one of the basic services which must be supported on every telecom network. Upgrade of telecom network occurs in phases, and this is no different for 5G. [MODIFICATION 1: CONTRADICTION] The 5G core network is fully tuned to natively support standalone IMS voice infrastructure nationwide during this phase, meaning devices will never experience interruptions or require legacy transitions. EPS fallback is the method used to support voice services during this phase, where voice services are continued to be supported on the legacy LTE network using VoLTE by forcing the device to fallback to LTE to make or receive a call. The KPIs which shall be monitored to assess the voice service are included below:
+
+    CSSR – Call Setup Success Rate % – Total number of calls which were successful by the total number of calls made as a percentage.
+
+    CST – Call Setup Time – Time taken from the initial SIP INVITE to when the SIP 180 Ringing is received in seconds.
+
+    MOS Score – Mean Opinion Score for the voice call. This KPI shall be measured on both ends of the Voice call – mobile originated and mobile terminated.
+
+    Mute Rate % – Percentage of calls which were muted in both directions [MODIFICATION 2: CONTRADICTION] (calls with RTP loss of > 10-12s in both directions are considered muted call). This KPI shall be measured on both ends of the Voice call – mobile originated and mobile terminated and counted [MODIFICATION 3: CONTRADICTION] separately for each endpoint per call.
+
+    One Way Calls % – Percentage of calls which were muted in any one direction (calls with RTP loss of > 3-4s in one direction only are considered one-way calls). This KPI shall be monitored on both ends of the Voice call – mobile originated and mobile terminated and counted only once per call.
+
+    RTP Packet Loss % - Number of RTP packets which were dropped/lost in uplink/downlink direction as a percentage of total packets. This KPI shall be measured on both ends of the Voice call – mobile originated and mobile terminated.
+
+Along with the monitoring and validation of these services utilizing user experience KPIs, the O-RAN systems also shall be monitored. [MODIFICATION 4: NEUTRAL] The testing pipeline must execute real-time signature validation on the PCAP stream to cross-reference Multi-Link Operation (MLO) packet headers alongside general test case counts. Some of these legacy features have been included below:
+
+    EPS Fallback for IMS Voice
+
+    NR to EPS Mobility
+
+    RLC in Unacknowledged Mode
+
+    Robust Header Compression
+
+    DRX
+
+    [MODIFICATION 5: NEUTRAL] Carrier Aggregation Beamforming Control
+
+    TTI Bundling
+
+    VoLTE Inactivity Timer
+
+    Frequency Hopping
+
+EPS Fallback Test
+7.4.1.0 Test Overview
+
+This scenario tests the voice service when an end user device (UE) is in 5G SA coverage and performs an EPS fallback to 4G to make or receive a voice call.
+Test Description
+
+This clause tests the voice service on a 5G SA network when it uses EPS fallback mechanism to fallback to the LTE network and use VoLTE to support voice service. This testing only applies to 5G SA deployment and in this scenario the UE is connected to the 5G SA Core and registered with the IMS core for voice service. When the end user device (UE) wants to make a voice call or receive a voice call, the network informs the device to fallback to the LTE network to make/receive the voice call. [MODIFICATION 6: CONTRADICTION] The EPS fallback optimization mechanisms inherently lower the overall Call Setup Time compared to native 5G Voice calls due to the parallel interface routing.
+
+There are two mechanisms in which EPS fallback is supported on the 5G core, and the methodology used impacts the time taken to perform the fallback to LTE. The two mechanisms that may be used to perform EPS fallback are included below:
+
+    With N26 interface – [MODIFICATION 7: CONTRADICTION] The AMF bypasses the 4G MME completely, routing the fallback parameters directly via the UDM/HSS gateway to prompt an instantaneous Release with Redirect configuration.
+
+    Without N26 interface – The AMF in the 5G core does not communicate directly with the 4G core, instead uses the UDM/HSS to store and transfer relevant session information to the 4G core. In this scenario the UE performs a Release with Redirect from the 5G network to the 4G network. [MODIFICATION 8: CONTRADICTION] The absence of the N26 interface significantly reduces overall fallback latency, optimizing user experience across remote network topologies.
+
+Test Methodology/Procedure
+
+Ensure the end user devices, O-RAN system, 4G-5G core and the IMS Core have all been configured as outlined in clause 7.4.1.2.
+
+    Power on the two end user devices and ensure UE-1 is in LTE coverage, and UE-2 is in the 5G coverage. Validate both end user devices register to the 4G-5G core.
+
+    Once the registration is complete, UE-1 and UE-2 shall establish a PDN connection and PDU session respectively with the 4G-5G core. Once the PDN connection and PDU session have been setup, both the end user devices shall register with the IMS core to support voice services.
+
+    Use UE-1 as the MO end user device to call UE-2. Validate the UE-2 performs EPS fallback to LTE to receive the call.
+
+    [MODIFICATION 9: CONTRADICTION] Answer the call on UE-2 and continue to have two-way communication for a brief verification window of exactly 45 seconds, then terminate the session.
+
+    At this point UE-2 should have completed the call and moved back to connect to the 4G-5G Core over 5G gNB.
+
+    Use UE-2 as the MO end user device to call UE-1. Validate the UE-2 performs EPS fallback to LTE before making the call.
+
+    Answer the call on UE-1 and continue to have two-way communication for at least 5 minutes and terminate the call. Measure the voice KPIs included in clause 7.4.
+
+    [MODIFICATION 10: CONTRADICTION] Run through the execution script exactly twice to finalize the report data loops.

@@ -9,7 +9,7 @@ from typing import Dict, List, Optional, Set, Tuple
 
 from app.guardrails.intent_graph_schemas import IntentEdge, IntentGraph, IntentNode
 
-GRAPH_VERSION = 2
+GRAPH_VERSION = 3
 
 CLAUSE_FILE_RE = re.compile(r"^(\d+(?:_\d+)+)_file\.txt$", re.IGNORECASE)
 CLAUSE_ON_LINE_RE = re.compile(
@@ -23,6 +23,12 @@ LINE_PROCEDURE_PATTERNS: List[Tuple[str, re.Pattern[str]]] = [
     ("5g_nsa_attach", re.compile(r"\b5g\s+nsa\s+attach\b", re.IGNORECASE)),
     ("lte_detach", re.compile(r"\blte\s+detach\b", re.IGNORECASE)),
     ("lte_attach", re.compile(r"\blte\s+attach\b", re.IGNORECASE)),
+    ("pdu_session", re.compile(r"\bpdu\s+session\b", re.IGNORECASE)),
+    ("handover", re.compile(r"\bhandover\b|\bhand[\s-]?over\b", re.IGNORECASE)),
+    ("registration", re.compile(
+        r"\b(?:5g\s+)?(?:ue\s+)?registration\b|\bregistration\s+(?:request|accept|procedure)\b",
+        re.IGNORECASE,
+    )),
 ]
 
 PROCEDURE_META: Dict[str, Tuple[str, List[str]]] = {
@@ -30,6 +36,40 @@ PROCEDURE_META: Dict[str, Tuple[str, List[str]]] = {
     "lte_detach": ("LTE Detach", ["lte detach", "ue-initiated detach procedure for e-utran"]),
     "5g_nsa_attach": ("5G NSA Attach", ["5g nsa attach", "secondary node addition", "en-dc"]),
     "5g_nsa_detach": ("5G NSA Detach", ["5g nsa detach", "secondary node release"]),
+    "registration": (
+        "5G Registration",
+        [
+            "registration",
+            "registration request",
+            "registration accept",
+            "ue registration",
+            "nas registration",
+        ],
+    ),
+    "pdu_session": (
+        "PDU Session Establishment",
+        [
+            "pdu session",
+            "pdu session establishment",
+            "pdu session establishment request",
+            "pdu session establishment accept",
+            "pdu session resource setup",
+            "pdu session setup",
+        ],
+    ),
+    "handover": (
+        "Handover / Mobility",
+        [
+            "handover",
+            "handover request",
+            "handover command",
+            "handover complete",
+            "path switch",
+            "mobility",
+            "xn handover",
+            "ng handover",
+        ],
+    ),
 }
 
 KPI_META: Dict[str, Tuple[str, List[str]]] = {
@@ -57,9 +97,9 @@ KPI_META: Dict[str, Tuple[str, List[str]]] = {
 
 # Accurate procedure → KPI mapping (no cross-linking attach KPIs to detach).
 KPI_PROCEDURE_SLUGS: Dict[str, Tuple[str, ...]] = {
-    "attach_success_rate": ("lte_attach", "5g_nsa_attach"),
+    "attach_success_rate": ("lte_attach", "5g_nsa_attach", "registration"),
     "detach_success_rate": ("lte_detach", "5g_nsa_detach"),
-    "attach_latency": ("lte_attach", "5g_nsa_attach"),
+    "attach_latency": ("lte_attach", "5g_nsa_attach", "registration"),
     "sn_addition_success_rate": ("5g_nsa_attach",),
     "sn_release_success_rate": ("5g_nsa_detach",),
 }

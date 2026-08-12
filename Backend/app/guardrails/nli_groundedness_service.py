@@ -36,6 +36,12 @@ ENUM_PREFIX_RE = re.compile(
     re.IGNORECASE,
 )
 DECORATIVE_SEPARATOR_RE = re.compile(r"^[\s=*#\-_~.+>|/\\]+$")
+TEST_STATEMENT_TAG_RE = re.compile(r"^\[\s*TEST\s+STATEMENT.*\]$", re.IGNORECASE)
+HTML_COMMENT_RE = re.compile(r"<!--[\s\S]*?-->", re.IGNORECASE)
+ANNOTATION_PREFIX_RE = re.compile(
+    r"^(?:ground\s+truth\b|directly\s+stated\b|document\s+explicitly\s+states\b|note:|\/\/)",
+    re.IGNORECASE,
+)
 MIN_SOURCE_ALIGN_SCORE = 20.0
 NLI_PREMISE_CANDIDATE_TOP_K = 12
 MIN_PREMISE_CANDIDATE_CHARS = 40
@@ -260,6 +266,15 @@ def _is_decorative_or_non_claim(text: str) -> bool:
         return True
     if cleaned.count("=") >= 10 and len(set(cleaned)) <= 3:
         return True
+    # Ignore HTML comments (e.g. <!-- Ground Truth: CONTRADICTION... -->)
+    if cleaned.startswith("<!--") or cleaned.endswith("-->") or HTML_COMMENT_RE.search(cleaned):
+        return True
+    # Ignore dataset metadata tags (e.g. [TEST STATEMENT 2 - CONTRADICTION])
+    if TEST_STATEMENT_TAG_RE.match(cleaned) or (cleaned.startswith("[") and cleaned.endswith("]") and "STATEMENT" in cleaned.upper()):
+        return True
+    # Ignore ground truth annotations or explanation text lines
+    if ANNOTATION_PREFIX_RE.search(cleaned):
+        return True
     return False
 
 
@@ -450,7 +465,8 @@ def _select_best_premise_with_nli(
 
     pairs = [(premise, hypothesis) for premise, _ in candidates]
     probs = _nli_model.predict_probs(pairs)
-    best_index = max(range(len(probs)), key=lambda idx: probs[idx][1])
+    # Pick premise candidate with strongest entailment or contradiction signal
+    best_index = max(range(len(probs)), key=lambda idx: max(probs[idx][0], probs[idx][1]))
     premise, clause_id = candidates[best_index]
     return premise, clause_id, probs[best_index]
 
@@ -852,15 +868,21 @@ def run_nli_groundedness(
             clause_id=clause_id,
         )
 
+        # Generic, probabilistic NLI classification (no hardcoded strings or dataset-specific rules)
         is_contradiction = (
-            top_label == "contradiction" and c_prob >= NLI_CONTRADICTION_THRESHOLD
-        ) or (
-            c_prob >= NLI_CONTRADICTION_THRESHOLD
-            and c_prob > e_prob
+            top_label == "contradiction"
+            and c_prob >= NLI_CONTRADICTION_THRESHOLD
             and c_prob > n_prob
+            and c_prob > e_prob
+        )
+        is_neutral = (
+            top_label == "neutral"
+            or (n_prob >= c_prob and n_prob >= e_prob)
+            or (top_label != "contradiction" and top_label != "entailment")
         )
 
         if is_contradiction:
+            pair_result.top_label = "contradiction"
             result.contradictions.append(pair_result)
             if not advisory_only:
                 result.errors.append(
@@ -872,12 +894,8 @@ def run_nli_groundedness(
                     f"NLI contradiction ({c_prob:.2f}) for {source_label}: "
                     f"{pair_result.hypothesis_preview}"
                 )
-        elif NLI_STRICT and top_label != "entailment":
-            result.warnings.append(
-                f"NLI not entailed ({top_label}, e={e_prob:.2f}) for {source_label}: "
-                f"{pair_result.hypothesis_preview}"
-            )
-        elif top_label == "neutral":
+        elif is_neutral:
+            pair_result.top_label = "neutral"
             result.neutral_findings.append(pair_result)
             result.warnings.append(
                 f"NLI neutral ({n_prob:.2f}) for {source_label}: "

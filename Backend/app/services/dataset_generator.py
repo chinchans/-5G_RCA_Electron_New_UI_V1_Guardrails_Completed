@@ -15,7 +15,7 @@ from pathlib import Path
 import networkx as nx
 from docx import Document
 import fitz  # PyMuPDF
-from openai import AzureOpenAI, BadRequestError
+from openai import AzureOpenAI, OpenAI, BadRequestError
 from dotenv import load_dotenv
 from collections import defaultdict
 from difflib import SequenceMatcher
@@ -27,20 +27,26 @@ class DatasetExtractor:
     """Main class for dataset extraction operations."""
     
     def __init__(self):
-        """Initialize the extractor with Azure OpenAI client."""
+        """Initialize the extractor with Gemini or Azure OpenAI client."""
         load_dotenv()
         
-        # Get Azure OpenAI credentials
+        # Get credentials (prefer GEMINI_API_KEY_LATEST / GEMINI_API_KEY)
+        self.azure_api_key = os.getenv("GEMINI_API_KEY_LATEST") or os.getenv("GEMINI_API_KEY") or os.getenv("AZURE_OPENAI_API_KEY") or os.getenv("AZURE_OPENAI_KEY")
         self.azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-        self.azure_api_key = os.getenv("AZURE_OPENAI_API_KEY")
-        self.azure_model_name = os.getenv("AZURE_OPENAI_MODEL_NAME")
         
-        # Initialize OpenAI client
-        self.client = AzureOpenAI(
-            api_key=self.azure_api_key,
-            azure_endpoint=self.azure_endpoint,
-            api_version="2024-02-01"
-        )
+        if os.getenv("GEMINI_API_KEY_LATEST") or os.getenv("GEMINI_API_KEY"):
+            self.azure_model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+            self.client = OpenAI(
+                api_key=self.azure_api_key,
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+            )
+        else:
+            self.azure_model_name = os.getenv("AZURE_OPENAI_MODEL_NAME")
+            self.client = AzureOpenAI(
+                api_key=self.azure_api_key,
+                azure_endpoint=self.azure_endpoint,
+                api_version="2024-02-01"
+            )
     
     def get_main_sections(self, doc_path):
         """Extract main section headings (Heading 1) from a DOCX file."""

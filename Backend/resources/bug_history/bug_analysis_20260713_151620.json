@@ -1,0 +1,64 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[SCTP]   Received SCTP SHUTDOWN EVENT\"\n\nContext:\nThis SCTP shutdown event indicates that the SCTP association (assoc_id 337) between the CU and DU was terminated unexpectedly. Following this, the log shows:\n- \"[F1AP]   Received SCTP state 1 for assoc_id 337, removing endpoint\"\n- \"[NR_RRC]   releasing DU ID 3584 (gNB-Eurecom-DU) on assoc_id 337\"\n\nThis error is critical as it represents loss of SCTP connectivity between the Central Unit (CU) and Distributed Unit (DU), which would prevent further signaling and data exchange, effectively disrupting the 5G system operation. No stack trace or crash info is present, but the SCTP shutdown event itself is a fatal connectivity failure.",
+  "log_file": "success_cu_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_cu_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-13T15:16:20.179595",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[SCTP]   Received SCTP SHUTDOWN EVENT\"\n\nContext:\nThis SCTP shutdown event indicates that the SCTP association (assoc_id 337) between the CU and DU was terminated unexpectedly. Following this, the log shows:\n- \"[F1AP]   Received SCTP state 1 for assoc_id 337, removing endpoint\"\n- \"[NR_RRC]   releasing DU ID 3584 (gNB-Eurecom-DU) on assoc_id 337\"\n\nThis error is critical as it represents loss of SCTP connectivity between the Central Unit (CU) and Distributed Unit (DU), which would prevent further signaling and data exchange, effectively disrupting the 5G system operation. No stack trace or crash info is present, but the SCTP shutdown event itself is a fatal connectivity failure.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_cu_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "ss -s | grep sctp",
+            "hint": "Check current SCTP socket statistics to verify SCTP associations and errors"
+          },
+          {
+            "command": "tcpdump -i eth0 host 10.138.77.131 and port 500 or port 501 -c 20",
+            "hint": "Capture SCTP packets between CU and DU IPs on SCTP ports to analyze SCTP shutdown cause"
+          },
+          {
+            "command": "cat /etc/gnb/gnb.conf | grep -i sctp",
+            "hint": "Verify SCTP configuration parameters in gNB config file for correctness"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ss -s | grep sctp",
+            "explanation": "Check current SCTP socket statistics to verify SCTP associations and errors"
+          },
+          {
+            "command": "tcpdump -i eth0 host 10.138.77.131 and port 500 or port 501 -c 20",
+            "explanation": "Capture SCTP packets between CU and DU IPs on SCTP ports to analyze SCTP shutdown cause"
+          },
+          {
+            "command": "cat /etc/gnb/gnb.conf | grep -i sctp",
+            "explanation": "Verify SCTP configuration parameters in gNB config file for correctness"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    },
+    "timestamp": "2026-07-13T15:16:20.067662"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260713_151620.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

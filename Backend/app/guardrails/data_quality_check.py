@@ -83,6 +83,10 @@ _EXPECTED_TAIL_BY_SCENARIO: Dict[str, Tuple[str, ...]] = {
         "ngap_register_cnf",
         "f1ap_start",
     ),
+    "du_stack": (
+        "stack_init",
+        "f1ap_start",
+    ),
 }
 
 _FAILURE_MARKERS = frozenset({
@@ -96,6 +100,7 @@ _SUCCESS_MARKERS = frozenset({
     "registration_complete",
     "ngap_setup_response",
     "contention_resolved",
+    "f1ap_start",
 })
 _IN_PROGRESS_MARKERS = frozenset({
     "ra_start",
@@ -186,6 +191,32 @@ def _effective_last_line(text: str) -> Tuple[str, bool]:
     return "", ends_nl
 
 
+# Complete last tokens that commonly end OAI / build lines without trailing punctuation.
+_COMPLETE_LAST_TOKENS = frozenset({
+    "ok", "sa", "ue", "du", "cu", "amf", "smf", "upf", "rrc", "mac", "phy",
+    "ngap", "pdcp", "rlc", "nas", "f1ap", "sctp", "itti",
+    "failed", "failure", "error", "errors", "warning", "info", "done", "ready",
+    "success", "successful", "complete", "completed", "connected", "accepted",
+    "rejected", "timeout", "expired", "started", "stopped", "abort", "aborted",
+    "exit", "exiting", "passed", "pass", "fail", "fatal", "assert",
+})
+
+# Whole-line outcomes that are complete even when the file omits a final newline.
+_COMPLETE_EOF_LINE_RE = re.compile(
+    r"(?i)(?:"
+    r"build have failed|"
+    r"compilation of .+ (?:have )?failed|"
+    r"undefined reference|"
+    r"segmentation fault|"
+    r"registration (?:accept|complete)|"
+    r"rrc_?connected|"
+    r"contention resolution|"
+    r"ngsetupresponse|"
+    r"associated amf"
+    r")"
+)
+
+
 def _message_looks_cut(msg: str) -> bool:
     """True when a log message body looks cut mid-token / mid-phrase."""
     msg = (msg or "").rstrip()
@@ -195,18 +226,17 @@ def _message_looks_cut(msg: str) -> bool:
         return False
     if _TERMINAL_PUNCT_RE.search(msg):
         return False
+    if _COMPLETE_EOF_LINE_RE.search(msg):
+        return False
     if msg.endswith((",", "=", ":", "(", "[", "{", "\\", "-", "/", "|", "&", "+")):
         return True
     tokens = re.findall(r"[A-Za-z0-9_]+", msg)
     if not tokens:
         return False
     last_token = tokens[-1]
+    if last_token.lower() in _COMPLETE_LAST_TOKENS:
+        return False
     if re.search(r"[:\s]\s*[A-Za-z]{1,8}$", msg) and not msg.endswith((".", "!", "?", ")", "]")):
-        if last_token.upper() in {
-            "OK", "SA", "UE", "DU", "CU", "AMF", "SMF", "UPF", "RRC", "MAC", "PHY",
-            "NGAP", "PDCP", "RLC", "NAS", "F1AP", "SCTP", "ITTI",
-        }:
-            return False
         if len(last_token) <= 8:
             return True
     return False
@@ -219,6 +249,10 @@ def _last_line_is_mid_cut(last_raw: str, *, ends_with_newline: bool) -> Tuple[bo
         return True, "empty_last_line"
 
     no_trailing_nl = not ends_with_newline
+
+    # Known complete outcomes (build fail, registration success, etc.).
+    if _COMPLETE_EOF_LINE_RE.search(last):
+        return False, ""
 
     if last.lstrip().startswith("[") and "]" not in last:
         return True, "partial_layer_tag"
@@ -378,7 +412,18 @@ def _check_truncation(
 
     peer = _peer_length_stats(scenario, steps)
     evidence["peer_length"] = peer
-    if not peer.get("skipped"):
+    step_set = set(steps)
+    has_terminal_outcome = bool(step_set & (_FAILURE_MARKERS | _SUCCESS_MARKERS))
+    # Build failures end cleanly at different lengths; don't compare byte size to a longer peer.
+    is_build_capture = (
+        scenario == "build"
+        or "build_compile_fail" in step_set
+        or "build_cmake" in step_set
+    )
+    if (
+        not (is_build_capture and has_terminal_outcome)
+        and not peer.get("skipped")
+    ):
         step_ratio = float(peer.get("length_ratio") or 1.0)
         similar_enough = float(peer.get("similarity") or 0) >= 0.35
         is_prefix = bool(peer.get("is_prefix"))
@@ -394,7 +439,13 @@ def _check_truncation(
             evidence["size_ratio"] = round(size_ratio, 4)
 
         effective_ratio = size_ratio if size_ratio is not None else step_ratio
-        if similar_enough and effective_ratio < length_limit and len(steps) >= 2:
+        # Only flag "too short". Larger-than-peer captures (e.g. long DU vs short CU) are fine.
+        if (
+            similar_enough
+            and effective_ratio < length_limit
+            and len(steps) >= 2
+            and (size_ratio is None or size_ratio < 1.0)
+        ):
             missing_pct = max(0.0, (1.0 - effective_ratio) * 100.0)
             evidence["reason"] = "short_vs_learned_peers"
             evidence["missing_vs_peer_percent"] = round(missing_pct, 1)
@@ -404,9 +455,11 @@ def _check_truncation(
                 "Log file appears incomplete; expected events are missing."
             )
 
-    step_set = set(steps)
     in_progress = bool(step_set & _IN_PROGRESS_MARKERS)
-    has_terminal = bool(step_set & (_FAILURE_MARKERS | _SUCCESS_MARKERS))
+    has_terminal = has_terminal_outcome
+    # Healthy DU/CU bring-up often ends on Frame.Slot traffic after F1/NGAP success.
+    if "f1ap_start" in step_set or "ngap_setup_response" in step_set:
+        has_terminal = True
     if in_progress and not has_terminal and oai_hits >= 5:
         if len(steps) < 6 or (peer and not peer.get("skipped") and float(peer.get("length_ratio") or 1) < 0.7):
             evidence["reason"] = "procedure_cut_before_outcome"
@@ -520,6 +573,15 @@ def _check_incomplete_tail(
             "failure_markers": sorted(step_set & _FAILURE_MARKERS),
         }, None
 
+    # Late success markers mean the procedure finished — do not require every
+    # intermediate milestone (logs often omit Msg3/contention lines).
+    if step_set & _SUCCESS_MARKERS:
+        return False, 0.0, {
+            "skipped": True,
+            "reason": "success_outcome_present",
+            "success_markers": sorted(step_set & _SUCCESS_MARKERS),
+        }, None
+
     present = [event for event in expected if event in step_set]
     missing = [event for event in expected if event not in step_set]
     coverage = len(present) / max(1, len(expected))
@@ -537,9 +599,14 @@ def _check_incomplete_tail(
     early_signals = {
         "registration": {"prach_detected", "ra_start", "msg3_tx", "msg2_sent", "sib1_decoded"},
         "cu_stack": {"stack_init", "ngap_setup_request"},
+        "du_stack": {"stack_init", "f1ap_start"},
     }
     early = early_signals.get(scenario, set())
     saw_early = bool(step_set & early) or len(steps) >= 2
+
+    # DU captures are complete once F1/stack init is present — do not demand CU NGAP tails.
+    if scenario == "du_stack" and "f1ap_start" in step_set:
+        return False, 0.0, evidence, None
 
     threshold_missing = (1.0 - GUARDRAILS_BD_DATA_QUALITY_MIN_COMPLETENESS) * 100.0
     if saw_early and missing_percent >= threshold_missing and len(missing) >= 2:
@@ -633,10 +700,18 @@ def check_data_quality_text(
 
     has_issue = truncated or missing_ts or empty_sec or incomplete_tail
     mode = GUARDRAILS_BD_DATA_QUALITY_MODE
-    blocked = has_issue and mode in ("balanced", "strict")
-    warned = has_issue and mode == "advisory"
-    if mode == "strict" and score < GUARDRAILS_BD_DATA_QUALITY_MIN_COMPLETENESS:
-        blocked = True
+    min_score = GUARDRAILS_BD_DATA_QUALITY_MIN_COMPLETENESS
+    # advisory: warn only
+    # balanced: block on any quality issue
+    # strict: block only when completeness is below MIN_COMPLETENESS
+    if mode == "advisory":
+        blocked = False
+        warned = has_issue
+    elif mode == "strict":
+        blocked = score < min_score
+        warned = has_issue and not blocked
+    else:  # balanced (and unknown modes)
+        blocked = has_issue
         warned = False
 
     if has_issue and not any("incomplete" in m.lower() for m in messages):

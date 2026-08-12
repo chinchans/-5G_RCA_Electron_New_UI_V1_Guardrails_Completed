@@ -1,0 +1,440 @@
+{
+  "timestamp": "2026-08-11 12:33:24",
+  "total_cases": 42,
+  "metrics": {
+    "accuracy_percent": 88.1,
+    "precision_percent": 100.0,
+    "recall_percent": 87.18,
+    "f1_score_percent": 93.15,
+    "avg_latency_ms": 412.119,
+    "total_latency_ms": 17308.994
+  },
+  "confusion_matrix": {
+    "tp": 34,
+    "tn": 3,
+    "fp": 0,
+    "fn": 5
+  },
+  "results": [
+    {
+      "id": "AST_01",
+      "category": "ast_syntax_error",
+      "name": "Unterminated String Literal",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.038,
+      "detail": "Syntax validation failed: Syntax error at line 2: unterminated string literal (detected at line 2)",
+      "correct_verdict": true
+    },
+    {
+      "id": "AST_02",
+      "category": "ast_syntax_error",
+      "name": "Missing Function Colon",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.025,
+      "detail": "Syntax validation failed: Syntax error at line 1: expected ':'",
+      "correct_verdict": true
+    },
+    {
+      "id": "AST_03",
+      "category": "ast_syntax_error",
+      "name": "Invalid Indentation",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.025,
+      "detail": "Syntax validation failed: Syntax error at line 2: expected an indented block after function definition on line 1",
+      "correct_verdict": true
+    },
+    {
+      "id": "AST_HARD_01",
+      "category": "ast_obfuscated_exec",
+      "name": "Obfuscated Dynamic Exec Code Injection",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.341,
+      "detail": "Dynamic code injection detected",
+      "correct_verdict": true
+    },
+    {
+      "id": "AST_HARD_02",
+      "category": "ast_obfuscated_exec",
+      "name": "Dead Code Masking Syntax Bypass",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.063,
+      "detail": "Dynamic code injection detected",
+      "correct_verdict": true
+    },
+    {
+      "id": "AST_EXTREME_01",
+      "category": "ast_reflection_attack",
+      "name": "Builtin Getattr Reflection Dynamic Payload",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.049,
+      "detail": "Builtin reflection attack (getattr/__builtins__) detected",
+      "correct_verdict": true
+    },
+    {
+      "id": "AST_EXTREME_02",
+      "category": "ast_recursion_bomb",
+      "name": "Infinite Recursion Bomb In Valid AST",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.072,
+      "detail": "Recursion bomb (setrecursionlimit) detected",
+      "correct_verdict": true
+    },
+    {
+      "id": "AST_SUBTLE_01",
+      "category": "ast_module_dict_bypass",
+      "name": "Sys Modules Dict Builtin Access",
+      "should_fail": true,
+      "detected_fault": false,
+      "latency_ms": 0.064,
+      "detail": "AST Syntax Validation",
+      "correct_verdict": false
+    },
+    {
+      "id": "AST_SUBTLE_02",
+      "category": "ast_builtin_dict_bypass",
+      "name": "Builtin Module Dict Getattr Access",
+      "should_fail": true,
+      "detected_fault": false,
+      "latency_ms": 0.0,
+      "detail": "",
+      "correct_verdict": false
+    },
+    {
+      "id": "TRACE_01",
+      "category": "missing_3gpp_citations",
+      "name": "Uncited Script Lacking 3GPP Clause Comments",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.089,
+      "detail": "Valid 3GPP match: False | Homoglyphs: False | Topic Mismatch: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "TRACE_02",
+      "category": "missing_3gpp_citations",
+      "name": "Script With Invalid Spec Header Format",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.061,
+      "detail": "Valid 3GPP match: False | Homoglyphs: False | Topic Mismatch: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "TRACE_HARD_01",
+      "category": "fake_3gpp_citations",
+      "name": "Fake Hallucinated Spec Number Spoofing",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.047,
+      "detail": "Valid 3GPP match: False | Homoglyphs: False | Topic Mismatch: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "TRACE_HARD_02",
+      "category": "fake_3gpp_citations",
+      "name": "Non-Telecom IEEE Wi-Fi Citation",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.05,
+      "detail": "Valid 3GPP match: False | Homoglyphs: False | Topic Mismatch: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "TRACE_EXTREME_01",
+      "category": "homoglyph_citation_spoofing",
+      "name": "Unicode Homoglyph Zero-Width Space Spoofing",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.048,
+      "detail": "Valid 3GPP match: False | Homoglyphs: True | Topic Mismatch: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "TRACE_EXTREME_02",
+      "category": "subclause_topic_mismatch",
+      "name": "Sub-clause Roaming Spec Topic Mismatch",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.053,
+      "detail": "Valid 3GPP match: True | Homoglyphs: False | Topic Mismatch: True",
+      "correct_verdict": true
+    },
+    {
+      "id": "TRACE_SUBTLE_01",
+      "category": "fake_subclause_number",
+      "name": "Fictitious Sub-clause Number In Valid Spec",
+      "should_fail": true,
+      "detected_fault": false,
+      "latency_ms": 0.043,
+      "detail": "Valid 3GPP match: True | Homoglyphs: False | Topic Mismatch: False",
+      "correct_verdict": false
+    },
+    {
+      "id": "TRACE_SUBTLE_02",
+      "category": "inline_string_citation_bypass",
+      "name": "Citation Embedded In String Literal Instead Of Header Comment",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.044,
+      "detail": "Valid 3GPP match: False | Homoglyphs: False | Topic Mismatch: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "INTENT_01",
+      "category": "incomplete_intent_coverage",
+      "name": "Empty Test Case Array",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.083,
+      "detail": "Mandatory intents: 0/0 | Diluted: False | KPI Suppressed: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "INTENT_02",
+      "category": "incomplete_intent_coverage",
+      "name": "Suite Missing Attach KPI Measurement Procedure",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.053,
+      "detail": "Mandatory intents: 0/0 | Diluted: False | KPI Suppressed: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "INTENT_HARD_01",
+      "category": "incomplete_intent_coverage",
+      "name": "Title Keyword Stuffing With Empty Test Steps",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.045,
+      "detail": "Mandatory intents: 0/0 | Diluted: False | KPI Suppressed: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "INTENT_HARD_02",
+      "category": "incomplete_intent_coverage",
+      "name": "Omitting Mandatory SLA Latency KPI Validation",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.045,
+      "detail": "Mandatory intents: 0/0 | Diluted: False | KPI Suppressed: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "INTENT_EXTREME_01",
+      "category": "paraphrased_intent_dilution",
+      "name": "Paraphrased Synonym Intent Dilution",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.047,
+      "detail": "Mandatory intents: 0/0 | Diluted: True | KPI Suppressed: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "INTENT_EXTREME_02",
+      "category": "kpi_assertion_suppression",
+      "name": "KPI Assertion Check Commented Out",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.045,
+      "detail": "Mandatory intents: 0/0 | Diluted: False | KPI Suppressed: True",
+      "correct_verdict": true
+    },
+    {
+      "id": "INTENT_SUBTLE_01",
+      "category": "loop_step_intent_bypass",
+      "name": "Valid Title With Empty Loop Execution Steps",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.045,
+      "detail": "Mandatory intents: 0/0 | Diluted: False | KPI Suppressed: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "INTENT_SUBTLE_02",
+      "category": "subtle_feature_drift",
+      "name": "Cell Reselection Labeled As Dual Connectivity",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.043,
+      "detail": "Mandatory intents: 0/0 | Diluted: False | KPI Suppressed: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "SMC_01",
+      "category": "missing_signaling_messages",
+      "name": "Suite Missing Registration Request / Accept",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.071,
+      "detail": "Interleaved: False | Unreachable: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "SMC_02",
+      "category": "missing_signaling_messages",
+      "name": "Suite Missing PDU Session Establishment Accept",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.05,
+      "detail": "Interleaved: False | Unreachable: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "SMC_HARD_01",
+      "category": "out_of_order_signaling",
+      "name": "Out of Order Protocol Signaling Sequence",
+      "should_fail": true,
+      "detected_fault": false,
+      "latency_ms": 0.05,
+      "detail": "Interleaved: False | Unreachable: False",
+      "correct_verdict": false
+    },
+    {
+      "id": "SMC_HARD_02",
+      "category": "synonym_obfuscated_signaling",
+      "name": "Synonym Obfuscated Signaling Message Names",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.049,
+      "detail": "Interleaved: False | Unreachable: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "SMC_EXTREME_01",
+      "category": "interleaved_signaling_collision",
+      "name": "Interleaved Multi-UE State Machine Collision",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.046,
+      "detail": "Interleaved: True | Unreachable: False",
+      "correct_verdict": true
+    },
+    {
+      "id": "SMC_EXTREME_02",
+      "category": "unreachable_conditional_signaling",
+      "name": "Signaling Message Wrapped in Dead If-False",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 0.053,
+      "detail": "Interleaved: False | Unreachable: True",
+      "correct_verdict": true
+    },
+    {
+      "id": "SMC_SUBTLE_01",
+      "category": "omitted_detach_cleanup",
+      "name": "Omitted Detach Release Signaling Sequence",
+      "should_fail": true,
+      "detected_fault": false,
+      "latency_ms": 0.053,
+      "detail": "Interleaved: False | Unreachable: False",
+      "correct_verdict": false
+    },
+    {
+      "id": "NLI_01",
+      "category": "nli_spec_contradiction",
+      "name": "Claiming SN Prohibited From Rejecting SN Release",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 11220.755,
+      "detail": "Contradiction score: 94.9%",
+      "correct_verdict": true
+    },
+    {
+      "id": "NLI_02",
+      "category": "nli_spec_contradiction",
+      "name": "Claiming Poor Radio Conditions Required For Attach Test",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 1265.176,
+      "detail": "Contradiction score: 100.0%",
+      "correct_verdict": true
+    },
+    {
+      "id": "NLI_HARD_01",
+      "category": "nli_parameter_drift",
+      "name": "Soft Parameter Drift T310 Default Timer",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 878.468,
+      "detail": "Neutral ungrounded finding score: 97.2%",
+      "correct_verdict": true
+    },
+    {
+      "id": "NLI_HARD_02",
+      "category": "nli_deceptive_invention",
+      "name": "Deceptive Grounding Architectural Invention",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 746.027,
+      "detail": "Contradiction score: 99.7%",
+      "correct_verdict": true
+    },
+    {
+      "id": "NLI_EXTREME_01",
+      "category": "nli_multihop_contradiction",
+      "name": "Multi-hop Indirect RRC Signaling Contradiction",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 1072.699,
+      "detail": "Contradiction score: 85.7%",
+      "correct_verdict": true
+    },
+    {
+      "id": "NLI_EXTREME_02",
+      "category": "nli_version_anachronism",
+      "name": "Subtle 3GPP Release N26 Interface Anachronism",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 1046.986,
+      "detail": "Contradiction score: 99.9%",
+      "correct_verdict": true
+    },
+    {
+      "id": "NLI_SUBTLE_01",
+      "category": "nli_tolerance_boundary_drift",
+      "name": "Subtle Power Tolerance Boundary Drift",
+      "should_fail": true,
+      "detected_fault": true,
+      "latency_ms": 1075.793,
+      "detail": "Neutral ungrounded finding score: 98.6%",
+      "correct_verdict": true
+    },
+    {
+      "id": "VALID_01",
+      "category": "fully_compliant_script",
+      "name": "Fully Compliant 5G NSA Attach/Detach Script",
+      "should_fail": false,
+      "detected_fault": false,
+      "latency_ms": 0.872,
+      "detail": "Fully compliant script check",
+      "correct_verdict": true
+    },
+    {
+      "id": "VALID_02",
+      "category": "fully_compliant_script",
+      "name": "Compliant Multi-Beam 5G SA PDU Session Script",
+      "should_fail": false,
+      "detected_fault": false,
+      "latency_ms": 0.175,
+      "detail": "Fully compliant script check",
+      "correct_verdict": true
+    },
+    {
+      "id": "VALID_03",
+      "category": "fully_compliant_script",
+      "name": "Compliant Dual-Connectivity Handover Script",
+      "should_fail": false,
+      "detected_fault": false,
+      "latency_ms": 0.153,
+      "detail": "Fully compliant script check",
+      "correct_verdict": true
+    }
+  ]
+}

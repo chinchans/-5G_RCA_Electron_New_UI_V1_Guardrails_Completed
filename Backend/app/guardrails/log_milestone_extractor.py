@@ -40,22 +40,24 @@ _MILESTONE_RULES: Tuple[Tuple[str, re.Pattern[str]], ...] = (
     ("ngap_register_cnf", re.compile(r"NGAP_REGISTER_GNB_CNF|associated AMF", re.I)),
     ("f1ap_start", re.compile(r"Starting F1AP", re.I)),
     ("prach_detected", re.compile(
-        r"Detected PRACH|PRACH \[UE|placing PRACH|nr_handle_prach|Processing PRACH request",
+        r"Detected PRACH|PRACH \[UE|placing PRACH|nr_handle_prach|Processing PRACH request|"
+        r"Initiating RA procedure",
         re.I,
     )),
     ("ra_start", re.compile(
         r"contention-based random access|4-step.*random access|"
-        r"Initialization of.*random access procedure",
+        r"Initialization of.*random access procedure|Initiating RA procedure",
         re.I,
     )),
     ("msg2_sent", re.compile(
         r"Transmitted RAR|Random Access Response|Preparing Random Access Response|"
-        r"nr_generate_Msg2|Scheduling PDSCH transmission for RAR",
+        r"nr_generate_Msg2|Generating RA-Msg2|Scheduling PDSCH transmission for RAR",
         re.I,
     )),
     ("msg3_tx", re.compile(r"RA-Msg3 transmitted|UL grant provided for Msg3", re.I)),
     ("msg3_received", re.compile(r"Received Msg3", re.I)),
-    ("contention_resolved", re.compile(r"Contention resolution successful", re.I)),
+    ("msg4_tx", re.compile(r"Generate Msg4|Generating Msg4", re.I)),
+    ("contention_resolved", re.compile(r"Contention resolution successful|Received Ack of Msg4", re.I)),
     ("contention_timer_expired", re.compile(
         r"Contention resolution timer has expired|RA procedure has failed",
         re.I,
@@ -90,7 +92,8 @@ _SCENARIO_HINTS: Tuple[Tuple[str, re.Pattern[str]], ...] = (
         r"contention resolution",
         re.I,
     )),
-    ("cu_stack", re.compile(r"NGSetupRequest|NGSetupResponse|Starting F1AP|NGAP layer", re.I)),
+    ("cu_stack", re.compile(r"NGSetupRequest|NGSetupResponse|NGAP layer", re.I)),
+    ("du_stack", re.compile(r"Starting F1AP|ngran_DU|F1AP_|Frame\.Slot", re.I)),
 )
 
 
@@ -138,8 +141,18 @@ def extract_milestones_from_file(path: Path, max_chars: int = MAX_SCAN_CHARS) ->
 def detect_scenario(steps: Sequence[str], text: str = "") -> str:
     """Infer scenario family for pattern routing."""
     step_set = set(steps)
+    sample = text[:12000] if text else ""
+    sample_l = sample.lower()
     if step_set & {"build_cmake", "build_compile_fail"}:
         return "build"
+
+    has_ngap = bool(step_set & {"ngap_setup_request", "ngap_setup_response", "ngap_register_cnf"}) or bool(
+        re.search(r"NGSetupRequest|NGSetupResponse|NGAP layer", sample, re.I)
+    )
+    has_f1ap = "f1ap_start" in step_set or bool(re.search(r"Starting F1AP|F1AP_", sample, re.I))
+    looks_du = bool(
+        re.search(r"ngran_DU|\bDU\b|Frame\.Slot", sample, re.I)
+    ) and not has_ngap
 
     registration_chain = {
         "prach_detected",
@@ -156,8 +169,11 @@ def detect_scenario(steps: Sequence[str], text: str = "") -> str:
     if step_set & {"rrc_setup_request_ue", "sib1_decoded"}:
         return "registration"
 
-    if step_set & {"ngap_setup_request", "ngap_setup_response", "f1ap_start", "ngap_register_cnf"}:
+    # CU vs DU: NGAP is CU-side; F1AP alone (no NGAP) is a DU capture.
+    if has_ngap:
         return "cu_stack"
+    if has_f1ap or looks_du:
+        return "du_stack"
 
     if step_set & {"registration_complete", "rrc_connected", "ngap_initial_ue"}:
         return "registration"
@@ -165,7 +181,6 @@ def detect_scenario(steps: Sequence[str], text: str = "") -> str:
     if "stack_init" in step_set:
         return "generic_runtime"
 
-    sample = text[:8000] if text else ""
     for scenario, pattern in _SCENARIO_HINTS:
         if pattern.search(sample):
             return scenario

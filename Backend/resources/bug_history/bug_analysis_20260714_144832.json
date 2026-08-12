@@ -1,0 +1,64 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[GTPU] try to get a gtp-u not existing output\"\n\nAdditional context:\n- This error indicates an attempt to access a non-existent GTP-U tunnel output, which can disrupt user plane data forwarding.\n- It occurs after the log entry \"[GTPU] [90] UE ID 904: Delete all tunnels (1 tunnels)\" and before \"[RLC] Remove UE 904\".\n- Followed by \"[NR_MAC] Unknown RNTI 0388 in PUCCH UCI\" and \"[HW] Lost socket\", suggesting subsequent issues in MAC layer and hardware interface.\n\nThis error is the most critical as it reflects a failure in GTP-U tunnel management that could prevent proper data transmission and lead to connection loss.",
+  "log_file": "success_du_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-14T14:48:32.008650",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[GTPU] try to get a gtp-u not existing output\"\n\nAdditional context:\n- This error indicates an attempt to access a non-existent GTP-U tunnel output, which can disrupt user plane data forwarding.\n- It occurs after the log entry \"[GTPU] [90] UE ID 904: Delete all tunnels (1 tunnels)\" and before \"[RLC] Remove UE 904\".\n- Followed by \"[NR_MAC] Unknown RNTI 0388 in PUCCH UCI\" and \"[HW] Lost socket\", suggesting subsequent issues in MAC layer and hardware interface.\n\nThis error is the most critical as it reflects a failure in GTP-U tunnel management that could prevent proper data transmission and lead to connection loss.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "grep -n \"gtpu\" /etc/gnb/gnb.conf",
+            "hint": "Verify GTP-U tunnel configuration parameters in gNB config file"
+          },
+          {
+            "command": "ip link show",
+            "hint": "Check if GTP-U tunnel interface exists and is up on the gNB"
+          },
+          {
+            "command": "tcpdump -i any port 2152",
+            "hint": "Capture GTP-U traffic to verify tunnel packets are being sent/received correctly"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "grep -n \"gtpu\" /etc/gnb/gnb.conf",
+            "explanation": "Verify GTP-U tunnel configuration parameters in gNB config file"
+          },
+          {
+            "command": "ip link show",
+            "explanation": "Check if GTP-U tunnel interface exists and is up on the gNB"
+          },
+          {
+            "command": "tcpdump -i any port 2152",
+            "explanation": "Capture GTP-U traffic to verify tunnel packets are being sent/received correctly"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    },
+    "timestamp": "2026-07-14T14:48:04.399771"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260714_144832.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

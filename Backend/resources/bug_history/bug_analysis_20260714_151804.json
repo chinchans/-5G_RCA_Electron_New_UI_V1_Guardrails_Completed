@@ -1,0 +1,64 @@
+{
+  "error_message": "ERROR MESSAGE:\n\"[NR_MAC] Unknown RNTI 0388 in PUCCH UCI\"\n\nAdditional context:\n- This error occurs immediately after the log line \"Remove NR rnti 0x0388\" indicating that the system attempted to remove the UE with RNTI 0388.\n- Followed by \"[HW] Lost socket\" which may indicate a hardware or communication failure related to the UE or MAC layer.\n- The \"Unknown RNTI\" error in the Physical Uplink Control Channel (PUCCH) User Control Information (UCI) processing suggests that the MAC layer received uplink control information referencing a UE that is no longer recognized or has been removed, which can cause loss of synchronization or connection failure.\n\nThis is the most critical error in the log that could prevent proper system operation related to UE MAC layer handling and uplink control. No stack trace or crash info is present.",
+  "log_file": "success_du_gnb.log",
+  "log_path": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+  "code_dir": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/openairinterface-5g-develop",
+  "timestamp": "2026-07-14T15:18:04.013230",
+  "results": {
+    "error_message": "ERROR MESSAGE:\n\"[NR_MAC] Unknown RNTI 0388 in PUCCH UCI\"\n\nAdditional context:\n- This error occurs immediately after the log line \"Remove NR rnti 0x0388\" indicating that the system attempted to remove the UE with RNTI 0388.\n- Followed by \"[HW] Lost socket\" which may indicate a hardware or communication failure related to the UE or MAC layer.\n- The \"Unknown RNTI\" error in the Physical Uplink Control Channel (PUCCH) User Control Information (UCI) processing suggests that the MAC layer received uplink control information referencing a UE that is no longer recognized or has been removed, which can cause loss of synchronization or connection failure.\n\nThis is the most critical error in the log that could prevent proper system operation related to UE MAC layer handling and uplink control. No stack trace or crash info is present.",
+    "log_file": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/app/services/Error_fixing_pipelin/log_files/success_du_gnb.log",
+    "pipeline_error": "'NoneType' object has no attribute 'ntotal'",
+    "deployment_context": null,
+    "phase2_analysis": {},
+    "phase3_fixes": {
+      "fix_suggestion": {
+        "investigation_commands": [
+          {
+            "command": "ethtool -i eth0",
+            "hint": "Verify driver and firmware version of the network interface handling socket communication"
+          },
+          {
+            "command": "ss -s",
+            "hint": "Check socket usage and status to identify possible socket descriptor exhaustion or leaks"
+          },
+          {
+            "command": "dmesg | grep -i socket",
+            "hint": "Review kernel logs for hardware or socket-related errors around the time of failure"
+          }
+        ]
+      }
+    },
+    "summary": {
+      "total_functions_analyzed": 0,
+      "total_configs_analyzed": 0,
+      "call_graph_entries": 0,
+      "pattern_matched": true,
+      "analysis_completed": true
+    },
+    "phase4_commands": {
+      "terminal_commands": {
+        "terminal_commands": [
+          {
+            "command": "ethtool -i eth0",
+            "explanation": "Verify driver and firmware version of the network interface handling socket communication"
+          },
+          {
+            "command": "ss -s",
+            "explanation": "Check socket usage and status to identify possible socket descriptor exhaustion or leaks"
+          },
+          {
+            "command": "dmesg | grep -i socket",
+            "explanation": "Review kernel logs for hardware or socket-related errors around the time of failure"
+          }
+        ],
+        "command_count": 3
+      },
+      "command_count": 3
+    },
+    "timestamp": "2026-07-14T15:17:33.722373"
+  },
+  "history_file": "resources/bug_history/bug_analysis_20260714_151804.json",
+  "source": "rca_analysis",
+  "from_git_history": false,
+  "git_metadata": null
+}

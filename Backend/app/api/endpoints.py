@@ -18,11 +18,13 @@ from app.guardrails import (
     validate_tsg_dataset_upload,
 )
 from app.guardrails.tsg_prompt_guardrail import (
-    raise_if_tsg_prompt_blocked,
+    raise_if_classifier_blocked,
     should_scan_tsg_prompt,
     validate_refine_prompt_or_raise,
     validate_tsg_prompt_or_raise,
-    validate_tsg_user_prompt,
+)
+from app.guardrails.prompt_studio_guardrail import (
+    validate_prompt_studio_or_raise,
 )
 from app.guardrails.bug_discovery_log_guardrail import (
     raise_if_bug_log_blocked,
@@ -32,6 +34,7 @@ from app.guardrails.bug_discovery_log_guardrail import (
 from app.guardrails.refine_guardrail import validate_refined_output
 from app.guardrails.test_script_guardrail import validate_generated_test_script
 from app.guardrails.config import (
+    GUARDRAILS_PROMPT_STUDIO_ENABLED,
     LEGACY_SPEC_INTEL_EXTRACT_ROOT,
     SPEC_INTEL_DATASETS_DIR,
     SPEC_INTEL_EXTRACT_ROOT,
@@ -163,22 +166,25 @@ try:
         print(f"ℹ️  Attempted to load .env using default dotenv behavior")
     
     # Verify required environment variables are set
-    # Prefer AZURE_OPENAI_API_KEY, but also accept AZURE_OPENAI_KEY for backward compatibility
-    api_key = os.getenv('AZURE_OPENAI_API_KEY') or os.getenv('AZURE_OPENAI_KEY')
+    # Prefer GEMINI_API_KEY_LATEST / GEMINI_API_KEY, fallback to AZURE_OPENAI_API_KEY
+    api_key = os.getenv('GEMINI_API_KEY_LATEST') or os.getenv('GEMINI_API_KEY') or os.getenv('AZURE_OPENAI_API_KEY') or os.getenv('AZURE_OPENAI_KEY')
     endpoint = os.getenv('AZURE_OPENAI_ENDPOINT')
     
     missing_vars = []
     if not api_key:
-        missing_vars.append('AZURE_OPENAI_API_KEY (or AZURE_OPENAI_KEY for backward compatibility)')
-    if not endpoint:
-        missing_vars.append('AZURE_OPENAI_ENDPOINT')
+        missing_vars.append('GEMINI_API_KEY_LATEST (or GEMINI_API_KEY / AZURE_OPENAI_API_KEY)')
     
     if missing_vars:
         print(f"⚠️ Warning: Some environment variables may be missing: {missing_vars}")
         print(f"   Note: Pipeline will check for these at runtime")
     else:
         print(f"✅ All required environment variables are set")
-        print(f"   Using API key from: {'AZURE_OPENAI_API_KEY' if os.getenv('AZURE_OPENAI_API_KEY') else 'AZURE_OPENAI_KEY'}")
+        active_key_source = (
+            'GEMINI_API_KEY_LATEST' if os.getenv('GEMINI_API_KEY_LATEST')
+            else ('GEMINI_API_KEY' if os.getenv('GEMINI_API_KEY')
+            else ('AZURE_OPENAI_API_KEY' if os.getenv('AZURE_OPENAI_API_KEY') else 'AZURE_OPENAI_KEY'))
+        )
+        print(f"   Using API key from: {active_key_source}")
         
 except Exception as e:
     print(f"⚠️ Could not load .env file: {e}")
@@ -870,6 +876,7 @@ class TestScriptRequest(BaseModel):
     variables: Optional[TestScriptVariables] = None
     custom_prompt: Optional[str] = None
     dataset_folder: Optional[str] = None
+    test_cases_content: Optional[str] = None
 
 class TestScriptResponse(BaseModel):
     success: bool
@@ -885,6 +892,7 @@ class IntentCoverageRequest(BaseModel):
     dataset_folder: str
     generated_text: str
     use_nli_for_gaps: bool = True
+    primary_feature: Optional[str] = None
 
 class PromptTemplateResponse(BaseModel):
     success: bool
@@ -898,6 +906,7 @@ class RefineScriptRequest(BaseModel):
     previous_response: Optional[str] = None
     dataset_folder: Optional[str] = None
     refinement_source: Optional[str] = None  # test_case | test_script
+    primary_feature: Optional[str] = None
 
 class TestScriptSaveRequest(BaseModel):
     content: str
@@ -907,6 +916,15 @@ class TestScriptSaveRequest(BaseModel):
 class TemplateSaveRequest(BaseModel):
     template_name: str
     template_content: str
+    source: Optional[str] = None
+    role: Optional[str] = None
+    reference_doc: Optional[str] = None
+
+class PromptStudioValidateRequest(BaseModel):
+    template_name: str
+    template_content: str
+    role: Optional[str] = None
+    reference_doc: Optional[str] = None
 
 class TemplateDeleteRequest(BaseModel):
     template_name: str
@@ -1029,6 +1047,19 @@ async def generate_test_script(request: TestScriptRequest):
                 access_mode=request.variables.access_mode,
                 language=request.variables.language
             )
+
+        # Prefer explicit test cases from the client; else keep prior / latest saved suite.
+        if request.test_cases_content and str(request.test_cases_content).strip():
+            test_script_generator.set_test_cases_content(request.test_cases_content)
+        elif (request.prompt_key or "").strip().lower() == "test script":
+            if not (test_script_generator.testcases_name or "").strip():
+                latest_cases = test_script_generator.load_latest_test_cases_content()
+                if latest_cases:
+                    test_script_generator.set_test_cases_content(latest_cases)
+                    print(
+                        f"✅ Loaded latest saved test cases for Test Script generation "
+                        f"({len(latest_cases)} chars)"
+                    )
         
         # Use editor-provided prompt when sent (modified prompt in UI)
         if request.custom_prompt and request.custom_prompt.strip():
@@ -1082,21 +1113,31 @@ async def generate_test_script(request: TestScriptRequest):
             request.text_content,
             request.dataset_folder,
         ):
+            # Prefer structured test cases for traceability/groundedness when available.
+            cases_for_guardrails = (
+                request.test_cases_content
+                or getattr(test_script_generator, "testcases_name", None)
+                or ""
+            ).strip()
+            guardrail_source = cases_for_guardrails or (request.text_content or "")
             script_verdict = validate_generated_test_script(
                 generated_script,
-                source_text=request.text_content or "",
+                source_text=guardrail_source,
                 dataset_folder=request.dataset_folder,
                 language=(request.variables.language if request.variables else "python") or "python",
             )
             script_guardrails = script_verdict.to_dict()
             if script_verdict.blocked:
+                reason_preview = "; ".join((script_verdict.reasons or [])[:2]) or (
+                    "traceability and/or test-case groundedness"
+                )
                 raise HTTPException(
                     status_code=422,
                     detail={
                         "error": "generated_script_blocked_by_guardrails",
                         "message": (
-                            "Generated test script failed guardrails (traceability and/or "
-                            "test-case groundedness). Align script content with source test "
+                            "Generated test script failed guardrails "
+                            f"({reason_preview}). Align script content with source test "
                             "cases; optionally add # <testCaseID>: <title> above classes or methods."
                         ),
                         "reasons": script_verdict.reasons,
@@ -1154,8 +1195,12 @@ async def generate_test_script(request: TestScriptRequest):
 
         intent_coverage = None
         intent_guardrails = None
+        scenario_message_coverage = None
         is_test_case = (request.prompt_key or "").strip().lower() == "test case"
         resolved_dataset_folder = request.dataset_folder
+        primary_feature = (
+            request.variables.primary_feature if request.variables else None
+        )
         if is_test_case and not resolved_dataset_folder and request.text_content:
             from app.guardrails.output_guardrail import resolve_tsg_dataset_folder_from_content
 
@@ -1172,8 +1217,10 @@ async def generate_test_script(request: TestScriptRequest):
                 coverage_result = validate_intent_coverage(
                     resolved_dataset_folder,
                     generated_script,
+                    primary_feature=primary_feature,
                 )
                 intent_coverage = coverage_result.to_dict()
+                scenario_message_coverage = intent_coverage.get("scenario_message_coverage")
                 intent_guardrails = {
                     "intent_coverage_validation": {
                         "step": "intent_coverage_validation",
@@ -1185,6 +1232,50 @@ async def generate_test_script(request: TestScriptRequest):
                 }
             except Exception as coverage_exc:
                 print(f"⚠️ Intent coverage validation skipped: {coverage_exc}")
+
+        if is_test_case and scenario_message_coverage is None:
+            try:
+                from app.guardrails.scenario_message_coverage import (
+                    validate_scenario_message_coverage,
+                )
+
+                scenario_result = validate_scenario_message_coverage(
+                    generated_script,
+                    primary_feature=primary_feature,
+                    advisory_only=True,
+                )
+                if scenario_result.available:
+                    scenario_message_coverage = scenario_result.to_dict()
+                    if intent_coverage is None:
+                        intent_coverage = {
+                            "available": True,
+                            "passed": scenario_result.passed,
+                            "advisory_only": True,
+                            "coverage_percent": 100.0 if scenario_result.passed else 0.0,
+                            "mandatory_total": 0,
+                            "mandatory_covered": 0,
+                            "warnings": scenario_result.warnings,
+                            "errors": [],
+                            "scenario_message_coverage": scenario_message_coverage,
+                        }
+                    else:
+                        intent_coverage["scenario_message_coverage"] = scenario_message_coverage
+                        if not scenario_result.passed:
+                            intent_coverage["passed"] = False
+                            intent_coverage.setdefault("warnings", []).extend(
+                                scenario_result.warnings
+                            )
+                    if intent_guardrails is None:
+                        intent_guardrails = {}
+                    intent_guardrails["scenario_message_coverage"] = {
+                        "step": "scenario_message_coverage",
+                        "passed": scenario_result.passed,
+                        "errors": scenario_result.errors,
+                        "warnings": scenario_result.warnings,
+                        "details": scenario_message_coverage,
+                    }
+            except Exception as scenario_exc:
+                print(f"⚠️ Scenario message coverage skipped: {scenario_exc}")
 
         response_message = "Test script generated successfully"
         if intent_coverage and intent_coverage.get("available"):
@@ -1200,6 +1291,12 @@ async def generate_test_script(request: TestScriptRequest):
                 response_message = (
                     f"Test cases generated. Intent coverage review needed ({pct}% — "
                     f"{covered}/{total} mandatory intents)."
+                )
+            scenario = intent_coverage.get("scenario_message_coverage") or {}
+            if scenario.get("available") and not scenario.get("passed"):
+                response_message += (
+                    " Scenario message checks need review "
+                    "(Registration / PDU Session / Handover)."
                 )
 
         combined_guardrails: Dict[str, Any] = {}
@@ -1238,6 +1335,7 @@ async def validate_test_case_intent_coverage(request: IntentCoverageRequest):
             request.dataset_folder,
             request.generated_text,
             use_nli_for_gaps=request.use_nli_for_gaps,
+            primary_feature=request.primary_feature,
         )
         return {"success": True, "intent_coverage": result.to_dict()}
     except Exception as e:
@@ -1568,15 +1666,12 @@ async def get_user_history(request: UserHistoryRequest):
 async def refine_test_script(request: RefineScriptRequest):
     """Refine existing test script with new prompt"""
     try:
-        prompt_verdict = validate_tsg_user_prompt(
+        validate_tsg_prompt_or_raise(
             request.new_prompt,
             context="tsg_refine",
             template_key="Refine",
-        )
-        raise_if_tsg_prompt_blocked(
-            prompt_verdict,
-            template_key="Refine",
-            context="tsg_refine",
+            previous_response=request.previous_response,
+            text_content=request.text_content or "",
         )
         validate_refine_prompt_or_raise(
             request.new_prompt,
@@ -1598,6 +1693,7 @@ async def refine_test_script(request: RefineScriptRequest):
             new_prompt=request.new_prompt,
             previous_response=request.previous_response,
             refinement_source=request.refinement_source,
+            primary_feature=request.primary_feature,
         )
         if refine_verdict.blocked:
             error_code = "generated_script_blocked_by_guardrails"
@@ -1643,7 +1739,11 @@ async def refine_test_script(request: RefineScriptRequest):
             generated_script=refined_script,
             message="Test script refined successfully",
             guardrails={
-                "refine_prompt_validation": prompt_verdict.to_dict(),
+                "refine_prompt_validation": {
+                    "passed": True,
+                    "blocked": False,
+                    "layers": {"intent_classifier": True, "refine_scope": True},
+                },
                 "refine_output_validation": refine_verdict.to_dict(),
             },
             intent_coverage=refine_verdict.intent_coverage,
@@ -1920,6 +2020,62 @@ async def save_test_script_response(request: TestScriptSaveRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error saving test script: {str(e)}")
 
+@router.post("/api/prompt-studio/validate-template")
+async def validate_prompt_studio_template_endpoint(request: PromptStudioValidateRequest):
+    """Validate Prompt Studio Add/Save template.
+
+    When GUARDRAILS_PROMPT_STUDIO_ENABLED is true: legacy structure/scope/L1 path.
+    When false (default for RoBERTa rollout): same intent classifier as TSG Generate.
+    """
+    if GUARDRAILS_PROMPT_STUDIO_ENABLED:
+        result = validate_prompt_studio_or_raise(
+            template_name=request.template_name,
+            template_content=request.template_content,
+            role=request.role or "",
+            reference_doc=request.reference_doc or "",
+        )
+        return {
+            "success": True,
+            "passed": True,
+            "blocked": False,
+            "messages": result.messages,
+            "checks": result.checks,
+            "guardrails": result.to_dict(),
+        }
+
+    if not (request.template_name or "").strip():
+        raise HTTPException(status_code=422, detail="Template name is required.")
+    if not (request.template_content or "").strip():
+        raise HTTPException(status_code=422, detail="Template prompt content is required.")
+
+    # Same RoBERTa OUT_OF_SCOPE / PROMPT_INJECTION path as Test Script Generator Generate.
+    raise_if_classifier_blocked(
+        request.template_content,
+        template_key=request.template_name,
+        context="prompt_studio_save",
+    )
+    return {
+        "success": True,
+        "passed": True,
+        "blocked": False,
+        "messages": [],
+        "checks": [
+            {
+                "check": "intent_classifier",
+                "passed": True,
+                "severity": "info",
+                "detail": "RoBERTa intent classifier passed (telecom workbench).",
+            }
+        ],
+        "guardrails": {
+            "passed": True,
+            "blocked": False,
+            "layers": {"intent_classifier": True},
+            "reasons": [],
+        },
+    }
+
+
 @router.post("/api/test-script/save-template")
 async def save_template(request: TemplateSaveRequest):
     """Save or update a template prompt in the backend."""
@@ -1931,7 +2087,21 @@ async def save_template(request: TemplateSaveRequest):
         print(f"💾 Template content length: {len(request.template_content)} chars")
         print(f"💾 Template preview (first 100 chars): {request.template_content[:100]}...")
 
-        if should_scan_tsg_prompt(request.template_name, save_template=True):
+        if (request.source or "").strip().lower() == "prompt_studio":
+            if GUARDRAILS_PROMPT_STUDIO_ENABLED:
+                validate_prompt_studio_or_raise(
+                    template_name=request.template_name,
+                    template_content=request.template_content,
+                    role=request.role or "",
+                    reference_doc=request.reference_doc or "",
+                )
+            else:
+                raise_if_classifier_blocked(
+                    request.template_content,
+                    template_key=request.template_name,
+                    context="prompt_studio_save",
+                )
+        elif should_scan_tsg_prompt(request.template_name, save_template=True):
             validate_tsg_prompt_or_raise(
                 request.template_content,
                 context="tsg_save_template",
@@ -2714,6 +2884,8 @@ async def validate_rca_log_file(request: ValidateLogFileRequest):
     quality = layers.get("telecom_domain")
     historical = layers.get("historical_pattern")
     data_quality = layers.get("data_quality")
+    scenario_relevance = layers.get("scenario_relevance")
+    context_confidence = layers.get("context_confidence")
     return {
         "success": True,
         "passed": verdict.passed and not verdict.blocked,
@@ -2722,6 +2894,8 @@ async def validate_rca_log_file(request: ValidateLogFileRequest):
         "quality": quality,
         "historical_pattern": historical,
         "data_quality": data_quality,
+        "scenario_relevance": scenario_relevance,
+        "context_confidence": context_confidence,
     }
 
 @router.post("/api/rca/upload-logs")
@@ -2781,6 +2955,8 @@ async def upload_rca_logs(files: List[UploadFile] = File(...)):
                 "quality": layers.get("telecom_domain"),
                 "historical_pattern": layers.get("historical_pattern"),
                 "data_quality": layers.get("data_quality"),
+                "scenario_relevance": layers.get("scenario_relevance"),
+                "context_confidence": layers.get("context_confidence"),
             })
         with open(metadata_file, 'w') as f:
             json.dump(file_metadata, f, indent=2)

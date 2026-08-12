@@ -100,22 +100,25 @@ try:
         print(f"ℹ️  Attempted to load .env using default dotenv behavior")
     
     # Verify required environment variables are set
-    # Prefer AZURE_OPENAI_API_KEY, but also accept AZURE_OPENAI_KEY for backward compatibility
-    api_key = os.getenv('AZURE_OPENAI_API_KEY') or os.getenv('AZURE_OPENAI_KEY')
+    # Prefer GEMINI_API_KEY_LATEST / GEMINI_API_KEY, fallback to AZURE_OPENAI_API_KEY
+    api_key = os.getenv('GEMINI_API_KEY_LATEST') or os.getenv('GEMINI_API_KEY') or os.getenv('AZURE_OPENAI_API_KEY') or os.getenv('AZURE_OPENAI_KEY')
     endpoint = os.getenv('AZURE_OPENAI_ENDPOINT')
     
     missing_vars = []
     if not api_key:
-        missing_vars.append('AZURE_OPENAI_API_KEY (or AZURE_OPENAI_KEY for backward compatibility)')
-    if not endpoint:
-        missing_vars.append('AZURE_OPENAI_ENDPOINT')
+        missing_vars.append('GEMINI_API_KEY_LATEST (or GEMINI_API_KEY / AZURE_OPENAI_API_KEY)')
     
     if missing_vars:
         print(f"⚠️ Warning: Some environment variables may be missing: {missing_vars}")
         print(f"   Note: Pipeline will check for these at runtime")
     else:
         print(f"✅ All required environment variables are set")
-        print(f"   Using API key from: {'AZURE_OPENAI_API_KEY' if os.getenv('AZURE_OPENAI_API_KEY') else 'AZURE_OPENAI_KEY'}")
+        active_key_source = (
+            'GEMINI_API_KEY_LATEST' if os.getenv('GEMINI_API_KEY_LATEST')
+            else ('GEMINI_API_KEY' if os.getenv('GEMINI_API_KEY')
+            else ('AZURE_OPENAI_API_KEY' if os.getenv('AZURE_OPENAI_API_KEY') else 'AZURE_OPENAI_KEY'))
+        )
+        print(f"   Using API key from: {active_key_source}")
         
 except Exception as e:
     print(f"⚠️ Could not load .env file: {e}")
@@ -1267,6 +1270,8 @@ async def refine_test_script(request: RefineScriptRequest):
             request.new_prompt,
             context="tsg_refine",
             template_key="Refine",
+            previous_response=request.previous_response,
+            text_content=request.text_content or "",
         )
 
         refined_script = test_script_generator.generate_with_new_prompt(

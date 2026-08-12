@@ -37,35 +37,64 @@ function showStatusBar(message, type = 'info', title = null, durationMs = 10000)
     const statusCheck = document.getElementById('statusCheck');
     const statusError = document.getElementById('statusError');
     
-    if (!statusBar) return;
+    if (!statusBar) {
+        console.warn('showStatusBar: #statusBar not found');
+        return;
+    }
     
     // Clear any existing timeout
     if (statusBarTimeout) {
         clearTimeout(statusBarTimeout);
         statusBarTimeout = null;
     }
+
+    // Cancel an in-progress auto-hide animation
+    statusBar.classList.remove('auto-hide');
+
+    // Portal to <body> so the toast stacks above Add Template / other modals
+    // (statusBar lives inside .layout-container which can sit under modal overlays).
+    if (statusBar.parentElement !== document.body) {
+        document.body.appendChild(statusBar);
+    }
     
     // Set content
-    statusTitle.textContent = title || getStatusTitle(type);
-    statusMessage.textContent = message;
+    if (statusTitle) {
+        statusTitle.textContent = title || getStatusTitle(type);
+    }
     if (statusMessage) {
-        statusMessage.style.whiteSpace = (type === 'error' || type === 'warning') ? 'pre-wrap' : '';
+        statusMessage.textContent = message || '';
+        // Preserve line breaks for multiline guardrail scorecards (info/success toasts too).
+        statusMessage.style.whiteSpace = String(message || '').includes('\n') ? 'pre-wrap' : '';
         statusMessage.style.wordBreak = 'break-word';
     }
     
-    // Set type and show appropriate icon
+    // Set type and show appropriate icon (always reset other icons first)
     statusBar.className = `status-bar ${type}`;
     if (type === 'error' && title && String(title).toLowerCase().includes('blocked')) {
         statusBar.classList.add('guardrail-error');
     }
+    if (type === 'warning' && title && /scenario relevanc/i.test(String(title))) {
+        statusBar.classList.add('guardrail-warning');
+    }
     statusBar.style.display = 'block';
+    statusBar.style.visibility = 'visible';
+    statusBar.style.opacity = '1';
+    // Keep toasts above Add Template / other modals (modal z-index ~10000–10004).
+    statusBar.style.zIndex = '100050';
+    statusBar.style.pointerEvents = 'auto';
     
+    if (statusSpinner) statusSpinner.style.display = 'none';
+    if (statusCheck) statusCheck.style.display = 'none';
+    if (statusError) statusError.style.display = 'none';
+
     if (type === 'success') {
-        statusCheck.style.display = 'inline';
+        if (statusCheck) statusCheck.style.display = 'inline';
     } else if (type === 'error') {
-        statusError.style.display = 'inline';
+        if (statusError) statusError.style.display = 'inline';
+    } else if (type === 'warning') {
+        if (statusError) statusError.style.display = 'inline';
     } else {
-        statusSpinner.style.display = 'inline';
+        if (statusSpinner) statusSpinner.style.display = 'inline';
     }
     
     // Auto-hide after delay; durationMs <= 0 keeps the popup open until dismissed
@@ -225,6 +254,7 @@ function extractGuardrailPayload(error) {
         || detail?.error === 'log_blocked_by_telecom_domain'
         || detail?.error === 'log_blocked_by_historical_pattern'
         || detail?.error === 'log_blocked_by_data_quality'
+        || detail?.error === 'log_blocked_by_scenario_relevance'
         || inferredCode
     );
     return {
@@ -314,6 +344,16 @@ function formatGuardrailBlockCategories(findings, reasons, detail) {
     });
     if (detail?.blocked_by === 'layer1') categories.add('Layer 1 regex (prompt)');
     if (detail?.blocked_by === 'layer2') categories.add('Layer 2 Llama Prompt Guard (prompt)');
+    if (detail?.blocked_by === 'intent_classifier') {
+        const predicted = String(
+            detail?.classifier?.predicted_label
+            || detail?.guardrails?.layers?.intent_classifier?.predicted_label
+            || ''
+        ).toUpperCase();
+        if (predicted === 'OUT_OF_SCOPE') categories.add('Intent classifier (out of scope)');
+        else if (predicted === 'PROMPT_INJECTION') categories.add('Intent classifier (prompt injection)');
+        else categories.add('Intent classifier');
+    }
     if (detail?.error === 'generated_script_blocked_by_guardrails' && categories.size === 0) {
         categories.add('Generated script static/structural checks');
     }
@@ -349,6 +389,14 @@ function formatGuardrailRejectionStatus(findings, reasons, detailMessage, detail
         return dqMessages[0]
             || 'Log file appears incomplete; expected events are missing.';
     }
+    if (detail?.error === 'log_blocked_by_scenario_relevance') {
+        const scenario = detail?.scenario_relevance
+            || detail?.guardrails?.layers?.scenario_relevance
+            || {};
+        const scMessages = (scenario.messages || reasons || []).filter(Boolean);
+        return scMessages[0]
+            || 'Expected registration test events not found.';
+    }
     if (backendMessage && backendMessage.length < 300 && !backendMessage.startsWith('{')) {
         return backendMessage;
     }
@@ -368,6 +416,9 @@ function inferGuardrailErrorCode(error, detail) {
     }
     if (msg.includes('log_blocked_by_data_quality') || msg.includes('appears incomplete')) {
         return 'log_blocked_by_data_quality';
+    }
+    if (msg.includes('log_blocked_by_scenario_relevance') || msg.includes('reported scenario')) {
+        return 'log_blocked_by_scenario_relevance';
     }
     if (msg.includes('5g network component') || msg.includes('openairinterface log')) {
         return 'log_blocked_by_telecom_domain';
@@ -629,6 +680,9 @@ function guardrailBlockTitle(detail, error, findings = []) {
     if (code === 'log_blocked_by_data_quality') {
         return 'Data quality — log file incomplete or truncated';
     }
+    if (code === 'log_blocked_by_scenario_relevance') {
+        return 'Scenario relevance';
+    }
     if (code === 'dataset_output_guardrails_failed') {
         return 'Dataset blocked — validation failed';
     }
@@ -636,6 +690,23 @@ function guardrailBlockTitle(detail, error, findings = []) {
         const blockedBy = detail?.blocked_by || '';
         if (blockedBy === 'refine_scope') {
             return 'New prompt blocked — off-topic for loaded dataset';
+        }
+        if (blockedBy === 'intent_classifier') {
+            const predicted = String(
+                detail?.classifier?.predicted_label
+                || detail?.guardrails?.layers?.intent_classifier?.predicted_label
+                || ''
+            ).toUpperCase();
+            if (predicted === 'OUT_OF_SCOPE') {
+                return 'Prompt blocked — out of scope';
+            }
+            if (predicted === 'PROMPT_INJECTION') {
+                return 'Prompt blocked — injection / jailbreak detected';
+            }
+            return 'Prompt blocked — intent classifier';
+        }
+        if (blockedBy === 'prompt_studio') {
+            return 'Template blocked — Prompt Studio input guardrails';
         }
         return 'Prompt blocked — injection / jailbreak detected';
     }
@@ -2153,6 +2224,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let bugLogDir = '';
     let bugLogFilesArr = [];
     let bugLogGuardrailPassed = true;
+    // Cached warnings from last validate-log (re-shown after Start RCA).
+    let lastBugDiscoveryScenarioRelevance = null;
+    let lastBugDiscoveryContextConfidence = null;
     const bugCodeDirText = document.getElementById('bugCodeDirText');
     const bugLogDirText = document.getElementById('bugLogDirText');
     
@@ -2183,17 +2257,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const safeTitle = window.escapeHtml ? window.escapeHtml(title || 'Log file blocked by guardrails') : (title || 'Log file blocked by guardrails');
         const safeMessage = window.escapeHtml ? window.escapeHtml(message || '') : (message || '');
         banner.innerHTML = `<strong style="display:block;margin-bottom:6px;">${safeTitle}</strong><span>${safeMessage.replace(/\n/g, '<br>')}</span>`;
-        banner.style.cssText = [
-            'display:block',
-            'margin:8px 0 0 0',
-            'padding:12px 14px',
-            isWarning ? 'border:1px solid #ffc107' : 'border:1px solid #dc3545',
-            'border-radius:8px',
-            isWarning ? 'background:#fff9e6' : 'background:#fff5f5',
-            isWarning ? 'color:#664d03' : 'color:#842029',
-            'font-size:13px',
-            'line-height:1.45',
-        ].join(';');
+        banner.classList.toggle('bd-guardrail-banner--warning', isWarning);
+        banner.classList.toggle('bd-guardrail-banner--error', !isWarning);
+        banner.style.display = 'block';
+        banner.style.padding = '12px 14px';
+        banner.style.borderRadius = '8px';
+        banner.style.border = isWarning ? '1px solid #ffc107' : '1px solid #dc3545';
+        banner.style.background = isWarning ? '#fff9e6' : '#fff5f5';
+        banner.style.color = isWarning ? '#664d03' : '#842029';
+        banner.style.fontSize = '13px';
+        banner.style.lineHeight = '1.45';
+        banner.style.width = '100%';
+        banner.style.maxWidth = '100%';
+        banner.style.boxSizing = 'border-box';
+        banner.style.minWidth = '0';
+        banner.style.overflowWrap = 'anywhere';
+        banner.style.wordBreak = 'break-word';
+        banner.style.margin = '8px 0 0 0';
     }
 
     function getBugDiscoveryTelecomQuality(source) {
@@ -2261,14 +2341,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return headline;
         }
-        const headline = messages.find((message) => /new log file|human review/i.test(String(message)))
+        // New-log advisory: never include "Closest prior match" in the UI popup.
+        return messages.find((message) => /new log file/i.test(String(message)))
+            || messages.find((message) => /human review/i.test(String(message)))
             || messages[0]
             || 'This appears to be a new log file — human review is recommended.';
-        const score = historical?.similarity_score;
-        if (typeof score === 'number' && historical?.is_new_log) {
-            return `${headline}\nClosest prior match: ${Math.round(score * 100)}%`;
-        }
-        return headline;
     }
 
     function formatDataQualitySummary(dataQuality) {
@@ -2283,7 +2360,207 @@ document.addEventListener('DOMContentLoaded', () => {
         return headline;
     }
 
-    function presentBugDiscoveryGuardrailBlock({ quality, historical, dataQuality, detail, error, findings, reasons }) {
+    function formatScenarioRelevanceSummary(scenario) {
+        const messages = Array.isArray(scenario?.messages) ? scenario.messages.filter(Boolean) : [];
+        if (messages.length) {
+            return messages.join('\n');
+        }
+        return 'Expected registration test events not found.';
+    }
+
+    function formatTargetScenarioMatchLabel(context) {
+        const raw = context?.target_scenario
+            || context?.evidence?.target_scenario
+            || 'attach';
+        const name = String(raw || 'attach').trim().toLowerCase();
+        if (!name) {
+            return 'Scenario match';
+        }
+        return `${name.charAt(0).toUpperCase()}${name.slice(1)} scenario match`;
+    }
+
+    function normalizeContextConfidenceScorecardLine(line, scenarioMatchLabel) {
+        const text = String(line || '').trim();
+        if (!text) {
+            return '';
+        }
+        if (/^Scenario match:/i.test(text)) {
+            return text.replace(/^Scenario match:/i, `${scenarioMatchLabel}:`);
+        }
+        return text;
+    }
+
+    function formatContextConfidenceSummary(context) {
+        if (!context || typeof context !== 'object') {
+            return 'Overall context score is below the configured threshold.';
+        }
+        const scenarioMatchLabel = formatTargetScenarioMatchLabel(context);
+        const scorecard = Array.isArray(context.scorecard) ? context.scorecard.filter(Boolean) : [];
+        if (scorecard.length) {
+            return scorecard
+                .map((line) => normalizeContextConfidenceScorecardLine(line, scenarioMatchLabel))
+                .filter(Boolean)
+                .join('\n');
+        }
+        const pct = (value) => (
+            typeof value === 'number' ? `${Math.round(value * 100)}%` : 'n/a'
+        );
+        return [
+            `Telecom relevance: ${pct(context.telecom_relevance)}`,
+            `${scenarioMatchLabel}: ${pct(context.scenario_match)}`,
+            `Completeness: ${pct(context.completeness)}`,
+            `Environment match: ${pct(context.environment_match)}`,
+            `Overall context score: ${pct(context.overall)}`,
+        ].join('\n');
+    }
+
+    function isContextConfidenceWarning(context) {
+        if (!context || typeof context !== 'object' || context.skipped) {
+            return false;
+        }
+        if (context.warned || context.blocked) {
+            return true;
+        }
+        const overall = context.overall;
+        const threshold = context.threshold;
+        return typeof overall === 'number'
+            && typeof threshold === 'number'
+            && overall < threshold;
+    }
+
+    function isScenarioRelevanceWarning(scenario) {
+        if (!scenario || typeof scenario !== 'object') {
+            return false;
+        }
+        if (scenario.warned || scenario.blocked) {
+            return true;
+        }
+        if (Array.isArray(scenario.messages) && scenario.messages.length) {
+            return true;
+        }
+        const checks = Array.isArray(scenario.checks) ? scenario.checks : [];
+        return checks.some((check) => (
+            check
+            && check.expected
+            && check.passed === false
+            && (check.scenario_id === 'rach_setup'
+                || check.scenario_id === 'registration'
+                || check.scenario_id === 'pdu_session'
+                || check.scenario_id === 'handover')
+        ));
+    }
+
+    function showScenarioRelevancePopup(scenario) {
+        const summary = formatScenarioRelevanceSummary(scenario);
+        showBugLogGuardrailBanner(summary, 'Scenario relevance', 'warning');
+        // Keep top-right popup open until dismissed — scenario text only (no telecom scores).
+        showStatusBar(summary, 'warning', 'Scenario relevance', 0);
+        return summary;
+    }
+
+    function showContextConfidencePopup(context) {
+        const scorecard = formatContextConfidenceSummary(context);
+        clearBugLogGuardrailBanner();
+        showStatusBar(scorecard, 'warning', 'Context confidence', 0);
+        return scorecard;
+    }
+
+    function showBugDiscoveryContextAndScenarioPopups(scenarioRelevance, contextConfidence) {
+        const scenarioIsWarning = isScenarioRelevanceWarning(scenarioRelevance);
+        const contextIsWarning = isContextConfidenceWarning(contextConfidence);
+        const hasContextScorecard = Boolean(
+            contextConfidence
+            && !contextConfidence.skipped
+            && Array.isArray(contextConfidence.scorecard)
+            && contextConfidence.scorecard.length
+        );
+
+        if (scenarioIsWarning) {
+            lastBugDiscoveryScenarioRelevance = scenarioRelevance;
+            // Yellow banner keeps scenario-only text.
+            showBugLogGuardrailBanner(
+                formatScenarioRelevanceSummary(scenarioRelevance),
+                'Scenario relevance',
+                'warning'
+            );
+        } else {
+            lastBugDiscoveryScenarioRelevance = null;
+            clearBugLogGuardrailBanner();
+        }
+
+        if (contextIsWarning || (hasContextScorecard && scenarioIsWarning)) {
+            // Prefer context scorecard in the top-right toast (do not let scenario swallow it).
+            lastBugDiscoveryContextConfidence = contextConfidence;
+            const scorecard = formatContextConfidenceSummary(contextConfidence);
+            const toastBody = scenarioIsWarning
+                ? `${formatScenarioRelevanceSummary(scenarioRelevance)}\n\n${scorecard}`
+                : scorecard;
+            showStatusBar(
+                toastBody,
+                'warning',
+                contextIsWarning ? 'Context confidence' : 'Scenario relevance',
+                0
+            );
+            return true;
+        }
+
+        lastBugDiscoveryContextConfidence = contextIsWarning ? contextConfidence : null;
+        if (scenarioIsWarning) {
+            showStatusBar(
+                formatScenarioRelevanceSummary(scenarioRelevance),
+                'warning',
+                'Scenario relevance',
+                0
+            );
+            return true;
+        }
+        if (hasContextScorecard && typeof contextConfidence.overall === 'number') {
+            // Always surface the scorecard once on validate when available.
+            lastBugDiscoveryContextConfidence = contextConfidence;
+            showStatusBar(
+                formatContextConfidenceSummary(contextConfidence),
+                contextIsWarning ? 'warning' : 'info',
+                'Context confidence',
+                contextIsWarning ? 0 : 12000
+            );
+            return true;
+        }
+        return false;
+    }
+
+    function presentBugDiscoveryGuardrailBlock({ quality, historical, dataQuality, scenarioRelevance, contextConfidence, detail, error, findings, reasons }) {
+        const isContextBlock = Boolean(
+            contextConfidence?.blocked
+            || detail?.error === 'log_blocked_by_context_confidence'
+            || error?.guardrailDetail?.error === 'log_blocked_by_context_confidence'
+        );
+        if (isContextBlock) {
+            const resolved = contextConfidence
+                || detail?.context_confidence
+                || detail?.guardrails?.layers?.context_confidence
+                || error?.guardrailDetail?.context_confidence;
+            return {
+                title: 'Context confidence',
+                summary: formatContextConfidenceSummary(resolved),
+                statusTitle: 'Context confidence',
+            };
+        }
+        const isScenarioBlock = Boolean(
+            scenarioRelevance?.blocked
+            || detail?.error === 'log_blocked_by_scenario_relevance'
+            || error?.guardrailDetail?.error === 'log_blocked_by_scenario_relevance'
+        );
+        if (isScenarioBlock) {
+            const resolved = scenarioRelevance
+                || detail?.scenario_relevance
+                || detail?.guardrails?.layers?.scenario_relevance
+                || error?.guardrailDetail?.scenario_relevance;
+            return {
+                title: 'Scenario relevance',
+                summary: formatScenarioRelevanceSummary(resolved),
+                statusTitle: 'Scenario relevance',
+            };
+        }
         const isDataQualityBlock = Boolean(
             dataQuality?.blocked
             || detail?.error === 'log_blocked_by_data_quality'
@@ -2345,34 +2622,78 @@ document.addEventListener('DOMContentLoaded', () => {
         const quality = result?.quality || result?.guardrails?.layers?.telecom_domain;
         const historical = result?.historical_pattern || result?.guardrails?.layers?.historical_pattern;
         const dataQuality = result?.data_quality || result?.guardrails?.layers?.data_quality;
+        const scenarioRelevance = result?.scenario_relevance || result?.guardrails?.layers?.scenario_relevance;
+        const contextConfidence = result?.context_confidence || result?.guardrails?.layers?.context_confidence;
 
         if (!result?.passed) {
             bugLogGuardrailPassed = false;
+            lastBugDiscoveryScenarioRelevance = isScenarioRelevanceWarning(scenarioRelevance)
+                ? scenarioRelevance
+                : null;
+            lastBugDiscoveryContextConfidence = contextConfidence && !contextConfidence.skipped
+                ? contextConfidence
+                : null;
             const presentation = presentBugDiscoveryGuardrailBlock({
                 quality,
                 historical,
                 dataQuality,
+                scenarioRelevance,
+                contextConfidence,
                 detail: result,
             });
-            showBugLogGuardrailBanner(presentation.summary, presentation.title);
-            showStatusBar(presentation.summary.split('\n')[0], 'error', presentation.statusTitle, 0);
+            if (presentation.title === 'Context confidence') {
+                clearBugLogGuardrailBanner();
+                showStatusBar(presentation.summary, 'error', presentation.statusTitle, 0);
+            } else {
+                showBugLogGuardrailBanner(presentation.summary, presentation.title);
+                // Still attach context scorecard in the toast when available.
+                if (lastBugDiscoveryContextConfidence) {
+                    const scorecard = formatContextConfidenceSummary(lastBugDiscoveryContextConfidence);
+                    showStatusBar(
+                        `${presentation.summary}\n\n${scorecard}`,
+                        'error',
+                        presentation.statusTitle,
+                        0
+                    );
+                } else {
+                    showStatusBar(presentation.summary, 'error', presentation.statusTitle, 0);
+                }
+            }
             return false;
         }
 
+        const showedContextOrScenario = showBugDiscoveryContextAndScenarioPopups(
+            scenarioRelevance,
+            contextConfidence
+        );
+        if (showedContextOrScenario) {
+            bugLogGuardrailPassed = !(scenarioRelevance?.blocked || contextConfidence?.blocked);
+            return !(scenarioRelevance?.blocked || contextConfidence?.blocked);
+        }
+        lastBugDiscoveryScenarioRelevance = null;
+        lastBugDiscoveryContextConfidence = null;
+
         const warningParts = [];
         let warningTitle = 'Log file warning';
-
+        let statusLine = 'Log file passed with guardrail warnings';
+        let showedHistoricalToast = false;
         if (dataQuality?.warned && Array.isArray(dataQuality.messages) && dataQuality.messages.length) {
             warningParts.push(formatDataQualitySummary(dataQuality));
-            warningTitle = 'Log file warning — data quality';
+            if (warningTitle === 'Log file warning') {
+                warningTitle = 'Log file warning — data quality';
+            }
         }
         if (historical?.warned || historical?.is_new_log) {
-            warningParts.push(formatHistoricalPatternSummary(historical));
-            if (warningTitle === 'Log file warning') {
-                warningTitle = historical?.is_new_log
-                    ? 'Log file warning — new log detected'
-                    : 'Log file warning — historical pattern';
-            }
+            // New-log historical match: top-right toast only — never blocks Start RCA.
+            showStatusBar(
+                formatHistoricalPatternSummary(historical),
+                'warning',
+                historical?.is_new_log
+                    ? 'Historical pattern — new log detected'
+                    : 'Historical pattern',
+                12000
+            );
+            showedHistoricalToast = true;
         }
         if (quality?.warned && Array.isArray(quality.messages) && quality.messages.length) {
             warningParts.push(formatTelecomDomainSummary(quality));
@@ -2382,21 +2703,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (warningParts.length) {
+            // Scenario relevance already returned above; remaining parts are DQ/telecom.
             showBugLogGuardrailBanner(warningParts.join('\n\n'), warningTitle, 'warning');
-            const statusLine = dataQuality?.warned
-                ? 'Log file may be incomplete — review data quality'
-                : (historical?.is_new_log
-                    ? 'New log file — human review recommended'
-                    : 'Log file passed with guardrail warnings');
-            showStatusBar(statusLine, 'warning', 'Bug Discovery');
+            if (!showedHistoricalToast) {
+                showStatusBar(statusLine, 'warning', 'Bug Discovery', 12000);
+            }
             bugLogGuardrailPassed = true;
             return true;
         }
 
-        const overall = quality?.context_scores?.overall ?? quality?.telecom_relevance;
-        const scoreText = typeof overall === 'number' ? ` (${Math.round(overall * 100)}% relevance)` : '';
+        if (showedHistoricalToast) {
+            bugLogGuardrailPassed = true;
+            return true;
+        }
+
+        const overall = contextConfidence?.overall
+            ?? quality?.context_scores?.overall
+            ?? quality?.telecom_relevance;
+        const scoreText = typeof overall === 'number'
+            ? ` (Overall context score: ${Math.round(overall * 100)}%)`
+            : '';
         showStatusBar(`Log file passed guardrails${scoreText}`, 'success', 'Bug Discovery');
         bugLogGuardrailPassed = true;
+        clearBugLogGuardrailBanner();
         return true;
     }
 
@@ -2405,35 +2734,68 @@ document.addEventListener('DOMContentLoaded', () => {
         const warnedFiles = files.filter((file) => {
             const historical = file?.historical_pattern || file?.guardrails?.layers?.historical_pattern;
             const dataQuality = file?.data_quality || file?.guardrails?.layers?.data_quality;
-            return historical?.warned || historical?.is_new_log || dataQuality?.warned;
+            const scenario = file?.scenario_relevance || file?.guardrails?.layers?.scenario_relevance;
+            const context = file?.context_confidence || file?.guardrails?.layers?.context_confidence;
+            return historical?.warned || historical?.is_new_log || dataQuality?.warned
+                || isScenarioRelevanceWarning(scenario)
+                || isContextConfidenceWarning(context);
         });
         if (!warnedFiles.length) {
             return;
         }
         const first = warnedFiles[0];
+        const scenario = first.scenario_relevance || first.guardrails?.layers?.scenario_relevance;
+        const context = first.context_confidence || first.guardrails?.layers?.context_confidence;
+        if (isScenarioRelevanceWarning(scenario) || isContextConfidenceWarning(context)) {
+            showBugDiscoveryContextAndScenarioPopups(scenario, context);
+            return;
+        }
         const dataQuality = first.data_quality || first.guardrails?.layers?.data_quality;
         const historical = first.historical_pattern || first.guardrails?.layers?.historical_pattern;
-        const summary = dataQuality?.warned
-            ? formatDataQualitySummary(dataQuality)
-            : formatHistoricalPatternSummary(historical);
-        const title = dataQuality?.warned
-            ? 'Log file warning — data quality'
-            : 'Log file warning — new log detected';
-        const countText = warnedFiles.length > 1 ? ` (${warnedFiles.length} files)` : '';
-        showBugLogGuardrailBanner(summary, `${title}${countText}`, 'warning');
+        if (dataQuality?.warned) {
+            const summary = formatDataQualitySummary(dataQuality);
+            const countText = warnedFiles.length > 1 ? ` (${warnedFiles.length} files)` : '';
+            showBugLogGuardrailBanner(summary, `Log file warning — data quality${countText}`, 'warning');
+            showStatusBar(
+                'Uploaded log(s) may be incomplete — review data quality',
+                'warning',
+                'Bug Discovery'
+            );
+            return;
+        }
+        // Historical new-log: top-right toast only (do not block analysis).
         showStatusBar(
-            dataQuality?.warned
-                ? 'Uploaded log(s) may be incomplete — review data quality'
-                : 'Uploaded log(s) include new files — human review recommended',
+            formatHistoricalPatternSummary(historical),
             'warning',
-            'Bug Discovery'
+            'Historical pattern — new log detected',
+            12000
         );
     }
 
+    let scanSelectedBugLogSeq = 0;
+    let scanSelectedBugLogTimer = null;
+
     async function scanSelectedBugLogFile() {
+        // Debounce duplicate onSelect + change triggers so the banner is not cleared mid-paint.
+        if (scanSelectedBugLogTimer) {
+            clearTimeout(scanSelectedBugLogTimer);
+            scanSelectedBugLogTimer = null;
+        }
+        return new Promise((resolve) => {
+            scanSelectedBugLogTimer = setTimeout(async () => {
+                scanSelectedBugLogTimer = null;
+                resolve(await scanSelectedBugLogFileNow());
+            }, 50);
+        });
+    }
+
+    async function scanSelectedBugLogFileNow() {
         const logPath = getSelectedBugLogFilePath();
+        const scanId = ++scanSelectedBugLogSeq;
         clearBugLogGuardrailBanner();
         bugLogGuardrailPassed = true;
+        lastBugDiscoveryScenarioRelevance = null;
+        lastBugDiscoveryContextConfidence = null;
 
         if (!logPath) {
             syncBdPlaceholderVisibility();
@@ -2441,17 +2803,49 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (!window.API?.validateBugDiscoveryLog) {
-            syncBdPlaceholderVisibility();
-            validateDirs();
-            return;
-        }
+        const validateLog = async (pathToValidate) => {
+            if (typeof window.API?.validateBugDiscoveryLog === 'function') {
+                return window.API.validateBugDiscoveryLog(pathToValidate);
+            }
+            if (typeof window.API?.makeAPICall === 'function') {
+                return window.API.makeAPICall('/api/rca/validate-log', 'POST', {
+                    log_file_path: pathToValidate,
+                });
+            }
+            const apiBase = (window.API && window.API.API_BASE_URL) || 'http://127.0.0.1:8000';
+            const response = await fetch(`${apiBase}/api/rca/validate-log`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ log_file_path: pathToValidate }),
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                const err = new Error(errorText || `HTTP error! status: ${response.status}`);
+                err.status = response.status;
+                if (typeof window.API?.attachGuardrailFieldsToError === 'function') {
+                    window.API.attachGuardrailFieldsToError(err, errorText);
+                }
+                throw err;
+            }
+            return response.json();
+        };
 
         try {
             showStatusBar('Scanning log file (telecom domain + historical pattern + security guardrails)...', 'info', 'Bug Discovery');
-            const result = await window.API.validateBugDiscoveryLog(logPath);
+            const result = await validateLog(logPath);
+            if (scanId !== scanSelectedBugLogSeq) {
+                return;
+            }
+            console.log('[Bug Discovery] validate-log result:', {
+                passed: result?.passed,
+                scenario_relevance: result?.scenario_relevance,
+                validateFn: typeof window.API?.validateBugDiscoveryLog,
+            });
             applyBugDiscoveryGuardrailResult(result);
         } catch (error) {
+            if (scanId !== scanSelectedBugLogSeq) {
+                return;
+            }
             if (typeof enrichGuardrailError === 'function') {
                 enrichGuardrailError(error);
             }
@@ -2466,25 +2860,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 const quality = detail.quality || detail.guardrails?.layers?.telecom_domain;
                 const historical = detail.historical_pattern || detail.guardrails?.layers?.historical_pattern;
                 const dataQuality = detail.data_quality || detail.guardrails?.layers?.data_quality;
+                const scenarioRelevance = detail.scenario_relevance || detail.guardrails?.layers?.scenario_relevance;
+                const contextConfidence = detail.context_confidence || detail.guardrails?.layers?.context_confidence;
                 const presentation = presentBugDiscoveryGuardrailBlock({
                     quality,
                     historical,
                     dataQuality,
+                    scenarioRelevance,
+                    contextConfidence,
                     detail,
                     error,
                     findings: payload.findings,
                     reasons: payload.reasons,
                 });
-                showBugLogGuardrailBanner(presentation.summary, presentation.title);
-                showStatusBar(presentation.summary.split('\n')[0], 'error', presentation.statusTitle, 0);
+                if (presentation.title === 'Context confidence') {
+                    clearBugLogGuardrailBanner();
+                } else {
+                    showBugLogGuardrailBanner(presentation.summary, presentation.title);
+                }
+                showStatusBar(presentation.summary, 'error', presentation.statusTitle, 0);
             } else {
                 bugLogGuardrailPassed = false;
                 showBugLogGuardrailBanner(error.message || 'Log file guardrail scan failed.', 'Log file scan failed');
                 showStatusBar(error.message || 'Log file guardrail scan failed.', 'error', 'Bug Discovery');
             }
         } finally {
-            syncBdPlaceholderVisibility();
-            validateDirs();
+            if (scanId === scanSelectedBugLogSeq) {
+                syncBdPlaceholderVisibility();
+                validateDirs();
+            }
         }
     }
 
@@ -2528,7 +2932,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (bugLogFilePathInput) {
                 bugLogFilePathInput.value = item.getAttribute('data-path') || '';
             }
-            // change listener on bugLogFileCombo runs scanSelectedBugLogFile()
+            // Ensure scan runs even if the hidden-input change listener is missed.
+            scanSelectedBugLogFile();
         }
     });
 
@@ -3622,6 +4027,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setBugLogFileSelection('', 'Select a log file', '');
         bugLogGuardrailPassed = true;
+        lastBugDiscoveryScenarioRelevance = null;
+        lastBugDiscoveryContextConfidence = null;
         clearBugLogGuardrailBanner();
         validateDirs();
     }
@@ -5916,6 +6323,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateBdExportReportButton();
                 revealBdPostAnalysisUi({ crashAnalysisEnabled, selectArtifact: 'error-detected'});
                 refreshBdMetricsForCurrentInstance();
+
+                // Re-surface guardrail toasts after RCA (Start RCA replaces the toast with progress).
+                if (lastBugDiscoveryContextConfidence
+                    && !lastBugDiscoveryContextConfidence.skipped) {
+                    showBugDiscoveryContextAndScenarioPopups(
+                        lastBugDiscoveryScenarioRelevance,
+                        lastBugDiscoveryContextConfidence
+                    );
+                } else if (lastBugDiscoveryScenarioRelevance
+                    && isScenarioRelevanceWarning(lastBugDiscoveryScenarioRelevance)) {
+                    showScenarioRelevancePopup(lastBugDiscoveryScenarioRelevance);
+                }
                 
                 // Save analysis to bug history (matching PyQt save_bug_analysis_to_history)
                 try {
@@ -6008,18 +6427,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 const quality = detail.quality || detail.guardrails?.layers?.telecom_domain;
                 const historical = detail.historical_pattern || detail.guardrails?.layers?.historical_pattern;
                 const dataQuality = detail.data_quality || detail.guardrails?.layers?.data_quality;
+                const scenarioRelevance = detail.scenario_relevance || detail.guardrails?.layers?.scenario_relevance;
+                const contextConfidence = detail.context_confidence || detail.guardrails?.layers?.context_confidence;
                 const presentation = presentBugDiscoveryGuardrailBlock({
                     quality,
                     historical,
                     dataQuality,
+                    scenarioRelevance,
+                    contextConfidence,
                     detail,
                     error,
                     findings: payload.findings,
                     reasons: payload.reasons,
                 });
-                showBugLogGuardrailBanner(presentation.summary, presentation.title);
+                if (presentation.title === 'Context confidence') {
+                    clearBugLogGuardrailBanner();
+                } else {
+                    showBugLogGuardrailBanner(presentation.summary, presentation.title);
+                }
                 hideBdResultsForGuardrailBlock();
-                showStatusBar(presentation.summary.split('\n')[0], 'error', presentation.statusTitle, 0);
+                showStatusBar(presentation.summary, 'error', presentation.statusTitle, 0);
             } else {
                 showBdAnalysisResultsPanel(true);
                 setBugAnalysisDetailContent(`
@@ -10112,6 +10539,7 @@ ${escapeHtml(output)}
     // Test Script Generator variables
     let currentTestDataset = null;
     let currentTestDatasetFolder = null;
+    let lastGeneratedTestCases = null;
     let lastIntentCoverageResult = null;
 
     function getActiveTestDatasetFolder() {
@@ -10409,20 +10837,35 @@ ${escapeHtml(output)}
         const iconKey = isAdd ? 'add-template' : (isUser ? 'default' : (name === 'Performance Test' ? 'performance-test' : name === 'Bug Analysis' ? 'bug-analysis' : 'default'));
         const iconSvg = getTsgMoreTemplateIconSvg(iconKey);
         const dataAdd = isAdd ? ' data-is-add="true"' : '';
+        const deleteBtn = isUser ? `
+                <button type="button"
+                    class="tsg-more-template-delete"
+                    data-template-name="${safeName}"
+                    title="Delete template"
+                    aria-label="Delete template ${safeName}">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        <line x1="10" y1="11" x2="10" y2="17"/>
+                        <line x1="14" y1="11" x2="14" y2="17"/>
+                    </svg>
+                </button>` : '';
         return `
-            <button type="button"
-                class="prompt-studio-category-card tsg-more-template-card${addClass}${activeClass}"
-                data-template-name="${safeName}"${dataAdd}
-                role="listitem">
-                <span class="prompt-studio-category-card-icon prompt-studio-category-card-icon--${iconKey}" aria-hidden="true">${iconSvg}</span>
-                <span class="prompt-studio-category-card-body">
-                    <span class="prompt-studio-category-card-title">${safeName}</span>
-                    <span class="prompt-studio-category-card-sub">${safeDesc}</span>
-                </span>
-                <span class="prompt-studio-category-card-chevron" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-                </span>
-            </button>
+            <div class="tsg-more-template-card-wrap${isUser ? ' tsg-more-template-card-wrap--user' : ''}" role="listitem">
+                <button type="button"
+                    class="prompt-studio-category-card tsg-more-template-card${addClass}${activeClass}"
+                    data-template-name="${safeName}"${dataAdd}>
+                    <span class="prompt-studio-category-card-icon prompt-studio-category-card-icon--${iconKey}" aria-hidden="true">${iconSvg}</span>
+                    <span class="prompt-studio-category-card-body">
+                        <span class="prompt-studio-category-card-title">${safeName}</span>
+                        <span class="prompt-studio-category-card-sub">${safeDesc}</span>
+                    </span>
+                    <span class="prompt-studio-category-card-chevron" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                    </span>
+                </button>
+                ${deleteBtn}
+            </div>
         `;
     }
 
@@ -10472,6 +10915,17 @@ ${escapeHtml(output)}
                     return;
                 }
                 await selectTsgMoreTemplate(templateName);
+            });
+        });
+
+        list.querySelectorAll('.tsg-more-template-delete').forEach((btn) => {
+            btn.addEventListener('click', async (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const templateName = btn.getAttribute('data-template-name');
+                if (templateName && typeof window.deleteCustomTemplate === 'function') {
+                    await window.deleteCustomTemplate(templateName);
+                }
             });
         });
     }
@@ -11085,6 +11539,22 @@ REQUIREMENTS:
 4. **No Duplication**: Avoid repetitive or near-identical test cases
 5. **Exhaustive Coverage**: If one sentence implies multiple scenarios, create separate test cases for each
 6. **Command/Interface Relevance**: Only use commands/interfaces that are actually relevant and applicable to each test scenario, or create appropriate generic steps
+7. **Primary Feature Focus**: Prioritize scenarios for primary feature \`{PRIMARY_FEATURE}\` when provided, but still include all mandatory scenarios below
+8. **MANDATORY dedicated 5G scenario test cases (ALWAYS include all three — do not skip)**:
+   Create **separate dedicated test cases** (distinct testCaseID + title) for each scenario. Do **not** treat Secondary Node Release / SN Release as Handover.
+
+   **A. Registration Test** (title must include "Registration"):
+   - Registration Request → Registration Accept → Registration Complete (when applicable)
+
+   **B. PDU Session Test** (title must include "PDU Session"):
+   - PDU Session Establishment Request → PDU Session Authentication (if applicable) → PDU Session Accept → User Plane Setup → N3 Tunnel Creation
+   - At minimum MUST explicitly mention **PDU Session Establishment**
+   - Also cover related signals where relevant: SMF, UPF, N11, N4, QoS Flow, Session Release
+
+   **C. Handover / Mobility Test** (title must include "Handover", "Xn Handover", "N2 Handover", or "Inter-gNB"):
+   - Measurement Report → Handover Required → Handover Request → Handover Request Ack → RRC Reconfiguration → Path Switch → Handover Complete
+   - Alternatives: Xn Handover, N2 Handover, Inter-gNB Mobility, Inter-DU, Inter-CU
+   - **NOT acceptable as Handover:** Secondary Node Release / SgNB Release / SN Release alone
 
 COMMAND/INTERFACE SELECTION STRATEGY:
 - **Analyze Before Selection**: Review all available commands/interfaces (if provided) to understand their purpose and functionality
@@ -11118,6 +11588,7 @@ Return a valid JSON array of test cases where:
 - Commands/actions are integrated inline within descriptive test steps
 - Each test case includes commands Used and verificationMethods arrays
 - Commands/actions are chosen based on test scenario requirements, not arbitrary categories
+- The JSON array **must include at least one dedicated Registration test case, one dedicated PDU Session test case, and one dedicated Handover/mobility test case** with the mandatory signaling events listed above
 Do not skip or merge scenarios — extract comprehensive test cases from every relevant aspect of the documentation while making intelligent use of the available commands/interfaces or creating appropriate generic test steps.`
             },
             "Custom": ""
@@ -11212,6 +11683,22 @@ REQUIREMENTS:
 4. **No Duplication**: Avoid repetitive or near-identical test cases
 5. **Exhaustive Coverage**: If one sentence implies multiple scenarios, create separate test cases for each
 6. **Command/Interface Relevance**: Only use commands/interfaces that are actually relevant and applicable to each test scenario, or create appropriate generic steps
+7. **Primary Feature Focus**: Prioritize scenarios for primary feature \`{PRIMARY_FEATURE}\` when provided, but still include all mandatory scenarios below
+8. **MANDATORY dedicated 5G scenario test cases (ALWAYS include all three — do not skip)**:
+   Create **separate dedicated test cases** (distinct testCaseID + title) for each scenario. Do **not** treat Secondary Node Release / SN Release as Handover.
+
+   **A. Registration Test** (title must include "Registration"):
+   - Registration Request → Registration Accept → Registration Complete (when applicable)
+
+   **B. PDU Session Test** (title must include "PDU Session"):
+   - PDU Session Establishment Request → PDU Session Authentication (if applicable) → PDU Session Accept → User Plane Setup → N3 Tunnel Creation
+   - At minimum MUST explicitly mention **PDU Session Establishment**
+   - Also cover related signals where relevant: SMF, UPF, N11, N4, QoS Flow, Session Release
+
+   **C. Handover / Mobility Test** (title must include "Handover", "Xn Handover", "N2 Handover", or "Inter-gNB"):
+   - Measurement Report → Handover Required → Handover Request → Handover Request Ack → RRC Reconfiguration → Path Switch → Handover Complete
+   - Alternatives: Xn Handover, N2 Handover, Inter-gNB Mobility, Inter-DU, Inter-CU
+   - **NOT acceptable as Handover:** Secondary Node Release / SgNB Release / SN Release alone
 
 COMMAND/INTERFACE SELECTION STRATEGY:
 - **Analyze Before Selection**: Review all available commands/interfaces (if provided) to understand their purpose and functionality
@@ -11244,6 +11731,7 @@ Return a valid JSON array of test cases where:
 - Commands/actions are integrated inline within descriptive test steps
 - Each test case includes commands Used and verificationMethods arrays
 - Commands/actions are chosen based on test scenario requirements, not arbitrary categories
+- The JSON array **must include at least one dedicated Registration test case, one dedicated PDU Session test case, and one dedicated Handover/mobility test case** with the mandatory signaling events listed above
 Do not skip or merge scenarios — extract comprehensive test cases from every relevant aspect of the documentation while making intelligent use of the available commands/interfaces or creating appropriate generic test steps.`
                 },
                 "Custom": ""
@@ -11588,8 +12076,31 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 
                 // Refresh main dropdown to remove deleted template
                 addCustomTemplatesToMainDropdown();
+
+                // Refresh More Templates panel
+                if (typeof renderTsgMoreTemplatesPanel === 'function') {
+                    renderTsgMoreTemplatesPanel();
+                }
+
+                // If the deleted template was selected, clear the editor selection
+                if (currentTestPromptKey === templateName) {
+                    const moreRadio = document.querySelector('.tsg-template-radio[value="more-templates"]');
+                    if (moreRadio) {
+                        moreRadio.checked = true;
+                        await handleTestTemplateSelection('more-templates');
+                    } else {
+                        currentTestPromptKey = 'more-templates';
+                        const promptEditor = document.getElementById('testPromptTextEditor');
+                        if (promptEditor) {
+                            promptEditor.value = '';
+                            setTestPromptEditorReadOnly(true);
+                        }
+                        updateTestPromptActionButtons();
+                        updateTsgStatusBar();
+                    }
+                }
                 
-                showStatusBar(`Template '${templateName}'deleted successfully`, 'success');
+                showStatusBar(`Template '${templateName}' deleted successfully`, 'success');
             } else {
                 showStatusBar(`Failed to delete template: ${response.message}`, 'error');
             }
@@ -11779,6 +12290,24 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 html += '</ul>';
             }
 
+            const scenarioCoverage = intentCoverage.scenario_message_coverage;
+            if (scenarioCoverage && scenarioCoverage.available !== false) {
+                const scenarioChecks = Array.isArray(scenarioCoverage.checks) ? scenarioCoverage.checks : [];
+                const triggered = scenarioChecks.filter((c) => c && c.triggered);
+                if (triggered.length) {
+                    html += '<div class="tsg-nli-panel__preview-title">Scenario message checks</div>';
+                    html += '<ul class="tsg-intent-panel__list">';
+                    triggered.forEach((check) => {
+                        const status = check.passed ? 'PASS' : 'MISSING';
+                        const detail = check.passed
+                            ? `${check.label}: required signaling present`
+                            : (check.message || `${check.label}: required signaling missing`);
+                        html += `<li><strong>${escapeHtml(status)}</strong> — ${escapeHtml(detail)}</li>`;
+                    });
+                    html += '</ul>';
+                }
+            }
+
             if (mappings.length) {
                 html += '<div class="tsg-nli-panel__preview-title">Test case → intent mappings</div>';
                 html += '<div class="tsg-intent-panel__mappings">';
@@ -11966,7 +12495,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             html += `<div class="tsg-nli-table__confidence-value tsg-nli-table__confidence-value--${colorClass}">${pct}%</div>`;
             html += `<div class="tsg-nli-table__confidence-bar"><div class="tsg-nli-table__confidence-fill tsg-nli-table__confidence-fill--${colorClass}" style="width:${pct}%"></div></div>`;
             html += `</td>`;
-            html += `<td class="tsg-nli-table__summary"><span class="tsg-nli-table__summary-text" title="${tsgNliEscapeHtml(item.summary)}">${tsgNliEscapeHtml(item.summary)}</span>`;
+            html += `<td class="tsg-nli-table__summary"><span class="tsg-nli-table__summary-text">${tsgNliEscapeHtml(item.summary)}</span>`;
             html += `<span class="tsg-nli-table__chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></span></td>`;
             html += `</tr>`;
             html += `<tr class="tsg-nli-detail-row" data-detail-for="${rowId}" hidden>`;
@@ -12625,13 +13154,6 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 setTestPromptEditorReadOnly(false);
                 promptEditor.placeholder = 'Enter your custom prompt for generation...';
                 
-                if (modifyBtn) modifyBtn.disabled = false;
-                
-                if (saveTemplateBtn) {
-                    saveTemplateBtn.style.display = 'none';
-                    saveTemplateBtn.disabled = false;
-                }
-                
                 if (testCaseVariables) testCaseVariables.style.display = 'none';
                 if (testScriptVariables) testScriptVariables.style.display = 'none';
                 
@@ -12644,6 +13166,8 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 }
                 
                 console.log('✅ Custom template selected - prompt editor ready for input');
+                // Save Template visibility/enablement is handled by updateTestPromptActionButtons()
+                // (shown while editing; enabled once the editor has content).
             } else if (window.customTemplateNames && window.customTemplateNames.includes(templateKey)) {
                 // Handle custom saved templates - Load the user's saved prompt
                 console.log('📝 Custom saved template selected:', templateKey);
@@ -13119,6 +13643,14 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             
             let response;
             const activeDatasetFolder = getActiveTestDatasetFolder();
+            const testCasesForScript = (currentTestPromptKey === 'Test Script')
+                ? (lastGeneratedTestCases || null)
+                : null;
+            if (testCasesForScript) {
+                console.log('  - Attaching cached test cases:', testCasesForScript.length, 'chars');
+            } else if (currentTestPromptKey === 'Test Script') {
+                console.log('  - No in-memory test cases; backend will use latest saved test_case_*.json if available');
+            }
             // Try window.API.generateTestScript first, fallback to direct fetch
             if (window.API && typeof window.API.generateTestScript === 'function') {
                 console.log('[app.js] ✅ Using window.API.generateTestScript');
@@ -13127,7 +13659,8 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 currentTestDataset || "No dataset provided - generating test script based on prompt only",
                     variables, // Send dropdown values as variables
                 selectedPrompt,
-                activeDatasetFolder
+                activeDatasetFolder,
+                testCasesForScript
             );
             } else {
                 console.warn('[app.js] ⚠️ window.API.generateTestScript not available, using direct fetch call');
@@ -13136,7 +13669,8 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     text_content: currentTestDataset || "No dataset provided - generating test script based on prompt only",
                     variables: variables,
                     custom_prompt: selectedPrompt,
-                    dataset_folder: activeDatasetFolder
+                    dataset_folder: activeDatasetFolder,
+                    test_cases_content: testCasesForScript
                 };
                 
                 const apiResponse = await fetch('http://127.0.0.1:8000/api/test-script/generate', {
@@ -13182,6 +13716,10 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                 clearTsgInlineGuardrailError();
                 if (response.dataset_folder) {
                     setActiveTestDatasetFolder(response.dataset_folder);
+                }
+                if (currentTestPromptKey === 'Test Case' && response.generated_script) {
+                    lastGeneratedTestCases = response.generated_script;
+                    console.log('✅ Cached generated test cases for Test Script generation');
                 }
                 
                 updateProgressDialog(progressDialog, 100, 'Complete!');
@@ -14116,7 +14654,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             const fileName = func.file ? func.file.split('/').pop() : 'Unknown';
             const filePath = func.file || 'Unknown';
             
-            html += `<tr style="background-color: ${bgColor};"><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #1f2937; font-weight: 600; font-family: monospace; font-size: 0.9rem;">${func.name || 'N/A'}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #6b7280; font-size: 0.85rem; max-width: 300px; word-wrap: break-word;"title="${filePath}">${filePath}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; text-align: center;"><span style="display: inline-block; padding: 0.25rem 0.5rem; background-color: ${relevanceBg}; color: ${relevanceColor}; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize;">${func.relevance || 'N/A'}</span></td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: ${scoreColor}; text-align: center; font-weight: 700; font-size: 1rem;">${func.score || 0}</td></tr>`;
+            html += `<tr style="background-color: ${bgColor};"><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #1f2937; font-weight: 600; font-family: monospace; font-size: 0.9rem;">${func.name || 'N/A'}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: #6b7280; font-size: 0.85rem; max-width: 300px; word-wrap: break-word;">${filePath}</td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; text-align: center;"><span style="display: inline-block; padding: 0.25rem 0.5rem; background-color: ${relevanceBg}; color: ${relevanceColor}; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize;">${func.relevance || 'N/A'}</span></td><td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0; color: ${scoreColor}; text-align: center; font-weight: 700; font-size: 1rem;">${func.score || 0}</td></tr>`;
         });
         
         html += `</tbody></table></div>`;
@@ -17317,6 +17855,86 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
         return [];
     }
 
+    async function validatePromptStudioTemplateWithGuardrails(templateName, templatePrompt, role) {
+        const validateFn = window.API?.validatePromptStudioTemplate;
+        let data;
+        if (typeof validateFn === 'function') {
+            data = await validateFn(templateName, templatePrompt, { role: role || '' });
+        } else {
+            const response = await fetch('http://127.0.0.1:8000/api/prompt-studio/validate-template', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    template_name: templateName,
+                    template_content: templatePrompt,
+                    role: role || '',
+                }),
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                const parseFn = window.API?.parseGuardrailHttpErrorBody;
+                const attachFn = window.API?.attachGuardrailFieldsToError;
+                const info = typeof parseFn === 'function'
+                    ? parseFn(errorText)
+                    : { message: errorText, guardrailDetail: null, guardrailFindings: [], guardrailReasons: [] };
+                const err = new Error(info.message || `Template validation failed (${response.status})`);
+                err.status = response.status;
+                if (typeof attachFn === 'function') {
+                    attachFn(err, errorText);
+                } else {
+                    err.guardrailDetail = info.guardrailDetail || null;
+                    err.guardrailFindings = info.guardrailFindings || [];
+                    err.guardrailReasons = info.guardrailReasons || [];
+                    err.isGuardrailBlock = Boolean(info.isGuardrailBlock);
+                }
+                throw err;
+            }
+            data = await response.json();
+        }
+
+        // Enforce input guardrails even if the API returns 200 with blocked=true.
+        if (data?.blocked || data?.passed === false || data?.guardrails?.blocked) {
+            const messages = Array.isArray(data?.messages) ? data.messages : [];
+            const reasons = Array.isArray(data?.guardrails?.reasons)
+                ? data.guardrails.reasons
+                : messages;
+            const detail = {
+                error: 'prompt_blocked_by_guardrails',
+                message: messages[0]
+                    || 'Template blocked by Prompt Studio input guardrails.',
+                blocked_by: 'prompt_studio',
+                reasons,
+                findings: data?.guardrails?.layers?.security?.findings || [],
+                checks: data?.checks || data?.guardrails?.checks || [],
+                guardrails: data?.guardrails || data,
+            };
+            const err = new Error(detail.message);
+            err.status = 422;
+            err.isGuardrailBlock = true;
+            err.guardrailDetail = detail;
+            err.guardrailFindings = detail.findings;
+            err.guardrailReasons = reasons;
+            throw err;
+        }
+        return data;
+    }
+
+    function showPromptStudioGuardrailError(error) {
+        if (typeof enrichGuardrailError === 'function') {
+            enrichGuardrailError(error);
+        }
+        const detail = error?.guardrailDetail || {};
+        const summary = typeof formatGuardrailRejectionStatus === 'function'
+            ? formatGuardrailRejectionStatus(
+                error?.guardrailFindings || detail?.findings || [],
+                error?.guardrailReasons || detail?.reasons || [],
+                error?.message,
+                detail
+            )
+            : (error?.message || 'Template blocked by Prompt Studio guardrails.');
+        showStatusBar(summary, 'error', 'Prompt Studio — template blocked', 0);
+    }
+
     function saveUserTemplate(role, templateName, templatePrompt) {
         try {
             const stored = localStorage.getItem('userTemplates');
@@ -17905,6 +18523,18 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
 
                         if (isCurrentTemplateUserTemplate && currentSelectedRole) {
                             console.log(`🚀 Saving user template '${currentPromptTemplateKey}' to localStorage...`);
+                            try {
+                                await validatePromptStudioTemplateWithGuardrails(
+                                    currentPromptTemplateKey,
+                                    contentToSave,
+                                    currentSelectedRole
+                                );
+                            } catch (error) {
+                                showPromptStudioGuardrailError(error);
+                                this.disabled = false;
+                                this.textContent = 'Save Prompt';
+                                return;
+                            }
                             if (saveUserTemplate(currentSelectedRole, currentPromptTemplateKey, contentToSave)) {
                                 showStatusBar(`Template '${currentPromptTemplateKey}' saved successfully!`, 'success');
                                 currentPromptTemplateContent = contentToSave;
@@ -18110,7 +18740,7 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
     }
 
     if (confirmAddTemplateBtn) {
-        confirmAddTemplateBtn.addEventListener('click', function() {
+        confirmAddTemplateBtn.addEventListener('click', async function() {
             const nameInput = document.getElementById('newTemplateNameInput');
             const promptInput = document.getElementById('newTemplatePromptInput');
             
@@ -18152,10 +18782,30 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
                     return;
                 }
             }
+
+            const saveBtn = this;
+            saveBtn.disabled = true;
+            const originalLabel = saveBtn.textContent;
+            saveBtn.textContent = 'Validating...';
+
+            try {
+                await validatePromptStudioTemplateWithGuardrails(
+                    templateName,
+                    templatePrompt,
+                    currentSelectedRole
+                );
+            } catch (error) {
+                showPromptStudioGuardrailError(error);
+                saveBtn.disabled = false;
+                saveBtn.textContent = originalLabel;
+                return;
+            }
+
+            saveBtn.textContent = 'Saving...';
             
-            // Save the template
+            // Save the template locally after guardrails pass
             if (currentSelectedRole && saveUserTemplate(currentSelectedRole, templateName, templatePrompt)) {
-                showStatusBar(`Template "${templateName}"added successfully!`, 'success');
+                showStatusBar(`Template "${templateName}" added successfully!`, 'success');
                 closeAddTemplateModal();
                 
                 // Refresh template categories to show the new template
@@ -18163,6 +18813,9 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
             } else {
                 showStatusBar('Error saving template', 'error');
             }
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalLabel;
         });
     }
 
@@ -18563,6 +19216,18 @@ Do not skip or merge scenarios — extract comprehensive test cases from every r
     if (testModifyBtn) {
         testModifyBtn.addEventListener('click', function() {
             enterTestPromptEditMode();
+        });
+    }
+
+    const testPromptTextEditor = document.getElementById('testPromptTextEditor');
+    if (testPromptTextEditor) {
+        // Keep Save Template / Reset state in sync while typing (esp. Custom template).
+        const refreshPromptActionButtons = () => updateTestPromptActionButtons();
+        testPromptTextEditor.addEventListener('input', refreshPromptActionButtons);
+        testPromptTextEditor.addEventListener('change', refreshPromptActionButtons);
+        testPromptTextEditor.addEventListener('keyup', refreshPromptActionButtons);
+        testPromptTextEditor.addEventListener('paste', () => {
+            setTimeout(refreshPromptActionButtons, 0);
         });
     }
 

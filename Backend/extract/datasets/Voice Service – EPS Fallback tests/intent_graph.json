@@ -1,0 +1,150 @@
+{
+  "version": 3,
+  "subsection": "Voice Service – EPS Fallback tests",
+  "dataset_folder": "/home/tcs/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/extract/datasets/Voice Service – EPS Fallback tests",
+  "nodes": [
+    {
+      "id": "subsection:voice_service_eps_fallback_tests",
+      "type": "oran_subsection",
+      "label": "Voice Service – EPS Fallback tests",
+      "mandatory": false,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "voice service – eps fallback tests"
+      ]
+    },
+    {
+      "id": "clause:7_4_1_0",
+      "type": "clause",
+      "label": "Clause 7.4.1.0",
+      "mandatory": false,
+      "clause_ids": [
+        "7.4.1.0"
+      ],
+      "references": [
+        "Clause '7.4.1.0' not found in the document."
+      ],
+      "keywords": [
+        "7.4.1.0",
+        "clause 7.4.1.0"
+      ]
+    },
+    {
+      "id": "clause:7_4_1_2",
+      "type": "clause",
+      "label": "Clause 7.4.1.2",
+      "mandatory": false,
+      "clause_ids": [
+        "7.4.1.2"
+      ],
+      "references": [
+        "Clause '7.4.1.2' not found in the document."
+      ],
+      "keywords": [
+        "7.4.1.2",
+        "clause 7.4.1.2"
+      ]
+    },
+    {
+      "id": "clause:7_4_1_3",
+      "type": "clause",
+      "label": "Clause 7.4.1.3",
+      "mandatory": false,
+      "clause_ids": [
+        "7.4.1.3"
+      ],
+      "references": [
+        "Clause '7.4.1.3' not found in the document."
+      ],
+      "keywords": [
+        "7.4.1.3",
+        "clause 7.4.1.3"
+      ]
+    },
+    {
+      "id": "clause:7_4_1_4",
+      "type": "clause",
+      "label": "Clause 7.4.1.4",
+      "mandatory": false,
+      "clause_ids": [
+        "7.4.1.4"
+      ],
+      "references": [
+        "Clause '7.4.1.4' not found in the document."
+      ],
+      "keywords": [
+        "7.4.1.4",
+        "clause 7.4.1.4"
+      ]
+    },
+    {
+      "id": "procedure:registration",
+      "type": "procedure",
+      "label": "5G Registration",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "5g registration",
+        "registration",
+        "registration request",
+        "registration accept",
+        "ue registration",
+        "nas registration"
+      ]
+    },
+    {
+      "id": "procedure:pdu_session",
+      "type": "procedure",
+      "label": "PDU Session Establishment",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "pdu session establishment",
+        "pdu session",
+        "pdu session establishment request",
+        "pdu session establishment accept",
+        "pdu session resource setup",
+        "pdu session setup"
+      ]
+    },
+    {
+      "id": "procedure:handover",
+      "type": "procedure",
+      "label": "Handover / Mobility",
+      "mandatory": true,
+      "clause_ids": [],
+      "references": [],
+      "keywords": [
+        "handover / mobility",
+        "handover",
+        "handover request",
+        "handover command",
+        "handover complete",
+        "path switch",
+        "mobility",
+        "xn handover",
+        "ng handover"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "subsection:voice_service_eps_fallback_tests",
+      "target": "procedure:registration",
+      "relation": "requires"
+    },
+    {
+      "source": "subsection:voice_service_eps_fallback_tests",
+      "target": "procedure:pdu_session",
+      "relation": "requires"
+    },
+    {
+      "source": "subsection:voice_service_eps_fallback_tests",
+      "target": "procedure:handover",
+      "relation": "requires"
+    }
+  ]
+}

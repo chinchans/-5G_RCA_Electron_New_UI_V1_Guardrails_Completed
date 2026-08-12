@@ -16,7 +16,7 @@ import re
 from difflib import SequenceMatcher
 from pathlib import Path
 import subprocess
-from openai import AzureOpenAI
+from openai import AzureOpenAI, OpenAI
 from dotenv import load_dotenv
 
 # Check if .env file exists
@@ -26,31 +26,37 @@ if not os.path.exists('.env'):
 # Load environment variables from .env file
 load_dotenv()
 
-# Get Azure OpenAI credentials from environment variables
+# Get OpenAI/Gemini or Azure OpenAI credentials from environment variables
 AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
-AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
-AZURE_OPENAI_MODEL_NAME = os.getenv("AZURE_OPENAI_MODEL_NAME")
+AZURE_OPENAI_API_KEY = os.getenv("GEMINI_API_KEY_LATEST") or os.getenv("GEMINI_API_KEY") or os.getenv("AZURE_OPENAI_API_KEY") or os.getenv("AZURE_OPENAI_KEY")
+
+if os.getenv("GEMINI_API_KEY_LATEST") or os.getenv("GEMINI_API_KEY"):
+    AZURE_OPENAI_MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+else:
+    AZURE_OPENAI_MODEL_NAME = os.getenv("AZURE_OPENAI_MODEL_NAME")
 
 missing_vars = []
-if not AZURE_OPENAI_ENDPOINT:
-    missing_vars.append("AZURE_OPENAI_ENDPOINT")
 if not AZURE_OPENAI_API_KEY:
-    missing_vars.append("AZURE_OPENAI_API_KEY")
-if not AZURE_OPENAI_MODEL_NAME:
-    missing_vars.append("AZURE_OPENAI_MODEL_NAME")
+    missing_vars.append("GEMINI_API_KEY_LATEST (or GEMINI_API_KEY / AZURE_OPENAI_API_KEY)")
 
 if missing_vars:
     print(f"Error: Missing environment variables: {', '.join(missing_vars)}. Please set them in your .env file.")
     sys.exit(1)
 
 try:
-    client = AzureOpenAI(
-        api_key=AZURE_OPENAI_API_KEY,
-        azure_endpoint=AZURE_OPENAI_ENDPOINT,
-        api_version="2024-02-01"  # Check Azure OpenAI documentation for the latest supported API version
-    )
+    if os.getenv("GEMINI_API_KEY_LATEST") or os.getenv("GEMINI_API_KEY"):
+        client = OpenAI(
+            api_key=AZURE_OPENAI_API_KEY,
+            base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+        )
+    else:
+        client = AzureOpenAI(
+            api_key=AZURE_OPENAI_API_KEY,
+            azure_endpoint=AZURE_OPENAI_ENDPOINT,
+            api_version="2024-02-01"
+        )
 except Exception as e:
-    print(f"Failed to initialize AzureOpenAI client: {e}")
+    print(f"Failed to initialize OpenAI client: {e}")
     sys.exit(1)
 
 
