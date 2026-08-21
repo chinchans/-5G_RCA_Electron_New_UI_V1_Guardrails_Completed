@@ -35,7 +35,8 @@ DEFAULT_DATASET = (
     / "Guardrails"
     / "Fine-tuning"
     / "Datasets"
-    / "CLEAN_NOTEBOOKLM_1000_PROMPT_INJECTION_PROMPTS_no_citations.json"
+    / "Testng_prompts"
+    / "TESTING_PROMPTS_TOTAL_TELECOM_WORKBENCH.json"
 )
 
 DOMAIN_LABELS = ("TELECOM_WORKBENCH", "OUT_OF_SCOPE")

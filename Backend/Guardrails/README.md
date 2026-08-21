@@ -199,4 +199,4 @@ Invalid fixtures: `Backend/Guardrails/Bug Discovery/fixtures/`
 
 ---
 
-*Planned but not implemented:* temporal window (see `Backend/Guardrails/Bug Discovery/targets/log_files_section`).
+

@@ -1,0 +1,76 @@
+# ==============================================================================
+# Guardrails — extras beyond Backend/requirements.txt + model setup
+# ==============================================================================
+# Location: Backend/Guardrails/requirements.txt
+#
+# Install order (from Backend/):
+#   ./venv/bin/pip install -r requirements.txt
+#   ./venv/bin/pip install -r Guardrails/requirements.txt
+#
+# Then prefetch Hugging Face models (Prompt Guard is GATED — needs HF access):
+#   ./venv/bin/python Guardrails/download_models.py
+#
+# Or manually:
+#   huggingface-cli login
+#   huggingface-cli download meta-llama/Llama-Prompt-Guard-2-86M
+#   huggingface-cli download cross-encoder/nli-deberta-v3-small
+#
+# Packages already covered by Backend/requirements.txt (do not duplicate here):
+#   fastapi, uvicorn, python-multipart, pydantic, python-dotenv, requests, httpx,
+#   python-docx, PyMuPDF, beautifulsoup4, openpyxl, PyPDF2, pdfplumber, lxml,
+#   numpy, pandas, networkx, torch, transformers, sentence-transformers,
+#   huggingface-hub, tqdm
+#
+# Runtime env (Backend/.env):
+#   HF_TOKEN=hf_...                         # required for gated Meta model
+#   HUGGINGFACE_HUB_TOKEN=hf_...            # alias accepted by config
+#   PROMPT_GUARD_MODEL=meta-llama/Llama-Prompt-Guard-2-86M
+#   LLAMA_GUARD_BACKEND=transformers        # transformers | ollama | rules_only
+#   NLI_MODEL=cross-encoder/nli-deberta-v3-small
+#   GUARDRAIL_CLASSIFIER_MODEL_PATH=...     # default: Fine-tuning/fine_tuned_guardrail_roberta
+#   GUARDRAILS_ENABLED=true
+#
+# NOTE: pip does NOT install Meta Llama Prompt Guard weights. Those are pulled
+# from Hugging Face Hub at first use (or via download_models.py) using HF_TOKEN.
+# Accept the model license at:
+#   https://huggingface.co/meta-llama/Llama-Prompt-Guard-2-86M
+# ==============================================================================
+
+# --- Guardrails-only extras (not listed in Backend/requirements.txt) ---
+safetensors
+accelerate
+
+# ==============================================================================
+# Hugging Face / local models used by guardrails (NOT pip packages)
+# ==============================================================================
+#
+# 1) Layer 2 input security — Meta Llama Prompt Guard 2 (86M)
+#    Hub id:  meta-llama/Llama-Prompt-Guard-2-86M
+#    Env:     PROMPT_GUARD_MODEL
+#    Code:    app/guardrails/llama_guard_service.py
+#    Access:  GATED — Hugging Face account must request/accept Meta license;
+#             set HF_TOKEN in Backend/.env. First load calls from_pretrained().
+#
+# 2) NLI groundedness (Spec Intel output + TSG script groundedness)
+#    Hub id:  cross-encoder/nli-deberta-v3-small
+#    Env:     NLI_MODEL
+#    Code:    app/guardrails/nli_groundedness_service.py
+#    Access:  Public — auto-downloads via sentence-transformers CrossEncoder.
+#
+# 3) Fine-tuned RoBERTa domain classifier (TELECOM_WORKBENCH / OUT_OF_SCOPE)
+#    Path:    Backend/Guardrails/Fine-tuning/fine_tuned_guardrail_roberta/
+#    Env:     GUARDRAIL_CLASSIFIER_MODEL_PATH
+#    Code:    app/guardrails/guardrail_classifier.py
+#    Access:  Local weights (often Git LFS). Ensure model.safetensors is real
+#             (~500MB), not a 134-byte LFS pointer:
+#               git lfs pull --include="Backend/Guardrails/Fine-tuning/fine_tuned_guardrail_roberta/model.safetensors"
+#
+# 4) Optional Layer 2 backend via Ollama (if LLAMA_GUARD_BACKEND=ollama)
+#    Model:   llama-guard3  (OLLAMA_GUARD_MODEL)
+#    Install: ollama pull llama-guard3
+#    API:     OLLAMA_BASE_URL (default http://localhost:11434)
+#
+# After install + model download, smoke-check from Backend/:
+#   ./venv/bin/python -c "from app.guardrails.llama_guard_service import ensure_prompt_guard_loaded; print(ensure_prompt_guard_loaded())"
+#   ./venv/bin/python Guardrails/Fine-tuning/run_golden_guardrail_cases.py
+# ==============================================================================

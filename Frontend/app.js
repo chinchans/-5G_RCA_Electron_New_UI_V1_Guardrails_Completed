@@ -8844,6 +8844,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Provide specific error messages
                     if (guardrailRejected) {
+                        // Keep open until user dismisses (durationMs <= 0)
                         showStatusBar(
                             formatGuardrailRejectionStatus(
                                 guardrailPayload.findings,
@@ -8852,7 +8853,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 guardrailPayload.detail
                             ),
                             'error',
-                            guardrailBlockTitle(guardrailPayload.detail, error)
+                            guardrailBlockTitle(guardrailPayload.detail, error),
+                            0
                         );
                     } else if (errorMsg.includes('Failed to fetch') || errorMsg.includes('NetworkError')) {
                         const apiUrl = (window.API && window.API.API_BASE_URL) || 'http://127.0.0.1:8000';
