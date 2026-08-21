@@ -57,5 +57,6 @@ genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Prompt Studio
 
 ## Fine-tuning — classifier eval datasets
 
-📁/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Fine-tuning/Datasets
-📁/genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Fine-tuning/Datasets/Testng_prompts
+genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Fine-tuning/Datasets
+
+genai_setups/5G_RCA_Electron_New_UI_V1/Backend/Guardrails/Fine-tuning/Datasets/Testng_prompts
